@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#006 質因數分解器 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 與 Pollard's rho 算法進行質因數分解">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首 -->
+        <header class="header">
+            <h1>質因數分解器</h1>
+            <p class="subtitle">Prime Factorization</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#006</span>
+                <span class="badge badge-secondary">計算密集型</span>
+                <span class="badge badge-warning">進階</span>
+            </div>
+            <div class="formula-display">
+                <span class="highlight">n</span> =
+                <span class="highlight">p₁^a₁</span> ×
+                <span class="highlight">p₂^a₂</span> × ... ×
+                <span class="highlight">pₖ^aₖ</span>
+            </div>
+        </header>
+
+        <!-- 單數分解 -->
+        <section class="card">
+            <h2 class="card-title">質因數分解</h2>
+
+            <div class="form-group">
+                <label class="form-label" for="single-input">輸入數字</label>
+                <input type="text" id="single-input" class="form-input" value="123456789" placeholder="輸入要分解的數字">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">快速設定</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-value="84">84</button>
+                    <button class="preset-btn" data-value="1001">1001</button>
+                    <button class="preset-btn" data-value="123456">123456</button>
+                    <button class="preset-btn" data-value="9999991">9999991</button>
+                    <button class="preset-btn" data-value="1000000007">10億質數</button>
+                    <button class="preset-btn" data-value="123456789012">大數測試</button>
+                </div>
+            </div>
+
+            <div id="error-message" class="error-message hidden"></div>
+
+            <div class="btn-group">
+                <button id="factorize-single-btn" class="btn btn-primary">分解質因數</button>
+                <button id="find-divisors-btn" class="btn btn-info">列出所有因數</button>
+                <button id="check-prime-btn" class="btn btn-secondary">檢測是否質數</button>
+                <button id="stop-btn" class="btn btn-danger" disabled>停止</button>
+            </div>
+        </section>
+
+        <!-- 批量分解 -->
+        <section class="card">
+            <h2 class="card-title">批量質因數分解</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                輸入多個數字 (以逗號、空格或換行分隔)
+            </p>
+
+            <div class="form-group">
+                <textarea id="batch-input" class="form-textarea" placeholder="例如: 12, 18, 24, 36&#10;或&#10;12&#10;18&#10;24&#10;36">84, 120, 360, 1001, 2021, 9973, 10007</textarea>
+            </div>
+
+            <button id="factorize-batch-btn" class="btn btn-secondary">批量分解</button>
+        </section>
+
+        <!-- 範圍分解 -->
+        <section class="card">
+            <h2 class="card-title">範圍質因數分解</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                分解指定範圍內所有數字的質因數 (最大範圍 10000)
+            </p>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="range-start">起始值</label>
+                    <input type="number" id="range-start" class="form-input" value="1" min="1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="range-end">結束值</label>
+                    <input type="number" id="range-end" class="form-input" value="100" min="1">
+                </div>
+            </div>
+
+            <button id="factorize-range-btn" class="btn btn-secondary">範圍分解</button>
+        </section>
+
+        <!-- 進度 -->
+        <section class="card">
+            <h2 class="card-title">計算進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 結果區域 -->
+        <section id="single-result" class="card result-section hidden">
+            <h2 class="card-title">分解結果</h2>
+        </section>
+
+        <section id="divisors-result" class="card result-section hidden">
+            <h2 class="card-title">因數列表</h2>
+        </section>
+
+        <section id="prime-result" class="card result-section hidden">
+            <h2 class="card-title">質數檢測結果</h2>
+        </section>
+
+        <section id="batch-result" class="card result-section hidden">
+            <h2 class="card-title">批量分解結果</h2>
+        </section>
+
+        <section id="range-result" class="card result-section hidden">
+            <h2 class="card-title">範圍分解結果</h2>
+        </section>
+
+        <!-- 說明 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>算術基本定理：</strong>每個大於 1 的自然數都可以唯一分解為質數的乘積</li>
+                <li><strong>試除法：</strong>對小數字使用簡單的試除法，複雜度 O(√n)</li>
+                <li><strong>Pollard's rho：</strong>對大數字使用隨機算法，期望複雜度 O(n^1/4)</li>
+                <li><strong>Miller-Rabin：</strong>使用機率性質數測試，確保分解的因數是質數</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker</li>
+                <li><strong>大數支援：</strong>使用 <code>BigInt</code> 處理超大整數</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #006 - 質因數分解器
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
