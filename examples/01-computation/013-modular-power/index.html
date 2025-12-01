@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#013 模冪運算 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 實現模冪運算，展示密碼學應用">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首 -->
+        <header class="header">
+            <h1>模冪運算</h1>
+            <p class="subtitle">Modular Exponentiation</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#013</span>
+                <span class="badge badge-secondary">計算密集型</span>
+                <span class="badge badge-warning">中級</span>
+            </div>
+            <div class="formula-display">
+                <span class="highlight">a<sup>b</sup> mod m</span> = 快速模冪算法
+                （密碼學核心運算）
+            </div>
+        </header>
+
+        <!-- 基本模冪計算 -->
+        <section class="card">
+            <h2 class="card-title">🔐 基本模冪計算</h2>
+            <p class="card-description">
+                計算 a<sup>b</sup> mod m，使用平方乘法
+            </p>
+
+            <div class="input-row-3">
+                <div class="form-group">
+                    <label class="form-label" for="base">底數 (a)</label>
+                    <input type="text" id="base" class="form-input" value="7" placeholder="輸入底數">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="exponent">指數 (b)</label>
+                    <input type="text" id="exponent" class="form-input" value="123456789" placeholder="輸入指數">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="modulus">模數 (m)</label>
+                    <input type="text" id="modulus" class="form-input" value="1000000007" placeholder="輸入模數">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">常用質數模數</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-mod="97">97</button>
+                    <button class="preset-btn" data-mod="1009">1009</button>
+                    <button class="preset-btn" data-mod="65537">65537</button>
+                    <button class="preset-btn" data-mod="1000000007">10⁹+7</button>
+                    <button class="preset-btn" data-mod="998244353">998244353</button>
+                </div>
+            </div>
+
+            <div id="error-message" class="error-message hidden"></div>
+
+            <div class="btn-group">
+                <button id="calculate-btn" class="btn btn-primary">計算模冪</button>
+                <button id="stop-btn" class="btn btn-danger" disabled>停止</button>
+            </div>
+        </section>
+
+        <!-- RSA 演示 -->
+        <section class="card">
+            <h2 class="card-title">🔑 RSA 加密演示</h2>
+            <p class="card-description">
+                展示 RSA 加密與解密流程（教學用小質數）
+            </p>
+
+            <div class="input-row-3">
+                <div class="form-group">
+                    <label class="form-label" for="rsa-p">質數 p</label>
+                    <input type="text" id="rsa-p" class="form-input" value="61" placeholder="第一個質數">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="rsa-q">質數 q</label>
+                    <input type="text" id="rsa-q" class="form-input" value="53" placeholder="第二個質數">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="rsa-e">公鑰指數 e</label>
+                    <input type="text" id="rsa-e" class="form-input" value="17" placeholder="公鑰指數">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="rsa-message">原始訊息 (數字)</label>
+                <input type="text" id="rsa-message" class="form-input" value="123" placeholder="要加密的數字">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">預設組合</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn rsa-preset" data-p="61" data-q="53" data-e="17">p=61, q=53</button>
+                    <button class="preset-btn rsa-preset" data-p="101" data-q="103" data-e="7">p=101, q=103</button>
+                    <button class="preset-btn rsa-preset" data-p="257" data-q="263" data-e="65537">p=257, q=263</button>
+                </div>
+            </div>
+
+            <button id="rsa-btn" class="btn btn-secondary">執行 RSA 演示</button>
+        </section>
+
+        <!-- Diffie-Hellman 演示 -->
+        <section class="card">
+            <h2 class="card-title">🤝 Diffie-Hellman 金鑰交換</h2>
+            <p class="card-description">
+                安全地在公開通道上建立共享密鑰
+            </p>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="dh-prime">質數 (p)</label>
+                    <input type="text" id="dh-prime" class="form-input" value="23" placeholder="大質數">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="dh-generator">生成元 (g)</label>
+                    <input type="text" id="dh-generator" class="form-input" value="5" placeholder="原根">
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="dh-alice">Alice 私鑰 (a)</label>
+                    <input type="text" id="dh-alice" class="form-input" value="6" placeholder="Alice 的秘密">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="dh-bob">Bob 私鑰 (b)</label>
+                    <input type="text" id="dh-bob" class="form-input" value="15" placeholder="Bob 的秘密">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">預設參數</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn dh-preset" data-p="23" data-g="5">p=23, g=5</button>
+                    <button class="preset-btn dh-preset" data-p="97" data-g="5">p=97, g=5</button>
+                    <button class="preset-btn dh-preset" data-p="353" data-g="3">p=353, g=3</button>
+                </div>
+            </div>
+
+            <button id="dh-btn" class="btn btn-secondary">執行金鑰交換</button>
+        </section>
+
+        <!-- Fermat 質數測試 -->
+        <section class="card">
+            <h2 class="card-title">🧪 Fermat 質數測試</h2>
+            <p class="card-description">
+                使用費馬小定理進行概率性質數測試
+            </p>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="fermat-number">測試數字</label>
+                    <input type="text" id="fermat-number" class="form-input" value="104729" placeholder="輸入數字">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="fermat-iterations">測試次數</label>
+                    <input type="number" id="fermat-iterations" class="form-input" value="20" min="1" max="100">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">測試範例</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn fermat-preset" data-n="97">97 (質數)</button>
+                    <button class="preset-btn fermat-preset" data-n="561">561 (Carmichael)</button>
+                    <button class="preset-btn fermat-preset" data-n="104729">104729 (第10000個質數)</button>
+                    <button class="preset-btn fermat-preset" data-n="2147483647">2³¹-1 (Mersenne)</button>
+                </div>
+            </div>
+
+            <button id="fermat-btn" class="btn btn-info">執行質數測試</button>
+        </section>
+
+        <!-- 批量計算 -->
+        <section class="card">
+            <h2 class="card-title">📊 批量模冪計算</h2>
+            <p class="card-description">
+                每行一個運算式，格式：base^exp mod modulus
+            </p>
+
+            <div class="form-group">
+                <label class="form-label" for="batch-input">計算式列表</label>
+                <textarea id="batch-input" class="form-input" rows="5" placeholder="7^123 mod 1000000007&#10;2^1000 mod 998244353">7^123456 mod 1000000007
+2^1000000 mod 998244353
+3^999999 mod 65537
+5^888888 mod 1009
+11^777777 mod 97</textarea>
+            </div>
+
+            <button id="batch-btn" class="btn btn-secondary">批量計算</button>
+        </section>
+
+        <!-- 方法比較 -->
+        <section class="card">
+            <h2 class="card-title">⚡ 演算法比較</h2>
+            <p class="card-description">
+                比較快速模冪與樸素迭代的效能差異
+            </p>
+
+            <div class="input-row-3">
+                <div class="form-group">
+                    <label class="form-label" for="compare-base">底數</label>
+                    <input type="text" id="compare-base" class="form-input" value="2" placeholder="底數">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="compare-exponent">指數</label>
+                    <input type="text" id="compare-exponent" class="form-input" value="100000" placeholder="指數">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="compare-modulus">模數</label>
+                    <input type="text" id="compare-modulus" class="form-input" value="1000000007" placeholder="模數">
+                </div>
+            </div>
+
+            <button id="compare-btn" class="btn btn-info">比較方法</button>
+        </section>
+
+        <!-- 進度 -->
+        <section class="card">
+            <h2 class="card-title">📈 計算進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 結果區域 -->
+        <section id="calculate-result" class="card result-section hidden"></section>
+        <section id="rsa-result" class="card result-section hidden"></section>
+        <section id="dh-result" class="card result-section hidden"></section>
+        <section id="fermat-result" class="card result-section hidden"></section>
+        <section id="batch-result" class="card result-section hidden"></section>
+        <section id="compare-result" class="card result-section hidden"></section>
+
+        <!-- 說明 -->
+        <section class="card info-section">
+            <h3>🔒 關於此範例</h3>
+            <ul>
+                <li><strong>模冪運算：</strong>a<sup>b</sup> mod m，密碼學的核心運算</li>
+                <li><strong>快速模冪：</strong>使用平方乘法，O(log n) 時間複雜度</li>
+                <li><strong>RSA 加密：</strong>基於大數因數分解困難性的公鑰加密</li>
+                <li><strong>Diffie-Hellman：</strong>安全的金鑰交換協議</li>
+                <li><strong>費馬測試：</strong>基於 a<sup>p-1</sup> ≡ 1 (mod p) 的質數測試</li>
+                <li><strong>注意：</strong>本範例為教學用途，實際密碼學應用需使用更大的數字</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #013 - 模冪運算
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
