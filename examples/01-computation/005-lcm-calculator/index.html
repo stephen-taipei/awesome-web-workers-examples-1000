@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#005 最小公倍數計算器 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 計算最小公倍數 (LCM)，展示 GCD 與 LCM 的關係">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首 -->
+        <header class="header">
+            <h1>最小公倍數計算器</h1>
+            <p class="subtitle">LCM Calculator (Least Common Multiple)</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#005</span>
+                <span class="badge badge-secondary">計算密集型</span>
+                <span class="badge badge-success">初級</span>
+            </div>
+            <div class="formula-display">
+                <span class="highlight">LCM(a, b)</span> =
+                <span class="highlight">|a × b|</span> /
+                <span class="highlight">GCD(a, b)</span>
+            </div>
+        </header>
+
+        <!-- 單對計算 -->
+        <section class="card">
+            <h2 class="card-title">計算兩數的 LCM</h2>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="input-a">數字 A</label>
+                    <input type="text" id="input-a" class="form-input" value="12" placeholder="輸入第一個數字">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="input-b">數字 B</label>
+                    <input type="text" id="input-b" class="form-input" value="18" placeholder="輸入第二個數字">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">快速設定</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-a="12" data-b="18">12, 18</button>
+                    <button class="preset-btn" data-a="15" data-b="20">15, 20</button>
+                    <button class="preset-btn" data-a="48" data-b="180">48, 180</button>
+                    <button class="preset-btn" data-a="123456" data-b="789012">大數測試</button>
+                </div>
+            </div>
+
+            <div id="error-message" class="error-message hidden"></div>
+
+            <div class="btn-group">
+                <button id="calculate-single-btn" class="btn btn-primary">計算 LCM</button>
+                <button id="show-relation-btn" class="btn btn-info">顯示 GCD/LCM 關係</button>
+                <button id="stop-btn" class="btn btn-danger" disabled>停止</button>
+            </div>
+        </section>
+
+        <!-- 多數計算 -->
+        <section class="card">
+            <h2 class="card-title">計算多個數字的 LCM</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                輸入多個數字 (以逗號、空格或換行分隔)
+            </p>
+
+            <div class="form-group">
+                <textarea id="multiple-input" class="form-textarea" placeholder="例如: 4, 6, 8, 12&#10;或&#10;4&#10;6&#10;8&#10;12">4, 6, 8, 12, 15</textarea>
+            </div>
+
+            <button id="calculate-multiple-btn" class="btn btn-secondary">計算多數 LCM</button>
+        </section>
+
+        <!-- 批量計算 -->
+        <section class="card">
+            <h2 class="card-title">批量計算數對的 LCM</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                每行輸入一對數字 (以逗號或空格分隔)
+            </p>
+
+            <div class="form-group">
+                <textarea id="batch-input" class="form-textarea" placeholder="例如:&#10;12, 18&#10;15 20&#10;8, 12">12, 18
+15, 20
+8, 12
+24, 36
+100, 75</textarea>
+            </div>
+
+            <button id="calculate-batch-btn" class="btn btn-secondary">批量計算</button>
+        </section>
+
+        <!-- 公倍數列表 -->
+        <section class="card">
+            <h2 class="card-title">尋找公倍數列表</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                找出兩數在指定範圍內的所有公倍數
+            </p>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="limit-input">上限值</label>
+                    <input type="number" id="limit-input" class="form-input" value="1000" min="1" max="100000">
+                </div>
+            </div>
+
+            <button id="find-multiples-btn" class="btn btn-info">尋找公倍數</button>
+        </section>
+
+        <!-- 進度 -->
+        <section class="card">
+            <h2 class="card-title">計算進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 結果區域 -->
+        <section id="single-result" class="card result-section hidden">
+            <h2 class="card-title">計算結果</h2>
+        </section>
+
+        <section id="relation-result" class="card result-section hidden">
+            <h2 class="card-title">GCD 與 LCM 的關係</h2>
+        </section>
+
+        <section id="multiple-result" class="card result-section hidden">
+            <h2 class="card-title">多數 LCM 結果</h2>
+        </section>
+
+        <section id="batch-result" class="card result-section hidden">
+            <h2 class="card-title">批量計算結果</h2>
+        </section>
+
+        <section id="multiples-result" class="card result-section hidden">
+            <h2 class="card-title">公倍數列表</h2>
+        </section>
+
+        <!-- 說明 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>LCM 定義：</strong>能同時被兩數整除的最小正整數</li>
+                <li><strong>計算公式：</strong><code>LCM(a, b) = |a × b| / GCD(a, b)</code></li>
+                <li><strong>演算法：</strong>透過歐幾里得算法求 GCD，再計算 LCM</li>
+                <li><strong>重要關係：</strong><code>GCD(a, b) × LCM(a, b) = a × b</code></li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker</li>
+                <li><strong>大數支援：</strong>使用 <code>BigInt</code> 處理超大整數</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #005 - 最小公倍數計算器
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

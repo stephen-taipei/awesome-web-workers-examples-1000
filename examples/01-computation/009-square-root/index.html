@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#009 平方根計算 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 與牛頓迭代法計算高精度平方根">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首 -->
+        <header class="header">
+            <h1>平方根計算</h1>
+            <p class="subtitle">High-Precision Square Root Calculator</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#009</span>
+                <span class="badge badge-secondary">計算密集型</span>
+                <span class="badge badge-success">入門</span>
+            </div>
+            <div class="formula-display">
+                <span class="sqrt-symbol">√</span><span class="highlight">x</span> =
+                <span class="highlight">x<sup>1/2</sup></span>
+                （使用牛頓迭代法計算任意精度）
+            </div>
+        </header>
+
+        <!-- 單一計算 -->
+        <section class="card">
+            <h2 class="card-title">計算平方根</h2>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="single-number">輸入數字</label>
+                    <input type="text" id="single-number" class="form-input" value="2" placeholder="輸入正數">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="single-precision">精度（小數位數）</label>
+                    <input type="number" id="single-precision" class="form-input" value="100" min="1" max="10000">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">常用數字</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-value="2">√2</button>
+                    <button class="preset-btn" data-value="3">√3</button>
+                    <button class="preset-btn" data-value="5">√5</button>
+                    <button class="preset-btn" data-value="7">√7</button>
+                    <button class="preset-btn" data-value="10">√10</button>
+                    <button class="preset-btn" data-value="0.5">√0.5</button>
+                    <button class="preset-btn" data-value="123456789">√123456789</button>
+                    <button class="preset-btn" data-value="3.14159265358979">√π</button>
+                </div>
+            </div>
+
+            <div id="error-message" class="error-message hidden"></div>
+
+            <div class="btn-group">
+                <button id="calculate-btn" class="btn btn-primary">計算平方根</button>
+                <button id="verify-btn" class="btn btn-info">驗證結果</button>
+                <button id="stop-btn" class="btn btn-danger" disabled>停止</button>
+            </div>
+        </section>
+
+        <!-- 批量計算 -->
+        <section class="card">
+            <h2 class="card-title">批量計算</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                一次計算多個數字的平方根（用逗號、空格或換行分隔）
+            </p>
+
+            <div class="form-group">
+                <label class="form-label" for="batch-numbers">數字列表</label>
+                <textarea id="batch-numbers" class="form-input" rows="4" placeholder="例如：2, 3, 5, 7, 11, 13">2, 3, 5, 7, 11, 13, 17, 19, 23, 29</textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="batch-precision">精度</label>
+                <input type="number" id="batch-precision" class="form-input" value="50" min="1" max="1000" style="max-width: 150px;">
+            </div>
+
+            <button id="batch-btn" class="btn btn-secondary">批量計算</button>
+        </section>
+
+        <!-- 方法比較 -->
+        <section class="card">
+            <h2 class="card-title">演算法比較</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                比較不同平方根計算方法的效能
+            </p>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="compare-number">數字</label>
+                    <input type="text" id="compare-number" class="form-input" value="2" placeholder="輸入正數">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="compare-precision">精度</label>
+                    <input type="number" id="compare-precision" class="form-input" value="200" min="1" max="5000">
+                </div>
+            </div>
+
+            <button id="compare-btn" class="btn btn-info">比較方法</button>
+        </section>
+
+        <!-- 進度 -->
+        <section class="card">
+            <h2 class="card-title">計算進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 結果區域 -->
+        <section id="calculate-result" class="card result-section hidden">
+            <h2 class="card-title">計算結果</h2>
+        </section>
+
+        <section id="verify-result" class="card result-section hidden">
+            <h2 class="card-title">驗證結果</h2>
+        </section>
+
+        <section id="batch-result" class="card result-section hidden">
+            <h2 class="card-title">批量計算結果</h2>
+        </section>
+
+        <section id="compare-result" class="card result-section hidden">
+            <h2 class="card-title">方法比較結果</h2>
+        </section>
+
+        <!-- 說明 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>牛頓迭代法：</strong>又稱巴比倫法，是計算平方根的經典演算法</li>
+                <li><strong>迭代公式：</strong>x<sub>n+1</sub> = (x<sub>n</sub> + S/x<sub>n</sub>) / 2</li>
+                <li><strong>收斂速度：</strong>二次收斂，每次迭代有效位數加倍</li>
+                <li><strong>精度支援：</strong>使用 BigInt 支援任意精度計算</li>
+                <li><strong>驗證功能：</strong>將結果平方後與原數比較，確認準確度</li>
+                <li><strong>多方法比較：</strong>牛頓法、二分搜尋法、數位逐位法</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #009 - 平方根計算
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

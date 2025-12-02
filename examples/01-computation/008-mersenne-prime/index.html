@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#008 梅森質數搜尋器 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 與 Lucas-Lehmer 測試搜尋梅森質數">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首 -->
+        <header class="header">
+            <h1>梅森質數搜尋器</h1>
+            <p class="subtitle">Mersenne Prime Searcher</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#008</span>
+                <span class="badge badge-secondary">計算密集型</span>
+                <span class="badge badge-danger">高級</span>
+            </div>
+            <div class="formula-display">
+                <span class="highlight">M<sub>p</sub></span> =
+                <span class="highlight">2<sup>p</sup> - 1</span>
+                （梅森數，當 p 為質數且 M<sub>p</sub> 為質數時稱為梅森質數）
+            </div>
+        </header>
+
+        <!-- 單一測試 -->
+        <section class="card">
+            <h2 class="card-title">測試梅森數</h2>
+
+            <div class="form-group">
+                <label class="form-label" for="single-exponent">指數 p</label>
+                <input type="number" id="single-exponent" class="form-input" value="31" min="2" placeholder="輸入指數">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">已知梅森質數指數</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-value="2">p=2</button>
+                    <button class="preset-btn" data-value="3">p=3</button>
+                    <button class="preset-btn" data-value="5">p=5</button>
+                    <button class="preset-btn" data-value="7">p=7</button>
+                    <button class="preset-btn" data-value="13">p=13</button>
+                    <button class="preset-btn" data-value="17">p=17</button>
+                    <button class="preset-btn" data-value="19">p=19</button>
+                    <button class="preset-btn" data-value="31">p=31</button>
+                    <button class="preset-btn" data-value="61">p=61</button>
+                    <button class="preset-btn" data-value="89">p=89</button>
+                </div>
+            </div>
+
+            <div id="error-message" class="error-message hidden"></div>
+
+            <div class="btn-group">
+                <button id="test-single-btn" class="btn btn-primary">Lucas-Lehmer 測試</button>
+                <button id="verify-btn" class="btn btn-info">詳細驗證</button>
+                <button id="calculate-btn" class="btn btn-secondary">計算梅森數</button>
+                <button id="stop-btn" class="btn btn-danger" disabled>停止</button>
+            </div>
+        </section>
+
+        <!-- 範圍搜尋 -->
+        <section class="card">
+            <h2 class="card-title">範圍搜尋</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                搜尋指定指數範圍內的所有梅森質數 (建議範圍 ≤ 5000)
+            </p>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="range-start">起始指數</label>
+                    <input type="number" id="range-start" class="form-input" value="2" min="2">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="range-end">結束指數</label>
+                    <input type="number" id="range-end" class="form-input" value="1000" min="2">
+                </div>
+            </div>
+
+            <button id="search-range-btn" class="btn btn-secondary">搜尋梅森質數</button>
+        </section>
+
+        <!-- 已知列表 -->
+        <section class="card">
+            <h2 class="card-title">已知梅森質數</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                列出歷史上發現的梅森質數
+            </p>
+
+            <div class="form-group">
+                <label class="form-label" for="known-limit">顯示數量</label>
+                <input type="number" id="known-limit" class="form-input" value="15" min="1" max="51" style="max-width: 150px;">
+            </div>
+
+            <button id="list-known-btn" class="btn btn-info">列出已知梅森質數</button>
+        </section>
+
+        <!-- 進度 -->
+        <section class="card">
+            <h2 class="card-title">計算進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 結果區域 -->
+        <section id="single-result" class="card result-section hidden">
+            <h2 class="card-title">測試結果</h2>
+        </section>
+
+        <section id="verify-result" class="card result-section hidden">
+            <h2 class="card-title">詳細驗證結果</h2>
+        </section>
+
+        <section id="calculate-result" class="card result-section hidden">
+            <h2 class="card-title">梅森數計算結果</h2>
+        </section>
+
+        <section id="search-result" class="card result-section hidden">
+            <h2 class="card-title">搜尋結果</h2>
+        </section>
+
+        <section id="known-result" class="card result-section hidden">
+            <h2 class="card-title">已知梅森質數列表</h2>
+        </section>
+
+        <!-- 說明 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>梅森數：</strong>形如 M<sub>p</sub> = 2<sup>p</sup> - 1 的數</li>
+                <li><strong>梅森質數：</strong>當 p 為質數且 M<sub>p</sub> 也是質數時</li>
+                <li><strong>Lucas-Lehmer 測試：</strong>判斷梅森數是否為質數的高效算法</li>
+                <li><strong>測試原理：</strong>S<sub>0</sub> = 4, S<sub>n</sub> = (S<sub>n-1</sub>² - 2) mod M<sub>p</sub>，若 S<sub>p-2</sub> ≡ 0 則為質數</li>
+                <li><strong>完美數關聯：</strong>若 M<sub>p</sub> 是梅森質數，則 2<sup>p-1</sup> × M<sub>p</sub> 是完美數</li>
+                <li><strong>GIMPS：</strong>大網際網路梅森質數搜尋是全球分散式運算專案</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #008 - 梅森質數搜尋器
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

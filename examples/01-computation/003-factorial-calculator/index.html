@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#003 階乘計算器 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 計算大數階乘，支援記憶化與雙階乘">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>階乘計算器</h1>
+            <p class="subtitle">Factorial Calculator</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#003</span>
+                <span class="badge badge-secondary">計算密集型</span>
+                <span class="badge badge-success">初級</span>
+            </div>
+            <!-- 階乘公式顯示 -->
+            <div class="formula-display">
+                <span class="factorial-symbol">N!</span>
+                <span class="formula-text">= N × (N-1) × (N-2) × ... × 2 × 1</span>
+            </div>
+        </header>
+
+        <!-- 單一階乘計算區域 -->
+        <section class="card">
+            <h2 class="card-title">計算階乘</h2>
+
+            <div class="form-group">
+                <label class="form-label" for="n-input">計算 N!</label>
+                <input
+                    type="number"
+                    id="n-input"
+                    class="form-input"
+                    value="1000"
+                    min="0"
+                    max="100000"
+                    placeholder="輸入 N 值 (0-100000)"
+                >
+            </div>
+
+            <!-- 快速設定按鈕 -->
+            <div class="form-group">
+                <label class="form-label">快速設定</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-n="10">10!</button>
+                    <button class="preset-btn" data-n="100">100!</button>
+                    <button class="preset-btn" data-n="1000">1000!</button>
+                    <button class="preset-btn" data-n="5000">5000!</button>
+                    <button class="preset-btn" data-n="10000">10000!</button>
+                    <button class="preset-btn" data-n="50000">50000!</button>
+                </div>
+            </div>
+
+            <!-- 快取選項 -->
+            <div class="checkbox-group">
+                <input type="checkbox" id="use-cache" checked>
+                <label for="use-cache">使用記憶化快取 (加速重複計算)</label>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group">
+                <button id="calculate-btn" class="btn btn-primary">
+                    計算 N!
+                </button>
+                <button id="stop-btn" class="btn btn-danger" disabled>
+                    停止計算
+                </button>
+            </div>
+
+            <!-- 趣味資訊 -->
+            <div id="fun-facts" class="fun-facts">
+                <p>輸入一個數字來查看階乘的趣味資訊！</p>
+            </div>
+        </section>
+
+        <!-- 範圍階乘計算區域 -->
+        <section class="card">
+            <h2 class="card-title">計算範圍階乘</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                一次計算多個連續的階乘值
+            </p>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="range-start">起始值</label>
+                    <input
+                        type="number"
+                        id="range-start"
+                        class="form-input"
+                        value="1"
+                        min="0"
+                        max="1000"
+                        placeholder="起始 N"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="range-end">結束值</label>
+                    <input
+                        type="number"
+                        id="range-end"
+                        class="form-input"
+                        value="20"
+                        min="0"
+                        max="1000"
+                        placeholder="結束 N"
+                    >
+                </div>
+            </div>
+
+            <button id="range-btn" class="btn btn-secondary">
+                計算範圍階乘
+            </button>
+        </section>
+
+        <!-- 雙階乘計算區域 -->
+        <section class="card">
+            <h2 class="card-title">計算雙階乘</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                雙階乘 N!! = N × (N-2) × (N-4) × ... × (2 或 1)
+            </p>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="double-n-input">計算 N!!</label>
+                    <input
+                        type="number"
+                        id="double-n-input"
+                        class="form-input"
+                        value="10"
+                        min="0"
+                        max="50000"
+                        placeholder="輸入 N 值"
+                    >
+                </div>
+                <div class="form-group" style="display: flex; align-items: flex-end;">
+                    <button id="double-btn" class="btn btn-info" style="width: 100%;">
+                        計算雙階乘
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 進度顯示區域 -->
+        <section class="card">
+            <h2 class="card-title">計算進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 單一值結果顯示區域 -->
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">計算結果</h2>
+            <div id="result-value" class="result-value"></div>
+            <div id="result-stats" class="result-stats"></div>
+        </section>
+
+        <!-- 範圍結果顯示區域 -->
+        <section id="range-section" class="card hidden">
+            <h2 class="card-title">範圍結果</h2>
+            <div id="range-list" class="range-list"></div>
+        </section>
+
+        <!-- 雙階乘結果顯示區域 -->
+        <section id="double-section" class="card hidden">
+            <h2 class="card-title">雙階乘結果</h2>
+            <div id="double-result"></div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>階乘定義：</strong><code>N! = N × (N-1) × ... × 2 × 1</code>，其中 <code>0! = 1</code></li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>通訊模式：</strong>使用 <code>postMessage</code> 進行雙向通訊</li>
+                <li><strong>大數支援：</strong>使用 <code>BigInt</code> 處理超大整數</li>
+                <li><strong>記憶化：</strong>快取中間結果，加速重複計算</li>
+                <li><strong>末尾零：</strong>由因子 5 的個數決定 (公式：⌊N/5⌋ + ⌊N/25⌋ + ...)</li>
+                <li><strong>雙階乘：</strong><code>N!! = N × (N-2) × (N-4) × ...</code> 直到 1 或 2</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #003 - 階乘計算器
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>
