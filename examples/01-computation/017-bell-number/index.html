@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bell Number Calculator - Web Worker Example #017</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Bell Number Calculator</h1>
+            <p class="subtitle">Web Worker Example #017 - Bell Triangle Method</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Bell Numbers</h2>
+                <p>
+                    Bell numbers count the number of ways to partition a set of n elements.
+                    They are calculated using the <strong>Bell Triangle</strong> (also known as Aitken's array).
+                </p>
+                <div class="formula">
+                    <p><strong>First few Bell numbers:</strong></p>
+                    <code>B(0)=1, B(1)=1, B(2)=2, B(3)=5, B(4)=15, B(5)=52, B(6)=203, ...</code>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="calculationType">Calculation Type:</label>
+                    <select id="calculationType">
+                        <option value="sequence">Bell Number Sequence (B(0) to B(n))</option>
+                        <option value="single">Single Bell Number (B(n))</option>
+                        <option value="triangle">Bell Triangle (First n+1 rows)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="nInput">Value of n:</label>
+                    <input type="number" id="nInput" min="0" value="20" placeholder="e.g., 50 (calculates B(0) to B(50))">
+                </div>
+
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Calculate</button>
+                    <button id="cancelBtn" class="btn btn-secondary hidden">Cancel</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <h2>Progress</h2>
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Starting calculation...</p>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div id="resultContent" class="result-content"></div>
+                <p class="execution-time">Execution time: <span id="executionTime">-</span></p>
+            </section>
+
+            <section id="errorContainer" class="error-section hidden">
+                <h2>Error</h2>
+                <p id="errorMessage" class="error-message"></p>
+            </section>
+
+            <section class="info">
+                <h2>Bell Triangle Construction</h2>
+                <div class="info-content">
+                    <p>The Bell Triangle is constructed as follows:</p>
+                    <ol>
+                        <li>Row 0 starts with 1</li>
+                        <li>The first element of each row is the last element of the previous row</li>
+                        <li>Each subsequent element is the sum of the element to its left and the element above the left element</li>
+                        <li>B(n) = first element of row n</li>
+                    </ol>
+                    <pre class="triangle-example">
+Row 0:  1
+Row 1:  1   2
+Row 2:  2   3   5
+Row 3:  5   7  10  15
+Row 4: 15  20  27  37  52
+                    </pre>
+                    <p class="note">The first element of each row gives B(0)=1, B(1)=1, B(2)=2, B(3)=5, B(4)=15, ...</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>
+                <a href="../index.html">Back to Examples</a> |
+                Web Workers Example #017 - Bell Number Calculator
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
