@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Euler Number Calculator - Web Worker Example #019</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Euler Number Calculator</h1>
+            <p class="subtitle">Web Worker Example #019 - Euler, Zigzag & Tangent Numbers</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About These Numbers</h2>
+                <div class="number-types">
+                    <div class="number-type">
+                        <h3>Euler Numbers |E(n)|</h3>
+                        <p>Appear in Taylor series of sec(x). Odd indices are 0.</p>
+                        <code>1, 1, 5, 61, 1385, 50521, ...</code>
+                    </div>
+                    <div class="number-type">
+                        <h3>Zigzag Numbers A(n)</h3>
+                        <p>Count alternating permutations of n elements.</p>
+                        <code>1, 1, 1, 2, 5, 16, 61, 272, ...</code>
+                    </div>
+                    <div class="number-type">
+                        <h3>Tangent Numbers T(n)</h3>
+                        <p>Coefficients in Taylor series of tan(x).</p>
+                        <code>1, 2, 16, 272, 7936, ...</code>
+                    </div>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="numberType">Number Type:</label>
+                    <select id="numberType">
+                        <option value="euler">Euler Numbers |E(2n)|</option>
+                        <option value="zigzag">Zigzag Numbers A(n)</option>
+                        <option value="tangent">Tangent Numbers T(n)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="calculationType">Calculation Type:</label>
+                    <select id="calculationType">
+                        <option value="sequence">Sequence (multiple values)</option>
+                        <option value="single">Single Value (Euler only)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="nInput">Value of n:</label>
+                    <input type="number" id="nInput" min="0" value="20" placeholder="e.g., 25">
+                </div>
+
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Calculate</button>
+                    <button id="cancelBtn" class="btn btn-secondary hidden">Cancel</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <h2>Progress</h2>
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Starting calculation...</p>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div id="resultContent" class="result-content"></div>
+                <p class="execution-time">Execution time: <span id="executionTime">-</span></p>
+            </section>
+
+            <section id="errorContainer" class="error-section hidden">
+                <h2>Error</h2>
+                <p id="errorMessage" class="error-message"></p>
+            </section>
+
+            <section class="info">
+                <h2>Mathematical Relationships</h2>
+                <div class="info-content">
+                    <p><strong>Euler numbers</strong> E(n) satisfy:</p>
+                    <ul>
+                        <li>E(2n+1) = 0 for all n</li>
+                        <li>|E(2n)| = A(2n) (zigzag number at even index)</li>
+                        <li>sec(x) = &Sigma; E(n) * x<sup>n</sup> / n!</li>
+                    </ul>
+
+                    <p><strong>Zigzag numbers</strong> A(n) count:</p>
+                    <ul>
+                        <li>Alternating permutations: a<sub>1</sub> &lt; a<sub>2</sub> &gt; a<sub>3</sub> &lt; a<sub>4</sub> &gt; ...</li>
+                        <li>A(0) = A(1) = 1</li>
+                        <li>A(n) = sec(x) + tan(x) Taylor coefficients</li>
+                    </ul>
+
+                    <p><strong>Tangent numbers</strong> T(n):</p>
+                    <ul>
+                        <li>T(n) = A(2n+1) = zigzag number at odd index</li>
+                        <li>tan(x) = &Sigma; T(n) * x<sup>2n+1</sup> / (2n+1)!</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>
+                <a href="../index.html">Back to Examples</a> |
+                Web Workers Example #019 - Euler Number Calculator
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
