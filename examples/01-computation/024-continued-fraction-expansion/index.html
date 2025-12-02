@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continued Fraction Expansion - Web Worker Example #024</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Continued Fraction Expansion</h1>
+            <p class="subtitle">Web Worker Example #024 - Number to CF Conversion</p>
+        </header>
+        <main>
+            <section class="description">
+                <h2>About Continued Fractions</h2>
+                <p>A continued fraction represents a number as: a₀ + 1/(a₁ + 1/(a₂ + 1/(a₃ + ...)))</p>
+                <p>Written in compact notation: [a₀; a₁, a₂, a₃, ...]</p>
+            </section>
+
+            <section class="controls">
+                <h2>Input</h2>
+                <div class="input-group">
+                    <label for="inputType">Input Type:</label>
+                    <select id="inputType">
+                        <option value="decimal">Decimal Number</option>
+                        <option value="rational">Rational (p/q)</option>
+                        <option value="constant">Mathematical Constant</option>
+                    </select>
+                </div>
+                <div class="input-group" id="decimalGroup">
+                    <label for="decimalInput">Decimal Value:</label>
+                    <input type="text" id="decimalInput" value="3.14159265" placeholder="e.g., 3.14159265">
+                </div>
+                <div class="input-group hidden" id="rationalGroup">
+                    <label>Fraction p/q:</label>
+                    <div class="fraction-input">
+                        <input type="text" id="numeratorInput" placeholder="Numerator" value="355">
+                        <span>/</span>
+                        <input type="text" id="denominatorInput" placeholder="Denominator" value="113">
+                    </div>
+                </div>
+                <div class="input-group hidden" id="constantGroup">
+                    <label for="constantSelect">Constant:</label>
+                    <select id="constantSelect">
+                        <option value="pi">π (Pi)</option>
+                        <option value="e">e (Euler's number)</option>
+                        <option value="phi">φ (Golden ratio)</option>
+                        <option value="sqrt2">√2</option>
+                        <option value="sqrt3">√3</option>
+                        <option value="sqrt5">√5</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="termsInput">Max Terms:</label>
+                    <input type="number" id="termsInput" value="30" min="5" max="200">
+                </div>
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Convert to CF</button>
+                    <button id="cancelBtn" class="btn btn-secondary hidden">Cancel</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <h2>Progress</h2>
+                <div class="progress-bar-container"><div id="progressBar" class="progress-bar"></div></div>
+                <p id="progressText" class="progress-text">Starting...</p>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div id="resultContent" class="result-content"></div>
+                <p class="execution-time">Execution time: <span id="executionTime">-</span></p>
+            </section>
+
+            <section id="errorContainer" class="error-section hidden">
+                <h2>Error</h2>
+                <p id="errorMessage" class="error-message"></p>
+            </section>
+        </main>
+        <footer><p><a href="../index.html">Back to Examples</a> | Web Workers Example #024</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
