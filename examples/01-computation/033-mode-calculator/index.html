@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#033 Mode Calculator - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#033 Mode Calculator</h1>
+            <p class="description">Calculate mode (most frequent value) using hash-based counting with Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Calculation Type:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="mode">Single Mode</option>
+                    <option value="multimode">All Modes (Multimodal)</option>
+                    <option value="frequency">Frequency Distribution</option>
+                    <option value="grouped">Grouped Mode (Bins)</option>
+                    <option value="generate">Generate & Calculate</option>
+                </select>
+            </div>
+
+            <div class="control-group" id="dataInputGroup">
+                <label for="dataInput">Data (comma or space separated):</label>
+                <textarea id="dataInput" rows="4" placeholder="1, 2, 2, 3, 3, 3, 4, 4, 5"></textarea>
+                <button class="btn-secondary" onclick="loadSample()">Load Sample Data</button>
+            </div>
+
+            <div class="control-group" id="binWidthGroup" style="display: none;">
+                <label for="binWidth">Bin Width:</label>
+                <input type="number" id="binWidth" value="1" min="0.01" step="0.1">
+            </div>
+
+            <div class="control-group" id="topNGroup" style="display: none;">
+                <label for="topN">Top N Frequencies:</label>
+                <input type="number" id="topN" value="10" min="1" max="100">
+            </div>
+
+            <div id="generateOptions" style="display: none;">
+                <div class="control-group">
+                    <label for="generateCount">Data Points to Generate:</label>
+                    <input type="number" id="generateCount" value="100000" min="1000" max="10000000">
+                </div>
+
+                <div class="control-group">
+                    <label for="distribution">Distribution:</label>
+                    <select id="distribution" onchange="updateDistributionParams()">
+                        <option value="uniform">Uniform (Discrete)</option>
+                        <option value="normal">Normal (Rounded)</option>
+                        <option value="poisson">Poisson</option>
+                        <option value="binomial">Binomial</option>
+                        <option value="geometric">Geometric</option>
+                    </select>
+                </div>
+
+                <div id="uniformParams" class="dist-params">
+                    <div class="param-row">
+                        <label>Min: <input type="number" id="uniformMin" value="1"></label>
+                        <label>Max: <input type="number" id="uniformMax" value="10"></label>
+                    </div>
+                </div>
+
+                <div id="normalParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>Mean: <input type="number" id="normalMean" value="50"></label>
+                        <label>Std Dev: <input type="number" id="normalStdDev" value="10"></label>
+                    </div>
+                </div>
+
+                <div id="poissonParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>Lambda (λ): <input type="number" id="poissonLambda" value="5" step="0.1"></label>
+                    </div>
+                </div>
+
+                <div id="binomialParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>n (trials): <input type="number" id="binomialN" value="10"></label>
+                        <label>p (probability): <input type="number" id="binomialP" value="0.5" step="0.01" min="0" max="1"></label>
+                    </div>
+                </div>
+
+                <div id="geometricParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>p (probability): <input type="number" id="geometricP" value="0.3" step="0.01" min="0.01" max="1"></label>
+                    </div>
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Mode</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Mode</h3>
+            <p>The <strong>mode</strong> is the value that appears most frequently in a dataset.</p>
+
+            <h4>Modality Types</h4>
+            <ul>
+                <li><strong>Unimodal:</strong> One mode (single peak)</li>
+                <li><strong>Bimodal:</strong> Two modes</li>
+                <li><strong>Multimodal:</strong> Multiple modes</li>
+                <li><strong>No mode:</strong> All values equally frequent</li>
+            </ul>
+
+            <h4>Mode vs Mean vs Median</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Measure</th>
+                    <th>Best For</th>
+                    <th>Categorical Data</th>
+                </tr>
+                <tr>
+                    <td>Mode</td>
+                    <td>Most common value</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>Mean</td>
+                    <td>Average value</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>Median</td>
+                    <td>Middle value</td>
+                    <td>Ordinal only</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
