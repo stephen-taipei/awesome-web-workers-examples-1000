@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Root Calculator - Web Worker Example #026</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Digital Root Calculator</h1>
+            <p class="subtitle">Web Worker Example #026 - Digit Sum Iterations</p>
+        </header>
+        <main>
+            <section class="description">
+                <h2>About Digital Root</h2>
+                <p>The digital root is obtained by repeatedly summing digits until a single digit remains.</p>
+                <p>Example: 9875 → 9+8+7+5=29 → 2+9=11 → 1+1=2, so dr(9875)=2</p>
+                <p>Formula: dr(n) = 1 + ((n-1) mod 9) for n > 0</p>
+            </section>
+
+            <section class="controls">
+                <h2>Calculation</h2>
+                <div class="input-group">
+                    <label for="calcType">Calculation Type:</label>
+                    <select id="calcType">
+                        <option value="single">Additive Digital Root</option>
+                        <option value="multiplicative">Multiplicative Digital Root</option>
+                        <option value="persistence">Persistence Analysis</option>
+                        <option value="batch">Batch Distribution</option>
+                        <option value="highPersistence">High Persistence Numbers</option>
+                    </select>
+                </div>
+                <div class="input-group" id="singleGroup">
+                    <label for="numberInput">Number:</label>
+                    <input type="text" id="numberInput" value="123456789" placeholder="Enter any number">
+                </div>
+                <div class="input-group hidden" id="batchGroup">
+                    <label>Range:</label>
+                    <div class="range-input">
+                        <input type="number" id="startInput" value="1" placeholder="Start">
+                        <span>to</span>
+                        <input type="number" id="endInput" value="10000" placeholder="End">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Calculate</button>
+                    <button id="cancelBtn" class="btn btn-secondary hidden">Cancel</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <h2>Progress</h2>
+                <div class="progress-bar-container"><div id="progressBar" class="progress-bar"></div></div>
+                <p id="progressText" class="progress-text">Starting...</p>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div id="resultContent" class="result-content"></div>
+                <p class="execution-time">Execution time: <span id="executionTime">-</span></p>
+            </section>
+
+            <section id="errorContainer" class="error-section hidden">
+                <h2>Error</h2>
+                <p id="errorMessage" class="error-message"></p>
+            </section>
+        </main>
+        <footer><p><a href="../index.html">Back to Examples</a> | Web Workers Example #026</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
