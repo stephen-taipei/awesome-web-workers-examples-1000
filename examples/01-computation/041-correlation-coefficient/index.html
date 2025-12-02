@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#041 Correlation Coefficient - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#041 Correlation Coefficient</h1>
+            <p class="description">Calculate Pearson, Spearman, and Kendall correlation coefficients with Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Correlation Type:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="all">All Correlations</option>
+                    <option value="pearson">Pearson (Linear)</option>
+                    <option value="spearman">Spearman (Rank)</option>
+                    <option value="kendall">Kendall (Tau)</option>
+                    <option value="generate">Generate Correlated Data</option>
+                </select>
+            </div>
+
+            <div id="dataInputs">
+                <div class="control-group">
+                    <label for="dataX">Variable X (comma or space separated):</label>
+                    <textarea id="dataX" rows="2" placeholder="1, 2, 3, 4, 5, 6, 7, 8, 9, 10"></textarea>
+                </div>
+
+                <div class="control-group">
+                    <label for="dataY">Variable Y (comma or space separated):</label>
+                    <textarea id="dataY" rows="2" placeholder="1.2, 2.1, 2.8, 4.2, 4.9, 6.1, 7.2, 7.8, 9.1, 10.2"></textarea>
+                </div>
+
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('perfect')">Perfect</button>
+                    <button class="btn-secondary" onclick="loadSample('strong')">Strong</button>
+                    <button class="btn-secondary" onclick="loadSample('weak')">Weak</button>
+                    <button class="btn-secondary" onclick="loadSample('negative')">Negative</button>
+                    <button class="btn-secondary" onclick="loadSample('nonlinear')">Non-linear</button>
+                </div>
+            </div>
+
+            <div id="generateOptions" style="display: none;">
+                <div class="control-group">
+                    <label for="generateCount">Data Points:</label>
+                    <input type="number" id="generateCount" value="10000" min="100" max="1000000">
+                </div>
+
+                <div class="control-group">
+                    <label for="targetCorrelation">Target Correlation (-1 to 1):</label>
+                    <input type="number" id="targetCorrelation" value="0.7" min="-1" max="1" step="0.1">
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Correlation</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Correlation</h3>
+            <p><strong>Correlation</strong> measures the strength and direction of relationship between two variables. Values range from -1 (perfect negative) to +1 (perfect positive).</p>
+
+            <h4>Correlation Types</h4>
+            <div class="corr-visual">
+                <div class="corr-item positive">
+                    <div class="corr-icon">📈</div>
+                    <div class="corr-name">Positive</div>
+                    <div class="corr-range">0 < r ≤ 1</div>
+                </div>
+                <div class="corr-item neutral">
+                    <div class="corr-icon">➖</div>
+                    <div class="corr-name">None</div>
+                    <div class="corr-range">r ≈ 0</div>
+                </div>
+                <div class="corr-item negative">
+                    <div class="corr-icon">📉</div>
+                    <div class="corr-name">Negative</div>
+                    <div class="corr-range">-1 ≤ r < 0</div>
+                </div>
+            </div>
+
+            <h4>Correlation Methods</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Method</th>
+                    <th>Use Case</th>
+                </tr>
+                <tr>
+                    <td>Pearson</td>
+                    <td>Linear relationships, continuous data</td>
+                </tr>
+                <tr>
+                    <td>Spearman</td>
+                    <td>Monotonic relationships, ordinal data</td>
+                </tr>
+                <tr>
+                    <td>Kendall</td>
+                    <td>Small samples, robust to outliers</td>
+                </tr>
+            </table>
+
+            <h4>Strength Guide</h4>
+            <table class="info-table">
+                <tr>
+                    <th>|r| Value</th>
+                    <th>Interpretation</th>
+                </tr>
+                <tr>
+                    <td>0.0 - 0.1</td>
+                    <td>Negligible</td>
+                </tr>
+                <tr>
+                    <td>0.1 - 0.3</td>
+                    <td>Weak</td>
+                </tr>
+                <tr>
+                    <td>0.3 - 0.5</td>
+                    <td>Moderate</td>
+                </tr>
+                <tr>
+                    <td>0.5 - 0.7</td>
+                    <td>Strong</td>
+                </tr>
+                <tr>
+                    <td>0.7 - 1.0</td>
+                    <td>Very Strong</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
