@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#046 Multiple Regression - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#046 Multiple Regression</h1>
+            <p class="description">Multivariate linear regression with VIF analysis using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Calculation Mode:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="fit">Fit Regression</option>
+                    <option value="predict">Fit & Predict</option>
+                    <option value="stepwise">Stepwise Selection</option>
+                    <option value="generate">Generate & Fit</option>
+                </select>
+            </div>
+
+            <div id="dataInputs">
+                <div class="control-group">
+                    <label for="dataX">X Matrix (rows separated by ; or newlines):</label>
+                    <textarea id="dataX" rows="4" placeholder="1, 2; 2, 3; 3, 5; 4, 4; 5, 6"></textarea>
+                    <small>Format: x1, x2, ... for each observation on separate rows</small>
+                </div>
+
+                <div class="control-group">
+                    <label for="dataY">Y values:</label>
+                    <textarea id="dataY" rows="2" placeholder="3, 5, 8, 9, 11"></textarea>
+                </div>
+
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('simple')">Simple 2-var</button>
+                    <button class="btn-secondary" onclick="loadSample('housing')">Housing (3-var)</button>
+                </div>
+            </div>
+
+            <div id="predictInputs" style="display: none;">
+                <div class="control-group">
+                    <label for="newX">New X values to predict (rows separated by ;):</label>
+                    <input type="text" id="newX" placeholder="11, 12; 12, 13">
+                </div>
+            </div>
+
+            <div id="stepwiseOptions" style="display: none;">
+                <div class="control-group">
+                    <label for="stepwiseMethod">Selection Method:</label>
+                    <select id="stepwiseMethod">
+                        <option value="forward">Forward Selection</option>
+                        <option value="backward">Backward Elimination</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="generateOptions" style="display: none;">
+                <div class="control-group">
+                    <label for="generateCount">Observations:</label>
+                    <input type="number" id="generateCount" value="1000" min="50" max="100000">
+                </div>
+
+                <div class="control-group">
+                    <label for="numVars">Number of Variables:</label>
+                    <input type="number" id="numVars" value="3" min="1" max="10">
+                </div>
+
+                <div class="control-group">
+                    <label for="trueCoefficients">True Coefficients (intercept, β₁, β₂, ...):</label>
+                    <input type="text" id="trueCoefficients" value="5, 2, -1, 0.5" placeholder="5, 2, -1, 0.5">
+                </div>
+
+                <div class="control-group">
+                    <label for="noiseLevel">Noise Level (±):</label>
+                    <input type="number" id="noiseLevel" value="5" min="0" step="1">
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Fit Regression</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Multiple Regression</h3>
+            <p><strong>Multiple Linear Regression</strong> models the relationship between a dependent variable and multiple independent variables.</p>
+
+            <h4>The Model</h4>
+            <div class="formula-display">
+                <code>y = β₀ + β₁x₁ + β₂x₂ + ... + βₚxₚ + ε</code>
+            </div>
+
+            <h4>Key Diagnostics</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Metric</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>VIF</td>
+                    <td>Variance Inflation Factor (multicollinearity)</td>
+                </tr>
+                <tr>
+                    <td>F-statistic</td>
+                    <td>Overall model significance</td>
+                </tr>
+                <tr>
+                    <td>t-statistics</td>
+                    <td>Individual coefficient significance</td>
+                </tr>
+            </table>
+
+            <h4>VIF Interpretation</h4>
+            <table class="info-table">
+                <tr>
+                    <th>VIF Value</th>
+                    <th>Interpretation</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>No multicollinearity</td>
+                </tr>
+                <tr>
+                    <td>1-5</td>
+                    <td>Moderate, acceptable</td>
+                </tr>
+                <tr>
+                    <td>5-10</td>
+                    <td>High, concerning</td>
+                </tr>
+                <tr>
+                    <td>&gt;10</td>
+                    <td>Severe, problematic</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
