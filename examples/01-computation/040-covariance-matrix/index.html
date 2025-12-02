@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#040 Covariance Matrix - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#040 Covariance Matrix</h1>
+            <p class="description">Calculate multivariate covariance and correlation matrices with Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Calculation Type:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="pairwise">Pairwise Covariance</option>
+                    <option value="matrix">Full Covariance Matrix</option>
+                    <option value="generate">Generate Correlated Data</option>
+                </select>
+            </div>
+
+            <div id="pairwiseInputs">
+                <div class="control-group">
+                    <label for="dataX">Variable X (comma or space separated):</label>
+                    <textarea id="dataX" rows="2" placeholder="1, 2, 3, 4, 5, 6, 7, 8, 9, 10"></textarea>
+                </div>
+
+                <div class="control-group">
+                    <label for="dataY">Variable Y (comma or space separated):</label>
+                    <textarea id="dataY" rows="2" placeholder="2, 4, 5, 4, 5, 7, 8, 9, 10, 11"></textarea>
+                </div>
+
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('positive')">Positive Cov</button>
+                    <button class="btn-secondary" onclick="loadSample('negative')">Negative Cov</button>
+                    <button class="btn-secondary" onclick="loadSample('none')">No Relationship</button>
+                </div>
+            </div>
+
+            <div id="matrixInputs" style="display: none;">
+                <div id="variablesContainer">
+                    <div class="control-group">
+                        <label>Variable 1:</label>
+                        <textarea class="variable-input" rows="2" placeholder="1, 2, 3, 4, 5"></textarea>
+                    </div>
+                    <div class="control-group">
+                        <label>Variable 2:</label>
+                        <textarea class="variable-input" rows="2" placeholder="2, 4, 5, 4, 5"></textarea>
+                    </div>
+                </div>
+                <button class="btn-secondary" onclick="addVariable()">+ Add Variable</button>
+            </div>
+
+            <div id="generateOptions" style="display: none;">
+                <div class="control-group">
+                    <label for="generateCount">Data Points:</label>
+                    <input type="number" id="generateCount" value="10000" min="100" max="1000000">
+                </div>
+
+                <div class="param-row">
+                    <label>
+                        Number of Variables:
+                        <input type="number" id="numVars" value="3" min="2" max="10">
+                    </label>
+                    <label>
+                        Target Correlation:
+                        <input type="number" id="targetCorrelation" value="0.7" min="-1" max="1" step="0.1">
+                    </label>
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Covariance</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Covariance</h3>
+            <p><strong>Covariance</strong> measures how two variables change together. Positive covariance means they increase together; negative means one increases as the other decreases.</p>
+
+            <h4>Relationship Types</h4>
+            <div class="rel-visual">
+                <div class="rel-item positive">
+                    <div class="rel-icon">📈</div>
+                    <div class="rel-name">Positive</div>
+                    <div class="rel-desc">Variables increase together</div>
+                </div>
+                <div class="rel-item neutral">
+                    <div class="rel-icon">➖</div>
+                    <div class="rel-name">None</div>
+                    <div class="rel-desc">No linear relationship</div>
+                </div>
+                <div class="rel-item negative">
+                    <div class="rel-icon">📉</div>
+                    <div class="rel-name">Negative</div>
+                    <div class="rel-desc">One up, other down</div>
+                </div>
+            </div>
+
+            <h4>Formulas</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Measure</th>
+                    <th>Formula</th>
+                </tr>
+                <tr>
+                    <td>Population Cov</td>
+                    <td>Σ(xᵢ - x̄)(yᵢ - ȳ) / n</td>
+                </tr>
+                <tr>
+                    <td>Sample Cov</td>
+                    <td>Σ(xᵢ - x̄)(yᵢ - ȳ) / (n-1)</td>
+                </tr>
+                <tr>
+                    <td>Correlation</td>
+                    <td>Cov(X,Y) / (σₓ × σᵧ)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
