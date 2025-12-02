@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continued Fraction Evaluation - Web Worker Example #025</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Continued Fraction Evaluation</h1>
+            <p class="subtitle">Web Worker Example #025 - CF to Decimal Conversion</p>
+        </header>
+        <main>
+            <section class="description">
+                <h2>About CF Evaluation</h2>
+                <p>Convert continued fractions back to decimal values with high precision using convergent calculation.</p>
+            </section>
+
+            <section class="controls">
+                <h2>Input</h2>
+                <div class="input-group">
+                    <label for="evalType">Evaluation Type:</label>
+                    <select id="evalType">
+                        <option value="standard">Standard CF [a0; a1, a2, ...]</option>
+                        <option value="periodic">Periodic CF [a0; period...]</option>
+                        <option value="famous">Famous CF Formulas</option>
+                    </select>
+                </div>
+                <div class="input-group" id="standardGroup">
+                    <label for="cfInput">CF Coefficients (comma-separated):</label>
+                    <input type="text" id="cfInput" value="1, 2, 2, 2, 2, 2, 2, 2, 2, 2" placeholder="e.g., 1, 2, 2, 2, ...">
+                </div>
+                <div class="input-group hidden" id="periodicGroup">
+                    <label for="a0Input">First term (a₀):</label>
+                    <input type="number" id="a0Input" value="1">
+                    <label for="periodInput">Period (comma-separated):</label>
+                    <input type="text" id="periodInput" value="2" placeholder="e.g., 2 for √2">
+                    <label for="repsInput">Repetitions:</label>
+                    <input type="number" id="repsInput" value="50" min="1" max="1000">
+                </div>
+                <div class="input-group hidden" id="famousGroup">
+                    <label for="formulaSelect">Formula:</label>
+                    <select id="formulaSelect">
+                        <option value="sqrt2">√2 = [1; 2, 2, 2, ...]</option>
+                        <option value="phi">φ = [1; 1, 1, 1, ...]</option>
+                        <option value="e">e (generalized CF)</option>
+                        <option value="pi4">π/4 (arctan CF)</option>
+                        <option value="sqrtN">√N (custom)</option>
+                    </select>
+                </div>
+                <div class="input-group hidden" id="sqrtNGroup">
+                    <label for="sqrtNInput">N value for √N:</label>
+                    <input type="number" id="sqrtNInput" value="7" min="2">
+                </div>
+                <div class="input-group">
+                    <label for="termsInput">Terms:</label>
+                    <input type="number" id="termsInput" value="50" min="5" max="1000">
+                </div>
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Evaluate</button>
+                    <button id="cancelBtn" class="btn btn-secondary hidden">Cancel</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <h2>Progress</h2>
+                <div class="progress-bar-container"><div id="progressBar" class="progress-bar"></div></div>
+                <p id="progressText" class="progress-text">Starting...</p>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div id="resultContent" class="result-content"></div>
+                <p class="execution-time">Execution time: <span id="executionTime">-</span></p>
+            </section>
+
+            <section id="errorContainer" class="error-section hidden">
+                <h2>Error</h2>
+                <p id="errorMessage" class="error-message"></p>
+            </section>
+        </main>
+        <footer><p><a href="../index.html">Back to Examples</a> | Web Workers Example #025</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
