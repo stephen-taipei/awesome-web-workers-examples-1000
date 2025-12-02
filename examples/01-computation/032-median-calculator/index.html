@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Median Calculator - Web Worker Example #032</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Median Calculator</h1>
+            <p class="subtitle">Web Worker Example #032 - QuickSelect Algorithm</p>
+        </header>
+        <main>
+            <section class="description">
+                <h2>About Median</h2>
+                <p>The median is the middle value when data is sorted. It's robust to outliers.</p>
+                <p>Uses QuickSelect algorithm for O(n) average time complexity.</p>
+            </section>
+
+            <section class="controls">
+                <h2>Calculation</h2>
+                <div class="input-group">
+                    <label for="calcType">Calculation Type:</label>
+                    <select id="calcType">
+                        <option value="median">Median & Quartiles</option>
+                        <option value="medianAbsoluteDeviation">Median Absolute Deviation</option>
+                        <option value="runningMedian">Running Median</option>
+                        <option value="weightedMedian">Weighted Median</option>
+                        <option value="generate">Generate Random Data</option>
+                    </select>
+                </div>
+                <div class="input-group" id="dataInputGroup">
+                    <label for="dataInput">Data (comma or newline separated):</label>
+                    <textarea id="dataInput" rows="4" placeholder="1, 2, 3, 4, 5...">12, 45, 23, 67, 34, 89, 56, 78, 90, 11, 33, 55, 77, 99, 22</textarea>
+                </div>
+                <div class="input-group hidden" id="weightsGroup">
+                    <label for="weightsInput">Weights:</label>
+                    <textarea id="weightsInput" rows="2" placeholder="1, 2, 3...">1, 1, 2, 2, 3, 3, 2, 2, 1, 1, 1, 2, 2, 1, 1</textarea>
+                </div>
+                <div class="input-group hidden" id="windowGroup">
+                    <label for="windowSizeInput">Window Size:</label>
+                    <input type="number" id="windowSizeInput" value="5" min="2" max="100">
+                </div>
+                <div class="input-group hidden" id="generateGroup">
+                    <label for="countInput">Data Points:</label>
+                    <input type="number" id="countInput" value="100000" min="100" max="10000000">
+                    <label for="distributionSelect">Distribution:</label>
+                    <select id="distributionSelect">
+                        <option value="uniform">Uniform</option>
+                        <option value="normal">Normal (Gaussian)</option>
+                        <option value="exponential">Exponential</option>
+                        <option value="bimodal">Bimodal</option>
+                    </select>
+                    <div id="paramsGroup">
+                        <div class="param-row" id="uniformParams">
+                            <label>Min: <input type="number" id="paramMinInput" value="0"></label>
+                            <label>Max: <input type="number" id="paramMaxInput" value="100"></label>
+                        </div>
+                        <div class="param-row hidden" id="normalParams">
+                            <label>Mean: <input type="number" id="paramMeanInput" value="50"></label>
+                            <label>Std Dev: <input type="number" id="paramStdDevInput" value="10"></label>
+                        </div>
+                        <div class="param-row hidden" id="expParams">
+                            <label>Lambda: <input type="number" id="paramLambdaInput" value="1" step="0.1"></label>
+                        </div>
+                        <div class="param-row hidden" id="bimodalParams">
+                            <label>Mean 1: <input type="number" id="paramMean1Input" value="30"></label>
+                            <label>Mean 2: <input type="number" id="paramMean2Input" value="70"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Calculate</button>
+                    <button id="cancelBtn" class="btn btn-secondary hidden">Cancel</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <h2>Progress</h2>
+                <div class="progress-bar-container"><div id="progressBar" class="progress-bar"></div></div>
+                <p id="progressText" class="progress-text">Starting...</p>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div id="resultContent" class="result-content"></div>
+                <p class="execution-time">Execution time: <span id="executionTime">-</span></p>
+            </section>
+
+            <section id="errorContainer" class="error-section hidden">
+                <h2>Error</h2>
+                <p id="errorMessage" class="error-message"></p>
+            </section>
+        </main>
+        <footer><p><a href="../index.html">Back to Examples</a> | Web Workers Example #032</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
