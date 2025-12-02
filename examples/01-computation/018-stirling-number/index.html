@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stirling Number Calculator - Web Worker Example #018</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Stirling Number Calculator</h1>
+            <p class="subtitle">Web Worker Example #018 - First & Second Kind</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Stirling Numbers</h2>
+                <div class="stirling-types">
+                    <div class="stirling-type">
+                        <h3>First Kind |s(n,k)|</h3>
+                        <p>Counts permutations of n elements with exactly k cycles (unsigned).</p>
+                        <p class="formula-text">Recurrence: s(n,k) = s(n-1,k-1) + (n-1)&middot;s(n-1,k)</p>
+                    </div>
+                    <div class="stirling-type">
+                        <h3>Second Kind S(n,k)</h3>
+                        <p>Counts partitions of n elements into exactly k non-empty subsets.</p>
+                        <p class="formula-text">Recurrence: S(n,k) = S(n-1,k-1) + k&middot;S(n-1,k)</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="kindSelect">Stirling Number Kind:</label>
+                    <select id="kindSelect">
+                        <option value="first">First Kind |s(n,k)| - Permutation Cycles</option>
+                        <option value="second">Second Kind S(n,k) - Set Partitions</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="calculationType">Calculation Type:</label>
+                    <select id="calculationType">
+                        <option value="single">Single Value</option>
+                        <option value="row">Entire Row (all k for given n)</option>
+                        <option value="triangle">Stirling Triangle</option>
+                    </select>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="nInput">Value of n:</label>
+                        <input type="number" id="nInput" min="0" value="10" placeholder="e.g., 10">
+                    </div>
+
+                    <div class="input-group" id="kInputGroup">
+                        <label for="kInput">Value of k:</label>
+                        <input type="number" id="kInput" min="0" value="3" placeholder="e.g., 3">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Calculate</button>
+                    <button id="cancelBtn" class="btn btn-secondary hidden">Cancel</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <h2>Progress</h2>
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Starting calculation...</p>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div id="resultContent" class="result-content"></div>
+                <p class="execution-time">Execution time: <span id="executionTime">-</span></p>
+            </section>
+
+            <section id="errorContainer" class="error-section hidden">
+                <h2>Error</h2>
+                <p id="errorMessage" class="error-message"></p>
+            </section>
+
+            <section class="info">
+                <h2>Example Values</h2>
+                <div class="example-tables">
+                    <div class="example-table">
+                        <h4>First Kind |s(n,k)|</h4>
+                        <table>
+                            <tr><td></td><td>k=0</td><td>k=1</td><td>k=2</td><td>k=3</td><td>k=4</td></tr>
+                            <tr><td>n=0</td><td>1</td><td></td><td></td><td></td><td></td></tr>
+                            <tr><td>n=1</td><td>0</td><td>1</td><td></td><td></td><td></td></tr>
+                            <tr><td>n=2</td><td>0</td><td>1</td><td>1</td><td></td><td></td></tr>
+                            <tr><td>n=3</td><td>0</td><td>2</td><td>3</td><td>1</td><td></td></tr>
+                            <tr><td>n=4</td><td>0</td><td>6</td><td>11</td><td>6</td><td>1</td></tr>
+                        </table>
+                    </div>
+                    <div class="example-table">
+                        <h4>Second Kind S(n,k)</h4>
+                        <table>
+                            <tr><td></td><td>k=0</td><td>k=1</td><td>k=2</td><td>k=3</td><td>k=4</td></tr>
+                            <tr><td>n=0</td><td>1</td><td></td><td></td><td></td><td></td></tr>
+                            <tr><td>n=1</td><td>0</td><td>1</td><td></td><td></td><td></td></tr>
+                            <tr><td>n=2</td><td>0</td><td>1</td><td>1</td><td></td><td></td></tr>
+                            <tr><td>n=3</td><td>0</td><td>1</td><td>3</td><td>1</td><td></td></tr>
+                            <tr><td>n=4</td><td>0</td><td>1</td><td>7</td><td>6</td><td>1</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>
+                <a href="../index.html">Back to Examples</a> |
+                Web Workers Example #018 - Stirling Number Calculator
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,423 @@
+/* Stirling Number Calculator - Style Sheet */
+
+:root {
+    --primary-color: #8b5cf6;
+    --primary-hover: #7c3aed;
+    --secondary-color: #64748b;
+    --success-color: #22c55e;
+    --error-color: #ef4444;
+    --background-color: #f8fafc;
+    --card-background: #ffffff;
+    --text-color: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --border-radius: 8px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--primary-color), #a855f7);
+    border-radius: var(--border-radius);
+    color: white;
+}
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+header .subtitle {
+    opacity: 0.9;
+    font-size: 1rem;
+}
+
+/* Sections */
+section {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+section h2 {
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+    color: var(--text-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 8px;
+}
+
+/* Stirling Types Description */
+.stirling-types {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.stirling-type {
+    background: var(--background-color);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--primary-color);
+}
+
+.stirling-type h3 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    color: var(--primary-color);
+}
+
+.stirling-type p {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.formula-text {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.85rem !important;
+    color: var(--text-muted);
+}
+
+/* Controls */
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+/* Buttons */
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+}
+
+.btn-primary:disabled {
+    background-color: var(--secondary-color);
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #475569;
+}
+
+/* Progress */
+.progress-bar-container {
+    height: 24px;
+    background: var(--background-color);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), #a855f7);
+    border-radius: 12px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.progress-text {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Results */
+.result-content {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.result-kind {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.result-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+.result-table th,
+.result-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.result-table th {
+    background: var(--background-color);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+}
+
+.result-table tr:hover {
+    background: var(--background-color);
+}
+
+.number-value {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.9rem;
+    word-break: break-all;
+}
+
+.result-info {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.execution-time {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.execution-time span {
+    font-weight: 600;
+    color: var(--success-color);
+}
+
+/* Single result */
+.result-single h4 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.big-number {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 1rem;
+    background: var(--background-color);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    word-break: break-all;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Triangle result */
+.triangle-container {
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.triangle-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+.row-label {
+    font-weight: 500;
+    min-width: 50px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.triangle-cell {
+    display: inline-block;
+    padding: 3px 8px;
+    background: var(--background-color);
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.8rem;
+    cursor: help;
+}
+
+.triangle-cell:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Error */
+.error-section {
+    background: #fef2f2;
+    border: 1px solid var(--error-color);
+}
+
+.error-section h2 {
+    color: var(--error-color);
+    border-bottom-color: var(--error-color);
+}
+
+.error-message {
+    color: var(--error-color);
+}
+
+/* Example tables */
+.example-tables {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.example-table {
+    overflow-x: auto;
+}
+
+.example-table h4 {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+.example-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.example-table td {
+    padding: 6px 10px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.example-table tr:first-child td {
+    background: var(--background-color);
+    font-weight: 600;
+}
+
+.example-table tr td:first-child {
+    background: var(--background-color);
+    font-weight: 600;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Utility */
+.hidden {
+    display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .stirling-types,
+    .input-row,
+    .example-tables {
+        grid-template-columns: 1fr;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
