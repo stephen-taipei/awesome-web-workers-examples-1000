@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#047 Moving Average - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#047 Moving Average</h1>
+            <p class="description">SMA, EMA, and WMA calculations using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Calculation Type:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="compare">Compare All (SMA/EMA/WMA)</option>
+                    <option value="sma">Simple Moving Average (SMA)</option>
+                    <option value="ema">Exponential Moving Average (EMA)</option>
+                    <option value="wma">Weighted Moving Average (WMA)</option>
+                    <option value="generate">Generate & Analyze</option>
+                </select>
+            </div>
+
+            <div id="dataInputs">
+                <div class="control-group">
+                    <label for="dataValues">Data Values:</label>
+                    <textarea id="dataValues" rows="3" placeholder="100, 102, 101, 103, 105, 104, 106, 108..."></textarea>
+                    <small>Enter numeric values separated by commas, spaces, or semicolons</small>
+                </div>
+
+                <div class="control-group">
+                    <label for="period">Period (Window Size):</label>
+                    <input type="number" id="period" value="5" min="2" max="100">
+                </div>
+
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('stock')">Stock Data</button>
+                    <button class="btn-secondary" onclick="loadSample('volatile')">Volatile Data</button>
+                    <button class="btn-secondary" onclick="loadSample('trend')">Trending Data</button>
+                </div>
+            </div>
+
+            <div id="generateOptions" style="display: none;">
+                <div class="control-group">
+                    <label for="generateCount">Data Points:</label>
+                    <input type="number" id="generateCount" value="500" min="50" max="10000">
+                </div>
+
+                <div class="control-group">
+                    <label for="generatePeriod">Period:</label>
+                    <input type="number" id="generatePeriod" value="10" min="2" max="50">
+                </div>
+
+                <div class="control-group">
+                    <label for="trend">Trend (per step):</label>
+                    <input type="number" id="trend" value="0.1" step="0.1">
+                </div>
+
+                <div class="control-group">
+                    <label for="volatility">Volatility:</label>
+                    <input type="number" id="volatility" value="5" min="0" step="1">
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Moving Average</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Moving Averages</h3>
+            <p><strong>Moving averages</strong> smooth time series data by creating a constantly updated average of past values.</p>
+
+            <h4>Types of Moving Averages</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Type</th>
+                    <th>Formula</th>
+                    <th>Characteristics</th>
+                </tr>
+                <tr>
+                    <td>SMA</td>
+                    <td>Equal weights</td>
+                    <td>Simple, lags most, smoothest</td>
+                </tr>
+                <tr>
+                    <td>EMA</td>
+                    <td>Exponential decay</td>
+                    <td>Fast response, good for trends</td>
+                </tr>
+                <tr>
+                    <td>WMA</td>
+                    <td>Linear weights</td>
+                    <td>Balance of SMA and EMA</td>
+                </tr>
+            </table>
+
+            <h4>Common Applications</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Field</th>
+                    <th>Use Case</th>
+                </tr>
+                <tr>
+                    <td>Finance</td>
+                    <td>Stock price trend analysis, trading signals</td>
+                </tr>
+                <tr>
+                    <td>Signal Processing</td>
+                    <td>Noise reduction, smoothing</td>
+                </tr>
+                <tr>
+                    <td>Economics</td>
+                    <td>GDP, inflation smoothing</td>
+                </tr>
+                <tr>
+                    <td>Sensors</td>
+                    <td>Temperature, accelerometer filtering</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
