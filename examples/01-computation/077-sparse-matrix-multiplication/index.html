@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#077 Sparse Matrix Multiplication - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#077 Sparse Matrix Multiplication</h1>
+            <p class="description">Efficient sparse matrix operations using CSR/CSC compressed formats</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="operation">Operation:</label>
+                <select id="operation">
+                    <option value="multiply">Sparse × Dense Vector (Ax)</option>
+                    <option value="matmul">Sparse × Sparse (A×B)</option>
+                    <option value="transpose">Transpose (A^T)</option>
+                    <option value="add">Sparse + Sparse (A+B)</option>
+                    <option value="benchmark">Benchmark All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="random">Random Sparse Matrix</option>
+                    <option value="manual">Manual Input</option>
+                </select>
+            </div>
+
+            <div id="randomInput">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="rows">Rows:</label>
+                        <input type="number" id="rows" value="1000" min="2" max="50000">
+                    </div>
+                    <div class="control-group third">
+                        <label for="cols">Columns:</label>
+                        <input type="number" id="cols" value="1000" min="2" max="50000">
+                    </div>
+                    <div class="control-group third">
+                        <label for="density">Density (%):</label>
+                        <input type="number" id="density" value="1" min="0.01" max="50" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <div id="manualInput" style="display: none;">
+                <div class="control-group">
+                    <label for="matrixInput">Sparse Matrix A (row, col, value per line):</label>
+                    <textarea id="matrixInput" rows="5" placeholder="0, 0, 1.0&#10;0, 2, 2.0&#10;1, 1, 3.0&#10;2, 0, 4.0&#10;2, 2, 5.0"></textarea>
+                </div>
+                <div class="control-group">
+                    <label for="rowsManual">Matrix Dimensions (rows):</label>
+                    <input type="number" id="rowsManual" value="3" min="1">
+                </div>
+                <div class="control-group">
+                    <label for="colsManual">Matrix Dimensions (cols):</label>
+                    <input type="number" id="colsManual" value="3" min="1">
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('identity')">Identity 5×5</button>
+                <button class="btn-secondary" onclick="loadSample('diagonal')">Diagonal 5×5</button>
+                <button class="btn-secondary" onclick="loadSample('tridiagonal')">Tridiagonal 5×5</button>
+                <button class="btn-secondary" onclick="loadSample('random')">Random Sparse</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Sparse Matrices</h3>
+            <p>Sparse matrices have mostly zero elements. Using compressed formats saves memory and speeds up operations.</p>
+
+            <h4>Storage Formats</h4>
+            <table class="info-table">
+                <tr><th>Format</th><th>Description</th><th>Best For</th></tr>
+                <tr><td>CSR</td><td>Compressed Sparse Row</td><td>Row slicing, Ax</td></tr>
+                <tr><td>CSC</td><td>Compressed Sparse Column</td><td>Column slicing, A^Tx</td></tr>
+                <tr><td>COO</td><td>Coordinate List</td><td>Construction, conversion</td></tr>
+            </table>
+
+            <h4>Memory Comparison</h4>
+            <p>Dense: n² elements. Sparse (CSR): 2×nnz + n+1 elements, where nnz = non-zero count.</p>
+            <p>For 1% density: CSR uses ~2% of dense storage!</p>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Scientific computing (FEM, FDM)</li>
+                <li>Graph algorithms (adjacency matrices)</li>
+                <li>Machine learning (feature matrices)</li>
+                <li>Network analysis</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
