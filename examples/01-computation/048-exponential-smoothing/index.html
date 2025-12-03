@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#048 Exponential Smoothing - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#048 Exponential Smoothing</h1>
+            <p class="description">Single, Double, and Triple (Holt-Winters) smoothing using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Smoothing Method:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="single">Single (Level Only)</option>
+                    <option value="double">Double (Level + Trend)</option>
+                    <option value="triple">Triple / Holt-Winters (Level + Trend + Seasonal)</option>
+                    <option value="optimize">Optimize Parameters</option>
+                    <option value="forecast">Auto Forecast</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="dataValues">Time Series Data:</label>
+                <textarea id="dataValues" rows="3" placeholder="100, 105, 112, 118, 125, 133, 140..."></textarea>
+                <small>Enter numeric values in chronological order</small>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('trend')">Trending</button>
+                <button class="btn-secondary" onclick="loadSample('seasonal')">Seasonal</button>
+                <button class="btn-secondary" onclick="loadSample('random')">Stationary</button>
+            </div>
+
+            <div id="alphaGroup" class="control-group">
+                <label for="alpha">α (Level Smoothing): <span id="alphaValue">0.3</span></label>
+                <input type="range" id="alpha" min="0.01" max="0.99" step="0.01" value="0.3" oninput="document.getElementById('alphaValue').textContent = this.value">
+                <small>Higher = more weight on recent values</small>
+            </div>
+
+            <div id="betaGroup" class="control-group" style="display: none;">
+                <label for="beta">β (Trend Smoothing): <span id="betaValue">0.1</span></label>
+                <input type="range" id="beta" min="0.01" max="0.99" step="0.01" value="0.1" oninput="document.getElementById('betaValue').textContent = this.value">
+            </div>
+
+            <div id="gammaGroup" class="control-group" style="display: none;">
+                <label for="gamma">γ (Seasonal Smoothing): <span id="gammaValue">0.1</span></label>
+                <input type="range" id="gamma" min="0.01" max="0.99" step="0.01" value="0.1" oninput="document.getElementById('gammaValue').textContent = this.value">
+            </div>
+
+            <div id="seasonGroup" class="control-group" style="display: none;">
+                <label for="seasonLength">Season Length:</label>
+                <input type="number" id="seasonLength" value="4" min="2" max="52">
+                <small>Number of periods per seasonal cycle (e.g., 4 for quarterly, 12 for monthly)</small>
+            </div>
+
+            <div id="optimizeGroup" class="control-group" style="display: none;">
+                <label for="optimizeMethod">Method to Optimize:</label>
+                <select id="optimizeMethod">
+                    <option value="single">Single</option>
+                    <option value="double">Double</option>
+                    <option value="triple">Triple</option>
+                </select>
+            </div>
+
+            <div id="forecastGroup" class="control-group" style="display: none;">
+                <label for="forecastPeriods">Forecast Periods:</label>
+                <input type="number" id="forecastPeriods" value="5" min="1" max="50">
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Apply Smoothing</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Exponential Smoothing</h3>
+            <p><strong>Exponential smoothing</strong> methods weight past observations with exponentially decreasing weights to forecast future values.</p>
+
+            <h4>Methods</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Method</th>
+                    <th>Components</th>
+                    <th>Best For</th>
+                </tr>
+                <tr>
+                    <td>Single (SES)</td>
+                    <td>Level only</td>
+                    <td>No trend or seasonality</td>
+                </tr>
+                <tr>
+                    <td>Double (Holt)</td>
+                    <td>Level + Trend</td>
+                    <td>Trending data</td>
+                </tr>
+                <tr>
+                    <td>Triple (Holt-Winters)</td>
+                    <td>Level + Trend + Season</td>
+                    <td>Trending + seasonal data</td>
+                </tr>
+            </table>
+
+            <h4>Parameters</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Parameter</th>
+                    <th>Range</th>
+                    <th>Effect</th>
+                </tr>
+                <tr>
+                    <td>α (alpha)</td>
+                    <td>0-1</td>
+                    <td>Level smoothing weight</td>
+                </tr>
+                <tr>
+                    <td>β (beta)</td>
+                    <td>0-1</td>
+                    <td>Trend smoothing weight</td>
+                </tr>
+                <tr>
+                    <td>γ (gamma)</td>
+                    <td>0-1</td>
+                    <td>Seasonal smoothing weight</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
