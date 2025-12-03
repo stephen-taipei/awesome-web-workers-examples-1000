@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#084 Matrix Logarithm - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#084 Matrix Logarithm</h1>
+            <p class="description">Compute log(A) using inverse scaling and squaring with Padé approximation</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="pade">Padé Approximation (recommended)</option>
+                    <option value="series">Gregory Series</option>
+                    <option value="eigenDecomp">Eigenvalue Decomposition</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="random">Random Positive Definite</option>
+                    <option value="manual">Manual Input</option>
+                </select>
+            </div>
+
+            <div id="randomInput">
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="size">Matrix Size (n×n):</label>
+                        <input type="number" id="size" value="50" min="2" max="150">
+                    </div>
+                    <div class="control-group half">
+                        <label for="matrixType">Matrix Type:</label>
+                        <select id="matrixType">
+                            <option value="spd">Symmetric Positive Definite</option>
+                            <option value="nearIdentity">Near Identity</option>
+                            <option value="diagonal">Diagonal (positive)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="manualInput" style="display: none;">
+                <div class="control-group">
+                    <label for="matrixInput">Square Matrix A (must have no negative real eigenvalues):</label>
+                    <textarea id="matrixInput" rows="4" placeholder="2, 0&#10;0, 3"></textarea>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('identity')">Identity 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('diagonal')">Diagonal 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('expResult')">e^[[1,0],[0,2]]</button>
+                <button class="btn-secondary" onclick="loadSample('random')">Random SPD</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute log(A)</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Matrix Logarithm</h3>
+            <p>The matrix logarithm log(A) is defined such that e^(log(A)) = A. It exists when A has no negative real eigenvalues.</p>
+
+            <h4>Algorithms</h4>
+            <table class="info-table">
+                <tr><th>Algorithm</th><th>Approach</th><th>Best For</th></tr>
+                <tr><td>Padé</td><td>Inverse scaling + rational approx</td><td>General case</td></tr>
+                <tr><td>Gregory</td><td>log(I+X) = X - X²/2 + X³/3 - ...</td><td>||A-I|| < 1</td></tr>
+                <tr><td>Eigendecomp</td><td>log(A) = V log(Λ) V⁻¹</td><td>Diagonalizable</td></tr>
+            </table>
+
+            <h4>Properties</h4>
+            <ul>
+                <li><strong>e^(log(A)) = A</strong>: Inverse of matrix exponential</li>
+                <li><strong>log(I) = 0</strong>: Zero matrix</li>
+                <li><strong>tr(log(A)) = log(det(A))</strong>: Trace formula</li>
+                <li><strong>log(AB) ≠ log(A) + log(B)</strong>: In general</li>
+            </ul>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Interpolation between rotation matrices</li>
+                <li>Computing matrix roots: A^(1/n) = e^(log(A)/n)</li>
+                <li>Lie algebra computations</li>
+                <li>Geometric mean of matrices</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
