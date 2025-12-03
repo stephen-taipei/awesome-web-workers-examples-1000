@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#060 PDE Solver - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#060 PDE Solver</h1>
+            <p class="description">Heat, Wave, Laplace, and Poisson Equations using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="pdeType">PDE Type:</label>
+                <select id="pdeType" onchange="updateOptions()">
+                    <option value="heat1d">1D Heat Equation</option>
+                    <option value="heat2d">2D Heat Equation</option>
+                    <option value="wave1d">1D Wave Equation</option>
+                    <option value="laplace">Laplace Equation</option>
+                    <option value="poisson">Poisson Equation</option>
+                    <option value="advection">1D Advection Equation</option>
+                </select>
+            </div>
+
+            <!-- 1D Heat Equation Options -->
+            <div id="heat1dGroup" class="options-group">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="heat1d_nx">Grid Points:</label>
+                        <input type="number" id="heat1d_nx" value="50" min="10">
+                    </div>
+                    <div class="control-group third">
+                        <label for="heat1d_nt">Time Steps:</label>
+                        <input type="number" id="heat1d_nt" value="1000" min="100">
+                    </div>
+                    <div class="control-group third">
+                        <label for="heat1d_alpha">Diffusivity (α):</label>
+                        <input type="number" id="heat1d_alpha" value="0.01" step="0.001">
+                    </div>
+                </div>
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="heat1d_dx">Space Step (dx):</label>
+                        <input type="number" id="heat1d_dx" value="0.02" step="0.01">
+                    </div>
+                    <div class="control-group half">
+                        <label for="heat1d_dt">Time Step (dt):</label>
+                        <input type="number" id="heat1d_dt" value="0.01" step="0.001">
+                    </div>
+                </div>
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="heat1d_initial">Initial Condition:</label>
+                        <select id="heat1d_initial">
+                            <option value="sine">Sine Wave</option>
+                            <option value="gaussian">Gaussian</option>
+                            <option value="step">Step Function</option>
+                        </select>
+                    </div>
+                    <div class="control-group half">
+                        <label for="heat1d_boundary">Boundary Condition:</label>
+                        <select id="heat1d_boundary">
+                            <option value="dirichlet">Dirichlet (Fixed)</option>
+                            <option value="neumann">Neumann (Insulated)</option>
+                            <option value="periodic">Periodic</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2D Heat Equation Options -->
+            <div id="heat2dGroup" class="options-group" style="display:none;">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="heat2d_nx">Grid X:</label>
+                        <input type="number" id="heat2d_nx" value="30" min="10">
+                    </div>
+                    <div class="control-group third">
+                        <label for="heat2d_ny">Grid Y:</label>
+                        <input type="number" id="heat2d_ny" value="30" min="10">
+                    </div>
+                    <div class="control-group third">
+                        <label for="heat2d_iterations">Iterations:</label>
+                        <input type="number" id="heat2d_iterations" value="500" min="100">
+                    </div>
+                </div>
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="heat2d_alpha">Diffusivity (α):</label>
+                        <input type="number" id="heat2d_alpha" value="0.1" step="0.01">
+                    </div>
+                    <div class="control-group half">
+                        <label for="heat2d_initial">Initial Condition:</label>
+                        <select id="heat2d_initial">
+                            <option value="gaussian">Gaussian</option>
+                            <option value="sine">Sine</option>
+                            <option value="hotspot">Hot Spot</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1D Wave Equation Options -->
+            <div id="wave1dGroup" class="options-group" style="display:none;">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="wave1d_nx">Grid Points:</label>
+                        <input type="number" id="wave1d_nx" value="100" min="20">
+                    </div>
+                    <div class="control-group third">
+                        <label for="wave1d_nt">Time Steps:</label>
+                        <input type="number" id="wave1d_nt" value="500" min="100">
+                    </div>
+                    <div class="control-group third">
+                        <label for="wave1d_c">Wave Speed (c):</label>
+                        <input type="number" id="wave1d_c" value="1.0" step="0.1">
+                    </div>
+                </div>
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="wave1d_dx">Space Step (dx):</label>
+                        <input type="number" id="wave1d_dx" value="0.01" step="0.001">
+                    </div>
+                    <div class="control-group half">
+                        <label for="wave1d_dt">Time Step (dt):</label>
+                        <input type="number" id="wave1d_dt" value="0.005" step="0.001">
+                    </div>
+                </div>
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="wave1d_initial">Initial Shape:</label>
+                        <select id="wave1d_initial">
+                            <option value="pluck">Pluck (Triangle)</option>
+                            <option value="sine">Sine Wave</option>
+                            <option value="gaussian">Gaussian Pulse</option>
+                        </select>
+                    </div>
+                    <div class="control-group half">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="wave1d_velocity"> Initial Velocity
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Laplace Equation Options -->
+            <div id="laplaceGroup" class="options-group" style="display:none;">
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="laplace_nx">Grid X:</label>
+                        <input type="number" id="laplace_nx" value="30" min="10">
+                    </div>
+                    <div class="control-group half">
+                        <label for="laplace_ny">Grid Y:</label>
+                        <input type="number" id="laplace_ny" value="30" min="10">
+                    </div>
+                </div>
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="laplace_boundary">Boundary:</label>
+                        <select id="laplace_boundary">
+                            <option value="heated_plate">Heated Plate</option>
+                            <option value="sine_boundary">Sine Boundary</option>
+                            <option value="mixed">Mixed</option>
+                        </select>
+                    </div>
+                    <div class="control-group third">
+                        <label for="laplace_tol">Tolerance:</label>
+                        <input type="number" id="laplace_tol" value="0.00001" step="0.00001">
+                    </div>
+                    <div class="control-group third">
+                        <label for="laplace_maxiter">Max Iterations:</label>
+                        <input type="number" id="laplace_maxiter" value="5000" min="100">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Poisson Equation Options -->
+            <div id="poissonGroup" class="options-group" style="display:none;">
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="poisson_nx">Grid X:</label>
+                        <input type="number" id="poisson_nx" value="30" min="10">
+                    </div>
+                    <div class="control-group half">
+                        <label for="poisson_ny">Grid Y:</label>
+                        <input type="number" id="poisson_ny" value="30" min="10">
+                    </div>
+                </div>
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="poisson_source">Source Type:</label>
+                        <select id="poisson_source">
+                            <option value="point">Point Source</option>
+                            <option value="uniform">Uniform</option>
+                            <option value="sine">Sine</option>
+                        </select>
+                    </div>
+                    <div class="control-group third">
+                        <label for="poisson_tol">Tolerance:</label>
+                        <input type="number" id="poisson_tol" value="0.00001" step="0.00001">
+                    </div>
+                    <div class="control-group third">
+                        <label for="poisson_maxiter">Max Iterations:</label>
+                        <input type="number" id="poisson_maxiter" value="5000" min="100">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advection Equation Options -->
+            <div id="advectionGroup" class="options-group" style="display:none;">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="advection_nx">Grid Points:</label>
+                        <input type="number" id="advection_nx" value="100" min="20">
+                    </div>
+                    <div class="control-group third">
+                        <label for="advection_nt">Time Steps:</label>
+                        <input type="number" id="advection_nt" value="200" min="50">
+                    </div>
+                    <div class="control-group third">
+                        <label for="advection_v">Velocity:</label>
+                        <input type="number" id="advection_v" value="1.0" step="0.1">
+                    </div>
+                </div>
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="advection_dx">dx:</label>
+                        <input type="number" id="advection_dx" value="0.01" step="0.001">
+                    </div>
+                    <div class="control-group third">
+                        <label for="advection_dt">dt:</label>
+                        <input type="number" id="advection_dt" value="0.005" step="0.001">
+                    </div>
+                    <div class="control-group third">
+                        <label for="advection_initial">Initial:</label>
+                        <select id="advection_initial">
+                            <option value="gaussian">Gaussian</option>
+                            <option value="square">Square</option>
+                            <option value="sine">Sine</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Solve PDE</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About PDEs</h3>
+            <p><strong>Partial Differential Equations</strong> describe phenomena involving multiple independent variables like space and time.</p>
+
+            <h4>Equation Types</h4>
+            <table class="info-table">
+                <tr><th>Type</th><th>Equation</th><th>Application</th></tr>
+                <tr><td>Heat</td><td>∂u/∂t = α∇²u</td><td>Diffusion, conduction</td></tr>
+                <tr><td>Wave</td><td>∂²u/∂t² = c²∇²u</td><td>Vibrations, acoustics</td></tr>
+                <tr><td>Laplace</td><td>∇²u = 0</td><td>Steady-state, potential</td></tr>
+                <tr><td>Poisson</td><td>∇²u = f</td><td>Electrostatics, gravity</td></tr>
+                <tr><td>Advection</td><td>∂u/∂t + v·∇u = 0</td><td>Transport, flow</td></tr>
+            </table>
+
+            <h4>Stability Conditions</h4>
+            <p><strong>Heat:</strong> r = α×dt/dx² ≤ 0.5</p>
+            <p><strong>Wave:</strong> C = c×dt/dx ≤ 1 (CFL condition)</p>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
