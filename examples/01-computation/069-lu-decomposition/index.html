@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#069 LU Decomposition - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#069 LU Decomposition</h1>
+            <p class="description">Doolittle, Crout, and LUP factorization using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="doolittle">Doolittle (L has 1s on diagonal)</option>
+                    <option value="crout">Crout (U has 1s on diagonal)</option>
+                    <option value="lup">LUP with Partial Pivoting</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="manual">Manual Input</option>
+                    <option value="random">Random Matrix</option>
+                </select>
+            </div>
+
+            <div id="manualInput">
+                <div class="control-group">
+                    <label for="matrixInput">Square Matrix (rows by newlines, values by commas):</label>
+                    <textarea id="matrixInput" rows="5" placeholder="2, 1, 1&#10;4, 3, 3&#10;8, 7, 9"></textarea>
+                </div>
+            </div>
+
+            <div id="randomInput" style="display: none;">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="size">Matrix Size (n×n):</label>
+                        <input type="number" id="size" value="5" min="2" max="500">
+                    </div>
+                    <div class="control-group third">
+                        <label for="minVal">Min Value:</label>
+                        <input type="number" id="minVal" value="-10" step="1">
+                    </div>
+                    <div class="control-group third">
+                        <label for="maxVal">Max Value:</label>
+                        <input type="number" id="maxVal" value="10" step="1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('simple')">Simple 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('identity')">Identity</button>
+                <button class="btn-secondary" onclick="loadSample('diagonal')">Diagonal</button>
+                <button class="btn-secondary" onclick="loadSample('tridiagonal')">Tridiagonal</button>
+                <button class="btn-secondary" onclick="loadSample('hilbert')">Hilbert</button>
+                <button class="btn-secondary" onclick="loadSample('needsPivot')">Needs Pivoting</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute LU Decomposition</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About LU Decomposition</h3>
+            <p>Factorizing <strong>A = LU</strong> (or PA = LU) where L is lower triangular and U is upper triangular.</p>
+
+            <h4>Algorithms</h4>
+            <table class="info-table">
+                <tr><th>Algorithm</th><th>L Diagonal</th><th>U Diagonal</th><th>Pivoting</th></tr>
+                <tr><td>Doolittle</td><td>1s</td><td>Computed</td><td>No</td></tr>
+                <tr><td>Crout</td><td>Computed</td><td>1s</td><td>No</td></tr>
+                <tr><td>LUP</td><td>1s</td><td>Computed</td><td>Partial</td></tr>
+            </table>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Solving linear systems Ax = b</li>
+                <li>Computing determinants: det(A) = det(L) × det(U)</li>
+                <li>Computing matrix inverse</li>
+                <li>Basis for many numerical algorithms</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
