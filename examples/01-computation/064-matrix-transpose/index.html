@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#064 Matrix Transpose - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#064 Matrix Transpose</h1>
+            <p class="description">Standard, In-place, and Block transpose algorithms using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="standard">Standard Transpose</option>
+                    <option value="inplace">In-place (Square only)</option>
+                    <option value="block">Block Transpose</option>
+                    <option value="recursive">Recursive Transpose</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="manual">Manual Input</option>
+                    <option value="random">Random Matrix</option>
+                </select>
+            </div>
+
+            <div id="manualInput">
+                <div class="control-group">
+                    <label for="matrixInput">Matrix (rows by newlines, values by commas):</label>
+                    <textarea id="matrixInput" rows="5" placeholder="1, 2, 3&#10;4, 5, 6&#10;7, 8, 9"></textarea>
+                </div>
+            </div>
+
+            <div id="randomInput" style="display: none;">
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="rows">Rows:</label>
+                        <input type="number" id="rows" value="500" min="1" max="5000">
+                    </div>
+                    <div class="control-group half">
+                        <label for="cols">Columns:</label>
+                        <input type="number" id="cols" value="500" min="1" max="5000">
+                    </div>
+                </div>
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="minVal">Min Value:</label>
+                        <input type="number" id="minVal" value="-100" step="1">
+                    </div>
+                    <div class="control-group half">
+                        <label for="maxVal">Max Value:</label>
+                        <input type="number" id="maxVal" value="100" step="1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('square')">Square 4×4</button>
+                <button class="btn-secondary" onclick="loadSample('rectangular')">Rectangular 3×5</button>
+                <button class="btn-secondary" onclick="loadSample('identity')">Identity</button>
+                <button class="btn-secondary" onclick="loadSample('symmetric')">Symmetric</button>
+                <button class="btn-secondary" onclick="loadSample('skewSymmetric')">Skew-symmetric</button>
+            </div>
+
+            <div id="blockSizeGroup" class="control-group" style="display: none;">
+                <label for="blockSize">Block Size:</label>
+                <input type="number" id="blockSize" value="64" min="2" max="512">
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Transpose Matrix</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Matrix Transpose</h3>
+            <p>Computing <strong>A<sup>T</sup></strong> where A<sup>T</sup>[i][j] = A[j][i]</p>
+
+            <h4>Algorithms</h4>
+            <table class="info-table">
+                <tr><th>Algorithm</th><th>Space</th><th>Best For</th></tr>
+                <tr><td>Standard</td><td>O(mn)</td><td>Any matrix</td></tr>
+                <tr><td>In-place</td><td>O(1)</td><td>Square matrices</td></tr>
+                <tr><td>Block</td><td>O(B²)</td><td>Cache efficiency</td></tr>
+                <tr><td>Recursive</td><td>O(log n)</td><td>Cache-oblivious</td></tr>
+            </table>
+
+            <h4>Properties</h4>
+            <ul>
+                <li>(A<sup>T</sup>)<sup>T</sup> = A</li>
+                <li>(A + B)<sup>T</sup> = A<sup>T</sup> + B<sup>T</sup></li>
+                <li>(AB)<sup>T</sup> = B<sup>T</sup>A<sup>T</sup></li>
+                <li>det(A<sup>T</sup>) = det(A)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
