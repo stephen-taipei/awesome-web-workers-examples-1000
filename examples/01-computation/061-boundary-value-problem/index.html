@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#061 Boundary Value Problem - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#061 Boundary Value Problem</h1>
+            <p class="description">Shooting, Finite Difference, and Relaxation Methods using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="method">Solution Method:</label>
+                <select id="method">
+                    <option value="shooting">Shooting Method</option>
+                    <option value="finiteDifference">Finite Difference</option>
+                    <option value="collocation">Collocation Method</option>
+                    <option value="relaxation">Relaxation (SOR)</option>
+                    <option value="compare">Compare All Methods</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="equation">Equation Type (y'' = f):</label>
+                <select id="equation">
+                    <option value="linear">y'' = -y (Harmonic)</option>
+                    <option value="exponential">y'' = y (Exponential)</option>
+                    <option value="damped">y'' = -0.5y' - y (Damped)</option>
+                    <option value="forced">y'' = -y + sin(x) (Forced)</option>
+                    <option value="nonhomogeneous">y'' = -y + x</option>
+                </select>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('harmonic')">Harmonic</button>
+                <button class="btn-secondary" onclick="loadSample('exponential')">Exponential</button>
+                <button class="btn-secondary" onclick="loadSample('damped')">Damped</button>
+                <button class="btn-secondary" onclick="loadSample('forced')">Forced</button>
+                <button class="btn-secondary" onclick="loadSample('nonhomogeneous')">Non-homogeneous</button>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="a">Left Endpoint (a):</label>
+                    <input type="number" id="a" value="0" step="0.1">
+                </div>
+                <div class="control-group half">
+                    <label for="b">Right Endpoint (b):</label>
+                    <input type="number" id="b" value="3.1416" step="0.1">
+                </div>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="ya">y(a) Boundary Value:</label>
+                    <input type="number" id="ya" value="0" step="0.1">
+                </div>
+                <div class="control-group half">
+                    <label for="yb">y(b) Boundary Value:</label>
+                    <input type="number" id="yb" value="0" step="0.1">
+                </div>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="n">Grid Points:</label>
+                    <input type="number" id="n" value="50" min="10" max="500">
+                </div>
+                <div class="control-group half">
+                    <label for="tolerance">Tolerance:</label>
+                    <input type="number" id="tolerance" value="0.000001" step="0.000001">
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Solve BVP</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Boundary Value Problems</h3>
+            <p><strong>Boundary Value Problems (BVPs)</strong> are differential equations with conditions specified at two or more points, unlike initial value problems where all conditions are at one point.</p>
+
+            <h4>General Form</h4>
+            <p>y'' = f(x, y, y') with y(a) = α and y(b) = β</p>
+
+            <h4>Solution Methods</h4>
+            <table class="info-table">
+                <tr><th>Method</th><th>Description</th><th>Pros/Cons</th></tr>
+                <tr><td>Shooting</td><td>Convert to IVP, iterate on initial slope</td><td>Simple, but may not converge</td></tr>
+                <tr><td>Finite Difference</td><td>Discretize derivatives, solve linear system</td><td>Robust, direct solution</td></tr>
+                <tr><td>Collocation</td><td>Polynomial approximation at selected points</td><td>High accuracy, smooth solution</td></tr>
+                <tr><td>Relaxation</td><td>Iterative refinement of guess</td><td>Good for nonlinear problems</td></tr>
+            </table>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Beam deflection and structural analysis</li>
+                <li>Heat conduction with fixed temperatures</li>
+                <li>Electrostatics with boundary potentials</li>
+                <li>Quantum mechanics (Schrödinger equation)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
