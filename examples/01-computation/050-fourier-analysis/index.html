@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#050 Fourier Analysis - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#050 Fourier Analysis</h1>
+            <p class="description">DFT, FFT, and Spectral Analysis using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Analysis Type:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="fft">Fast Fourier Transform (FFT)</option>
+                    <option value="dft">Discrete Fourier Transform (DFT)</option>
+                    <option value="spectrum">Spectral Analysis</option>
+                    <option value="filter">Frequency Filter</option>
+                    <option value="generate">Generate & Analyze</option>
+                </select>
+            </div>
+
+            <div id="signalInputs">
+                <div class="control-group">
+                    <label for="signalData">Signal Data:</label>
+                    <textarea id="signalData" rows="3" placeholder="1, 0, -1, 0, 1, 0, -1, 0..."></textarea>
+                    <small>Enter signal samples separated by commas</small>
+                </div>
+
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('sine')">Pure Sine</button>
+                    <button class="btn-secondary" onclick="loadSample('composite')">Composite</button>
+                    <button class="btn-secondary" onclick="loadSample('noisy')">Noisy Signal</button>
+                </div>
+            </div>
+
+            <div id="generateInputs" style="display: none;">
+                <div class="control-group">
+                    <label for="frequencies">Frequencies (Hz):</label>
+                    <input type="text" id="frequencies" value="10, 25, 50" placeholder="10, 25, 50">
+                </div>
+
+                <div class="control-group">
+                    <label for="amplitudes">Amplitudes:</label>
+                    <input type="text" id="amplitudes" value="1, 0.5, 0.3" placeholder="1, 0.5, 0.3">
+                </div>
+
+                <div class="control-group">
+                    <label for="duration">Duration (seconds):</label>
+                    <input type="number" id="duration" value="1" min="0.1" max="10" step="0.1">
+                </div>
+            </div>
+
+            <div id="sampleRateGroup" class="control-group" style="display: none;">
+                <label for="sampleRate">Sample Rate (Hz):</label>
+                <input type="number" id="sampleRate" value="1000" min="100" max="100000">
+            </div>
+
+            <div id="filterInputs" style="display: none;">
+                <div class="control-group">
+                    <label for="filterType">Filter Type:</label>
+                    <select id="filterType">
+                        <option value="lowpass">Low-pass</option>
+                        <option value="highpass">High-pass</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="cutoffFreq">Cutoff Frequency (Hz):</label>
+                    <input type="number" id="cutoffFreq" value="100" min="1">
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Analyze</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Fourier Analysis</h3>
+            <p><strong>Fourier Analysis</strong> decomposes signals into their constituent frequencies, enabling spectral analysis and signal processing.</p>
+
+            <h4>Transforms</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Transform</th>
+                    <th>Complexity</th>
+                    <th>Use Case</th>
+                </tr>
+                <tr>
+                    <td>DFT</td>
+                    <td>O(n²)</td>
+                    <td>Small signals, educational</td>
+                </tr>
+                <tr>
+                    <td>FFT</td>
+                    <td>O(n log n)</td>
+                    <td>General purpose, fast</td>
+                </tr>
+            </table>
+
+            <h4>Key Concepts</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Concept</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>Magnitude</td>
+                    <td>Strength of each frequency component</td>
+                </tr>
+                <tr>
+                    <td>Phase</td>
+                    <td>Timing offset of each component</td>
+                </tr>
+                <tr>
+                    <td>Power Spectrum</td>
+                    <td>Magnitude squared, energy distribution</td>
+                </tr>
+                <tr>
+                    <td>Nyquist Frequency</td>
+                    <td>Maximum frequency = Sample Rate / 2</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
