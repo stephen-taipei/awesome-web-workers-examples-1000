@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#088 Pseudoinverse - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#088 Pseudoinverse</h1>
+            <p class="description">Compute the Moore-Penrose pseudoinverse A⁺ using SVD decomposition</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="svd">SVD Method (recommended)</option>
+                    <option value="qr">QR Decomposition</option>
+                    <option value="normalEq">Normal Equations (A⁺ = (AᵀA)⁻¹Aᵀ)</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="tolerance">Singular Value Tolerance:</label>
+                <input type="number" id="tolerance" value="1e-10" step="1e-10" min="0">
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="random">Random Matrix</option>
+                    <option value="manual">Manual Input</option>
+                </select>
+            </div>
+
+            <div id="randomInput">
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="rows">Rows (m):</label>
+                        <input type="number" id="rows" value="50" min="2" max="200">
+                    </div>
+                    <div class="control-group half">
+                        <label for="cols">Columns (n):</label>
+                        <input type="number" id="cols" value="30" min="2" max="200">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="matrixType">Matrix Type:</label>
+                    <select id="matrixType">
+                        <option value="random">Full Rank Random</option>
+                        <option value="rankDeficient">Rank Deficient</option>
+                        <option value="overdetermined">Tall (m > n)</option>
+                        <option value="underdetermined">Wide (m < n)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="manualInput" style="display: none;">
+                <div class="control-group">
+                    <label for="matrixInput">Matrix A (can be rectangular):</label>
+                    <textarea id="matrixInput" rows="4" placeholder="1, 2&#10;3, 4&#10;5, 6"></textarea>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('square')">Square 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('tall')">Tall 4×2</button>
+                <button class="btn-secondary" onclick="loadSample('wide')">Wide 2×4</button>
+                <button class="btn-secondary" onclick="loadSample('rankDef')">Rank Deficient</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute A⁺</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Moore-Penrose Pseudoinverse</h3>
+            <p>The pseudoinverse A⁺ generalizes the concept of matrix inverse to rectangular and singular matrices. It provides the least-squares solution to Ax = b.</p>
+
+            <h4>Definition</h4>
+            <p>A⁺ is the unique matrix satisfying the Moore-Penrose conditions:</p>
+            <ul>
+                <li><strong>AA⁺A = A</strong></li>
+                <li><strong>A⁺AA⁺ = A⁺</strong></li>
+                <li><strong>(AA⁺)ᵀ = AA⁺</strong></li>
+                <li><strong>(A⁺A)ᵀ = A⁺A</strong></li>
+            </ul>
+
+            <h4>SVD Method</h4>
+            <p>If A = UΣVᵀ, then A⁺ = VΣ⁺Uᵀ where Σ⁺ has 1/σᵢ on the diagonal for non-zero singular values.</p>
+
+            <h4>Special Cases</h4>
+            <table class="info-table">
+                <tr><th>Matrix Type</th><th>Pseudoinverse</th></tr>
+                <tr><td>Invertible (n×n)</td><td>A⁺ = A⁻¹</td></tr>
+                <tr><td>Full column rank (m > n)</td><td>A⁺ = (AᵀA)⁻¹Aᵀ</td></tr>
+                <tr><td>Full row rank (m < n)</td><td>A⁺ = Aᵀ(AAᵀ)⁻¹</td></tr>
+                <tr><td>Rank deficient</td><td>Use SVD method</td></tr>
+            </table>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Least squares solutions: x = A⁺b</li>
+                <li>Minimum norm solutions</li>
+                <li>Linear regression</li>
+                <li>System identification</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
