@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#053 Correlation Computation - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#053 Correlation Computation</h1>
+            <p class="description">Signal Correlation Analysis using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Analysis Type:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="autocorrelation">Autocorrelation</option>
+                    <option value="crosscorrelation">Cross-Correlation</option>
+                    <option value="pearson">Pearson Correlation</option>
+                    <option value="timedelay">Time Delay Estimation</option>
+                    <option value="correlogram">Correlogram (ACF/PACF)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="signal1Data">Signal Data:</label>
+                <textarea id="signal1Data" rows="3" placeholder="0.1, 0.5, 0.8, 1.0, 0.8, 0.5, 0.1..."></textarea>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('periodic')">Periodic</button>
+                <button class="btn-secondary" onclick="loadSample('noisy')">Noisy Sine</button>
+                <button class="btn-secondary" onclick="loadSample('whitenoise')">White Noise</button>
+            </div>
+
+            <div id="signal2Group" style="display: none;">
+                <div class="control-group">
+                    <label for="signal2Data">Signal 2:</label>
+                    <textarea id="signal2Data" rows="3" placeholder="Second signal data..."></textarea>
+                </div>
+
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('delayed')">Delayed Pair</button>
+                    <button class="btn-secondary" onclick="loadSample('correlated')">Correlated XY</button>
+                </div>
+            </div>
+
+            <div id="maxLagGroup" class="control-group">
+                <label for="maxLag">Max Lag:</label>
+                <input type="number" id="maxLag" value="50" min="1" max="500">
+            </div>
+
+            <div id="modeGroup" class="control-group" style="display: none;">
+                <label for="corrMode">Correlation Mode:</label>
+                <select id="corrMode">
+                    <option value="full">Full</option>
+                    <option value="same">Same</option>
+                </select>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute Correlation</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Correlation</h3>
+            <p><strong>Correlation</strong> measures the similarity between signals or the relationship between variables. It's fundamental to signal processing, statistics, and time series analysis.</p>
+
+            <h4>Methods</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Method</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>Autocorrelation</td>
+                    <td>Correlation of signal with itself at different lags</td>
+                </tr>
+                <tr>
+                    <td>Cross-Correlation</td>
+                    <td>Similarity between two signals at different time shifts</td>
+                </tr>
+                <tr>
+                    <td>Pearson</td>
+                    <td>Linear relationship between two variables (-1 to +1)</td>
+                </tr>
+                <tr>
+                    <td>Time Delay</td>
+                    <td>Find lag where signals are most aligned</td>
+                </tr>
+                <tr>
+                    <td>Correlogram</td>
+                    <td>ACF/PACF for time series analysis</td>
+                </tr>
+            </table>
+
+            <h4>Interpretation</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Value</th>
+                    <th>Meaning</th>
+                </tr>
+                <tr>
+                    <td>r = 1.0</td>
+                    <td>Perfect positive correlation</td>
+                </tr>
+                <tr>
+                    <td>r = 0.7-0.9</td>
+                    <td>Strong positive correlation</td>
+                </tr>
+                <tr>
+                    <td>r = 0.4-0.6</td>
+                    <td>Moderate correlation</td>
+                </tr>
+                <tr>
+                    <td>r ~ 0</td>
+                    <td>No linear relationship</td>
+                </tr>
+                <tr>
+                    <td>r = -1.0</td>
+                    <td>Perfect negative correlation</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
