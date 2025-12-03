@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#082 Hadamard Product - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#082 Hadamard Product</h1>
+            <p class="description">Element-wise matrix multiplication C[i,j] = A[i,j] × B[i,j] using TypedArray</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="operation">Operation:</label>
+                <select id="operation">
+                    <option value="hadamard">Hadamard Product (A ∘ B)</option>
+                    <option value="hadamardDiv">Hadamard Division (A ⊘ B)</option>
+                    <option value="hadamardPower">Hadamard Power (A.^n)</option>
+                    <option value="schurComplement">Schur Complement</option>
+                    <option value="benchmark">Benchmark All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="random">Random Matrices</option>
+                    <option value="manual">Manual Input</option>
+                </select>
+            </div>
+
+            <div id="randomInput">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="rows">Rows:</label>
+                        <input type="number" id="rows" value="1000" min="1" max="5000">
+                    </div>
+                    <div class="control-group third">
+                        <label for="cols">Columns:</label>
+                        <input type="number" id="cols" value="1000" min="1" max="5000">
+                    </div>
+                    <div class="control-group third">
+                        <label for="power">Power (for A.^n):</label>
+                        <input type="number" id="power" value="2" min="0" max="10" step="0.5">
+                    </div>
+                </div>
+            </div>
+
+            <div id="manualInput" style="display: none;">
+                <div class="control-group">
+                    <label for="matrixA">Matrix A (rows by newlines):</label>
+                    <textarea id="matrixA" rows="3" placeholder="1, 2, 3&#10;4, 5, 6&#10;7, 8, 9"></textarea>
+                </div>
+                <div class="control-group">
+                    <label for="matrixB">Matrix B (same dimensions):</label>
+                    <textarea id="matrixB" rows="3" placeholder="9, 8, 7&#10;6, 5, 4&#10;3, 2, 1"></textarea>
+                </div>
+                <div class="control-group">
+                    <label for="powerManual">Power (for A.^n):</label>
+                    <input type="number" id="powerManual" value="2" min="0" max="10" step="0.5">
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('simple')">Simple 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('mask')">Mask Example</button>
+                <button class="btn-secondary" onclick="loadSample('weights')">Weight Matrix</button>
+                <button class="btn-secondary" onclick="loadSample('random')">Random Large</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Hadamard Product</h3>
+            <p>The Hadamard (or Schur) product is the element-wise multiplication of two matrices of the same dimensions.</p>
+
+            <h4>Operations</h4>
+            <table class="info-table">
+                <tr><th>Operation</th><th>Symbol</th><th>Formula</th></tr>
+                <tr><td>Hadamard Product</td><td>A ∘ B</td><td>C[i,j] = A[i,j] × B[i,j]</td></tr>
+                <tr><td>Hadamard Division</td><td>A ⊘ B</td><td>C[i,j] = A[i,j] / B[i,j]</td></tr>
+                <tr><td>Hadamard Power</td><td>A.^n</td><td>C[i,j] = A[i,j]^n</td></tr>
+            </table>
+
+            <h4>Properties</h4>
+            <ul>
+                <li><strong>Commutative</strong>: A ∘ B = B ∘ A</li>
+                <li><strong>Associative</strong>: (A ∘ B) ∘ C = A ∘ (B ∘ C)</li>
+                <li><strong>Distributive</strong>: A ∘ (B + C) = A ∘ B + A ∘ C</li>
+                <li><strong>Identity</strong>: A ∘ J = A (J = all ones)</li>
+            </ul>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Image processing (masking, blending)</li>
+                <li>Neural networks (attention mechanisms)</li>
+                <li>Feature weighting in ML</li>
+                <li>Signal processing</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
