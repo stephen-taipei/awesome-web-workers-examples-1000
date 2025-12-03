@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#089 Matrix Power - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#089 Matrix Power</h1>
+            <p class="description">Compute A^n efficiently using binary exponentiation (fast power algorithm)</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="binary">Binary Exponentiation (recommended)</option>
+                    <option value="naive">Naive Repeated Multiplication</option>
+                    <option value="diagonalization">Eigenvalue Diagonalization</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="power">Power (n):</label>
+                <input type="number" id="power" value="10" min="0" max="10000">
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="random">Random Matrix</option>
+                    <option value="manual">Manual Input</option>
+                </select>
+            </div>
+
+            <div id="randomInput">
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="size">Matrix Size (n×n):</label>
+                        <input type="number" id="size" value="50" min="2" max="200">
+                    </div>
+                    <div class="control-group half">
+                        <label for="matrixType">Matrix Type:</label>
+                        <select id="matrixType">
+                            <option value="random">Random [-1, 1]</option>
+                            <option value="stochastic">Stochastic (Markov)</option>
+                            <option value="nilpotent">Nilpotent</option>
+                            <option value="orthogonal">Orthogonal</option>
+                            <option value="diagonal">Diagonal</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="manualInput" style="display: none;">
+                <div class="control-group">
+                    <label for="matrixInput">Square Matrix A:</label>
+                    <textarea id="matrixInput" rows="4" placeholder="1, 1&#10;1, 0"></textarea>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('identity')">Identity 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('fibonacci')">Fibonacci 2×2</button>
+                <button class="btn-secondary" onclick="loadSample('rotation')">Rotation 2×2</button>
+                <button class="btn-secondary" onclick="loadSample('nilpotent')">Nilpotent 3×3</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute A^n</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Matrix Power</h3>
+            <p>Computing A^n (matrix raised to power n) is fundamental in many applications including Markov chains, recurrence relations, and graph algorithms.</p>
+
+            <h4>Algorithms</h4>
+            <table class="info-table">
+                <tr><th>Method</th><th>Complexity</th><th>Description</th></tr>
+                <tr><td>Binary Exp.</td><td>O(k³ log n)</td><td>Square-and-multiply</td></tr>
+                <tr><td>Naive</td><td>O(k³ n)</td><td>Repeated multiplication</td></tr>
+                <tr><td>Diagonalization</td><td>O(k³)</td><td>A^n = PD^nP⁻¹</td></tr>
+            </table>
+
+            <h4>Binary Exponentiation</h4>
+            <p>Uses the binary representation of n. For n = 13 = 1101₂:</p>
+            <p>A^13 = A^8 × A^4 × A^1 = A^(8+4+1)</p>
+
+            <h4>Special Cases</h4>
+            <ul>
+                <li><strong>A^0 = I</strong>: Identity matrix</li>
+                <li><strong>Nilpotent</strong>: A^k = 0 for some k</li>
+                <li><strong>Orthogonal</strong>: A^n remains orthogonal</li>
+                <li><strong>Stochastic</strong>: Converges to stationary distribution</li>
+            </ul>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Fibonacci numbers: [[1,1],[1,0]]^n</li>
+                <li>Markov chain steady state</li>
+                <li>Graph path counting</li>
+                <li>Linear recurrence solving</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
