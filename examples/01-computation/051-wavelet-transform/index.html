@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#051 Wavelet Transform - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#051 Wavelet Transform</h1>
+            <p class="description">DWT, CWT, and Signal Denoising using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Analysis Type:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="dwt">Discrete Wavelet Transform (DWT)</option>
+                    <option value="decompose">Multi-Level Decomposition</option>
+                    <option value="denoise">Wavelet Denoising</option>
+                    <option value="cwt">Continuous Wavelet Transform (CWT)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="signalData">Signal Data:</label>
+                <textarea id="signalData" rows="3" placeholder="1, 0, -1, 0, 1, 0, -1, 0..."></textarea>
+                <small>Enter at least 8 signal samples</small>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('sine')">Sine Wave</button>
+                <button class="btn-secondary" onclick="loadSample('noisy')">Noisy Sine</button>
+                <button class="btn-secondary" onclick="loadSample('step')">Step Function</button>
+            </div>
+
+            <div id="waveletGroup" class="control-group">
+                <label for="wavelet">Wavelet:</label>
+                <select id="wavelet">
+                    <option value="haar">Haar</option>
+                    <option value="db2">Daubechies 2 (db2)</option>
+                    <option value="db4">Daubechies 4 (db4)</option>
+                    <option value="sym4">Symlet 4 (sym4)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="level">Decomposition Level:</label>
+                <input type="number" id="level" value="3" min="1" max="10">
+            </div>
+
+            <div id="thresholdGroup" class="control-group" style="display: none;">
+                <label for="thresholdType">Threshold Type:</label>
+                <select id="thresholdType">
+                    <option value="soft">Soft Threshold</option>
+                    <option value="hard">Hard Threshold</option>
+                </select>
+            </div>
+
+            <div id="cwtOptions" style="display: none;">
+                <div class="control-group">
+                    <label for="minScale">Min Scale:</label>
+                    <input type="number" id="minScale" value="1" min="0.1" step="0.1">
+                </div>
+                <div class="control-group">
+                    <label for="maxScale">Max Scale:</label>
+                    <input type="number" id="maxScale" value="32" min="1">
+                </div>
+                <div class="control-group">
+                    <label for="numScales">Number of Scales:</label>
+                    <input type="number" id="numScales" value="32" min="8" max="128">
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Analyze</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Wavelet Transform</h3>
+            <p><strong>Wavelet Transform</strong> provides time-frequency analysis by decomposing signals into scaled and shifted versions of a mother wavelet.</p>
+
+            <h4>Wavelet Types</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Wavelet</th>
+                    <th>Properties</th>
+                    <th>Best For</th>
+                </tr>
+                <tr>
+                    <td>Haar</td>
+                    <td>Simplest, discontinuous</td>
+                    <td>Step-like signals</td>
+                </tr>
+                <tr>
+                    <td>Daubechies</td>
+                    <td>Compact support, smooth</td>
+                    <td>General purpose</td>
+                </tr>
+                <tr>
+                    <td>Symlet</td>
+                    <td>Nearly symmetric</td>
+                    <td>Image processing</td>
+                </tr>
+            </table>
+
+            <h4>DWT vs CWT</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Feature</th>
+                    <th>DWT</th>
+                    <th>CWT</th>
+                </tr>
+                <tr>
+                    <td>Scales</td>
+                    <td>Dyadic (powers of 2)</td>
+                    <td>Continuous</td>
+                </tr>
+                <tr>
+                    <td>Speed</td>
+                    <td>O(n)</td>
+                    <td>O(n²)</td>
+                </tr>
+                <tr>
+                    <td>Output</td>
+                    <td>Coefficients</td>
+                    <td>Scalogram</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
