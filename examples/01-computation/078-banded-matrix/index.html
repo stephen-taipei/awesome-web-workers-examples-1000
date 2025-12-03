@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#078 Banded Matrix Operations - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#078 Banded Matrix Operations</h1>
+            <p class="description">Efficient storage and operations for banded matrices using compressed format</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="operation">Operation:</label>
+                <select id="operation">
+                    <option value="solve">Solve Banded System (Ax = b)</option>
+                    <option value="multiply">Banded × Vector (Ax)</option>
+                    <option value="luBanded">LU Decomposition (Banded)</option>
+                    <option value="add">Add Banded Matrices</option>
+                    <option value="benchmark">Benchmark All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="random">Random Banded Matrix</option>
+                    <option value="manual">Manual Input</option>
+                </select>
+            </div>
+
+            <div id="randomInput">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="size">Matrix Size (n):</label>
+                        <input type="number" id="size" value="1000" min="3" max="100000">
+                    </div>
+                    <div class="control-group third">
+                        <label for="lowerBand">Lower Bandwidth (p):</label>
+                        <input type="number" id="lowerBand" value="2" min="0" max="50">
+                    </div>
+                    <div class="control-group third">
+                        <label for="upperBand">Upper Bandwidth (q):</label>
+                        <input type="number" id="upperBand" value="2" min="0" max="50">
+                    </div>
+                </div>
+            </div>
+
+            <div id="manualInput" style="display: none;">
+                <div class="control-group">
+                    <label for="matrixInput">Banded Matrix (diagonals, from lower to upper):</label>
+                    <textarea id="matrixInput" rows="5" placeholder="Lower diagonal: 1, 1, 1, 1&#10;Main diagonal: 4, 4, 4, 4, 4&#10;Upper diagonal: 1, 1, 1, 1"></textarea>
+                </div>
+                <div class="control-group">
+                    <label for="vectorInput">Vector b (comma separated):</label>
+                    <input type="text" id="vectorInput" placeholder="6, 7, 7, 7, 6">
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('tridiagonal')">Tridiagonal 5×5</button>
+                <button class="btn-secondary" onclick="loadSample('pentadiagonal')">Pentadiagonal 7×7</button>
+                <button class="btn-secondary" onclick="loadSample('heatEquation')">Heat Equation</button>
+                <button class="btn-secondary" onclick="loadSample('random')">Random Large</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Banded Matrices</h3>
+            <p>A banded matrix has non-zero elements only near the main diagonal. Storage and operations can be optimized.</p>
+
+            <h4>Bandwidth Parameters</h4>
+            <ul>
+                <li><strong>Lower bandwidth (p)</strong>: Number of non-zero diagonals below main</li>
+                <li><strong>Upper bandwidth (q)</strong>: Number of non-zero diagonals above main</li>
+                <li><strong>Total bandwidth</strong>: p + q + 1</li>
+            </ul>
+
+            <h4>Storage Comparison</h4>
+            <table class="info-table">
+                <tr><th>Format</th><th>Storage</th><th>Example (n=1000, p=q=2)</th></tr>
+                <tr><td>Dense</td><td>n²</td><td>1,000,000 elements</td></tr>
+                <tr><td>Banded</td><td>n × (p+q+1)</td><td>5,000 elements (0.5%)</td></tr>
+            </table>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Finite difference methods (heat/wave equations)</li>
+                <li>Spline interpolation</li>
+                <li>Structural analysis</li>
+                <li>Signal processing filters</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
