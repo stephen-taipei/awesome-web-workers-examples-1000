@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#065 Matrix Determinant - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#065 Matrix Determinant</h1>
+            <p class="description">Cofactor, LU Decomposition, and Bareiss algorithms using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="lu">LU Decomposition (Recommended)</option>
+                    <option value="cofactor">Cofactor Expansion</option>
+                    <option value="bareiss">Bareiss Algorithm (Integer)</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="manual">Manual Input</option>
+                    <option value="random">Random Matrix</option>
+                </select>
+            </div>
+
+            <div id="manualInput">
+                <div class="control-group">
+                    <label for="matrixInput">Square Matrix (rows by newlines, values by commas):</label>
+                    <textarea id="matrixInput" rows="5" placeholder="1, 2, 3&#10;4, 5, 6&#10;7, 8, 9"></textarea>
+                </div>
+            </div>
+
+            <div id="randomInput" style="display: none;">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="size">Matrix Size (n×n):</label>
+                        <input type="number" id="size" value="5" min="1" max="500">
+                    </div>
+                    <div class="control-group third">
+                        <label for="minVal">Min Value:</label>
+                        <input type="number" id="minVal" value="-10" step="1">
+                    </div>
+                    <div class="control-group third">
+                        <label for="maxVal">Max Value:</label>
+                        <input type="number" id="maxVal" value="10" step="1">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>
+                        <input type="checkbox" id="integerOnly" checked>
+                        Integer values only (required for Bareiss)
+                    </label>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('simple')">Simple 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('identity')">Identity</button>
+                <button class="btn-secondary" onclick="loadSample('singular')">Singular</button>
+                <button class="btn-secondary" onclick="loadSample('upper')">Upper Triangular</button>
+                <button class="btn-secondary" onclick="loadSample('symmetric')">Symmetric</button>
+                <button class="btn-secondary" onclick="loadSample('large')">Larger 5×5</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Determinant</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Matrix Determinant</h3>
+            <p>The determinant det(A) is a scalar value that encodes properties of a square matrix.</p>
+
+            <h4>Algorithms</h4>
+            <table class="info-table">
+                <tr><th>Algorithm</th><th>Complexity</th><th>Best For</th></tr>
+                <tr><td>LU Decomposition</td><td>O(n³)</td><td>General use, numerical</td></tr>
+                <tr><td>Cofactor</td><td>O(n!)</td><td>Small matrices (n≤10)</td></tr>
+                <tr><td>Bareiss</td><td>O(n³)</td><td>Integer matrices</td></tr>
+            </table>
+
+            <h4>Properties</h4>
+            <ul>
+                <li>det(AB) = det(A) × det(B)</li>
+                <li>det(A<sup>T</sup>) = det(A)</li>
+                <li>det(A<sup>-1</sup>) = 1/det(A)</li>
+                <li>det(cA) = c<sup>n</sup>det(A) for n×n matrix</li>
+                <li>det(A) = 0 ⟺ A is singular</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
