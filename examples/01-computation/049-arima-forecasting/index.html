@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#049 ARIMA Forecasting - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#049 ARIMA Forecasting</h1>
+            <p class="description">AutoRegressive Integrated Moving Average using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Model Type:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="ar">AR(p) - AutoRegressive</option>
+                    <option value="ma">MA(q) - Moving Average</option>
+                    <option value="arma">ARMA(p,q)</option>
+                    <option value="arima" selected>ARIMA(p,d,q)</option>
+                    <option value="forecast">ARIMA Forecast</option>
+                    <option value="auto">Auto ARIMA</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="dataValues">Time Series Data:</label>
+                <textarea id="dataValues" rows="3" placeholder="112, 118, 132, 129, 121, 135..."></textarea>
+                <small>Enter at least 10 numeric values</small>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('airline')">Airline Data</button>
+                <button class="btn-secondary" onclick="loadSample('trend')">Trending</button>
+                <button class="btn-secondary" onclick="loadSample('stationary')">Stationary</button>
+            </div>
+
+            <div class="order-group">
+                <div class="control-group">
+                    <label for="orderP">p (AR order):</label>
+                    <input type="number" id="orderP" value="1" min="0" max="10">
+                </div>
+
+                <div class="control-group">
+                    <label for="orderD">d (Differencing):</label>
+                    <input type="number" id="orderD" value="1" min="0" max="3">
+                </div>
+
+                <div class="control-group">
+                    <label for="orderQ">q (MA order):</label>
+                    <input type="number" id="orderQ" value="0" min="0" max="10">
+                </div>
+            </div>
+
+            <div id="forecastGroup" class="control-group" style="display: none;">
+                <label for="forecastPeriods">Forecast Periods:</label>
+                <input type="number" id="forecastPeriods" value="5" min="1" max="50">
+            </div>
+
+            <div id="autoGroup" style="display: none;">
+                <div class="order-group">
+                    <div class="control-group">
+                        <label for="maxP">Max p:</label>
+                        <input type="number" id="maxP" value="3" min="0" max="5">
+                    </div>
+                    <div class="control-group">
+                        <label for="maxD">Max d:</label>
+                        <input type="number" id="maxD" value="2" min="0" max="2">
+                    </div>
+                    <div class="control-group">
+                        <label for="maxQ">Max q:</label>
+                        <input type="number" id="maxQ" value="3" min="0" max="5">
+                    </div>
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Fit Model</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About ARIMA</h3>
+            <p><strong>ARIMA</strong> (AutoRegressive Integrated Moving Average) is a popular time series forecasting method that combines autoregression, differencing, and moving averages.</p>
+
+            <h4>Model Components</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Component</th>
+                    <th>Parameter</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>AR</td>
+                    <td>p</td>
+                    <td>Number of autoregressive terms</td>
+                </tr>
+                <tr>
+                    <td>I</td>
+                    <td>d</td>
+                    <td>Degree of differencing</td>
+                </tr>
+                <tr>
+                    <td>MA</td>
+                    <td>q</td>
+                    <td>Number of moving average terms</td>
+                </tr>
+            </table>
+
+            <h4>Common Models</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Model</th>
+                    <th>Use Case</th>
+                </tr>
+                <tr>
+                    <td>ARIMA(1,0,0)</td>
+                    <td>Simple AR process</td>
+                </tr>
+                <tr>
+                    <td>ARIMA(0,1,1)</td>
+                    <td>Simple exponential smoothing</td>
+                </tr>
+                <tr>
+                    <td>ARIMA(1,1,1)</td>
+                    <td>Mixed with differencing</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
