@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#114 Fast Fourier Transform - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#114 Fast Fourier Transform</h1>
+            <p class="description">Efficient O(N log N) frequency analysis using Cooley-Tukey algorithm</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="signalType">Signal Type:</label>
+                <select id="signalType" onchange="updateSignalOptions()">
+                    <option value="sine">Sine Wave</option>
+                    <option value="composite">Composite Signal</option>
+                    <option value="chirp">Chirp (Frequency Sweep)</option>
+                    <option value="square">Square Wave</option>
+                    <option value="impulse">Impulse</option>
+                    <option value="noise">White Noise</option>
+                    <option value="am">AM Modulated</option>
+                </select>
+            </div>
+
+            <div id="waveOptions" class="control-group">
+                <label>Signal Parameters:</label>
+                <div class="param-row">
+                    <span>Frequency 1:</span>
+                    <input type="number" id="freq1" value="50" min="1" max="500">
+                    <span>Amplitude:</span>
+                    <input type="number" id="amp1" value="1" step="0.1">
+                </div>
+                <div id="compositeParams">
+                    <div class="param-row">
+                        <span>Frequency 2:</span>
+                        <input type="number" id="freq2" value="120" min="1" max="500">
+                        <span>Amplitude:</span>
+                        <input type="number" id="amp2" value="0.5" step="0.1">
+                    </div>
+                    <div class="param-row">
+                        <span>Frequency 3:</span>
+                        <input type="number" id="freq3" value="200" min="1" max="500">
+                        <span>Amplitude:</span>
+                        <input type="number" id="amp3" value="0.3" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="sampleSize">Sample Size (N = 2^k):</label>
+                <select id="sampleSize">
+                    <option value="256">256 (2⁸)</option>
+                    <option value="512">512 (2⁹)</option>
+                    <option value="1024" selected>1024 (2¹⁰)</option>
+                    <option value="2048">2048 (2¹¹)</option>
+                    <option value="4096">4096 (2¹²)</option>
+                    <option value="8192">8192 (2¹³)</option>
+                    <option value="16384">16384 (2¹⁴)</option>
+                    <option value="32768">32768 (2¹⁵)</option>
+                    <option value="65536">65536 (2¹⁶)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="sampleRate">Sample Rate (Hz):</label>
+                <input type="number" id="sampleRate" value="1000" min="100" max="100000">
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadPreset('single')">Single Tone</button>
+                <button class="btn-secondary" onclick="loadPreset('dual')">Dual Tone</button>
+                <button class="btn-secondary" onclick="loadPreset('dtmf')">DTMF (697+1209)</button>
+                <button class="btn-secondary" onclick="loadPreset('chirp')">Chirp</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute FFT</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Fast Fourier Transform</h3>
+            <p>The FFT is an efficient algorithm for computing the DFT in O(N log N) time instead of O(N²), making large-scale frequency analysis practical.</p>
+
+            <h4>Cooley-Tukey Algorithm</h4>
+            <div class="formula-box">
+                <div class="formula">X[k] = X_even[k] + W_N^k · X_odd[k]</div>
+                <div class="formula-note">where W_N = e^(-2πi/N) is the twiddle factor</div>
+            </div>
+
+            <h4>Divide and Conquer</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Split</div>
+                    <div class="formula">x[n] → x_even[n], x_odd[n]</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Recurse</div>
+                    <div class="formula">FFT(N) = 2×FFT(N/2) + O(N)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Combine</div>
+                    <div class="formula">Butterfly: X[k], X[k+N/2]</div>
+                </div>
+            </div>
+
+            <h4>Complexity Comparison</h4>
+            <ul>
+                <li><strong>DFT:</strong> O(N²) - 1M samples ≈ 10¹² operations</li>
+                <li><strong>FFT:</strong> O(N log N) - 1M samples ≈ 20M operations</li>
+                <li><strong>Speedup:</strong> ~50,000× for N = 10⁶</li>
+            </ul>
+
+            <h4>Requirements</h4>
+            <ul>
+                <li>N must be a power of 2 (radix-2 FFT)</li>
+                <li>Bit-reversal permutation for in-place computation</li>
+                <li>Twiddle factors can be precomputed</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
