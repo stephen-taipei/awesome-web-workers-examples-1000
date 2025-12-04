@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#108 Newton Interpolation - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#108 Newton Interpolation</h1>
+            <p class="description">Construct interpolating polynomials using Newton's divided differences</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="dataSource">Data Source:</label>
+                <select id="dataSource" onchange="updateDataSource()">
+                    <option value="manual">Manual Input</option>
+                    <option value="sin">Sample: sin(x)</option>
+                    <option value="exp">Sample: e^x</option>
+                    <option value="polynomial">Sample: x³ - 2x + 1</option>
+                    <option value="sqrt">Sample: √x</option>
+                </select>
+            </div>
+
+            <div id="manualInput" class="control-group">
+                <label>Data Points (x, y):</label>
+                <div id="dataPoints" class="data-points">
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="0" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="1" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="1" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="2" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="2" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="0" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="3" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="3" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                </div>
+                <button class="btn-add" onclick="addPoint()">+ Add Point</button>
+            </div>
+
+            <div id="sampleInput" class="control-group" style="display: none;">
+                <label for="numPoints">Number of Sample Points:</label>
+                <input type="number" id="numPoints" value="5" min="2" max="20">
+            </div>
+
+            <div class="control-group">
+                <label for="evalPoint">Evaluate at x =</label>
+                <input type="number" id="evalPoint" value="1.5" step="0.1">
+            </div>
+
+            <div class="control-group">
+                <label for="evalRange">Evaluation Range:</label>
+                <div class="range-inputs">
+                    <input type="number" id="rangeStart" value="-0.5" step="0.5">
+                    <span>to</span>
+                    <input type="number" id="rangeEnd" value="3.5" step="0.5">
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('linear')">Linear (2 pts)</button>
+                <button class="btn-secondary" onclick="loadSample('quadratic')">Quadratic (3 pts)</button>
+                <button class="btn-secondary" onclick="loadSample('cubic')">Cubic (4 pts)</button>
+                <button class="btn-secondary" onclick="loadSample('sin5')">Sin (5 pts)</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Interpolate</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Newton Interpolation</h3>
+            <p>Newton's interpolation uses divided differences to construct an interpolating polynomial incrementally.</p>
+
+            <h4>Newton's Forward Formula</h4>
+            <div class="formula-box">
+                <div class="formula">P(x) = f[x₀] + f[x₀,x₁](x-x₀) + f[x₀,x₁,x₂](x-x₀)(x-x₁) + ...</div>
+            </div>
+
+            <h4>Divided Differences</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">First Order</div>
+                    <div class="formula">f[xᵢ,xⱼ] = (f[xⱼ] - f[xᵢ]) / (xⱼ - xᵢ)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Higher Order</div>
+                    <div class="formula">f[xᵢ,...,xⱼ] = (f[xᵢ₊₁,...,xⱼ] - f[xᵢ,...,xⱼ₋₁]) / (xⱼ - xᵢ)</div>
+                </div>
+            </div>
+
+            <h4>Advantages over Lagrange</h4>
+            <ul>
+                <li><strong>Incremental:</strong> Easy to add new points without recalculating everything</li>
+                <li><strong>Divided difference table:</strong> Useful for detecting patterns and errors</li>
+                <li><strong>Efficient evaluation:</strong> Horner's method for nested multiplication</li>
+                <li><strong>Error estimation:</strong> Higher-order differences can estimate truncation error</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
