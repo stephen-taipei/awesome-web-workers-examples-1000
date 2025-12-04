@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#112 Fourier Series - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#112 Fourier Series</h1>
+            <p class="description">Decompose periodic functions into sine and cosine components</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="functionType">Function Type:</label>
+                <select id="functionType" onchange="updateFunction()">
+                    <option value="square">Square Wave</option>
+                    <option value="sawtooth">Sawtooth Wave</option>
+                    <option value="triangle">Triangle Wave</option>
+                    <option value="rectified">Rectified Sine</option>
+                    <option value="pulse">Pulse Train</option>
+                    <option value="custom">Custom Expression</option>
+                </select>
+            </div>
+
+            <div id="customFunction" class="control-group" style="display: none;">
+                <label for="customExpr">Custom Function f(x) for x ∈ [-π, π]:</label>
+                <input type="text" id="customExpr" placeholder="e.g., x, x*x, Math.abs(x)">
+            </div>
+
+            <div class="control-group">
+                <label for="numTerms">Number of Terms (N):</label>
+                <input type="number" id="numTerms" value="10" min="1" max="100">
+            </div>
+
+            <div class="control-group">
+                <label for="evalPoint">Evaluate at x =</label>
+                <input type="number" id="evalPoint" value="0.5" step="0.1">
+            </div>
+
+            <div class="control-group">
+                <label for="integrationPoints">Integration Points:</label>
+                <input type="number" id="integrationPoints" value="1000" min="100" max="10000">
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadPreset('square')">Square</button>
+                <button class="btn-secondary" onclick="loadPreset('sawtooth')">Sawtooth</button>
+                <button class="btn-secondary" onclick="loadPreset('triangle')">Triangle</button>
+                <button class="btn-secondary" onclick="loadPreset('rectified')">Rectified</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute Fourier Series</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Fourier Series</h3>
+            <p>Fourier series represent periodic functions as infinite sums of sines and cosines. Any periodic function can be expressed as a combination of harmonic frequencies.</p>
+
+            <h4>Fourier Series Formula</h4>
+            <div class="formula-box">
+                <div class="formula">f(x) = a₀/2 + Σₙ₌₁^∞ [aₙcos(nx) + bₙsin(nx)]</div>
+            </div>
+
+            <h4>Fourier Coefficients</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">DC Component (a₀)</div>
+                    <div class="formula">a₀ = (1/π) ∫₋π^π f(x) dx</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Cosine Coefficients (aₙ)</div>
+                    <div class="formula">aₙ = (1/π) ∫₋π^π f(x)cos(nx) dx</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Sine Coefficients (bₙ)</div>
+                    <div class="formula">bₙ = (1/π) ∫₋π^π f(x)sin(nx) dx</div>
+                </div>
+            </div>
+
+            <h4>Convergence Properties</h4>
+            <ul>
+                <li><strong>Pointwise:</strong> Converges at continuous points</li>
+                <li><strong>Gibbs phenomenon:</strong> ~9% overshoot at discontinuities</li>
+                <li><strong>Parseval's theorem:</strong> Energy in time = energy in frequency</li>
+                <li><strong>Even functions:</strong> Only cosine terms (bₙ = 0)</li>
+                <li><strong>Odd functions:</strong> Only sine terms (aₙ = 0)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
