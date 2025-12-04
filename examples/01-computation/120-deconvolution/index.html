@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#120 Deconvolution - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#120 Deconvolution</h1>
+            <p class="description">Signal restoration using Wiener filter and inverse filtering</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="method">Deconvolution Method:</label>
+                <select id="method">
+                    <option value="wiener" selected>Wiener Filter (Recommended)</option>
+                    <option value="inverse">Direct Inverse Filter</option>
+                    <option value="regularized">Regularized Inverse</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="signalType">Original Signal Type:</label>
+                <select id="signalType" onchange="updateSignalOptions()">
+                    <option value="pulse">Sharp Pulse</option>
+                    <option value="square">Square Wave</option>
+                    <option value="step">Step Function</option>
+                    <option value="spikes">Multiple Spikes</option>
+                    <option value="custom">Custom Values</option>
+                </select>
+            </div>
+
+            <div id="signalOptions" class="control-group">
+                <label>Signal Parameters:</label>
+                <div class="param-row">
+                    <span>Amplitude:</span>
+                    <input type="number" id="amplitude" value="100" step="10">
+                </div>
+            </div>
+
+            <div id="customOptions" class="control-group" style="display: none;">
+                <label>Custom Signal (comma-separated):</label>
+                <input type="text" id="customValues" placeholder="e.g., 0, 0, 100, 0, 0, 50, 0, 0">
+            </div>
+
+            <div class="control-group">
+                <label for="kernelType">Blur Kernel (PSF):</label>
+                <select id="kernelType">
+                    <option value="gaussian" selected>Gaussian Blur</option>
+                    <option value="box">Box Blur (Averaging)</option>
+                    <option value="motion">Motion Blur</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="kernelSize">Kernel Size:</label>
+                <select id="kernelSize">
+                    <option value="5">5</option>
+                    <option value="7" selected>7</option>
+                    <option value="11">11</option>
+                    <option value="15">15</option>
+                    <option value="21">21</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="noiseLevel">Noise Level (%):</label>
+                <select id="noiseLevel">
+                    <option value="0">0% (No noise)</option>
+                    <option value="1" selected>1% (Low)</option>
+                    <option value="5">5% (Medium)</option>
+                    <option value="10">10% (High)</option>
+                    <option value="20">20% (Very High)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="wienerK">Wiener K Parameter (NSR estimate):</label>
+                <select id="wienerK">
+                    <option value="0.001">0.001 (Low noise assumption)</option>
+                    <option value="0.01" selected>0.01 (Typical)</option>
+                    <option value="0.1">0.1 (High noise assumption)</option>
+                    <option value="0.5">0.5 (Very high noise)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="signalSize">Signal Size:</label>
+                <select id="signalSize">
+                    <option value="64">64 samples</option>
+                    <option value="128" selected>128 samples</option>
+                    <option value="256">256 samples</option>
+                    <option value="512">512 samples</option>
+                </select>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadPreset('sharp')">Sharp Recovery</button>
+                <button class="btn-secondary" onclick="loadPreset('noisy')">Noisy Signal</button>
+                <button class="btn-secondary" onclick="loadPreset('motion')">Motion Deblur</button>
+                <button class="btn-secondary" onclick="loadPreset('compare')">Method Compare</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute Deconvolution</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Deconvolution</h3>
+            <p>Deconvolution reverses the effect of convolution, attempting to recover the original signal from a blurred/degraded version. It's essential in image restoration, audio processing, and scientific measurement.</p>
+
+            <h4>The Problem</h4>
+            <div class="formula-box">
+                <div class="formula">g = f * h + n</div>
+                <div class="formula-note">g = observed (blurred), f = original, h = kernel (PSF), n = noise</div>
+            </div>
+
+            <h4>Deconvolution Methods</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Inverse Filter</div>
+                    <div class="formula">F = G / H</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Wiener Filter</div>
+                    <div class="formula">F = G · H* / (|H|² + K)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Regularized</div>
+                    <div class="formula">F = G · H* / (|H|² + λ)</div>
+                </div>
+            </div>
+
+            <h4>Why Wiener Filter?</h4>
+            <ul>
+                <li><strong>Noise robustness:</strong> Prevents amplification of noise at frequencies where H is small</li>
+                <li><strong>K parameter:</strong> Estimates noise-to-signal ratio, controls smoothness</li>
+                <li><strong>Optimal (MSE):</strong> Minimizes mean square error under noise assumptions</li>
+            </ul>
+
+            <h4>Challenges</h4>
+            <ul>
+                <li><strong>Ill-posed problem:</strong> Small changes in input cause large output changes</li>
+                <li><strong>Noise amplification:</strong> Inverse filter amplifies noise at high frequencies</li>
+                <li><strong>Ringing artifacts:</strong> Gibbs phenomenon at sharp edges</li>
+                <li><strong>Unknown PSF:</strong> Blind deconvolution is much harder</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
