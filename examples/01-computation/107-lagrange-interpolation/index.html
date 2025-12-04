@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#107 Lagrange Interpolation - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#107 Lagrange Interpolation</h1>
+            <p class="description">Construct interpolating polynomials through data points using Lagrange basis</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="dataSource">Data Source:</label>
+                <select id="dataSource" onchange="updateDataSource()">
+                    <option value="manual">Manual Input</option>
+                    <option value="sin">Sample: sin(x)</option>
+                    <option value="exp">Sample: e^x</option>
+                    <option value="runge">Sample: Runge Function 1/(1+25x²)</option>
+                    <option value="polynomial">Sample: x³ - 2x + 1</option>
+                    <option value="step">Sample: Step Function</option>
+                </select>
+            </div>
+
+            <div id="manualInput" class="control-group">
+                <label>Data Points (x, y):</label>
+                <div id="dataPoints" class="data-points">
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="0" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="1" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="1" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="2" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="2" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="0" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                </div>
+                <button class="btn-add" onclick="addPoint()">+ Add Point</button>
+            </div>
+
+            <div id="sampleInput" class="control-group" style="display: none;">
+                <label for="numPoints">Number of Sample Points:</label>
+                <input type="number" id="numPoints" value="5" min="2" max="20">
+            </div>
+
+            <div class="control-group">
+                <label for="evalPoint">Evaluate at x =</label>
+                <input type="number" id="evalPoint" value="1.5" step="0.1">
+            </div>
+
+            <div class="control-group">
+                <label for="evalRange">Evaluation Range (for visualization):</label>
+                <div class="range-inputs">
+                    <input type="number" id="rangeStart" value="-0.5" step="0.5">
+                    <span>to</span>
+                    <input type="number" id="rangeEnd" value="2.5" step="0.5">
+                    <span>with</span>
+                    <input type="number" id="rangeSteps" value="50" min="10" max="200">
+                    <span>points</span>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('linear')">Linear (2 pts)</button>
+                <button class="btn-secondary" onclick="loadSample('quadratic')">Quadratic (3 pts)</button>
+                <button class="btn-secondary" onclick="loadSample('sin5')">Sin (5 pts)</button>
+                <button class="btn-secondary" onclick="loadSample('runge')">Runge (11 pts)</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Interpolate</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Lagrange Interpolation</h3>
+            <p>Lagrange interpolation constructs a polynomial of degree at most n-1 that passes exactly through n given data points.</p>
+
+            <h4>Lagrange Formula</h4>
+            <div class="formula-box">
+                <div class="formula">P(x) = Σᵢ yᵢ · Lᵢ(x)</div>
+                <div class="formula-note">where Lᵢ(x) = Πⱼ≠ᵢ (x - xⱼ) / (xᵢ - xⱼ)</div>
+            </div>
+
+            <h4>Lagrange Basis Polynomials</h4>
+            <p>Each basis polynomial Lᵢ(x) equals 1 at xᵢ and 0 at all other data points xⱼ (j ≠ i).</p>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Properties</div>
+                    <ul>
+                        <li>Lᵢ(xᵢ) = 1</li>
+                        <li>Lᵢ(xⱼ) = 0 for j ≠ i</li>
+                        <li>deg(Lᵢ) = n - 1</li>
+                    </ul>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Uniqueness</div>
+                    <p>There exists exactly one polynomial of degree ≤ n-1 passing through n distinct points.</p>
+                </div>
+            </div>
+
+            <h4>Considerations</h4>
+            <ul>
+                <li><strong>Runge's Phenomenon:</strong> High-degree polynomials may oscillate wildly between points</li>
+                <li><strong>Conditioning:</strong> Equally-spaced points can lead to numerical instability</li>
+                <li><strong>Chebyshev nodes:</strong> Optimal node placement minimizes interpolation error</li>
+                <li><strong>Computational cost:</strong> O(n²) for evaluation at a single point</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
