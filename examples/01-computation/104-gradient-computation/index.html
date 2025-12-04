@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#104 Gradient Computation - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#104 Gradient Computation</h1>
+            <p class="description">Compute gradients for n-dimensional functions using numerical differentiation</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="functionSelect">Function:</label>
+                <select id="functionSelect" onchange="updateFunction()">
+                    <option value="sphere">Sphere: x₁² + x₂² + ... + xₙ²</option>
+                    <option value="rosenbrock">Rosenbrock: Σ[100(xᵢ₊₁ - xᵢ²)² + (1-xᵢ)²]</option>
+                    <option value="rastrigin">Rastrigin: 10n + Σ[xᵢ² - 10cos(2πxᵢ)]</option>
+                    <option value="ackley">Ackley: Multi-modal test function</option>
+                    <option value="beale">Beale: 2D test function</option>
+                    <option value="booth">Booth: (x+2y-7)² + (2x+y-5)²</option>
+                    <option value="custom">Custom function</option>
+                </select>
+            </div>
+
+            <div id="customInput" class="control-group" style="display: none;">
+                <label for="customFunction">Custom f(x₁, x₂, ...):</label>
+                <input type="text" id="customFunction" placeholder="x[0]*x[0] + x[1]*x[1]">
+                <small>Use x[0], x[1], ... for variables with JavaScript syntax</small>
+            </div>
+
+            <div class="control-group">
+                <label for="dimensions">Number of Dimensions:</label>
+                <select id="dimensions" onchange="updateDimensions()">
+                    <option value="2" selected>2D</option>
+                    <option value="3">3D</option>
+                    <option value="4">4D</option>
+                    <option value="5">5D</option>
+                    <option value="10">10D</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Point x:</label>
+                <div id="pointInputs" class="point-inputs">
+                    <input type="number" class="point-input" value="1" step="0.1">
+                    <input type="number" class="point-input" value="1" step="0.1">
+                </div>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="h">Step Size h:</label>
+                    <input type="number" id="h" value="0.0001" step="0.00001" min="0.000001">
+                </div>
+                <div class="control-group half">
+                    <label for="method">Method:</label>
+                    <select id="method">
+                        <option value="central">Central Difference</option>
+                        <option value="forward">Forward Difference</option>
+                        <option value="backward">Backward Difference</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('sphere')">Sphere Origin</button>
+                <button class="btn-secondary" onclick="loadSample('rosenbrock')">Rosenbrock (1,1)</button>
+                <button class="btn-secondary" onclick="loadSample('rastrigin')">Rastrigin (0.5,0.5)</button>
+                <button class="btn-secondary" onclick="loadSample('high-dim')">5D Sphere</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute Gradient</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Gradient Computation</h3>
+            <p>The gradient ∇f is a vector of all partial derivatives, pointing in the direction of steepest ascent.</p>
+
+            <h4>Numerical Gradient Methods</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Forward Difference</div>
+                    <div class="formula">∂f/∂xᵢ ≈ [f(x + heᵢ) - f(x)] / h</div>
+                    <div class="formula-order">O(h)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Central Difference</div>
+                    <div class="formula">∂f/∂xᵢ ≈ [f(x + heᵢ) - f(x - heᵢ)] / 2h</div>
+                    <div class="formula-order">O(h²)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Backward Difference</div>
+                    <div class="formula">∂f/∂xᵢ ≈ [f(x) - f(x - heᵢ)] / h</div>
+                    <div class="formula-order">O(h)</div>
+                </div>
+            </div>
+
+            <h4>Test Functions</h4>
+            <ul>
+                <li><strong>Sphere:</strong> Convex, bowl-shaped, minimum at origin</li>
+                <li><strong>Rosenbrock:</strong> Non-convex "banana valley", minimum at (1,1,...)</li>
+                <li><strong>Rastrigin:</strong> Highly multi-modal with many local minima</li>
+                <li><strong>Ackley:</strong> Nearly flat outer region with deep hole at origin</li>
+            </ul>
+
+            <h4>Applications</h4>
+            <ul>
+                <li><strong>Optimization:</strong> Gradient descent, conjugate gradient methods</li>
+                <li><strong>Machine Learning:</strong> Backpropagation, training neural networks</li>
+                <li><strong>Physics:</strong> Force fields, potential energy minimization</li>
+                <li><strong>Sensitivity Analysis:</strong> How outputs change with inputs</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
