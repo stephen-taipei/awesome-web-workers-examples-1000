@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#099 Gaussian Quadrature - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#099 Gaussian Quadrature</h1>
+            <p class="description">High-precision numerical integration using Gauss-Legendre quadrature</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="functionSelect">Function f(x):</label>
+                <select id="functionSelect" onchange="updateFunction()">
+                    <option value="polynomial">x⁵ (integral: x⁶/6)</option>
+                    <option value="sin">sin(x) (integral: -cos(x))</option>
+                    <option value="exp">e^x (integral: e^x)</option>
+                    <option value="gaussian">e^(-x²) (Gaussian)</option>
+                    <option value="sqrt">√(1-x²) (semicircle)</option>
+                    <option value="rational">1/(1+x²) (arctan)</option>
+                    <option value="oscillatory">sin(5x)·cos(3x)</option>
+                    <option value="custom">Custom function</option>
+                </select>
+            </div>
+
+            <div id="customInput" class="control-group" style="display: none;">
+                <label for="customFunction">Custom f(x):</label>
+                <input type="text" id="customFunction" placeholder="Math.sin(x) * Math.exp(-x*x)">
+                <small>Use JavaScript math syntax</small>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="a">Lower Bound (a):</label>
+                    <input type="number" id="a" value="-1" step="0.1">
+                </div>
+                <div class="control-group half">
+                    <label for="b">Upper Bound (b):</label>
+                    <input type="number" id="b" value="1" step="0.1">
+                </div>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="n">Number of Points (n):</label>
+                    <input type="number" id="n" value="10" min="2" max="64">
+                    <small>2-64 Gauss points</small>
+                </div>
+                <div class="control-group half">
+                    <label for="compareWith">Compare with n =</label>
+                    <input type="number" id="compareWith" value="20" min="2" max="64">
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('polynomial')">∫x⁵ [-1,1]</button>
+                <button class="btn-secondary" onclick="loadSample('sin')">∫sin(x) [0,π]</button>
+                <button class="btn-secondary" onclick="loadSample('sqrt')">Semicircle (π/2)</button>
+                <button class="btn-secondary" onclick="loadSample('gaussian')">Gaussian</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Integral</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Gaussian Quadrature</h3>
+            <p>Gaussian quadrature achieves optimal accuracy by choosing both the evaluation points (nodes) and weights to exactly integrate polynomials of degree up to 2n-1.</p>
+
+            <h4>Formula</h4>
+            <div class="formula">
+                ∫₋₁¹ f(x)dx ≈ Σᵢ wᵢ · f(xᵢ)
+            </div>
+            <p>where xᵢ are roots of Legendre polynomial Pₙ(x) and wᵢ are the corresponding weights</p>
+
+            <h4>Properties</h4>
+            <table class="info-table">
+                <tr><th>Property</th><th>Value</th></tr>
+                <tr><td>Exact for polynomials</td><td>Degree ≤ 2n-1</td></tr>
+                <tr><td>Error order</td><td>O(h^(2n))</td></tr>
+                <tr><td>Standard interval</td><td>[-1, 1]</td></tr>
+                <tr><td>Function evaluations</td><td>n</td></tr>
+            </table>
+
+            <h4>Interval Transformation</h4>
+            <div class="formula">
+                ∫ₐᵇ f(x)dx = (b-a)/2 · ∫₋₁¹ f((b-a)t/2 + (a+b)/2) dt
+            </div>
+
+            <h4>Why Gaussian Quadrature?</h4>
+            <ul>
+                <li><strong>Optimal:</strong> Best accuracy for given number of function evaluations</li>
+                <li><strong>Exponential convergence:</strong> For smooth functions</li>
+                <li><strong>Few points:</strong> Often 5-10 points give excellent results</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
