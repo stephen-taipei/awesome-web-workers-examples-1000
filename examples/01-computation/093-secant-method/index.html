@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#093 Secant Method - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#093 Secant Method</h1>
+            <p class="description">Derivative-free root finding: x_{n+1} = x_n - f(x_n) * (x_n - x_{n-1}) / (f(x_n) - f(x_{n-1}))</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="functionSelect">Function f(x):</label>
+                <select id="functionSelect" onchange="updateFunction()">
+                    <option value="polynomial">x³ - x - 2 (cubic)</option>
+                    <option value="trig">cos(x) - x (fixed point)</option>
+                    <option value="exp">e^x - 3x (exponential)</option>
+                    <option value="sqrt">x² - 2 (√2 computation)</option>
+                    <option value="log">ln(x) - 1 (find e)</option>
+                    <option value="custom">Custom function</option>
+                </select>
+            </div>
+
+            <div id="customInput" class="control-group" style="display: none;">
+                <label for="customFunction">Custom f(x):</label>
+                <input type="text" id="customFunction" placeholder="Math.pow(x,3) - x - 2">
+                <small>Use JavaScript math syntax (Math.sin, Math.exp, Math.pow, etc.)</small>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="x0">First Initial Guess (x₀):</label>
+                    <input type="number" id="x0" value="1" step="0.1">
+                </div>
+                <div class="control-group half">
+                    <label for="x1">Second Initial Guess (x₁):</label>
+                    <input type="number" id="x1" value="2" step="0.1">
+                </div>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="tolerance">Tolerance (ε):</label>
+                    <input type="number" id="tolerance" value="1e-12" step="1e-12">
+                </div>
+                <div class="control-group half">
+                    <label for="maxIterations">Max Iterations:</label>
+                    <input type="number" id="maxIterations" value="100" min="1" max="500">
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('polynomial')">x³-x-2, [1,2]</button>
+                <button class="btn-secondary" onclick="loadSample('sqrt')">√2, [1,2]</button>
+                <button class="btn-secondary" onclick="loadSample('trig')">cos(x)=x, [0,1]</button>
+                <button class="btn-secondary" onclick="loadSample('close')">Close guesses</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Find Root</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Secant Method</h3>
+            <p>The Secant Method is a root-finding algorithm that uses a secant line (through two points) to approximate the root, avoiding the need for derivative computation.</p>
+
+            <h4>Algorithm</h4>
+            <div class="formula">
+                x_{n+1} = x_n - f(x_n) * (x_n - x_{n-1}) / (f(x_n) - f(x_{n-1}))
+            </div>
+
+            <h4>Properties</h4>
+            <table class="info-table">
+                <tr><th>Property</th><th>Value</th></tr>
+                <tr><td>Convergence</td><td>Superlinear (order ≈ 1.618)</td></tr>
+                <tr><td>Order</td><td>φ = (1 + √5) / 2 ≈ 1.618 (Golden ratio)</td></tr>
+                <tr><td>Requirement</td><td>Two initial guesses</td></tr>
+                <tr><td>Derivative</td><td>Not required</td></tr>
+            </table>
+
+            <h4>Comparison with Newton's Method</h4>
+            <ul>
+                <li><strong>Pro:</strong> No derivative computation needed</li>
+                <li><strong>Pro:</strong> Simpler implementation</li>
+                <li><strong>Con:</strong> Slightly slower convergence (1.618 vs 2)</li>
+                <li><strong>Con:</strong> Needs two starting points</li>
+            </ul>
+
+            <h4>Comparison with Bisection</h4>
+            <ul>
+                <li><strong>Pro:</strong> Much faster (superlinear vs linear)</li>
+                <li><strong>Con:</strong> Can diverge (no guaranteed convergence)</li>
+                <li><strong>Con:</strong> Doesn't require bracket with sign change</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
