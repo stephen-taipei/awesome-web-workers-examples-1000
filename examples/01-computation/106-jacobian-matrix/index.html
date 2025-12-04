@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#106 Jacobian Matrix - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#106 Jacobian Matrix</h1>
+            <p class="description">Compute the Jacobian matrix of partial derivatives for vector-valued functions</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="functionSelect">Vector Function F(x):</label>
+                <select id="functionSelect" onchange="updateFunction()">
+                    <option value="polar">Polar to Cartesian: (r·cos(θ), r·sin(θ))</option>
+                    <option value="spherical">Spherical to Cartesian (3D)</option>
+                    <option value="rotation">2D Rotation: (x·cos(θ)-y·sin(θ), x·sin(θ)+y·cos(θ))</option>
+                    <option value="nonlinear">Nonlinear: (x²+y, xy+y²)</option>
+                    <option value="trig">Trig: (sin(x)·cos(y), cos(x)·sin(y))</option>
+                    <option value="newton">Newton System: (x²+y²-4, xy-1)</option>
+                    <option value="lorentz">Lorentz System (3D)</option>
+                    <option value="custom">Custom function</option>
+                </select>
+            </div>
+
+            <div id="customInput" class="control-group" style="display: none;">
+                <label for="customFunction">Custom F(x) = [f₁, f₂, ...]:</label>
+                <input type="text" id="customFunction" placeholder="[x[0]*x[0]+x[1], x[0]*x[1]]">
+                <small>Enter as array: [f1, f2, ...] using x[0], x[1], ...</small>
+            </div>
+
+            <div class="control-group">
+                <label>Input Point x:</label>
+                <div id="pointInputs" class="point-inputs">
+                    <input type="number" class="point-input" value="1" step="0.1">
+                    <input type="number" class="point-input" value="0.5" step="0.1">
+                </div>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="h">Step Size h:</label>
+                    <input type="number" id="h" value="0.0001" step="0.00001" min="0.000001">
+                </div>
+                <div class="control-group half">
+                    <label for="method">Method:</label>
+                    <select id="method">
+                        <option value="central">Central Difference</option>
+                        <option value="forward">Forward Difference</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('polar')">Polar (r=2, θ=π/4)</button>
+                <button class="btn-secondary" onclick="loadSample('rotation')">Rotation (1,0)</button>
+                <button class="btn-secondary" onclick="loadSample('newton')">Newton (2,0.5)</button>
+                <button class="btn-secondary" onclick="loadSample('spherical')">Spherical 3D</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute Jacobian</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About the Jacobian Matrix</h3>
+            <p>The Jacobian matrix J is the matrix of all first-order partial derivatives of a vector-valued function F: ℝⁿ → ℝᵐ.</p>
+
+            <h4>Definition</h4>
+            <div class="formula-box">
+                <div class="formula">J(F) = [∂fᵢ/∂xⱼ]</div>
+                <div class="formula-note">where Jᵢⱼ = ∂fᵢ/∂xⱼ (m×n matrix)</div>
+            </div>
+
+            <h4>Numerical Approximation</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Central Difference</div>
+                    <div class="formula">∂fᵢ/∂xⱼ ≈ [fᵢ(x + heⱼ) - fᵢ(x - heⱼ)] / 2h</div>
+                    <div class="formula-order">O(h²)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Forward Difference</div>
+                    <div class="formula">∂fᵢ/∂xⱼ ≈ [fᵢ(x + heⱼ) - fᵢ(x)] / h</div>
+                    <div class="formula-order">O(h)</div>
+                </div>
+            </div>
+
+            <h4>Properties & Applications</h4>
+            <ul>
+                <li><strong>Linearization:</strong> F(x + Δx) ≈ F(x) + J·Δx near x</li>
+                <li><strong>Newton's Method:</strong> Solve F(x) = 0 via x_{n+1} = x_n - J⁻¹F(x_n)</li>
+                <li><strong>Change of Variables:</strong> Volume element scales by |det(J)|</li>
+                <li><strong>Sensitivity Analysis:</strong> Jᵢⱼ measures sensitivity of fᵢ to xⱼ</li>
+            </ul>
+
+            <h4>Common Applications</h4>
+            <table class="info-table">
+                <tr><th>Application</th><th>Description</th></tr>
+                <tr><td>Coordinate transforms</td><td>Polar, spherical, cylindrical conversions</td></tr>
+                <tr><td>Robotics</td><td>Forward/inverse kinematics</td></tr>
+                <tr><td>Control systems</td><td>Linearization around operating point</td></tr>
+                <tr><td>Optimization</td><td>Constrained optimization, KKT conditions</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
