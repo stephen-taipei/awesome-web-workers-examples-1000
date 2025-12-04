@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#109 Cubic Spline Interpolation - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#109 Cubic Spline Interpolation</h1>
+            <p class="description">Smooth piecewise cubic polynomials with continuous derivatives</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="dataSource">Data Source:</label>
+                <select id="dataSource" onchange="updateDataSource()">
+                    <option value="manual">Manual Input</option>
+                    <option value="sin">Sample: sin(x)</option>
+                    <option value="exp">Sample: e^x</option>
+                    <option value="polynomial">Sample: x³ - 2x + 1</option>
+                    <option value="runge">Sample: Runge Function 1/(1+x²)</option>
+                </select>
+            </div>
+
+            <div id="manualInput" class="control-group">
+                <label>Data Points (x, y):</label>
+                <div id="dataPoints" class="data-points">
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="0" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="0" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="1" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="2" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="2" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="1" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="3" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="3" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                </div>
+                <button class="btn-add" onclick="addPoint()">+ Add Point</button>
+            </div>
+
+            <div id="sampleInput" class="control-group" style="display: none;">
+                <label for="numPoints">Number of Sample Points:</label>
+                <input type="number" id="numPoints" value="7" min="3" max="30">
+            </div>
+
+            <div class="control-group">
+                <label for="boundaryType">Boundary Conditions:</label>
+                <select id="boundaryType">
+                    <option value="natural">Natural Spline (S''=0 at endpoints)</option>
+                    <option value="clamped">Clamped Spline (specify S' at endpoints)</option>
+                    <option value="notaknot">Not-a-Knot</option>
+                </select>
+            </div>
+
+            <div id="clampedInputs" class="control-group" style="display: none;">
+                <label>Clamped Boundary Derivatives:</label>
+                <div class="range-inputs">
+                    <span>S'(x₀) =</span>
+                    <input type="number" id="leftDerivative" value="0" step="0.1">
+                    <span>S'(xₙ) =</span>
+                    <input type="number" id="rightDerivative" value="0" step="0.1">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="evalPoint">Evaluate at x =</label>
+                <input type="number" id="evalPoint" value="1.5" step="0.1">
+            </div>
+
+            <div class="control-group">
+                <label for="evalRange">Evaluation Range:</label>
+                <div class="range-inputs">
+                    <input type="number" id="rangeStart" value="-0.5" step="0.5">
+                    <span>to</span>
+                    <input type="number" id="rangeEnd" value="3.5" step="0.5">
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('simple')">Simple (4 pts)</button>
+                <button class="btn-secondary" onclick="loadSample('wave')">Wave (6 pts)</button>
+                <button class="btn-secondary" onclick="loadSample('runge5')">Runge (5 pts)</button>
+                <button class="btn-secondary" onclick="loadSample('runge9')">Runge (9 pts)</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute Spline</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Cubic Spline Interpolation</h3>
+            <p>Cubic splines construct smooth curves through data points using piecewise cubic polynomials with continuous first and second derivatives.</p>
+
+            <h4>Spline Form</h4>
+            <div class="formula-box">
+                <div class="formula">Sᵢ(x) = aᵢ + bᵢ(x-xᵢ) + cᵢ(x-xᵢ)² + dᵢ(x-xᵢ)³</div>
+                <div class="formula-note">for x ∈ [xᵢ, xᵢ₊₁]</div>
+            </div>
+
+            <h4>Continuity Conditions</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Interpolation</div>
+                    <div class="formula">Sᵢ(xᵢ) = yᵢ, Sᵢ(xᵢ₊₁) = yᵢ₊₁</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">C¹ Continuity</div>
+                    <div class="formula">S'ᵢ(xᵢ₊₁) = S'ᵢ₊₁(xᵢ₊₁)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">C² Continuity</div>
+                    <div class="formula">S''ᵢ(xᵢ₊₁) = S''ᵢ₊₁(xᵢ₊₁)</div>
+                </div>
+            </div>
+
+            <h4>Boundary Conditions</h4>
+            <ul>
+                <li><strong>Natural:</strong> S''(x₀) = S''(xₙ) = 0 (relaxed ends)</li>
+                <li><strong>Clamped:</strong> S'(x₀) and S'(xₙ) specified (best accuracy)</li>
+                <li><strong>Not-a-Knot:</strong> Third derivative continuous at x₁ and xₙ₋₁</li>
+            </ul>
+
+            <h4>Tridiagonal System</h4>
+            <p>The second derivatives M = S'' satisfy a tridiagonal linear system that can be solved efficiently in O(n) time using the Thomas algorithm.</p>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
