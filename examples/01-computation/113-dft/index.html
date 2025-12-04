@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#113 Discrete Fourier Transform - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#113 Discrete Fourier Transform</h1>
+            <p class="description">Transform signals from time domain to frequency domain</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="signalType">Signal Type:</label>
+                <select id="signalType" onchange="updateSignalOptions()">
+                    <option value="sine">Sine Wave</option>
+                    <option value="cosine">Cosine Wave</option>
+                    <option value="composite">Composite (Multi-frequency)</option>
+                    <option value="square">Square Wave</option>
+                    <option value="sawtooth">Sawtooth Wave</option>
+                    <option value="impulse">Impulse</option>
+                    <option value="noise">White Noise</option>
+                    <option value="custom">Custom Values</option>
+                </select>
+            </div>
+
+            <div id="waveOptions" class="control-group">
+                <label>Wave Parameters:</label>
+                <div class="param-row">
+                    <span>Frequency 1:</span>
+                    <input type="number" id="freq1" value="3" min="1" max="50">
+                    <span>Amplitude:</span>
+                    <input type="number" id="amp1" value="1" step="0.1">
+                </div>
+                <div id="compositeParams" style="display: none;">
+                    <div class="param-row">
+                        <span>Frequency 2:</span>
+                        <input type="number" id="freq2" value="7" min="1" max="50">
+                        <span>Amplitude:</span>
+                        <input type="number" id="amp2" value="0.5" step="0.1">
+                    </div>
+                    <div class="param-row">
+                        <span>Frequency 3:</span>
+                        <input type="number" id="freq3" value="12" min="1" max="50">
+                        <span>Amplitude:</span>
+                        <input type="number" id="amp3" value="0.3" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <div id="customValues" class="control-group" style="display: none;">
+                <label>Custom Signal Values (comma-separated):</label>
+                <input type="text" id="customSignal" placeholder="e.g., 1, 0, -1, 0, 1, 0, -1, 0">
+            </div>
+
+            <div class="control-group">
+                <label for="sampleSize">Number of Samples (N):</label>
+                <select id="sampleSize">
+                    <option value="8">8</option>
+                    <option value="16">16</option>
+                    <option value="32">32</option>
+                    <option value="64" selected>64</option>
+                    <option value="128">128</option>
+                    <option value="256">256</option>
+                    <option value="512">512</option>
+                    <option value="1024">1024</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="viewFreq">View Frequency Bin k =</label>
+                <input type="number" id="viewFreq" value="3" min="0" max="63">
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadPreset('single')">Single Freq</button>
+                <button class="btn-secondary" onclick="loadPreset('dual')">Dual Freq</button>
+                <button class="btn-secondary" onclick="loadPreset('triple')">Triple Freq</button>
+                <button class="btn-secondary" onclick="loadPreset('square')">Square Wave</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute DFT</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Discrete Fourier Transform</h3>
+            <p>The DFT converts a finite sequence of samples from the time domain into the frequency domain, revealing the frequency components present in the signal.</p>
+
+            <h4>DFT Formula</h4>
+            <div class="formula-box">
+                <div class="formula">X[k] = Σₙ₌₀^(N-1) x[n] · e^(-i·2πkn/N)</div>
+                <div class="formula-note">where k = 0, 1, ..., N-1</div>
+            </div>
+
+            <h4>Euler's Formula Expansion</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Complex Exponential</div>
+                    <div class="formula">e^(-iθ) = cos(θ) - i·sin(θ)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Real Part</div>
+                    <div class="formula">Re(X[k]) = Σ x[n]·cos(2πkn/N)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Imaginary Part</div>
+                    <div class="formula">Im(X[k]) = -Σ x[n]·sin(2πkn/N)</div>
+                </div>
+            </div>
+
+            <h4>Key Properties</h4>
+            <ul>
+                <li><strong>Magnitude:</strong> |X[k]| = √(Re² + Im²) - strength at frequency k</li>
+                <li><strong>Phase:</strong> ∠X[k] = atan2(Im, Re) - phase shift</li>
+                <li><strong>Symmetry:</strong> For real signals, X[N-k] = X[k]*</li>
+                <li><strong>Parseval's theorem:</strong> Energy in time = energy in frequency</li>
+                <li><strong>Frequency resolution:</strong> Δf = fs/N (sampling freq / samples)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
