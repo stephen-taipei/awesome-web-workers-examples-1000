@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#115 Inverse FFT - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#115 Inverse FFT</h1>
+            <p class="description">Reconstruct time-domain signals from frequency spectra</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="spectrumType">Spectrum Type:</label>
+                <select id="spectrumType" onchange="updateSpectrumOptions()">
+                    <option value="single">Single Frequency</option>
+                    <option value="multiple">Multiple Frequencies</option>
+                    <option value="lowpass">Low-pass Filtered</option>
+                    <option value="bandpass">Band-pass Filtered</option>
+                    <option value="custom">Custom Spectrum</option>
+                </select>
+            </div>
+
+            <div id="singleFreqOptions" class="control-group">
+                <label>Frequency Parameters:</label>
+                <div class="param-row">
+                    <span>Bin k:</span>
+                    <input type="number" id="freq1Bin" value="10" min="0" max="512">
+                    <span>Magnitude:</span>
+                    <input type="number" id="freq1Mag" value="1" step="0.1">
+                    <span>Phase (°):</span>
+                    <input type="number" id="freq1Phase" value="0" step="15">
+                </div>
+            </div>
+
+            <div id="multiFreqOptions" class="control-group" style="display: none;">
+                <label>Multiple Frequencies:</label>
+                <div class="param-row">
+                    <span>Bin 1:</span>
+                    <input type="number" id="multi1Bin" value="5" min="0">
+                    <span>Mag:</span>
+                    <input type="number" id="multi1Mag" value="1" step="0.1">
+                </div>
+                <div class="param-row">
+                    <span>Bin 2:</span>
+                    <input type="number" id="multi2Bin" value="15" min="0">
+                    <span>Mag:</span>
+                    <input type="number" id="multi2Mag" value="0.5" step="0.1">
+                </div>
+                <div class="param-row">
+                    <span>Bin 3:</span>
+                    <input type="number" id="multi3Bin" value="25" min="0">
+                    <span>Mag:</span>
+                    <input type="number" id="multi3Mag" value="0.3" step="0.1">
+                </div>
+            </div>
+
+            <div id="filterOptions" class="control-group" style="display: none;">
+                <label>Filter Cutoff (bin):</label>
+                <div class="param-row">
+                    <span>Low:</span>
+                    <input type="number" id="filterLow" value="0" min="0">
+                    <span>High:</span>
+                    <input type="number" id="filterHigh" value="20" min="0">
+                </div>
+            </div>
+
+            <div id="customOptions" class="control-group" style="display: none;">
+                <label>Custom Spectrum (bin:magnitude pairs):</label>
+                <input type="text" id="customSpectrum" placeholder="e.g., 5:1, 10:0.5, 20:0.3">
+            </div>
+
+            <div class="control-group">
+                <label for="sampleSize">Sample Size (N = 2^k):</label>
+                <select id="sampleSize">
+                    <option value="64">64 (2⁶)</option>
+                    <option value="128">128 (2⁷)</option>
+                    <option value="256" selected>256 (2⁸)</option>
+                    <option value="512">512 (2⁹)</option>
+                    <option value="1024">1024 (2¹⁰)</option>
+                    <option value="2048">2048 (2¹¹)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="sampleRate">Sample Rate (Hz):</label>
+                <input type="number" id="sampleRate" value="1000" min="100" max="100000">
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadPreset('pure')">Pure Tone</button>
+                <button class="btn-secondary" onclick="loadPreset('harmonic')">Harmonics</button>
+                <button class="btn-secondary" onclick="loadPreset('filtered')">Filtered Noise</button>
+                <button class="btn-secondary" onclick="loadPreset('impulse')">Impulse Response</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute IFFT</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Inverse FFT</h3>
+            <p>The IFFT transforms frequency-domain data back to the time domain, enabling signal synthesis from spectral components.</p>
+
+            <h4>IFFT Formula</h4>
+            <div class="formula-box">
+                <div class="formula">x[n] = (1/N) Σₖ₌₀^(N-1) X[k] · e^(i·2πkn/N)</div>
+                <div class="formula-note">Note: Positive exponent, divided by N</div>
+            </div>
+
+            <h4>Relationship to FFT</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Conjugate Method</div>
+                    <div class="formula">IFFT(X) = (1/N) · conj(FFT(conj(X)))</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Direct Method</div>
+                    <div class="formula">Same as FFT with +i instead of -i</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Perfect Recovery</div>
+                    <div class="formula">IFFT(FFT(x)) = x</div>
+                </div>
+            </div>
+
+            <h4>Applications</h4>
+            <ul>
+                <li><strong>Signal synthesis:</strong> Generate signals with specified frequency content</li>
+                <li><strong>Filtering:</strong> Modify spectrum then IFFT to get filtered signal</li>
+                <li><strong>Convolution:</strong> FFT → multiply → IFFT (fast convolution)</li>
+                <li><strong>Audio effects:</strong> Spectral processing for music/speech</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
