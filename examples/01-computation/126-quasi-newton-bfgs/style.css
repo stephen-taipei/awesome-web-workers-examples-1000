@@ -1,0 +1,253 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #134e5e 0%, #71b280 100%);
+    min-height: 100vh;
+    color: #eee;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h1 {
+    color: #a7f3d0;
+    font-size: 2.4rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+    color: #d1fae5;
+}
+
+section {
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(167, 243, 208, 0.2);
+}
+
+h2 {
+    color: #a7f3d0;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+.description p {
+    color: #d1fae5;
+    margin-bottom: 1rem;
+}
+
+.formula-box {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #34d399;
+}
+
+.formula {
+    font-family: 'Courier New', monospace;
+    color: #6ee7b7;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    white-space: pre;
+}
+
+.params-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.input-group {
+    margin-bottom: 0.5rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #6ee7b7;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.input-group select,
+.input-group input[type="number"] {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+}
+
+.input-group select:focus,
+.input-group input[type="number"]:focus {
+    outline: none;
+    border-color: #34d399;
+    box-shadow: 0 0 15px rgba(52, 211, 153, 0.3);
+}
+
+.button-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #34d399, #059669);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 25px rgba(52, 211, 153, 0.4);
+}
+
+.btn-secondary {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-outline {
+    background: transparent;
+    color: #34d399;
+    border: 2px solid #34d399;
+}
+
+.btn-outline:hover {
+    background: rgba(52, 211, 153, 0.1);
+}
+
+.hidden {
+    display: none !important;
+}
+
+.progress-section {
+    padding: 1rem;
+}
+
+.progress-bar-container {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    height: 20px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #34d399, #a7f3d0);
+    width: 0%;
+    transition: width 0.2s;
+}
+
+.progress-text {
+    text-align: center;
+    margin-top: 0.5rem;
+    color: #d1fae5;
+    font-size: 0.9rem;
+}
+
+.visualization {
+    text-align: center;
+}
+
+.canvas-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+canvas {
+    background: #0a1612;
+    border-radius: 8px;
+    border: 1px solid rgba(52, 211, 153, 0.2);
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.result-item {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.result-label {
+    display: block;
+    color: #d1fae5;
+    font-size: 0.8rem;
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+}
+
+.result-value {
+    color: #6ee7b7;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+}
+
+.convergence-info h3 {
+    color: #a7f3d0;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    color: #d1fae5;
+}
+
+footer a {
+    color: #34d399;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    .container { padding: 1rem; }
+    h1 { font-size: 1.8rem; }
+    .params-grid { grid-template-columns: 1fr; }
+    .button-group { flex-direction: column; }
+}
