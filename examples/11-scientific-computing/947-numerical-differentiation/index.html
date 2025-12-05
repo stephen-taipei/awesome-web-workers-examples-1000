@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Numerical Differentiation - Example 947</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Numerical Differentiation</h1>
+        <p>Computes the derivative of a function using the Finite Difference Method in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="func">Function f(x):</label>
+                    <select id="func">
+                        <option value="sin">sin(x)</option>
+                        <option value="poly">x^3 - 2x^2 + x</option>
+                        <option value="exp">exp(-x^2)</option>
+                        <option value="tanh">tanh(x)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="method">Method:</label>
+                    <select id="method">
+                        <option value="forward">Forward Difference</option>
+                        <option value="backward">Backward Difference</option>
+                        <option value="central" selected>Central Difference (More Accurate)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="stepH">Step Size (h):</label>
+                    <input type="number" id="stepH" value="0.1" min="0.0001" step="0.0001">
+                    <small>Smaller is usually better, until precision loss.</small>
+                </div>
+                <button id="calcBtn">Compute & Plot</button>
+
+                <div class="stats">
+                    <div class="stat-item">Points: <span id="pointCount">-</span></div>
+                    <div class="stat-item">Time: <span id="calcTime">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="diffCanvas" width="600" height="400"></canvas>
+                <div class="legend">
+                    <span class="line func"></span> f(x)
+                    <span class="line deriv"></span> f'(x) (Derivative)
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
