@@ -1,0 +1,125 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #000;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    background: #1a1a1a;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+    max-width: 900px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    color: #40c4ff;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    text-align: center;
+    color: #81d4fa;
+    margin-bottom: 2rem;
+}
+
+.layout {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.controls {
+    flex: 1;
+    min-width: 250px;
+    background: #263238;
+    padding: 1.5rem;
+    border: 1px solid #37474f;
+    border-radius: 6px;
+}
+
+.visualization {
+    flex: 2;
+    min-width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    background-color: #050505;
+    border: 1px solid #37474f;
+    border-radius: 4px;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #4fc3f7;
+}
+
+input[type="range"] {
+    width: 100%;
+    accent-color: #03a9f4;
+}
+
+button {
+    width: 100%;
+    background-color: #0288d1;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    transition: background 0.2s;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #0277bd;
+}
+
+button:disabled {
+    background-color: #546e7a;
+    cursor: not-allowed;
+}
+
+#stopBtn {
+    background-color: #ef5350;
+}
+
+#stopBtn:hover {
+    background-color: #c62828;
+}
+
+.stats {
+    margin-top: 2rem;
+    border-top: 1px solid #37474f;
+    padding-top: 1rem;
+}
+
+.stat-item {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+}
+
+.stat-item span {
+    font-weight: bold;
+    color: #81d4fa;
+    font-family: monospace;
+}
