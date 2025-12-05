@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Naive Bayes - Example 977</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Naive Bayes Spam Classifier</h1>
+        <p>Trains a Naive Bayes classifier on a simulated dataset of emails to detect spam using a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="trainingSize">Training Samples:</label>
+                    <select id="trainingSize">
+                        <option value="1000">1,000</option>
+                        <option value="5000" selected>5,000</option>
+                        <option value="20000">20,000</option>
+                    </select>
+                </div>
+                <button id="trainBtn">Generate Data & Train</button>
+                
+                <hr>
+                
+                <div class="form-group">
+                    <label for="testInput">Test Message:</label>
+                    <textarea id="testInput" placeholder="Enter text to classify (e.g., 'Win a free prize now!')"></textarea>
+                </div>
+                <button id="predictBtn" disabled>Classify</button>
+
+                <div class="stats">
+                    <div class="stat-item">Training Time: <span id="trainTime">-</span></div>
+                    <div class="stat-item">Vocab Size: <span id="vocabSize">-</span></div>
+                    <div class="stat-item">Prediction: <span id="predictionResult">-</span></div>
+                    <div class="stat-item">Confidence: <span id="confidenceVal">-</span></div>
+                </div>
+            </div>
+
+            <div class="info-panel">
+                <h3>Top Spam Words</h3>
+                <div id="spamWords" class="word-cloud"></div>
+                
+                <h3>Top Ham Words</h3>
+                <div id="hamWords" class="word-cloud"></div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
