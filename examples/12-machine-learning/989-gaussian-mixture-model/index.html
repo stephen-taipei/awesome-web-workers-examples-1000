@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker GMM (EM Algorithm) - Example 989</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Gaussian Mixture Models (GMM)</h1>
+        <p>Implements the Expectation-Maximization (EM) algorithm in a Web Worker to cluster data using probabilistic Gaussian distributions.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="pointCount">Data Points:</label>
+                    <select id="pointCount">
+                        <option value="200">200</option>
+                        <option value="500" selected>500</option>
+                        <option value="1000">1,000</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="clusterCount">Number of Gaussians (K):</label>
+                    <input type="range" id="clusterCount" min="2" max="6" value="3">
+                    <span id="kDisplay">3</span>
+                </div>
+                <div class="form-group">
+                    <label>Training Speed:</label>
+                    <div class="speed-controls">
+                        <label><input type="radio" name="speed" value="500" checked> Slow</label>
+                        <label><input type="radio" name="speed" value="100"> Fast</label>
+                        <label><input type="radio" name="speed" value="0"> Max</label>
+                    </div>
+                </div>
+                <button id="startBtn">Generate Data & Train</button>
+                <button id="stopBtn" disabled>Stop</button>
+
+                <div class="stats">
+                    <div class="stat-item">Iteration: <span id="iterDisplay">0</span></div>
+                    <div class="stat-item">Log-Likelihood: <span id="llDisplay">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="gmmCanvas" width="600" height="500"></canvas>
+                <div class="legend">
+                    <span class="dot" style="background:#aaa"></span> Data Point
+                    <span class="ring"></span> Gaussian Confidence Interval
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
