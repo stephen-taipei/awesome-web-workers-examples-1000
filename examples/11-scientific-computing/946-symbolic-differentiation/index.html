@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Symbolic Differentiation - Example 946</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Symbolic Differentiator</h1>
+        <p>Computes the exact symbolic derivative of a mathematical expression using an Expression Tree in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="expression">Expression f(x):</label>
+                    <input type="text" id="expression" value="x^3 + sin(x)*x" placeholder="e.g. x^2 + 1/x">
+                </div>
+                <button id="diffBtn">Differentiate</button>
+                
+                <div class="separator">Evaluation</div>
+                
+                <div class="form-group">
+                    <label for="evalX">Value of x:</label>
+                    <input type="number" id="evalX" value="1" step="0.1">
+                </div>
+                <button id="evalBtn" disabled>Evaluate f'(x)</button>
+
+                <div class="stats">
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                    <div class="stat-item">Time: <span id="calcTime">-</span></div>
+                </div>
+            </div>
+
+            <div class="results">
+                <h3>Derivative:</h3>
+                <div id="resultOutput" class="math-result">
+                    f'(x) = <span id="derivative">?</span>
+                </div>
+                <div id="valOutput" class="math-result hidden">
+                    f'(<span id="xValDisplay"></span>) = <span id="numericVal">?</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
