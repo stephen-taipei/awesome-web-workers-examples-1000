@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker KNN Classification - Example 978</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>K-Nearest Neighbors (KNN)</h1>
+        <p>Visualizes the decision boundaries of the K-Nearest Neighbors algorithm by computing pixel-wise classification in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="kValue">K Neighbors:</label>
+                    <input type="range" id="kValue" min="1" max="20" value="3">
+                    <span id="kDisplay">3</span>
+                </div>
+                <div class="form-group">
+                    <label for="pointCount">Training Points:</label>
+                    <select id="pointCount">
+                        <option value="20">20</option>
+                        <option value="50" selected>50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button id="genDataBtn">New Random Data</button>
+                    <button id="computeBtn">Compute Decision Map</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">Time: <span id="timeDisplay">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="knnCanvas" width="500" height="500"></canvas>
+                <div class="legend">
+                    <span class="dot class0"></span> Class 0
+                    <span class="dot class1"></span> Class 1
+                    <span class="dot class2"></span> Class 2
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
