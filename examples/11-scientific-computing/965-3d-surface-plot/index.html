@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker 3D Surface Plot - Example 965</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>3D Surface Plotter</h1>
+        <p>Calculates and projects a 3D surface mesh from a mathematical function <code>z = f(x, y)</code> in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="eqZ">z = f(x, y) =</label>
+                    <input type="text" id="eqZ" value="sin(sqrt(x*x + y*y)) * 5">
+                    <small>Available: x, y, sin, cos, sqrt, pow, abs</small>
+                </div>
+                <div class="form-group row">
+                    <div>
+                        <label>Range:</label>
+                        <input type="number" id="range" value="10">
+                    </div>
+                    <div>
+                        <label>Resolution:</label>
+                        <input type="range" id="resolution" min="10" max="100" value="40">
+                        <span id="resDisplay">40</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Rotation:</label>
+                    <div class="row">
+                        <input type="range" id="rotX" min="0" max="360" value="45">
+                        <input type="range" id="rotY" min="0" max="360" value="30">
+                    </div>
+                </div>
+                <button id="plotBtn">Generate Surface</button>
+
+                <div class="stats">
+                    <div class="stat-item">Vertices: <span id="vertexCount">-</span></div>
+                    <div class="stat-item">Time: <span id="calcTime">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="surfaceCanvas" width="500" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
