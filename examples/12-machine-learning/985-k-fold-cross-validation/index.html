@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker K-Fold Cross Validation - Example 985</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>K-Fold Cross Validation</h1>
+        <p>Simulates evaluating a linear regression model using K-Fold Cross Validation in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="sampleSize">Sample Size:</label>
+                    <select id="sampleSize">
+                        <option value="1000">1,000</option>
+                        <option value="10000" selected>10,000</option>
+                        <option value="50000">50,000</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="kValue">Folds (K):</label>
+                    <input type="range" id="kValue" min="2" max="10" value="5">
+                    <span id="kDisplay">5</span>
+                </div>
+                <div class="form-group">
+                    <label for="noiseLevel">Data Noise:</label>
+                    <input type="range" id="noiseLevel" min="0" max="100" value="20">
+                    <span id="noiseDisplay">20</span>
+                </div>
+                <button id="runBtn">Run Cross Validation</button>
+
+                <div class="stats">
+                    <div class="stat-item">Average MSE: <span id="avgMSE">-</span></div>
+                    <div class="stat-item">Average R²: <span id="avgR2">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Ready</span></div>
+                </div>
+            </div>
+
+            <div class="results">
+                <h3>Fold Results</h3>
+                <div class="fold-grid" id="foldGrid">
+                    <!-- Folds will be injected here -->
+                    <div class="placeholder">Run validation to see results</div>
+                </div>
+                <canvas id="visCanvas" width="600" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
