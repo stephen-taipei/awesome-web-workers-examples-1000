@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Association Rules (Apriori) - Example 993</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Association Rules Mining (Apriori)</h1>
+        <p>Mines frequent itemsets and association rules from a large transaction dataset using the Apriori algorithm in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="transactionCount">Transactions:</label>
+                    <select id="transactionCount">
+                        <option value="1000">1,000</option>
+                        <option value="10000">10,000</option>
+                        <option value="50000" selected>50,000</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="uniqueProducts">Unique Products:</label>
+                    <input type="number" id="uniqueProducts" value="50" min="10" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="minSupport">Min Support (%):</label>
+                    <input type="range" id="minSupport" min="1" max="50" value="5">
+                    <span id="minSupportDisplay">5%</span>
+                </div>
+                <div class="form-group">
+                    <label for="minConfidence">Min Confidence (%):</label>
+                    <input type="range" id="minConfidence" min="1" max="100" value="50">
+                    <span id="minConfidenceDisplay">50%</span>
+                </div>
+                <button id="mineBtn">Generate Transactions & Mine</button>
+
+                <div class="stats">
+                    <div class="stat-item">Processing Time: <span id="timeValue">-</span></div>
+                    <div class="stat-item">Frequent Itemsets: <span id="itemsetsCount">-</span></div>
+                    <div class="stat-item">Rules Found: <span id="rulesCount">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Ready</span></div>
+                </div>
+            </div>
+
+            <div class="results-area">
+                <h3>Top Association Rules</h3>
+                <div class="table-wrapper">
+                    <table id="rulesTable">
+                        <thead>
+                            <tr>
+                                <th>Rule (Antecedent &rarr; Consequent)</th>
+                                <th>Support</th>
+                                <th>Confidence</th>
+                                <th>Lift</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rulesBody">
+                            <tr><td colspan="4" class="empty">No rules mined yet</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
