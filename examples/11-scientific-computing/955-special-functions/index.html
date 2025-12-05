@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Special Functions (Gamma/Beta) - Example 955</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Special Functions Calculator</h1>
+        <p>Calculates high-precision approximations of special functions (Gamma, Beta, Erf) using numerical methods in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="funcType">Function:</label>
+                    <select id="funcType">
+                        <option value="gamma">Gamma Γ(x)</option>
+                        <option value="beta">Beta B(x, y)</option>
+                        <option value="erf">Error Function erf(x)</option>
+                    </select>
+                </div>
+                
+                <div id="inputXGroup" class="form-group">
+                    <label>Range X:</label>
+                    <div class="row">
+                        <input type="number" id="xStart" value="-5" step="0.1">
+                        <span>to</span>
+                        <input type="number" id="xEnd" value="5" step="0.1">
+                    </div>
+                </div>
+
+                <div id="inputYGroup" class="form-group hidden">
+                    <label>Parameter Y:</label>
+                    <input type="number" id="paramY" value="2.0" step="0.1">
+                </div>
+
+                <div class="form-group">
+                    <label for="step">Step Size:</label>
+                    <input type="number" id="step" value="0.05" min="0.001" step="0.001">
+                </div>
+                <button id="calcBtn">Calculate & Plot</button>
+
+                <div class="stats">
+                    <div class="stat-item">Points: <span id="pointCount">-</span></div>
+                    <div class="stat-item">Time: <span id="calcTime">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="plotCanvas" width="500" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
