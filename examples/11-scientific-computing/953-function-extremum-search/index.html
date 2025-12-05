@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Function Extremum Search - Example 953</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Function Extremum Search (Gradient Descent)</h1>
+        <p>Finds the local minimum or maximum of a user-defined 2D function using Gradient Descent (with numerical differentiation) in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="eqZ">Function f(x, y) =</label>
+                    <input type="text" id="eqZ" value="sin(x) * cos(y)">
+                    <small>Try: x^2 + y^2, sin(x)*cos(y), -(x^2+y^2)</small>
+                </div>
+                <div class="form-group">
+                    <label for="type">Search Type:</label>
+                    <select id="type">
+                        <option value="min">Minimum</option>
+                        <option value="max">Maximum</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="learningRate">Learning Rate:</label>
+                    <input type="range" id="learningRate" min="0.01" max="0.5" step="0.01" value="0.1">
+                    <span id="lrDisplay">0.1</span>
+                </div>
+                <button id="startBtn">Start Search</button>
+                <button id="resetBtn">Reset</button>
+
+                <div class="stats">
+                    <div class="stat-item">Current Pos: <span id="posDisplay">-</span></div>
+                    <div class="stat-item">Value: <span id="valDisplay">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="searchCanvas" width="500" height="500"></canvas>
+                <div class="legend">
+                    <span class="dot current"></span> Current
+                    <span class="dot path"></span> Path
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
