@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genetic Algorithm - Web Worker Example #130</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Genetic Algorithm</h1>
+            <p class="subtitle">Web Worker Example #130 - Evolutionary Optimization</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Genetic Algorithm</h2>
+                <p>Genetic Algorithms (GA) are optimization methods inspired by natural selection. A population of candidate solutions evolves through selection, crossover, and mutation to find optimal or near-optimal solutions.</p>
+                <div class="formula-box">
+                    <p><strong>Algorithm:</strong></p>
+                    <pre class="formula">
+1. Initialize: Generate random population of N individuals
+2. Evaluate: Calculate fitness f(x) for each individual
+3. Selection: Choose parents based on fitness (tournament, roulette wheel)
+4. Crossover: Combine parents to create offspring
+   - Single-point: [a₁...aₖ|aₖ₊₁...aₙ] × [b₁...bₖ|bₖ₊₁...bₙ] → [a₁...aₖ|bₖ₊₁...bₙ]
+   - BLX-α: child = parent₁ + α(parent₂ - parent₁) × random
+5. Mutation: Random perturbation with probability p_m
+6. Replacement: Form new generation
+7. Repeat steps 2-6 until convergence
+
+Key Parameters:
+  Population size:    N = 50-200
+  Crossover rate:     p_c = 0.6-0.9
+  Mutation rate:      p_m = 0.01-0.1
+  Selection pressure: Controls diversity vs convergence
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="functionSelect">Test Function:</label>
+                    <select id="functionSelect">
+                        <option value="rastrigin">Rastrigin (Many Local Minima)</option>
+                        <option value="ackley">Ackley Function</option>
+                        <option value="rosenbrock">Rosenbrock</option>
+                        <option value="schwefel">Schwefel Function</option>
+                    </select>
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="populationSize">Population Size:</label>
+                        <input type="number" id="populationSize" value="100" min="10" max="500">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="maxGenerations">Max Generations:</label>
+                        <input type="number" id="maxGenerations" value="200" min="10" max="1000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="crossoverRate">Crossover Rate:</label>
+                        <input type="number" id="crossoverRate" value="0.8" step="0.05" min="0" max="1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="mutationRate">Mutation Rate:</label>
+                        <input type="number" id="mutationRate" value="0.1" step="0.01" min="0" max="1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="selectionMethod">Selection Method:</label>
+                        <select id="selectionMethod">
+                            <option value="tournament">Tournament</option>
+                            <option value="roulette">Roulette Wheel</option>
+                            <option value="rank">Rank Selection</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="tournamentSize">Tournament Size:</label>
+                        <input type="number" id="tournamentSize" value="3" min="2" max="10">
+                        <span class="hint">For tournament selection</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="elitism">Elitism:</label>
+                        <input type="number" id="elitism" value="2" min="0" max="20">
+                        <span class="hint">Best individuals preserved</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="crossoverType">Crossover Type:</label>
+                        <select id="crossoverType">
+                            <option value="blx">BLX-alpha</option>
+                            <option value="uniform">Uniform</option>
+                            <option value="arithmetic">Arithmetic</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="evolveBtn" class="btn btn-primary">Start Evolution</button>
+                    <button id="stopBtn" class="btn btn-secondary hidden">Stop</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Initializing population...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Population Distribution</h2>
+                <canvas id="populationCanvas" width="550" height="450"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Generations</span>
+                        <span id="genCount" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Best Position</span>
+                        <span id="bestPos" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Best Fitness</span>
+                        <span id="bestFitness" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Population Diversity</span>
+                        <span id="diversity" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="charts-row">
+                    <div class="chart-container">
+                        <h3>Fitness History</h3>
+                        <canvas id="fitnessCanvas" width="260" height="180"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Diversity History</h3>
+                        <canvas id="diversityCanvas" width="260" height="180"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #130</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
