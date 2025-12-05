@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Least Squares Fitting - Example 951</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Least Squares Curve Fitting</h1>
+        <p>Calculates the best-fit polynomial curve for a set of noisy data points using the Normal Equation (Matrix Inversion) in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="degree">Polynomial Degree:</label>
+                    <input type="range" id="degree" min="1" max="10" value="3">
+                    <span id="degreeDisplay">3</span>
+                </div>
+                <div class="form-group">
+                    <label for="points">Data Points:</label>
+                    <select id="points">
+                        <option value="20">20</option>
+                        <option value="50" selected>50</option>
+                        <option value="100">100</option>
+                        <option value="500">500</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="noise">Noise Level:</label>
+                    <input type="range" id="noise" min="0" max="100" value="30">
+                </div>
+                <div class="buttons">
+                    <button id="genBtn">New Data</button>
+                    <button id="fitBtn">Fit Curve</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">R² Score: <span id="r2Display">-</span></div>
+                    <div class="stat-item">Time: <span id="timeDisplay">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="fitCanvas" width="600" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
