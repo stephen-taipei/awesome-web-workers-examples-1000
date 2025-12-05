@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Stock Simulation (GBM) - Example 944</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Price Simulator</h1>
+        <p>Simulates thousands of potential future stock price paths using Geometric Brownian Motion (GBM) in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="startPrice">Start Price ($):</label>
+                    <input type="number" id="startPrice" value="100">
+                </div>
+                <div class="form-group">
+                    <label for="mu">Expected Return (μ %):</label>
+                    <input type="number" id="mu" value="8" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="sigma">Volatility (σ %):</label>
+                    <input type="number" id="sigma" value="20" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="years">Time Horizon (Years):</label>
+                    <input type="number" id="years" value="1" min="0.1" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="paths">Number of Paths:</label>
+                    <select id="paths">
+                        <option value="100">100</option>
+                        <option value="1000" selected>1,000</option>
+                        <option value="5000">5,000</option>
+                    </select>
+                </div>
+                <button id="simBtn">Run Simulation</button>
+
+                <div class="stats">
+                    <div class="stat-item">Mean Final Price: <span id="meanFinal">-</span></div>
+                    <div class="stat-item">Median Final Price: <span id="medianFinal">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="chartCanvas" width="600" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
