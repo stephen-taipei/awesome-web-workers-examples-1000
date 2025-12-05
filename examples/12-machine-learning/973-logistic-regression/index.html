@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Logistic Regression - Example 973</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Logistic Regression Classifier</h1>
+        <p>Trains a Logistic Regression model using Gradient Descent in a Web Worker to separate two classes of data.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="learningRate">Learning Rate:</label>
+                    <input type="range" id="learningRate" min="0.001" max="0.5" step="0.001" value="0.05">
+                    <span id="lrDisplay">0.05</span>
+                </div>
+                <div class="form-group">
+                    <label for="epochs">Max Epochs:</label>
+                    <input type="number" id="epochs" value="2000" min="100" max="10000">
+                </div>
+                <div class="form-group">
+                    <button id="genDataBtn">New Data</button>
+                    <button id="trainBtn">Train Model</button>
+                    <button id="stopBtn" disabled>Stop</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">Epoch: <span id="epochDisplay">0</span></div>
+                    <div class="stat-item">Loss (Log Loss): <span id="lossDisplay">-</span></div>
+                    <div class="stat-item">Accuracy: <span id="accDisplay">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="lrCanvas" width="500" height="500"></canvas>
+                <div class="legend">
+                    <span class="dot class1"></span> Class 1
+                    <span class="dot class0"></span> Class 0
+                    <span class="gradient-box"></span> Probability Gradient
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
