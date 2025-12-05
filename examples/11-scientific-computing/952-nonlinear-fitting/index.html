@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Non-Linear Fitting - Example 952</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Non-Linear Curve Fitting (Levenberg-Marquardt)</h1>
+        <p>Fits a non-linear model <code>y = a * exp(-b * x) + c</code> to noisy data using the Levenberg-Marquardt algorithm in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label>Target Model:</label>
+                    <div class="math-display">y = a * e^(-b * x) + c</div>
+                </div>
+                <div class="form-group">
+                    <label for="trueA">True a:</label>
+                    <input type="range" id="trueA" min="1" max="10" step="0.1" value="5">
+                    <span id="valA">5</span>
+                </div>
+                <div class="form-group">
+                    <label for="trueB">True b:</label>
+                    <input type="range" id="trueB" min="0.1" max="2" step="0.1" value="0.5">
+                    <span id="valB">0.5</span>
+                </div>
+                <div class="form-group">
+                    <label for="trueC">True c:</label>
+                    <input type="range" id="trueC" min="0" max="5" step="0.1" value="1">
+                    <span id="valC">1</span>
+                </div>
+                <div class="form-group">
+                    <label for="noise">Noise Level:</label>
+                    <input type="range" id="noise" min="0" max="1" step="0.05" value="0.2">
+                </div>
+                <button id="fitBtn">Generate Data & Fit</button>
+
+                <div class="stats">
+                    <div class="stat-item">Iterations: <span id="iterDisplay">0</span></div>
+                    <div class="stat-item">Residual Sum Sq: <span id="rssDisplay">-</span></div>
+                    <div class="stat-item">Fitted a: <span id="fitA">-</span></div>
+                    <div class="stat-item">Fitted b: <span id="fitB">-</span></div>
+                    <div class="stat-item">Fitted c: <span id="fitC">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="fitCanvas" width="500" height="400"></canvas>
+                <div class="legend">
+                    <span class="dot data"></span> Data
+                    <span class="line fit"></span> Fitted Curve
+                    <span class="line true"></span> True Curve
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
