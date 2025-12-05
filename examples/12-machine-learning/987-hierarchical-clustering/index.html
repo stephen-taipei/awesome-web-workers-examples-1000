@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Hierarchical Clustering - Example 987</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Hierarchical Clustering (Agglomerative)</h1>
+        <p>Visualizes the process of building a cluster hierarchy by iteratively merging the closest pairs of clusters in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="pointCount">Data Points:</label>
+                    <select id="pointCount">
+                        <option value="50">50</option>
+                        <option value="100" selected>100</option>
+                        <option value="200">200</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="linkage">Linkage Criteria:</label>
+                    <select id="linkage">
+                        <option value="single">Single Linkage (Min Dist)</option>
+                        <option value="complete">Complete Linkage (Max Dist)</option>
+                        <option value="average" selected>Average Linkage</option>
+                        <option value="centroid">Centroid Linkage</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="targetClusters">Stop at K Clusters:</label>
+                    <input type="range" id="targetClusters" min="1" max="10" value="3">
+                    <span id="kDisplay">3</span>
+                </div>
+                <div class="form-group">
+                    <label>Animation Speed:</label>
+                    <div class="speed-controls">
+                        <label><input type="radio" name="speed" value="200"> Slow</label>
+                        <label><input type="radio" name="speed" value="50" checked> Fast</label>
+                        <label><input type="radio" name="speed" value="0"> Instant</label>
+                    </div>
+                </div>
+                <button id="startBtn">Generate & Cluster</button>
+                <button id="stopBtn" disabled>Stop</button>
+
+                <div class="stats">
+                    <div class="stat-item">Current Clusters: <span id="clusterCountDisplay">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="hcCanvas" width="600" height="500"></canvas>
+                <div class="legend">
+                    <span class="dot node"></span> Data Point
+                    <span class="line link"></span> Merge Link
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
