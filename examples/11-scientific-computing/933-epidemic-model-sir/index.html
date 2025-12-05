@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Epidemic Model (SIR) - Example 933</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Epidemic Simulation (SIR Model)</h1>
+        <p>Simulates the spread of an infectious disease using the SIR (Susceptible-Infected-Recovered) compartmental model in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="popSize">Population:</label>
+                    <select id="popSize">
+                        <option value="1000">1,000</option>
+                        <option value="10000" selected>10,000</option>
+                        <option value="100000">100,000</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="beta">Infection Rate (β):</label>
+                    <input type="range" id="beta" min="0" max="1" step="0.01" value="0.3">
+                    <span id="betaDisplay">0.3</span>
+                </div>
+                <div class="form-group">
+                    <label for="gamma">Recovery Rate (γ):</label>
+                    <input type="range" id="gamma" min="0" max="0.5" step="0.01" value="0.1">
+                    <span id="gammaDisplay">0.1</span>
+                </div>
+                <div class="form-group">
+                    <label for="days">Duration (Days):</label>
+                    <input type="number" id="days" value="100">
+                </div>
+                <button id="runBtn">Run Simulation</button>
+
+                <div class="stats">
+                    <div class="stat-item">Peak Infected: <span id="peakInf">-</span></div>
+                    <div class="stat-item">Total Recovered: <span id="totalRec">-</span></div>
+                    <div class="stat-item">Time: <span id="calcTime">-</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="sirCanvas" width="500" height="300"></canvas>
+                <div class="legend">
+                    <span class="dot susc"></span> Susceptible
+                    <span class="dot inf"></span> Infected
+                    <span class="dot rec"></span> Recovered
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

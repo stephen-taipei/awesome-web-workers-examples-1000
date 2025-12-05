@@ -1,0 +1,146 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fff3e0;
+    color: #e65100;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-width: 900px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    color: #ef6c00;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    text-align: center;
+    color: #fb8c00;
+    margin-bottom: 2rem;
+}
+
+.layout {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.controls {
+    flex: 1;
+    min-width: 250px;
+    background: #fff8e1;
+    padding: 1.5rem;
+    border: 1px solid #ffe0b2;
+    border-radius: 6px;
+}
+
+.visualization {
+    flex: 2;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+canvas {
+    background-color: #fff;
+    border: 1px solid #ffe0b2;
+    border-radius: 4px;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #ef6c00;
+}
+
+select, input[type="number"] {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ffcc80;
+    border-radius: 4px;
+    font-size: 1rem;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+input[type="range"] {
+    width: 100%;
+    accent-color: #e65100;
+}
+
+button {
+    width: 100%;
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    transition: background 0.2s;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #f57c00;
+}
+
+button:disabled {
+    background-color: #ffe0b2;
+    cursor: not-allowed;
+}
+
+.stats {
+    margin-top: 2rem;
+    border-top: 1px solid #ffe0b2;
+    padding-top: 1rem;
+}
+
+.stat-item {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+}
+
+.stat-item span {
+    font-weight: bold;
+    color: #e65100;
+}
+
+.legend {
+    margin-top: 10px;
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.susc { background-color: #2196f3; }
+.inf { background-color: #f44336; }
+.rec { background-color: #4caf50; }
