@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker t-SNE - Example 991</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>t-SNE Visualization</h1>
+        <p>Iteratively runs t-Distributed Stochastic Neighbor Embedding (t-SNE) in a Web Worker to visualize high-dimensional clusters in 2D space.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="pointCount">Data Points:</label>
+                    <select id="pointCount">
+                        <option value="100">100</option>
+                        <option value="300" selected>300</option>
+                        <option value="500">500</option>
+                        <option value="1000">1000</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="perplexity">Perplexity:</label>
+                    <input type="range" id="perplexity" min="5" max="50" value="30">
+                    <span id="perpDisplay">30</span>
+                </div>
+                <div class="form-group">
+                    <label for="iterations">Max Iterations:</label>
+                    <input type="number" id="iterations" value="500" min="100" max="2000">
+                </div>
+                <div class="form-group">
+                    <label>Learning Rate:</label>
+                    <input type="number" id="epsilon" value="10" min="1" max="100">
+                </div>
+                <button id="startBtn">Initialize & Run</button>
+                <button id="stopBtn" disabled>Stop</button>
+
+                <div class="stats">
+                    <div class="stat-item">Iteration: <span id="iterDisplay">0</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="tsneCanvas" width="600" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
