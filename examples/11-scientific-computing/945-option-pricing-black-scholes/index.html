@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Option Pricing (Black-Scholes) - Example 945</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Option Pricing Calculator</h1>
+        <p>Calculates Call/Put option prices and Greeks using the Black-Scholes model (Analytical) vs Monte Carlo Simulation in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="spot">Spot Price (S):</label>
+                    <input type="number" id="spot" value="100">
+                </div>
+                <div class="form-group">
+                    <label for="strike">Strike Price (K):</label>
+                    <input type="number" id="strike" value="100">
+                </div>
+                <div class="form-group">
+                    <label for="time">Time to Maturity (T years):</label>
+                    <input type="number" id="time" value="1" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="rate">Risk-free Rate (r %):</label>
+                    <input type="number" id="rate" value="5" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="volatility">Volatility (σ %):</label>
+                    <input type="number" id="volatility" value="20" step="1">
+                </div>
+                <div class="form-group">
+                    <label for="sims">Monte Carlo Simulations:</label>
+                    <select id="sims">
+                        <option value="10000">10,000</option>
+                        <option value="100000" selected>100,000</option>
+                        <option value="1000000">1,000,000</option>
+                    </select>
+                </div>
+                <button id="calcBtn">Calculate</button>
+
+                <div class="stats">
+                    <div class="stat-item">Calculation Time: <span id="calcTime">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="results">
+                <h3>Analytical (Black-Scholes)</h3>
+                <div class="result-grid">
+                    <div>Call Price: <span id="bsCall" class="val">-</span></div>
+                    <div>Put Price: <span id="bsPut" class="val">-</span></div>
+                    <div>Delta (Call): <span id="bsDelta">-</span></div>
+                    <div>Gamma: <span id="bsGamma">-</span></div>
+                    <div>Vega: <span id="bsVega">-</span></div>
+                    <div>Theta (Call): <span id="bsTheta">-</span></div>
+                </div>
+
+                <h3>Monte Carlo Simulation</h3>
+                <div class="result-grid">
+                    <div>Call Price: <span id="mcCall" class="val">-</span></div>
+                    <div>Put Price: <span id="mcPut" class="val">-</span></div>
+                    <div>Std Err: <span id="mcErr">-</span></div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="pricePathCanvas" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
