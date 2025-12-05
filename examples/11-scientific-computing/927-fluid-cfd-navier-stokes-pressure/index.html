@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker CFD (Stable Fluids) - Example 927</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Stable Fluids (Navier-Stokes)</h1>
+        <p>Solves the incompressible Navier-Stokes equations using Jos Stam's Stable Fluids method in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="viscosity">Viscosity:</label>
+                    <input type="range" id="viscosity" min="0" max="0.005" step="0.0001" value="0.0001">
+                </div>
+                <div class="form-group">
+                    <label for="diffusion">Diffusion:</label>
+                    <input type="range" id="diffusion" min="0" max="0.005" step="0.0001" value="0.0001">
+                </div>
+                <div class="form-group">
+                    <label for="iterations">Solver Iterations:</label>
+                    <input type="range" id="iterations" min="4" max="40" value="16">
+                    <span id="iterDisplay">16</span>
+                </div>
+                <button id="startBtn">Start / Pause</button>
+                <button id="resetBtn">Reset</button>
+
+                <div class="stats">
+                    <div class="stat-item">FPS: <span id="fpsDisplay">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="fluidCanvas" width="500" height="500"></canvas>
+                <div class="legend">Drag to add Dye & Velocity</div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
