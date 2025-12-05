@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Contour Plot (Marching Squares) - Example 964</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Contour Plotter</h1>
+        <p>Generates contour lines (isolines) from a scalar field <code>z = f(x, y)</code> using the Marching Squares algorithm in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="eqZ">z = f(x, y) =</label>
+                    <input type="text" id="eqZ" value="sin(x) * cos(y) * exp(-0.1*(x*x + y*y))">
+                    <small>Example: sin(x) + cos(y), x*x - y*y</small>
+                </div>
+                <div class="form-group row">
+                    <div>
+                        <label>Range:</label>
+                        <input type="number" id="range" value="5">
+                    </div>
+                    <div>
+                        <label>Resolution:</label>
+                        <input type="range" id="resolution" min="20" max="200" value="80">
+                        <span id="resDisplay">80</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="thresholds">Isoline Levels:</label>
+                    <input type="number" id="thresholds" value="10" min="1" max="20">
+                </div>
+                <button id="plotBtn">Generate Contours</button>
+
+                <div class="stats">
+                    <div class="stat-item">Lines Generated: <span id="lineCount">-</span></div>
+                    <div class="stat-item">Time: <span id="calcTime">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="contourCanvas" width="500" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
