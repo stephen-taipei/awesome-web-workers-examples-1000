@@ -1,0 +1,165 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e3f2fd;
+    color: #0d47a1;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    max-width: 900px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    color: #1565c0;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    text-align: center;
+    color: #1976d2;
+    margin-bottom: 2rem;
+}
+
+.layout {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.controls {
+    flex: 1;
+    min-width: 250px;
+    background: #bbdefb;
+    padding: 1.5rem;
+    border: 1px solid #90caf9;
+    border-radius: 6px;
+}
+
+.visualization {
+    flex: 2;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+canvas {
+    background-color: #fff;
+    border: 1px solid #90caf9;
+    border-radius: 4px;
+    cursor: crosshair;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #0d47a1;
+}
+
+input[type="range"] {
+    width: 100%;
+    accent-color: #1565c0;
+}
+
+.speed-controls {
+    display: flex;
+    gap: 1rem;
+}
+
+.speed-controls label {
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+}
+
+button {
+    width: 100%;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    transition: background 0.2s;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #1565c0;
+}
+
+button:disabled {
+    background-color: #90caf9;
+    cursor: not-allowed;
+}
+
+#stopBtn {
+    background-color: #ef5350;
+}
+
+#stopBtn:hover {
+    background-color: #d32f2f;
+}
+
+.stats {
+    margin-top: 2rem;
+    border-top: 1px solid #90caf9;
+    padding-top: 1rem;
+}
+
+.stat-item {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+}
+
+.stat-item span {
+    font-weight: bold;
+    color: #0d47a1;
+}
+
+.legend {
+    margin-top: 10px;
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.class1 { background-color: #2196f3; }
+.class0 { background-color: #f44336; }
+
+.line {
+    width: 20px;
+    height: 2px;
+    display: inline-block;
+    background-color: #333;
+    margin-bottom: 4px;
+    margin-right: 5px;
+}
