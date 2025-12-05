@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Confusion Matrix - Example 997</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Multi-Class Confusion Matrix</h1>
+        <p>Offloads the computation of a Confusion Matrix for multi-class classification problems to a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="sampleSize">Dataset Size:</label>
+                    <select id="sampleSize">
+                        <option value="10000">10,000 Samples</option>
+                        <option value="100000">100,000 Samples</option>
+                        <option value="1000000" selected>1,000,000 Samples</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="classCount">Number of Classes:</label>
+                    <input type="number" id="classCount" value="10" min="2" max="50">
+                </div>
+                <div class="form-group">
+                    <label for="errorRate">Simulated Error Rate:</label>
+                    <input type="range" id="errorRate" min="0" max="100" value="20">
+                    <span id="errorRateDisplay">20%</span>
+                </div>
+                <button id="generateBtn">Generate & Compute</button>
+
+                <div class="stats">
+                    <div class="stat-item">Processing Time: <span id="timeValue">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Ready</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <h3>Confusion Matrix Heatmap</h3>
+                <div id="heatmapContainer">
+                    <canvas id="heatmapCanvas" width="500" height="500"></canvas>
+                </div>
+                <div id="tooltip" class="tooltip hidden"></div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
