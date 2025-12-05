@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Quaternion Rotation - Example 962</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Quaternion Rotation</h1>
+        <p>Demonstrates smooth 3D rotation interpolation (SLERP) using Quaternions calculated in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <h3>Target Orientation</h3>
+                <div class="form-group">
+                    <label>Axis X:</label>
+                    <input type="range" id="axisX" min="-1" max="1" step="0.1" value="1">
+                </div>
+                <div class="form-group">
+                    <label>Axis Y:</label>
+                    <input type="range" id="axisY" min="-1" max="1" step="0.1" value="1">
+                </div>
+                <div class="form-group">
+                    <label>Axis Z:</label>
+                    <input type="range" id="axisZ" min="-1" max="1" step="0.1" value="0">
+                </div>
+                <div class="form-group">
+                    <label>Angle (deg): <span id="angleDisplay">90</span></label>
+                    <input type="range" id="angle" min="0" max="360" value="90">
+                </div>
+                <div class="buttons">
+                    <button id="animateBtn">Animate to Target</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">Current Q: <span id="qCurrent">[1, 0, 0, 0]</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="qCanvas" width="500" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
