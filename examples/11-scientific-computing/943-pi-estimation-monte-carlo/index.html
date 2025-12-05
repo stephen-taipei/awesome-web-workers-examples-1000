@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Pi Estimation (Monte Carlo) - Example 943</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Pi Estimation (Monte Carlo)</h1>
+        <p>This example is a simplified version of Example 969, focusing on rapid convergence display and different visualization style.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="batchSize">Batch Size:</label>
+                    <select id="batchSize">
+                        <option value="1000">1,000</option>
+                        <option value="10000">10,000</option>
+                        <option value="50000" selected>50,000</option>
+                    </select>
+                </div>
+                <button id="startBtn">Start</button>
+                <button id="stopBtn" disabled>Stop</button>
+
+                <div class="stats">
+                    <div class="stat-item">Total: <span id="totalPoints">0</span></div>
+                    <div class="stat-item big">π ≈ <span id="piEst">-</span></div>
+                    <div class="stat-item">Error: <span id="piErr">-</span>%</div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="mcCanvas" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
