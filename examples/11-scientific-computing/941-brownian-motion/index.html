@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Brownian Motion - Example 941</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Brownian Motion (Random Walk)</h1>
+        <p>Simulates the random movement of particles suspended in a fluid (Brownian Motion) using a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="particleCount">Particles:</label>
+                    <select id="particleCount">
+                        <option value="100">100</option>
+                        <option value="1000" selected>1,000</option>
+                        <option value="5000">5,000</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="speed">Temperature (Speed):</label>
+                    <input type="range" id="speed" min="1" max="20" value="5">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="trails" checked> Show Trails
+                    </label>
+                </div>
+                <button id="startBtn">Start Simulation</button>
+                <button id="resetBtn">Reset</button>
+
+                <div class="stats">
+                    <div class="stat-item">Step: <span id="stepCount">0</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="motionCanvas" width="500" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
