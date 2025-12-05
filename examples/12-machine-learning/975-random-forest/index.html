@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Random Forest - Example 975</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Random Forest Classifier</h1>
+        <p>Trains a Random Forest on a 2D dataset by building multiple Decision Trees in parallel (simulated) using a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="nTrees">Number of Trees:</label>
+                    <input type="range" id="nTrees" min="1" max="50" value="10">
+                    <span id="treeDisplay">10</span>
+                </div>
+                <div class="form-group">
+                    <label for="maxDepth">Max Depth:</label>
+                    <input type="range" id="maxDepth" min="1" max="10" value="5">
+                    <span id="depthDisplay">5</span>
+                </div>
+                <div class="form-group">
+                    <button id="genDataBtn">New Data</button>
+                    <button id="trainBtn">Train Forest</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">Trees Built: <span id="builtCount">0</span></div>
+                    <div class="stat-item">Accuracy: <span id="accDisplay">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="rfCanvas" width="500" height="500"></canvas>
+                <div class="legend">
+                    <span class="dot class0"></span> Class 0
+                    <span class="dot class1"></span> Class 1
+                    <span class="dot class2"></span> Class 2
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
