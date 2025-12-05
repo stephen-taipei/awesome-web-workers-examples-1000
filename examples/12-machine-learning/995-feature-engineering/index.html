@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Feature Engineering - Example 995</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Feature Engineering</h1>
+        <p>Perform computationally intensive feature transformations (Scaling, Polynomial Features, Log Transform) on large datasets using a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="sampleSize">Dataset Size (Rows):</label>
+                    <select id="sampleSize">
+                        <option value="10000">10,000</option>
+                        <option value="100000">100,000</option>
+                        <option value="1000000" selected>1,000,000</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="featureCount">Original Features (Cols):</label>
+                    <input type="number" id="featureCount" value="5" min="2" max="20">
+                </div>
+                <div class="form-group">
+                    <label>Transformations:</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="normalize" checked> Normalize (Min-Max)</label>
+                        <label><input type="checkbox" id="logTransform"> Log Transform</label>
+                        <label><input type="checkbox" id="polyFeatures"> Polynomial Features (Interaction)</label>
+                        <label><input type="checkbox" id="standardize"> Standardize (Z-Score)</label>
+                    </div>
+                </div>
+                <button id="processBtn">Generate & Process</button>
+
+                <div class="stats">
+                    <div class="stat-item">Input Size: <span id="inputSizeVal">-</span></div>
+                    <div class="stat-item">Output Size: <span id="outputSizeVal">-</span></div>
+                    <div class="stat-item">Processing Time: <span id="timeValue">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Ready</span></div>
+                </div>
+            </div>
+
+            <div class="preview">
+                <h3>Data Preview (First 5 Rows)</h3>
+                <div class="table-container">
+                    <table id="previewTable">
+                        <thead>
+                            <tr id="tableHeader"></tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr><td colspan="5" class="empty">No data processed yet</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
