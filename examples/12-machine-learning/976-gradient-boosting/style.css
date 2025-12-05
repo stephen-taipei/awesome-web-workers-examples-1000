@@ -1,0 +1,149 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fffde7;
+    color: #3e2723;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    max-width: 900px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    color: #ef6c00;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    text-align: center;
+    color: #ff9800;
+    margin-bottom: 2rem;
+}
+
+.layout {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.controls {
+    flex: 1;
+    min-width: 250px;
+    background: #fff3e0;
+    padding: 1.5rem;
+    border: 1px solid #ffcc80;
+    border-radius: 6px;
+}
+
+.visualization {
+    flex: 2;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+canvas {
+    background-color: #fff;
+    border: 1px solid #ffcc80;
+    border-radius: 4px;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #e65100;
+}
+
+input[type="range"] {
+    width: 100%;
+    accent-color: #ef6c00;
+}
+
+button {
+    width: 100%;
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    transition: background 0.2s;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #f57c00;
+}
+
+button:disabled {
+    background-color: #ffcc80;
+    cursor: not-allowed;
+}
+
+#stopBtn {
+    background-color: #d84315;
+}
+
+#stopBtn:hover {
+    background-color: #bf360c;
+}
+
+.stats {
+    margin-top: 2rem;
+    border-top: 1px solid #ffcc80;
+    padding-top: 1rem;
+}
+
+.stat-item {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+}
+
+.stat-item span {
+    font-weight: bold;
+    color: #ef6c00;
+}
+
+.legend {
+    margin-top: 10px;
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    background-color: #aaa;
+    margin-right: 5px;
+}
+
+.line {
+    width: 20px;
+    height: 3px;
+    display: inline-block;
+    background-color: #e65100;
+    margin-right: 5px;
+    margin-bottom: 3px;
+}
