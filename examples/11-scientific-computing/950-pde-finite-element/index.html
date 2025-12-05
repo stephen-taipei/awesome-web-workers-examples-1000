@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker PDE Solver (FEM) - Example 950</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>PDE Solver (Heat Equation)</h1>
+        <p>Solves the 2D Heat Equation using the Finite Difference Method (FDM) in a Web Worker to simulate heat diffusion.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="gridSize">Grid Size:</label>
+                    <select id="gridSize">
+                        <option value="50">50x50</option>
+                        <option value="100" selected>100x100</option>
+                        <option value="200">200x200</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="alpha">Thermal Diffusivity (α):</label>
+                    <input type="range" id="alpha" min="0.01" max="0.25" step="0.01" value="0.1">
+                    <span id="alphaDisplay">0.1</span>
+                </div>
+                <div class="form-group">
+                    <label for="boundary">Boundary Condition:</label>
+                    <select id="boundary">
+                        <option value="fixed">Fixed (Cold Edges)</option>
+                        <option value="insulated">Insulated (Reflect)</option>
+                        <option value="periodic">Periodic (Wrap)</option>
+                    </select>
+                </div>
+                <div class="buttons">
+                    <button id="startBtn">Start</button>
+                    <button id="resetBtn">Reset</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">FPS: <span id="fpsDisplay">-</span></div>
+                    <div class="stat-item">Avg Temp: <span id="avgTemp">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="heatCanvas" width="500" height="500"></canvas>
+                <div class="legend">
+                    <span class="gradient-bar"></span>
+                    <div class="labels">
+                        <span>Cold (0.0)</span>
+                        <span>Hot (1.0)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
