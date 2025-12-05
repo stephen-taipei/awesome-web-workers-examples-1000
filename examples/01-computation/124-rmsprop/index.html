@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RMSprop Optimizer - Web Worker Example #124</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>RMSprop Optimizer</h1>
+            <p class="subtitle">Web Worker Example #124 - Root Mean Square Propagation</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About RMSprop</h2>
+                <p>RMSprop (Root Mean Square Propagation) is an adaptive learning rate optimization algorithm designed to handle the diminishing learning rates problem in AdaGrad. It uses an exponentially decaying average of squared gradients.</p>
+                <div class="formula-box">
+                    <p><strong>Update Rules:</strong></p>
+                    <pre class="formula">
+v_t = ρ * v_{t-1} + (1 - ρ) * g_t²    (Running average of squared gradients)
+θ_t = θ_{t-1} - α * g_t / (√v_t + ε)  (Parameter update)
+
+Where:
+  ρ = decay rate (typically 0.9)
+  α = learning rate
+  ε = small constant for numerical stability
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="functionSelect">Test Function:</label>
+                    <select id="functionSelect">
+                        <option value="rosenbrock">Rosenbrock (Banana)</option>
+                        <option value="rastrigin">Rastrigin</option>
+                        <option value="sphere">Sphere</option>
+                        <option value="himmelblau">Himmelblau</option>
+                    </select>
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="learningRate">Learning Rate (α):</label>
+                        <input type="number" id="learningRate" value="0.01" step="0.001" min="0.0001">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="decayRate">Decay Rate (ρ):</label>
+                        <input type="number" id="decayRate" value="0.9" step="0.01" min="0" max="0.999">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="epsilon">Epsilon (ε):</label>
+                        <input type="number" id="epsilon" value="1e-8" step="1e-9">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="maxIter">Max Iterations:</label>
+                        <input type="number" id="maxIter" value="2000" min="100" max="10000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="tolerance">Tolerance:</label>
+                        <input type="number" id="tolerance" value="1e-6" step="1e-7">
+                    </div>
+
+                    <div class="input-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="useMomentum">
+                            Add Momentum (Nesterov)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="optimizeBtn" class="btn btn-primary">Start Optimization</button>
+                    <button id="stopBtn" class="btn btn-secondary hidden">Stop</button>
+                    <button id="compareBtn" class="btn btn-accent">Compare with SGD</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Initializing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Optimization Landscape</h2>
+                <div class="canvas-container">
+                    <canvas id="optimCanvas" width="550" height="450"></canvas>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Iterations</span>
+                        <span id="iterCount" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Final Position</span>
+                        <span id="finalPos" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Final Loss</span>
+                        <span id="finalValue" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Time</span>
+                        <span id="execTime" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <div class="convergence-info">
+                    <h3>Convergence Comparison</h3>
+                    <canvas id="lossCanvas" width="550" height="220"></canvas>
+                    <div class="legend-box">
+                        <span class="legend-item"><span class="color-dot rmsprop"></span> RMSprop</span>
+                        <span class="legend-item"><span class="color-dot sgd"></span> SGD (if compared)</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>
+                <a href="../index.html">Back to Examples</a> |
+                Web Workers Example #124 - RMSprop Optimizer
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
