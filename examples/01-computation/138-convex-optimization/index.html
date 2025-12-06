@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convex Optimization - Web Worker Example #138</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Convex Optimization</h1>
+            <p class="subtitle">Web Worker Example #138 - Interior Point Method</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Convex Optimization</h2>
+                <p>Convex optimization finds the global minimum of a convex function over a convex set. The Interior Point Method (Barrier Method) handles inequality constraints by adding a logarithmic barrier to the objective, then gradually reducing its influence to approach the constrained optimum.</p>
+                <div class="formula-box">
+                    <p><strong>Barrier Method:</strong></p>
+                    <pre class="formula">
+Original Problem:
+  Minimize:   f(x)
+  Subject to: gᵢ(x) ≤ 0,  i = 1,...,m
+              Ax = b
+
+Barrier Problem:
+  Minimize:   t·f(x) - Σ log(-gᵢ(x))
+
+Where t > 0 is the barrier parameter
+
+Algorithm (Path Following):
+1. Initialize with strictly feasible x, t = t₀
+2. Centering step: Minimize barrier problem
+   using Newton's method
+3. Increase t: t ← μ·t  (μ > 1)
+4. Repeat until m/t < ε (duality gap bound)
+
+Newton Step for Centering:
+  Δx = -H⁻¹∇φ(x)
+
+Where:
+  φ(x) = t·f(x) - Σ log(-gᵢ(x))
+  H = t·∇²f + Σ (1/gᵢ²)∇gᵢ∇gᵢᵀ - Σ (1/gᵢ)∇²gᵢ
+
+Convergence: O(√m · log(m/ε))
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Problem Setup</h2>
+
+                <div class="input-group">
+                    <label for="problemSelect">Example Problem:</label>
+                    <select id="problemSelect">
+                        <option value="quadratic">Quadratic with Linear Constraints</option>
+                        <option value="logistic">Log-Sum-Exp</option>
+                        <option value="geometric">Geometric Programming</option>
+                        <option value="custom">Custom Problem</option>
+                    </select>
+                </div>
+
+                <div id="customProblem" class="custom-problem hidden">
+                    <div class="input-group">
+                        <label>Objective: f(x) = (x₁-a)² + (x₂-b)²</label>
+                        <div class="coef-inputs">
+                            <span>a =</span>
+                            <input type="number" id="targetX" value="3" step="0.5">
+                            <span>b =</span>
+                            <input type="number" id="targetY" value="3" step="0.5">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Constraints (gᵢ(x) ≤ 0):</label>
+                        <div class="constraint-row">
+                            <input type="number" id="a11" value="1" step="0.1">
+                            <span>x₁ +</span>
+                            <input type="number" id="a12" value="1" step="0.1">
+                            <span>x₂ ≤</span>
+                            <input type="number" id="b1" value="4" step="0.5">
+                        </div>
+                        <div class="constraint-row">
+                            <input type="number" id="a21" value="-1" step="0.1">
+                            <span>x₁ +</span>
+                            <input type="number" id="a22" value="0" step="0.1">
+                            <span>x₂ ≤</span>
+                            <input type="number" id="b2" value="0" step="0.5">
+                        </div>
+                        <div class="constraint-row">
+                            <input type="number" id="a31" value="0" step="0.1">
+                            <span>x₁ +</span>
+                            <input type="number" id="a32" value="-1" step="0.1">
+                            <span>x₂ ≤</span>
+                            <input type="number" id="b3" value="0" step="0.5">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="problemDescription" class="problem-desc"></div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="mu">Barrier Growth μ:</label>
+                        <input type="number" id="mu" value="10" min="1.5" max="50" step="0.5">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="tolerance">Tolerance ε:</label>
+                        <input type="number" id="tolerance" value="0.0001" step="0.0001" min="0.00001">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="maxOuter">Max Outer Iterations:</label>
+                        <input type="number" id="maxOuter" value="50" min="5" max="200">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="maxInner">Max Newton Steps:</label>
+                        <input type="number" id="maxInner" value="50" min="5" max="100">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="solveBtn" class="btn btn-primary">Solve</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Solving...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Interior Point Path</h2>
+                <canvas id="convexCanvas" width="550" height="400"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Solution</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Status</span>
+                        <span id="status" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Optimal x₁</span>
+                        <span id="optX1" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Optimal x₂</span>
+                        <span id="optX2" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Optimal Value</span>
+                        <span id="optValue" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Outer Iterations</span>
+                        <span id="outerIter" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Newton Steps</span>
+                        <span id="newtonSteps" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Final t</span>
+                        <span id="finalT" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Duality Gap</span>
+                        <span id="dualityGap" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Barrier Path</h3>
+                <div id="barrierHistory" class="barrier-history"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #138</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
