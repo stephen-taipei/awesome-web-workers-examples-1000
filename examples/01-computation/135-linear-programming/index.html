@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Programming - Web Worker Example #135</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Linear Programming</h1>
+            <p class="subtitle">Web Worker Example #135 - Simplex Method</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Linear Programming</h2>
+                <p>Linear Programming (LP) optimizes a linear objective function subject to linear equality and inequality constraints. The Simplex method efficiently finds optimal solutions by traversing vertices of the feasible region.</p>
+                <div class="formula-box">
+                    <p><strong>Standard Form:</strong></p>
+                    <pre class="formula">
+Maximize:   z = c₁x₁ + c₂x₂ + ... + cₙxₙ
+
+Subject to:
+  a₁₁x₁ + a₁₂x₂ + ... + a₁ₙxₙ ≤ b₁
+  a₂₁x₁ + a₂₂x₂ + ... + a₂ₙxₙ ≤ b₂
+  ...
+  aₘ₁x₁ + aₘ₂x₂ + ... + aₘₙxₙ ≤ bₘ
+
+  x₁, x₂, ..., xₙ ≥ 0
+
+Simplex Method:
+1. Convert to standard form (add slack variables)
+2. Find initial basic feasible solution
+3. While not optimal:
+   a. Select entering variable (most positive cⱼ - zⱼ)
+   b. Select leaving variable (minimum ratio test)
+   c. Pivot to new basic solution
+4. Read optimal solution from tableau
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Problem Setup</h2>
+
+                <div class="input-group">
+                    <label for="problemSelect">Example Problem:</label>
+                    <select id="problemSelect">
+                        <option value="production">Production Planning</option>
+                        <option value="diet">Diet Problem</option>
+                        <option value="transportation">Transportation</option>
+                        <option value="custom">Custom Problem</option>
+                    </select>
+                </div>
+
+                <div id="customProblem" class="custom-problem hidden">
+                    <div class="input-group">
+                        <label for="objective">Objective (max c₁x₁ + c₂x₂):</label>
+                        <div class="coef-inputs">
+                            <input type="number" id="c1" value="3" step="0.1" placeholder="c₁">
+                            <span>x₁ +</span>
+                            <input type="number" id="c2" value="2" step="0.1" placeholder="c₂">
+                            <span>x₂</span>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Constraints (≤):</label>
+                        <div class="constraint-row">
+                            <input type="number" id="a11" value="1" step="0.1">
+                            <span>x₁ +</span>
+                            <input type="number" id="a12" value="1" step="0.1">
+                            <span>x₂ ≤</span>
+                            <input type="number" id="b1" value="4" step="0.1">
+                        </div>
+                        <div class="constraint-row">
+                            <input type="number" id="a21" value="2" step="0.1">
+                            <span>x₁ +</span>
+                            <input type="number" id="a22" value="1" step="0.1">
+                            <span>x₂ ≤</span>
+                            <input type="number" id="b2" value="6" step="0.1">
+                        </div>
+                        <div class="constraint-row">
+                            <input type="number" id="a31" value="1" step="0.1">
+                            <span>x₁ +</span>
+                            <input type="number" id="a32" value="2" step="0.1">
+                            <span>x₂ ≤</span>
+                            <input type="number" id="b3" value="5" step="0.1">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="problemDescription" class="problem-desc"></div>
+
+                <div class="button-group">
+                    <button id="solveBtn" class="btn btn-primary">Solve LP</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Solving...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Feasible Region</h2>
+                <canvas id="lpCanvas" width="550" height="450"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Solution</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Status</span>
+                        <span id="status" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Optimal x₁</span>
+                        <span id="optX1" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Optimal x₂</span>
+                        <span id="optX2" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Optimal Value</span>
+                        <span id="optValue" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="tableau-container">
+                    <h3>Simplex Iterations</h3>
+                    <div id="tableauHistory"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #135</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
