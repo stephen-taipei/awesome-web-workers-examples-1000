@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nonlinear Programming - Web Worker Example #139</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Nonlinear Programming</h1>
+            <p class="subtitle">Web Worker Example #139 - Sequential Quadratic Programming</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Nonlinear Programming</h2>
+                <p>Nonlinear Programming (NLP) optimizes nonlinear objective functions subject to nonlinear constraints. Sequential Quadratic Programming (SQP) is a powerful method that solves a sequence of quadratic subproblems to approximate the original NLP.</p>
+                <div class="formula-box">
+                    <p><strong>NLP Standard Form:</strong></p>
+                    <pre class="formula">
+Minimize:   f(x)
+Subject to: hᵢ(x) = 0,   i = 1,...,p  (equality)
+            gⱼ(x) ≤ 0,   j = 1,...,m  (inequality)
+
+SQP Method - At each iteration k:
+
+1. Form QP subproblem:
+   min  ∇f(xₖ)ᵀd + ½dᵀBₖd
+   s.t. ∇hᵢ(xₖ)ᵀd + hᵢ(xₖ) = 0
+        ∇gⱼ(xₖ)ᵀd + gⱼ(xₖ) ≤ 0
+
+2. Solve QP for search direction d
+
+3. Line search: xₖ₊₁ = xₖ + αd
+
+4. Update Hessian approximation Bₖ₊₁
+   (BFGS or damped BFGS)
+
+Merit Function (L₁ penalty):
+  φ(x; μ) = f(x) + μ Σ|hᵢ(x)| + μ Σmax(0, gⱼ(x))
+
+KKT Conditions:
+  ∇f(x*) + Σλᵢ∇hᵢ(x*) + Σμⱼ∇gⱼ(x*) = 0
+  hᵢ(x*) = 0,  gⱼ(x*) ≤ 0
+  μⱼ ≥ 0,  μⱼgⱼ(x*) = 0
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Problem Setup</h2>
+
+                <div class="input-group">
+                    <label for="problemSelect">Example Problem:</label>
+                    <select id="problemSelect">
+                        <option value="rosenbrock">Constrained Rosenbrock</option>
+                        <option value="himmelblau">Constrained Himmelblau</option>
+                        <option value="circle">Circle Packing</option>
+                        <option value="engineering">Engineering Design</option>
+                    </select>
+                </div>
+
+                <div id="problemDescription" class="problem-desc"></div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="maxIter">Max Iterations:</label>
+                        <input type="number" id="maxIter" value="100" min="10" max="500">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="tolerance">Tolerance:</label>
+                        <input type="number" id="tolerance" value="0.000001" step="0.000001" min="0.0000001">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="penaltyInit">Initial Penalty μ:</label>
+                        <input type="number" id="penaltyInit" value="1" min="0.1" max="100" step="0.1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="hessianUpdate">Hessian Update:</label>
+                        <select id="hessianUpdate">
+                            <option value="bfgs">BFGS</option>
+                            <option value="dampedBfgs">Damped BFGS</option>
+                            <option value="sr1">SR1</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="solveBtn" class="btn btn-primary">Solve NLP</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Solving...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Solution Path</h2>
+                <canvas id="nlpCanvas" width="550" height="400"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Solution</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Status</span>
+                        <span id="status" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Optimal x₁</span>
+                        <span id="optX1" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Optimal x₂</span>
+                        <span id="optX2" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Optimal Value</span>
+                        <span id="optValue" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Iterations</span>
+                        <span id="iterations" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">QP Solves</span>
+                        <span id="qpSolves" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Constraint Violation</span>
+                        <span id="constraintViol" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">KKT Residual</span>
+                        <span id="kktResidual" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Convergence History</h3>
+                <div id="convergenceHistory" class="convergence-history"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #139</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
