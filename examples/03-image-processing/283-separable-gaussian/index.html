@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#283 可分離高斯模糊 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 實現優化的可分離高斯模糊，將 2D 卷積拆分為兩次 1D 卷積">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>可分離高斯模糊</h1>
+            <p class="subtitle">Separable Gaussian Blur</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#283</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-warning">進階</span>
+            </div>
+            <!-- 可分離概念視覺化 -->
+            <div class="separable-visual">
+                <div class="visual-item">
+                    <span class="visual-label">2D 核心</span>
+                    <span class="visual-formula">O(r²)</span>
+                </div>
+                <span class="visual-arrow">→</span>
+                <div class="visual-item">
+                    <span class="visual-label">水平 1D</span>
+                    <span class="visual-formula">O(r)</span>
+                </div>
+                <span class="visual-plus">+</span>
+                <div class="visual-item">
+                    <span class="visual-label">垂直 1D</span>
+                    <span class="visual-formula">O(r)</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 圖片上傳區域 -->
+        <section class="card">
+            <h2 class="card-title">圖片選擇</h2>
+            <div class="upload-area" id="upload-area">
+                <input type="file" id="file-input" accept="image/*" hidden>
+                <div class="upload-placeholder">
+                    <div class="upload-icon">🖼️</div>
+                    <p>點擊或拖放圖片至此處</p>
+                    <p class="upload-hint">支援 JPG, PNG, GIF, WebP 格式</p>
+                </div>
+            </div>
+            <div class="demo-buttons">
+                <button id="load-demo-btn" class="btn btn-secondary">載入範例圖片</button>
+            </div>
+        </section>
+
+        <!-- 參數設定區域 -->
+        <section class="card">
+            <h2 class="card-title">高斯模糊參數</h2>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="radius-input">模糊半徑：<span id="radius-value">5</span> 像素</label>
+                    <input
+                        type="range"
+                        id="radius-input"
+                        class="form-range"
+                        value="5"
+                        min="1"
+                        max="30"
+                        step="1"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sigma-input">Sigma (σ)：<span id="sigma-value">2.5</span></label>
+                    <input
+                        type="range"
+                        id="sigma-input"
+                        class="form-range"
+                        value="2.5"
+                        min="0.5"
+                        max="15"
+                        step="0.5"
+                    >
+                </div>
+            </div>
+
+            <div class="form-hint">
+                核心大小 = <span id="kernel-size">11</span>
+                &nbsp;|&nbsp;
+                預估加速比 = <span id="speedup-ratio">5.5</span>x
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">快速設定</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-radius="3" data-sigma="1.5">輕微 (r=3)</button>
+                    <button class="preset-btn" data-radius="5" data-sigma="2.5">標準 (r=5)</button>
+                    <button class="preset-btn" data-radius="10" data-sigma="5">中等 (r=10)</button>
+                    <button class="preset-btn" data-radius="20" data-sigma="10">強烈 (r=20)</button>
+                    <button class="preset-btn" data-radius="30" data-sigma="15">極強 (r=30)</button>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button id="apply-separable-btn" class="btn btn-primary" disabled>可分離高斯模糊</button>
+                <button id="apply-regular-btn" class="btn btn-secondary" disabled>標準高斯模糊 (比較)</button>
+                <button id="reset-btn" class="btn btn-secondary" disabled>還原原圖</button>
+                <button id="download-btn" class="btn btn-info" disabled>下載結果</button>
+            </div>
+        </section>
+
+        <!-- 一維核心視覺化 -->
+        <section class="card">
+            <h2 class="card-title">一維高斯核心預覽</h2>
+            <div class="kernel-1d-preview">
+                <canvas id="kernel-canvas" width="400" height="100"></canvas>
+            </div>
+            <div id="kernel-values" class="kernel-values"></div>
+        </section>
+
+        <!-- 進度顯示區域 -->
+        <section class="card">
+            <h2 class="card-title">處理進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 圖片顯示區域 -->
+        <section class="card" id="preview-section" style="display: none;">
+            <h2 class="card-title">圖片預覽</h2>
+            <div class="preview-container">
+                <div class="preview-box">
+                    <h4>原圖</h4>
+                    <canvas id="original-canvas"></canvas>
+                </div>
+                <div class="preview-box">
+                    <h4>處理結果</h4>
+                    <canvas id="result-canvas"></canvas>
+                </div>
+            </div>
+            <div id="result-stats" class="result-stats"></div>
+        </section>
+
+        <!-- 效能比較區域 -->
+        <section class="card" id="comparison-section" style="display: none;">
+            <h2 class="card-title">效能比較</h2>
+            <div id="comparison-results" class="comparison-results"></div>
+        </section>
+
+        <!-- 演算法說明區域 -->
+        <section class="card info-section">
+            <h3>可分離濾波器原理</h3>
+            <ul>
+                <li><strong>核心概念：</strong>高斯函數可分解為兩個一維函數的乘積</li>
+                <li><strong>數學基礎：</strong>
+                    <code>G(x,y) = G(x) × G(y)</code>
+                </li>
+                <li><strong>優化效果：</strong>
+                    <ul style="margin-top: 8px; margin-left: 20px;">
+                        <li>2D 卷積：每像素 (2r+1)² 次運算</li>
+                        <li>可分離：每像素 2×(2r+1) 次運算</li>
+                        <li>加速比：約 r+0.5 倍</li>
+                    </ul>
+                </li>
+                <li><strong>處理流程：</strong>
+                    <ol style="margin-top: 8px; margin-left: 20px;">
+                        <li>產生一維高斯核心</li>
+                        <li>水平方向卷積（每行獨立處理）</li>
+                        <li>垂直方向卷積（每列獨立處理）</li>
+                    </ol>
+                </li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #283 - 可分離高斯模糊
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#280 批量濾鏡 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 實現多濾鏡組合應用，支援濾鏡鏈處理">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>批量濾鏡</h1>
+            <p class="subtitle">Batch Filters</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#280</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-warning">進階</span>
+            </div>
+        </header>
+
+        <!-- 圖片上傳區域 -->
+        <section class="card">
+            <h2 class="card-title">圖片選擇</h2>
+            <div class="upload-area" id="upload-area">
+                <input type="file" id="file-input" accept="image/*" hidden>
+                <div class="upload-placeholder">
+                    <div class="upload-icon">🖼️</div>
+                    <p>點擊或拖放圖片至此處</p>
+                    <p class="upload-hint">支援 JPG, PNG, GIF, WebP 格式</p>
+                </div>
+            </div>
+            <div class="demo-buttons">
+                <button id="load-demo-btn" class="btn btn-secondary">載入範例圖片</button>
+            </div>
+        </section>
+
+        <!-- 濾鏡選擇區域 -->
+        <section class="card">
+            <h2 class="card-title">濾鏡鏈設定</h2>
+
+            <div class="filter-chain-container">
+                <div class="available-filters">
+                    <h3>可用濾鏡</h3>
+                    <div class="filter-buttons">
+                        <button class="filter-btn" data-filter="grayscale">灰階</button>
+                        <button class="filter-btn" data-filter="invert">反色</button>
+                        <button class="filter-btn" data-filter="brightness">亮度+20%</button>
+                        <button class="filter-btn" data-filter="brightness-down">亮度-20%</button>
+                        <button class="filter-btn" data-filter="contrast">對比度+20%</button>
+                        <button class="filter-btn" data-filter="saturate">飽和度+50%</button>
+                        <button class="filter-btn" data-filter="sepia">懷舊</button>
+                        <button class="filter-btn" data-filter="warm">暖色調</button>
+                        <button class="filter-btn" data-filter="cool">冷色調</button>
+                        <button class="filter-btn" data-filter="threshold">二值化</button>
+                        <button class="filter-btn" data-filter="posterize">色調分離</button>
+                        <button class="filter-btn" data-filter="gamma">Gamma校正</button>
+                    </div>
+                </div>
+
+                <div class="selected-filters">
+                    <h3>濾鏡鏈 (依序套用)</h3>
+                    <div id="filter-chain" class="filter-chain">
+                        <p class="empty-hint">點擊左側濾鏡加入處理鏈</p>
+                    </div>
+                    <button id="clear-chain-btn" class="btn btn-danger btn-small">清除全部</button>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button id="apply-btn" class="btn btn-primary" disabled>套用濾鏡鏈</button>
+                <button id="reset-btn" class="btn btn-secondary" disabled>還原原圖</button>
+                <button id="download-btn" class="btn btn-info" disabled>下載結果</button>
+            </div>
+        </section>
+
+        <!-- 進度顯示區域 -->
+        <section class="card">
+            <h2 class="card-title">處理進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 圖片顯示區域 -->
+        <section class="card" id="preview-section" style="display: none;">
+            <h2 class="card-title">圖片預覽</h2>
+            <div class="preview-container">
+                <div class="preview-box">
+                    <h4>原圖</h4>
+                    <canvas id="original-canvas"></canvas>
+                </div>
+                <div class="preview-box">
+                    <h4>處理結果</h4>
+                    <canvas id="result-canvas"></canvas>
+                </div>
+            </div>
+            <div id="result-stats" class="result-stats"></div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>濾鏡鏈：</strong>將多個濾鏡依序組合，形成處理流水線</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>通訊模式：</strong>使用 <code>Transferable Objects</code> 傳遞 ImageData</li>
+                <li><strong>支援濾鏡：</strong>灰階、反色、亮度、對比度、飽和度、懷舊、冷暖色調等</li>
+                <li><strong>效能特點：</strong>
+                    <ul style="margin-top: 8px; margin-left: 20px;">
+                        <li>在背景執行緒處理，不阻塞主執行緒</li>
+                        <li>支援即時進度回報</li>
+                        <li>多濾鏡一次處理，減少資料傳輸開銷</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #280 - 批量濾鏡
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>
