@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Routing - Web Worker Example #229</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Message Routing</h1>
+            <p class="subtitle">Web Worker Example #229 - Routing Table for Message Distribution</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Message Routing</h2>
+                <p>This example demonstrates a flexible message routing system that distributes messages to different Web Workers based on configurable routing rules. Messages can be routed by topic, content pattern, or custom predicates.</p>
+                <div class="formula-box">
+                    <p><strong>Routing Strategies:</strong></p>
+                    <pre class="formula">
+Routing Methods:
+  Topic-Based    - Route by message topic/channel
+  Content-Based  - Route by message content patterns
+  Round-Robin    - Distribute evenly across workers
+  Hash-Based     - Consistent hashing for affinity
+  Broadcast      - Send to all workers
+
+Routing Table Entry:
+  {
+    pattern: string | RegExp,
+    target: worker_id | "broadcast" | "round-robin",
+    transform?: (msg) => msg,  // Optional transformation
+    filter?: (msg) => boolean  // Optional filter
+  }
+
+Message Flow:
+  Main Thread → Router → Match Rules → Target Worker(s)
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Routing Configuration</h2>
+
+                <div class="routing-rules">
+                    <h3>Active Routing Rules</h3>
+                    <div id="rulesContainer" class="rules-container"></div>
+
+                    <div class="add-rule-form">
+                        <h4>Add New Rule</h4>
+                        <div class="params-grid">
+                            <div class="input-group">
+                                <label for="rulePattern">Pattern (topic/regex):</label>
+                                <input type="text" id="rulePattern" placeholder="e.g., data.* or /^user\./" value="data.*">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="ruleTarget">Target:</label>
+                                <select id="ruleTarget">
+                                    <option value="worker-1">Worker 1 (Compute)</option>
+                                    <option value="worker-2">Worker 2 (IO)</option>
+                                    <option value="worker-3">Worker 3 (Analytics)</option>
+                                    <option value="broadcast">Broadcast (All)</option>
+                                    <option value="round-robin">Round Robin</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="rulePriority">Priority:</label>
+                                <input type="number" id="rulePriority" value="10" min="1" max="100">
+                            </div>
+                        </div>
+                        <button id="addRuleBtn" class="btn btn-secondary">Add Rule</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="message-section">
+                <h2>Send Message</h2>
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="messageTopic">Topic:</label>
+                        <input type="text" id="messageTopic" placeholder="e.g., data.process" value="data.process">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="messagePayload">Payload:</label>
+                        <input type="text" id="messagePayload" placeholder="Message content" value='{"action": "compute", "value": 42}'>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="sendBtn" class="btn btn-primary">Send Message</button>
+                    <button id="sendBatchBtn" class="btn btn-success">Send Batch (10)</button>
+                    <button id="clearLogsBtn" class="btn btn-outline">Clear Logs</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Routing Visualization</h2>
+                <canvas id="routingCanvas" width="700" height="400"></canvas>
+            </section>
+
+            <section class="workers-section">
+                <h2>Worker Status</h2>
+                <div class="workers-grid">
+                    <div class="worker-card" id="worker-1-card">
+                        <div class="worker-header">
+                            <span class="worker-name">Worker 1</span>
+                            <span class="worker-type">Compute</span>
+                        </div>
+                        <div class="worker-stats">
+                            <div class="stat">
+                                <span class="stat-label">Messages</span>
+                                <span class="stat-value" id="worker-1-count">0</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Status</span>
+                                <span class="status-indicator idle" id="worker-1-status">Idle</span>
+                            </div>
+                        </div>
+                        <div class="worker-log" id="worker-1-log"></div>
+                    </div>
+
+                    <div class="worker-card" id="worker-2-card">
+                        <div class="worker-header">
+                            <span class="worker-name">Worker 2</span>
+                            <span class="worker-type">IO</span>
+                        </div>
+                        <div class="worker-stats">
+                            <div class="stat">
+                                <span class="stat-label">Messages</span>
+                                <span class="stat-value" id="worker-2-count">0</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Status</span>
+                                <span class="status-indicator idle" id="worker-2-status">Idle</span>
+                            </div>
+                        </div>
+                        <div class="worker-log" id="worker-2-log"></div>
+                    </div>
+
+                    <div class="worker-card" id="worker-3-card">
+                        <div class="worker-header">
+                            <span class="worker-name">Worker 3</span>
+                            <span class="worker-type">Analytics</span>
+                        </div>
+                        <div class="worker-stats">
+                            <div class="stat">
+                                <span class="stat-label">Messages</span>
+                                <span class="stat-value" id="worker-3-count">0</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Status</span>
+                                <span class="status-indicator idle" id="worker-3-status">Idle</span>
+                            </div>
+                        </div>
+                        <div class="worker-log" id="worker-3-log"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="stats-section">
+                <h2>Routing Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Sent</span>
+                        <span id="totalSent" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Routed</span>
+                        <span id="totalRouted" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">No Match</span>
+                        <span id="noMatch" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Broadcasts</span>
+                        <span id="broadcasts" class="stat-value">0</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #229</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
