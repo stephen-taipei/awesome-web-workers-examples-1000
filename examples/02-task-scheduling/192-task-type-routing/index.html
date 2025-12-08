@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#192 任務類型分流 - Web Workers 範例</title>
+    <meta name="description" content="按任務類型分配給不同的 Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>任務類型分流</h1>
+            <p class="subtitle">Task Type Routing</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#192</span>
+                <span class="badge badge-secondary">任務分流</span>
+                <span class="badge badge-success">進階</span>
+            </div>
+        </header>
+
+        <!-- 輸入控制區域 -->
+        <section class="card">
+            <h2 class="card-title">任務提交</h2>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="task-type">任務類型</label>
+                    <select id="task-type" class="form-input">
+                        <option value="cpu">CPU 密集型 (計算費波那契數)</option>
+                        <option value="io">IO 密集型 (模擬網路請求)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="task-complexity">任務複雜度</label>
+                     <select id="task-complexity" class="form-input">
+                        <option value="low">低</option>
+                        <option value="medium" selected>中</option>
+                        <option value="high">高</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button id="add-task-btn" class="btn btn-primary">
+                    提交任務
+                </button>
+                 <button id="random-task-btn" class="btn btn-secondary">
+                    隨機提交 10 個任務
+                </button>
+            </div>
+        </section>
+
+        <!-- 系統狀態區域 -->
+        <section class="card">
+            <h2 class="card-title">系統狀態</h2>
+            <div class="status-grid">
+                <div class="status-item">
+                    <h3>CPU Worker</h3>
+                    <div id="cpu-worker-status" class="worker-status idle">閒置</div>
+                    <div class="queue-info">待處理: <span id="cpu-queue-count">0</span></div>
+                </div>
+                <div class="status-item">
+                    <h3>IO Worker</h3>
+                    <div id="io-worker-status" class="worker-status idle">閒置</div>
+                    <div class="queue-info">待處理: <span id="io-queue-count">0</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 任務日誌區域 -->
+        <section class="card">
+            <h2 class="card-title">任務日誌</h2>
+            <div id="task-log" class="task-log">
+                <!-- 日誌項目將動態插入這裡 -->
+            </div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>核心概念：</strong>根據任務特性將任務路由到專門的 Worker。</li>
+                <li><strong>Worker 類型：</strong>
+                    <ul>
+                        <li><code>CPU Worker</code>: 處理計算密集型任務 (如數學運算)。</li>
+                        <li><code>IO Worker</code>: 處理 IO 密集型任務 (如網路請求模擬)。</li>
+                    </ul>
+                </li>
+                <li><strong>優點：</strong>
+                    <ul>
+                        <li>避免長計算阻塞 IO 操作。</li>
+                        <li>可以針對不同類型的任務優化 Worker 環境或資源配置。</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #192 - 任務類型分流
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>

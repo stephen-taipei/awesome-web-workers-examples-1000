@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#193 峰值分流 - Web Workers 範例</title>
+    <meta name="description" content="處理峰值流量，當負載過高時自動排隊或拒絕請求">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>峰值分流</h1>
+            <p class="subtitle">Peak Shaving</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#193</span>
+                <span class="badge badge-secondary">任務分流</span>
+                <span class="badge badge-danger">高級</span>
+            </div>
+        </header>
+
+        <!-- 參數設定 -->
+        <section class="card">
+            <h2 class="card-title">系統參數</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="max-concurrency">最大併發數 (Worker 數量)</label>
+                    <input type="number" id="max-concurrency" class="form-input" value="3" min="1" max="10">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="queue-capacity">佇列容量上限</label>
+                    <input type="number" id="queue-capacity" class="form-input" value="5" min="0">
+                </div>
+            </div>
+            <button id="apply-settings-btn" class="btn btn-secondary">套用設定 (重置系統)</button>
+        </section>
+
+        <!-- 流量模擬 -->
+        <section class="card">
+            <h2 class="card-title">流量模擬</h2>
+            <div class="btn-group">
+                <button id="add-task-btn" class="btn btn-primary">提交 1 個任務</button>
+                <button id="burst-task-btn" class="btn btn-warning">模擬突發流量 (10 個任務)</button>
+            </div>
+        </section>
+
+        <!-- 系統儀表板 -->
+        <section class="card">
+            <h2 class="card-title">系統儀表板</h2>
+            <div class="dashboard">
+                <div class="metric-card">
+                    <div class="metric-label">活躍 Worker</div>
+                    <div id="active-workers" class="metric-value">0 / 3</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">佇列長度</div>
+                    <div id="queue-length" class="metric-value">0 / 5</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">總提交</div>
+                    <div id="total-submitted" class="metric-value">0</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">已拒絕</div>
+                    <div id="total-rejected" class="metric-value rejected">0</div>
+                </div>
+            </div>
+
+            <div class="progress-bar-container">
+                <label>系統負載 (活躍 + 佇列)</label>
+                <div class="progress-bar-bg">
+                    <div id="load-bar" class="progress-bar-fill" style="width: 0%"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 任務日誌 -->
+        <section class="card">
+            <h2 class="card-title">活動日誌</h2>
+            <div id="activity-log" class="activity-log"></div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>核心概念：</strong>模擬流量峰值處理 (Peak Shaving)。當請求量超過系統處理能力時，使用緩衝佇列來暫存請求。當佇列也滿時，則拒絕請求以保護系統。</li>
+                <li><strong>機制：</strong>
+                    <ul>
+                        <li><strong>Worker 池：</strong>限制最大同時執行任務的數量。</li>
+                        <li><strong>緩衝佇列：</strong>暫存等待執行的任務。</li>
+                        <li><strong>背壓 (Backpressure)：</strong>當佇列滿載時，直接拒絕新任務，防止系統崩潰。</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #193 - 峰值分流
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
