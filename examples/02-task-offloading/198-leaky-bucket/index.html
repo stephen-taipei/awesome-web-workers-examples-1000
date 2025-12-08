@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker 漏桶演算法</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>漏桶演算法 (Leaky Bucket)</h1>
+        <p>此示例演示漏桶演算法。請求進入桶中（以水滴表示），並以恆定速率流出（被處理）。如果桶滿了，新請求將被丟棄。</p>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="capacity">桶容量 (Capacity):</label>
+                <input type="number" id="capacity" value="10" min="1" max="50">
+            </div>
+            <div class="control-group">
+                <label for="leakRate">漏水速率 (requests/sec):</label>
+                <input type="number" id="leakRate" value="1" min="0.1" max="10" step="0.1">
+            </div>
+            <button id="updateConfigBtn">更新設定</button>
+        </div>
+
+        <div class="demo-area">
+            <button id="requestBtn" class="action-btn">發送請求 (加水)</button>
+            <button id="burstBtn" class="action-btn">大量請求 (5滴)</button>
+        </div>
+
+        <div class="visualization-container">
+            <div class="bucket-container">
+                <div id="bucket" class="bucket">
+                    <div id="water" class="water"></div>
+                </div>
+                <div class="bucket-spout"></div>
+                <div id="processedStream" class="processed-stream"></div>
+            </div>
+        </div>
+
+        <div class="status-panel">
+            <div class="status-item">
+                <span class="label">當前水量:</span>
+                <span id="currentLevel" class="value">0</span>
+            </div>
+            <div class="status-item">
+                <span class="label">狀態:</span>
+                <span id="statusText" class="value">就緒</span>
+            </div>
+        </div>
+
+        <div class="log-panel">
+            <h3>處理日誌</h3>
+            <ul id="logList"></ul>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
