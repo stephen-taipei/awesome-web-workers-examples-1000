@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers Batch Processing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Batch Processing</h1>
+        <p>This example demonstrates how to group multiple small tasks into a single message to reduce Web Worker communication overhead.</p>
+
+        <div class="controls">
+            <button id="runIndividualBtn">Run Individual (No Batching)</button>
+            <button id="runBatchBtn">Run Batched</button>
+            <button id="clearBtn">Clear</button>
+        </div>
+
+        <div class="stats">
+            <div>
+                <h3>Individual</h3>
+                <p>Time: <span id="individualTime">-</span> ms</p>
+            </div>
+            <div>
+                <h3>Batched</h3>
+                <p>Time: <span id="batchTime">-</span> ms</p>
+            </div>
+        </div>
+
+        <div id="log" class="log"></div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

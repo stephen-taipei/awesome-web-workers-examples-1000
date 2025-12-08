@@ -1,0 +1,120 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+    color: #333;
+    margin-top: 0;
+}
+
+.controls {
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.graph-container {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    min-height: 200px;
+    position: relative;
+    background-color: #fafafa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.task-node {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    background-color: white;
+    transition: background-color 0.3s;
+    position: relative;
+}
+
+.task-node.pending {
+    background-color: white;
+}
+
+.task-node.running {
+    background-color: #ffc107; /* Yellow */
+    color: #000;
+}
+
+.task-node.completed {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+
+.task-node.error {
+    background-color: #dc3545; /* Red */
+    color: white;
+}
+
+.arrow {
+    font-size: 20px;
+    color: #666;
+}
+
+.status {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.log {
+    margin-top: 20px;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    height: 200px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+.log-entry {
+    margin-bottom: 5px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 2px;
+}
