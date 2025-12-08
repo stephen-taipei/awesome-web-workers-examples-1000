@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Cinematic LUT - Example 272</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cinematic LUT (3D Color Grading)</h1>
+        <p>Apply 3D LUT (Look-Up Table) for cinematic color grading using Web Workers.</p>
+
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="imageInput">Select Image:</label>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+
+                <div class="form-group">
+                    <label for="lutStyle">LUT Style:</label>
+                    <select id="lutStyle">
+                        <option value="cinematic-warm">Cinematic Warm</option>
+                        <option value="cinematic-cool">Cinematic Cool</option>
+                        <option value="teal-orange">Teal & Orange</option>
+                        <option value="vintage-film">Vintage Film</option>
+                        <option value="noir">Film Noir</option>
+                        <option value="blockbuster">Blockbuster</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="intensity">Intensity: <span id="intensityVal">100%</span></label>
+                    <input type="range" id="intensity" min="0" max="100" value="100">
+                </div>
+
+                <button id="applyBtn" disabled>Apply LUT</button>
+                <button id="resetBtn" class="secondary" disabled>Reset Image</button>
+
+                <div class="stats">
+                    <div class="stat-item">Status: <span id="statusText">Ready</span></div>
+                    <div class="stat-item">Processing Time: <span id="timeVal">-</span></div>
+                    <div class="stat-item">Image Size: <span id="sizeVal">-</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <div class="canvas-container">
+                    <h3>Original</h3>
+                    <canvas id="originalCanvas"></canvas>
+                </div>
+                <div class="canvas-container">
+                    <h3>Graded</h3>
+                    <canvas id="resultCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
