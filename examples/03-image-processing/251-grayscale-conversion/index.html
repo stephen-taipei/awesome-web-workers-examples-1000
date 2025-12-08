@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grayscale Conversion - Web Worker Example #251</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Grayscale Conversion</h1>
+            <p class="subtitle">Web Worker Example #251 - RGB Weighted Average</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Beginner</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Grayscale Conversion</h2>
+                <p>Convert color images to grayscale using weighted RGB averaging. This technique accounts for human perception of different colors, where green appears brightest and blue appears darkest.</p>
+                <div class="formula-box">
+                    <p><strong>Grayscale Conversion Formulas:</strong></p>
+                    <pre class="formula">
+Standard (Luminosity) Method - ITU-R BT.709:
+  Gray = 0.2126 × R + 0.7152 × G + 0.0722 × B
+
+Average Method:
+  Gray = (R + G + B) / 3
+
+Lightness Method:
+  Gray = (max(R,G,B) + min(R,G,B)) / 2
+
+Desaturation Method:
+  Gray = (max(R,G,B) + min(R,G,B)) / 2
+
+Custom Weighted:
+  Gray = Wr × R + Wg × G + Wb × B
+  Where Wr + Wg + Wb = 1
+
+Performance Target: 1080p image < 100ms
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label for="methodSelect">Conversion Method:</label>
+                    <select id="methodSelect">
+                        <option value="luminosity" selected>Luminosity (BT.709)</option>
+                        <option value="average">Average</option>
+                        <option value="lightness">Lightness</option>
+                        <option value="custom">Custom Weights</option>
+                    </select>
+                </div>
+
+                <div id="customWeights" class="custom-weights hidden">
+                    <div class="weight-sliders">
+                        <div class="weight-item">
+                            <label>Red Weight: <span id="redValue">0.30</span></label>
+                            <input type="range" id="redWeight" min="0" max="100" value="30">
+                        </div>
+                        <div class="weight-item">
+                            <label>Green Weight: <span id="greenValue">0.59</span></label>
+                            <input type="range" id="greenWeight" min="0" max="100" value="59">
+                        </div>
+                        <div class="weight-item">
+                            <label>Blue Weight: <span id="blueValue">0.11</span></label>
+                            <input type="range" id="blueWeight" min="0" max="100" value="11">
+                        </div>
+                    </div>
+                    <p class="weight-note">Weights are normalized automatically</p>
+                </div>
+
+                <div class="button-group">
+                    <button id="convertBtn" class="btn btn-primary" disabled>Convert to Grayscale</button>
+                    <button id="compareBtn" class="btn btn-secondary" disabled>Compare Methods</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <p id="originalInfo" class="image-info">No image loaded</p>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Grayscale</h3>
+                        <canvas id="grayscaleCanvas"></canvas>
+                        <p id="grayscaleInfo" class="image-info">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Conversion Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Pixels Processed</span>
+                        <span id="pixelsProcessed" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Throughput</span>
+                        <span id="throughput" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Method Used</span>
+                        <span id="methodUsed" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Avg Brightness</span>
+                        <span id="avgBrightness" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Contrast</span>
+                        <span id="contrast" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Dynamic Range</span>
+                        <span id="dynamicRange" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Worker Status</span>
+                        <span id="workerStatus" class="result-value">Ready</span>
+                    </div>
+                </div>
+
+                <h3>Histogram</h3>
+                <canvas id="histogramCanvas" width="600" height="150"></canvas>
+
+                <div class="download-section">
+                    <button id="downloadBtn" class="btn btn-primary">Download Grayscale Image</button>
+                </div>
+            </section>
+
+            <section id="comparisonContainer" class="comparison-section hidden">
+                <h2>Method Comparison</h2>
+                <div id="comparisonGrid" class="comparison-grid"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #251</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
