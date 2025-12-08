@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Auto Levels - Example 275</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Auto Levels (Histogram Adjustment)</h1>
+        <p>Automatic histogram-based level adjustment for optimal contrast and brightness using Web Workers.</p>
+
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="imageInput">Select Image:</label>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+
+                <div class="form-group">
+                    <label for="mode">Mode:</label>
+                    <select id="mode">
+                        <option value="rgb">Per-Channel RGB</option>
+                        <option value="luminance">Luminance Only</option>
+                        <option value="hsv">HSV Value</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="clipPercent">Clip Percentage: <span id="clipVal">0.5%</span></label>
+                    <input type="range" id="clipPercent" min="0" max="5" step="0.1" value="0.5">
+                </div>
+
+                <div class="form-group">
+                    <label for="gammaCorrect">Gamma Correction: <span id="gammaVal">1.0</span></label>
+                    <input type="range" id="gammaCorrect" min="50" max="200" value="100">
+                </div>
+
+                <button id="applyBtn" disabled>Apply Auto Levels</button>
+                <button id="resetBtn" class="secondary" disabled>Reset Image</button>
+
+                <div class="stats">
+                    <div class="stat-item">Status: <span id="statusText">Ready</span></div>
+                    <div class="stat-item">Processing Time: <span id="timeVal">-</span></div>
+                    <div class="stat-item">Input Range: <span id="inputRange">-</span></div>
+                    <div class="stat-item">Output Range: <span id="outputRange">-</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <div class="canvas-container">
+                    <h3>Original</h3>
+                    <canvas id="originalCanvas"></canvas>
+                </div>
+                <div class="canvas-container">
+                    <h3>Auto Levels Result</h3>
+                    <canvas id="resultCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="histogram-section">
+            <h3>Histogram Comparison</h3>
+            <div class="histogram-container">
+                <div class="histogram-item">
+                    <span>Before</span>
+                    <canvas id="histBefore" width="256" height="100"></canvas>
+                </div>
+                <div class="histogram-item">
+                    <span>After</span>
+                    <canvas id="histAfter" width="256" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
