@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADMM Optimization (Lasso)</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f4f4f9;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #218838;
+        }
+        button:disabled {
+            background: #ccc;
+        }
+        #status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .status-idle { background: #e9ecef; color: #495057; }
+        .status-running { background: #fff3cd; color: #856404; }
+        .status-done { background: #d4edda; color: #155724; }
+        .status-error { background: #f8d7da; color: #721c24; }
+
+        canvas {
+            width: 100%;
+            height: 300px;
+            margin-top: 20px;
+            border: 1px solid #eee;
+        }
+        .results {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ADMM Optimization (Lasso)</h1>
+        <p>Solves Lasso: min 1/2 ||Ax - b||^2 + λ||x||_1 using Alternating Direction Method of Multipliers.</p>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="samples">Number of Samples (N)</label>
+                <input type="number" id="samples" value="100">
+            </div>
+            <div class="control-group">
+                <label for="features">Number of Features (D)</label>
+                <input type="number" id="features" value="50">
+            </div>
+            <div class="control-group">
+                <label for="sparsity">True Sparsity (%)</label>
+                <input type="number" id="sparsity" value="20" min="0" max="100">
+            </div>
+            <div class="control-group">
+                <label for="lambda">Lambda (Regularization)</label>
+                <input type="number" id="lambda" value="0.1" step="0.01">
+            </div>
+            <div class="control-group">
+                <label for="rho">Rho (Penalty Parameter)</label>
+                <input type="number" id="rho" value="1.0" step="0.1">
+            </div>
+            <div class="control-group">
+                <label for="iterations">Iterations</label>
+                <input type="number" id="iterations" value="200">
+            </div>
+        </div>
+
+        <button id="startBtn">Start Optimization</button>
+        <div id="status" class="status-idle">Ready</div>
+
+        <div class="results">
+            <div>
+                <h3>Objective Value</h3>
+                <canvas id="objChart"></canvas>
+            </div>
+            <div>
+                <h3>Primal/Dual Residuals</h3>
+                <canvas id="resChart"></canvas>
+            </div>
+        </div>
+        <div>
+            <h3>Weights (True vs Estimated)</h3>
+            <canvas id="weightsChart"></canvas>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
