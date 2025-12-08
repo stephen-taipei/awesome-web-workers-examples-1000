@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Example 173: Result Aggregation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Result Aggregation (Word Count)</h1>
+        <p>Generate a large text dataset, distribute chunks to workers for counting words (Map), and aggregate the results (Reduce).</p>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="text-size">Text Size (Words):</label>
+                <select id="text-size">
+                    <option value="100000">100,000</option>
+                    <option value="500000" selected>500,000</option>
+                    <option value="1000000">1,000,000</option>
+                    <option value="5000000">5,000,000</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="worker-count">Number of Workers:</label>
+                <select id="worker-count">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="4" selected>4</option>
+                    <option value="8">8</option>
+                </select>
+            </div>
+
+            <button id="generate-btn">1. Generate Text</button>
+            <button id="process-btn" disabled>2. Count Words</button>
+        </div>
+
+        <div id="status" class="status">Waiting for input...</div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Text Generation</h3>
+                <div id="gen-time">- ms</div>
+            </div>
+            <div class="stat-card">
+                <h3>Processing Time</h3>
+                <div id="proc-time">- ms</div>
+            </div>
+            <div class="stat-card">
+                <h3>Aggregation Time</h3>
+                <div id="agg-time">- ms</div>
+            </div>
+             <div class="stat-card">
+                <h3>Unique Words</h3>
+                <div id="unique-count">-</div>
+            </div>
+        </div>
+
+        <div id="worker-status-container"></div>
+
+        <h2>Top 10 Words</h2>
+        <div id="top-words" class="word-list"></div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
