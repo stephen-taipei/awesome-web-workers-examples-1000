@@ -1,0 +1,228 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+    color: #2c3e50;
+    margin-top: 0;
+}
+
+.controls {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border: 1px solid #e9ecef;
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.control-group label {
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+input[type="number"] {
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    width: 100px;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #ffc107;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #e0a800;
+}
+
+.demo-area {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.action-btn {
+    font-size: 1.1em;
+    padding: 10px 20px;
+    margin: 0 10px;
+    background-color: #007bff;
+    color: white;
+}
+
+.action-btn:hover {
+    background-color: #0069d9;
+}
+
+/* Visualization */
+.visualization-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    height: 300px;
+    position: relative;
+    background-color: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.token-generator, .request-processor {
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.generator-icon {
+    font-size: 40px;
+    animation: spin 4s linear infinite;
+}
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+.bucket-container {
+    position: relative;
+    width: 150px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.bucket {
+    width: 120px;
+    height: 200px;
+    border: 5px solid #555;
+    border-top: none;
+    border-radius: 0 0 15px 15px;
+    background-color: rgba(255, 235, 59, 0.1);
+    position: relative;
+    display: flex;
+    flex-wrap: wrap-reverse;
+    align-content: flex-start;
+    padding: 5px;
+    box-sizing: border-box;
+    gap: 2px;
+}
+
+.bucket-label {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #555;
+}
+
+.token {
+    width: 20px;
+    height: 20px;
+    background-color: gold;
+    border-radius: 50%;
+    border: 2px solid #daa520;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #333;
+}
+
+.token.small {
+    width: 15px;
+    height: 15px;
+}
+
+.token.hidden {
+    opacity: 0;
+}
+
+.token.animate-drop {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: dropIn 0.5s ease-in forwards;
+}
+
+@keyframes dropIn {
+    0% { top: -30px; opacity: 1; }
+    100% { top: 50%; opacity: 0; } /* Just a visual hint, real tokens appear in bucket */
+}
+
+.processor-gate {
+    width: 80px;
+    height: 10px;
+    background-color: #333;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+.status-panel {
+    display: flex;
+    justify-content: space-around;
+    padding: 15px;
+    background-color: #e9ecef;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.status-item .value {
+    font-weight: bold;
+    color: #007bff;
+    margin-left: 10px;
+}
+
+.log-panel {
+    border-top: 2px solid #eee;
+    padding-top: 20px;
+}
+
+#logList {
+    list-style: none;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 4px;
+}
+
+#logList li {
+    padding: 6px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.9em;
+}
+
+#logList li.token-gen { color: #856404; background-color: #fff3cd; }
+#logList li.allow { color: #155724; background-color: #d4edda; }
+#logList li.deny { color: #721c24; background-color: #f8d7da; }

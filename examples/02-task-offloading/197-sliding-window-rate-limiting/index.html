@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker 滑動窗口限流</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>滑動窗口限流 (Sliding Window)</h1>
+        <p>此示例演示使用 Web Worker 實作滑動窗口限流演算法。相比固定窗口，滑動窗口能更平滑地處理跨窗口邊界的流量突發。</p>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="windowSize">窗口大小 (秒):</label>
+                <input type="number" id="windowSize" value="10" min="1" max="60">
+            </div>
+            <div class="control-group">
+                <label for="limit">限制請求數:</label>
+                <input type="number" id="limit" value="5" min="1" max="100">
+            </div>
+            <button id="updateConfigBtn">更新設定</button>
+        </div>
+
+        <div class="demo-area">
+            <button id="requestBtn" class="action-btn">發送請求</button>
+            <button id="burstBtn" class="action-btn">發送突發請求 (5次)</button>
+        </div>
+
+        <div class="visualization">
+            <h3>窗口可視化</h3>
+            <div id="windowContainer" class="window-container">
+                <!-- 請求點將會在這裡繪製 -->
+                <div class="current-time-line"></div>
+            </div>
+            <div class="legend">
+                <span class="legend-item allowed">● 允許</span>
+                <span class="legend-item denied">● 拒絕</span>
+            </div>
+        </div>
+
+        <div class="status-panel">
+            <div class="status-item">
+                <span class="label">當前窗口內請求數:</span>
+                <span id="currentCount" class="value">0</span>
+            </div>
+             <div class="status-item">
+                <span class="label">狀態:</span>
+                <span id="statusText" class="value">就緒</span>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
