@@ -1,0 +1,123 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1f150f 0%, #352515 50%, #1f1a0f 100%);
+    min-height: 100vh;
+    color: #eee;
+    line-height: 1.6;
+}
+
+.container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+header { text-align: center; margin-bottom: 2rem; }
+
+h1 { color: #f59e0b; font-size: 2.4rem; margin-bottom: 0.5rem; }
+.subtitle { color: #fbbf24; }
+
+section {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(245,158,11,0.2);
+}
+
+h2 { color: #f59e0b; font-size: 1.3rem; margin-bottom: 1rem; }
+h3 { color: #fbbf24; font-size: 1.1rem; margin: 0.5rem 0; text-align: center; }
+
+.description p { color: #fde68a; margin-bottom: 1rem; }
+
+.formula-box {
+    background: rgba(0,0,0,0.3);
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #f59e0b;
+    overflow-x: auto;
+}
+
+.formula { font-family: 'Courier New', monospace; color: #fde68a; font-size: 0.82rem; line-height: 1.6; white-space: pre; }
+
+.params-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+
+.input-group { margin-bottom: 1rem; }
+.input-group label { display: block; margin-bottom: 0.4rem; color: #fde68a; font-size: 0.9rem; font-weight: 500; }
+
+.input-group input[type="file"] {
+    padding: 0.7rem;
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 8px;
+    background: rgba(0,0,0,0.3);
+    color: #fff;
+    font-size: 0.95rem;
+    width: 100%;
+}
+
+.input-group input[type="range"] {
+    width: calc(100% - 50px);
+    vertical-align: middle;
+}
+
+.input-group span {
+    display: inline-block;
+    width: 45px;
+    text-align: right;
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+.button-group { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
+
+.btn { flex: 1; min-width: 120px; padding: 0.8rem 1.5rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+.btn-primary { background: linear-gradient(135deg, #f59e0b, #d97706); color: #1f150f; }
+.btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 25px rgba(245,158,11,0.4); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-outline { background: transparent; color: #f59e0b; border: 2px solid #f59e0b; }
+.btn-outline:hover:not(:disabled) { background: rgba(245,158,11,0.1); }
+.btn-outline:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.hidden { display: none !important; }
+
+.progress-section { padding: 1rem; }
+.progress-bar-container { background: rgba(0,0,0,0.3); border-radius: 10px; height: 20px; overflow: hidden; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, #f59e0b, #d97706); width: 0%; transition: width 0.2s; }
+.progress-text { text-align: center; margin-top: 0.5rem; color: #fbbf24; font-size: 0.9rem; }
+
+.visualization { text-align: center; }
+
+.canvas-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.canvas-wrapper {
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
+}
+
+canvas {
+    max-width: 100%;
+    height: auto;
+    background: #0f0a07;
+    border-radius: 8px;
+    border: 1px solid rgba(245,158,11,0.2);
+}
+
+.results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+.result-item { background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; text-align: center; }
+.result-label { display: block; color: #fbbf24; font-size: 0.8rem; margin-bottom: 0.3rem; text-transform: uppercase; }
+.result-value { color: #fde68a; font-size: 1rem; font-weight: 600; font-family: 'Courier New', monospace; }
+
+footer { text-align: center; padding: 1.5rem; color: #fbbf24; }
+footer a { color: #f59e0b; text-decoration: none; }
+
+@media (max-width: 600px) {
+    .container { padding: 1rem; }
+    h1 { font-size: 1.8rem; }
+    .button-group { flex-direction: column; }
+    .canvas-container { flex-direction: column; }
+}
