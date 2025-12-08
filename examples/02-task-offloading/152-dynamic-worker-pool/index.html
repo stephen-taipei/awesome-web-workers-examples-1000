@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Worker Pool Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Dynamic Worker Pool</h1>
+    <p>This example demonstrates a dynamic worker pool that automatically scales the number of workers based on the task load.</p>
+
+    <div class="controls">
+        <button id="addTaskBtn">Add Task (500ms)</button>
+        <button id="addLongTaskBtn">Add Long Task (2000ms)</button>
+        <button id="addBurstBtn">Add Burst (20 Tasks)</button>
+    </div>
+
+    <div class="status-panel">
+        <div class="pool-status">
+            <h2>Worker Pool</h2>
+            <div class="stats">
+                <div>Active Workers: <span id="workerCount">0</span></div>
+                <div>Min Workers: <span id="minWorkers">2</span></div>
+                <div>Max Workers: <span id="maxWorkers">8</span></div>
+            </div>
+            <div id="workerList" class="worker-list"></div>
+        </div>
+
+        <div class="queue-status">
+            <h2>Task Queue</h2>
+            <div class="stats">
+                <div>Pending Tasks: <span id="pendingCount">0</span></div>
+                <div>Completed Tasks: <span id="completedCount">0</span></div>
+            </div>
+            <div id="taskQueue" class="task-queue"></div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
