@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Priority - Web Worker Example #228</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Message Priority</h1>
+            <p class="subtitle">Web Worker Example #228 - Priority Queue for Worker Messages</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Message Priority</h2>
+                <p>This example demonstrates a priority-based message queue system for Web Workers. Messages are processed based on their priority level, ensuring important tasks are handled first.</p>
+                <div class="formula-box">
+                    <p><strong>Priority Queue Implementation:</strong></p>
+                    <pre class="formula">
+Priority Levels:
+  CRITICAL (4) - Immediate processing
+  HIGH (3)     - Process before normal tasks
+  NORMAL (2)   - Default priority
+  LOW (1)      - Background tasks
+
+Processing Order:
+  1. Extract highest priority message
+  2. Process message in Worker
+  3. Return result with timing info
+  4. Continue with next highest priority
+
+Binary Heap Operations:
+  Insert:  O(log n)
+  Extract: O(log n)
+  Peek:    O(1)
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Message Control</h2>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="messageContent">Message Content:</label>
+                        <input type="text" id="messageContent" placeholder="Enter task description" value="Process data batch">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="prioritySelect">Priority Level:</label>
+                        <select id="prioritySelect">
+                            <option value="4">CRITICAL (4)</option>
+                            <option value="3">HIGH (3)</option>
+                            <option value="2" selected>NORMAL (2)</option>
+                            <option value="1">LOW (1)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="taskComplexity">Task Complexity (ms):</label>
+                        <input type="number" id="taskComplexity" value="500" min="100" max="5000" step="100">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="batchCount">Batch Generate:</label>
+                        <input type="number" id="batchCount" value="10" min="1" max="50">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="addBtn" class="btn btn-primary">Add Message</button>
+                    <button id="batchBtn" class="btn btn-secondary">Generate Batch</button>
+                    <button id="startBtn" class="btn btn-success">Start Processing</button>
+                    <button id="clearBtn" class="btn btn-outline">Clear All</button>
+                </div>
+            </section>
+
+            <section class="queue-section">
+                <h2>Message Queue <span id="queueCount" class="badge">0</span></h2>
+                <div id="queueContainer" class="queue-container">
+                    <p class="empty-message">No messages in queue</p>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Processing Visualization</h2>
+                <canvas id="priorityCanvas" width="700" height="350"></canvas>
+            </section>
+
+            <section class="stats-section">
+                <h2>Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Messages Processed</span>
+                        <span id="processedCount" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Avg Wait Time (ms)</span>
+                        <span id="avgWaitTime" class="stat-value">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Critical Processed</span>
+                        <span id="criticalCount" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Low Priority Delayed</span>
+                        <span id="lowDelayedCount" class="stat-value">0</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="logSection" class="log-section">
+                <h2>Processing Log</h2>
+                <div id="logContainer" class="log-container"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #228</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
