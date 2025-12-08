@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#260 曲線調整 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 進行影像曲線調整，透過 LUT 查找表實現自訂色調映射">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>曲線調整</h1>
+            <p class="subtitle">Curve Adjustment</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#260</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-warning">中級</span>
+            </div>
+        </header>
+
+        <!-- 圖片上傳區域 -->
+        <section class="card">
+            <h2 class="card-title">圖片來源</h2>
+            <div class="upload-area" id="upload-area">
+                <div class="upload-placeholder">
+                    <div class="upload-icon">📷</div>
+                    <p>拖放圖片到此處，或點擊選擇檔案</p>
+                    <p class="upload-hint">支援 JPG、PNG、WebP 格式</p>
+                </div>
+                <input type="file" id="file-input" accept="image/*" hidden>
+            </div>
+            <div class="btn-group" style="margin-top: 15px;">
+                <button id="load-sample-btn" class="btn btn-secondary">載入範例圖片</button>
+            </div>
+        </section>
+
+        <!-- 曲線編輯器 -->
+        <section class="card">
+            <h2 class="card-title">曲線編輯器</h2>
+            <div class="curve-editor-container">
+                <div class="curve-controls">
+                    <div class="channel-selector">
+                        <button class="channel-btn active" data-channel="rgb">RGB</button>
+                        <button class="channel-btn" data-channel="r">R</button>
+                        <button class="channel-btn" data-channel="g">G</button>
+                        <button class="channel-btn" data-channel="b">B</button>
+                    </div>
+                    <div class="preset-buttons">
+                        <button class="preset-btn" data-preset="linear">線性</button>
+                        <button class="preset-btn" data-preset="brighten">增亮</button>
+                        <button class="preset-btn" data-preset="darken">變暗</button>
+                        <button class="preset-btn" data-preset="contrast">對比</button>
+                        <button class="preset-btn" data-preset="invert">反轉</button>
+                        <button class="preset-btn" data-preset="solarize">曝光</button>
+                    </div>
+                </div>
+                <div class="curve-canvas-wrapper">
+                    <canvas id="curve-canvas" width="256" height="256"></canvas>
+                    <div class="curve-labels">
+                        <span class="label-input">輸入</span>
+                        <span class="label-output">輸出</span>
+                    </div>
+                </div>
+                <div class="curve-info">
+                    <p>點擊曲線上的點並拖動來調整。雙擊新增控制點，右鍵刪除控制點。</p>
+                </div>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group">
+                <button id="apply-btn" class="btn btn-primary" disabled>套用曲線</button>
+                <button id="reset-btn" class="btn btn-secondary">重置曲線</button>
+                <button id="download-btn" class="btn btn-success" disabled>下載結果</button>
+            </div>
+        </section>
+
+        <!-- 進度顯示區域 -->
+        <section class="card">
+            <h2 class="card-title">處理進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 結果顯示區域 -->
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">處理結果</h2>
+            <div class="image-comparison">
+                <div class="image-box">
+                    <h4>原始圖片</h4>
+                    <canvas id="original-canvas"></canvas>
+                </div>
+                <div class="image-box">
+                    <h4>處理後</h4>
+                    <canvas id="result-canvas"></canvas>
+                </div>
+            </div>
+            <div id="result-stats" class="result-stats"></div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>曲線調整：</strong>透過自訂輸入到輸出的映射曲線，調整影像的亮度、對比度和色調</li>
+                <li><strong>LUT 查找表：</strong>預先計算所有 256 個可能輸入值的輸出值，實現高效處理</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>技術重點：</strong>使用 Cubic Spline 插值產生平滑曲線，支援 RGB 分通道調整</li>
+                <li><strong>效能目標：</strong>1080p 圖片處理時間 &lt; 100ms</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #260 - 曲線調整
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>

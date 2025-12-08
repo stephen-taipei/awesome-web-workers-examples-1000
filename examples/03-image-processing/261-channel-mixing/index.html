@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#261 通道混合 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 進行 RGB 通道混合，透過矩陣乘法實現色彩調整">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>通道混合</h1>
+            <p class="subtitle">Channel Mixing</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#261</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-warning">中級</span>
+            </div>
+        </header>
+
+        <!-- 圖片上傳區域 -->
+        <section class="card">
+            <h2 class="card-title">圖片來源</h2>
+            <div class="upload-area" id="upload-area">
+                <div class="upload-placeholder">
+                    <div class="upload-icon">📷</div>
+                    <p>拖放圖片到此處，或點擊選擇檔案</p>
+                    <p class="upload-hint">支援 JPG、PNG、WebP 格式</p>
+                </div>
+                <input type="file" id="file-input" accept="image/*" hidden>
+            </div>
+            <div class="btn-group" style="margin-top: 15px;">
+                <button id="load-sample-btn" class="btn btn-secondary">載入範例圖片</button>
+            </div>
+        </section>
+
+        <!-- 通道混合矩陣 -->
+        <section class="card">
+            <h2 class="card-title">通道混合矩陣</h2>
+
+            <div class="matrix-description">
+                <p>輸出顏色 = 混合矩陣 × 輸入顏色</p>
+                <div class="matrix-formula">
+                    <div class="matrix-bracket">[</div>
+                    <div class="matrix-output">
+                        <span>R'</span>
+                        <span>G'</span>
+                        <span>B'</span>
+                    </div>
+                    <div class="matrix-bracket">]</div>
+                    <span class="matrix-equals">=</span>
+                    <div class="matrix-bracket">[</div>
+                    <div class="matrix-grid-formula">
+                        <span>Rr</span><span>Rg</span><span>Rb</span>
+                        <span>Gr</span><span>Gg</span><span>Gb</span>
+                        <span>Br</span><span>Bg</span><span>Bb</span>
+                    </div>
+                    <div class="matrix-bracket">]</div>
+                    <span class="matrix-times">×</span>
+                    <div class="matrix-bracket">[</div>
+                    <div class="matrix-input">
+                        <span>R</span>
+                        <span>G</span>
+                        <span>B</span>
+                    </div>
+                    <div class="matrix-bracket">]</div>
+                </div>
+            </div>
+
+            <div class="matrix-editor">
+                <div class="matrix-header">
+                    <span></span>
+                    <span class="channel-label red">R 輸入</span>
+                    <span class="channel-label green">G 輸入</span>
+                    <span class="channel-label blue">B 輸入</span>
+                </div>
+                <div class="matrix-row">
+                    <span class="channel-label red">R 輸出</span>
+                    <input type="number" class="matrix-input" id="rr" value="1" step="0.1" min="-2" max="2">
+                    <input type="number" class="matrix-input" id="rg" value="0" step="0.1" min="-2" max="2">
+                    <input type="number" class="matrix-input" id="rb" value="0" step="0.1" min="-2" max="2">
+                </div>
+                <div class="matrix-row">
+                    <span class="channel-label green">G 輸出</span>
+                    <input type="number" class="matrix-input" id="gr" value="0" step="0.1" min="-2" max="2">
+                    <input type="number" class="matrix-input" id="gg" value="1" step="0.1" min="-2" max="2">
+                    <input type="number" class="matrix-input" id="gb" value="0" step="0.1" min="-2" max="2">
+                </div>
+                <div class="matrix-row">
+                    <span class="channel-label blue">B 輸出</span>
+                    <input type="number" class="matrix-input" id="br" value="0" step="0.1" min="-2" max="2">
+                    <input type="number" class="matrix-input" id="bg" value="0" step="0.1" min="-2" max="2">
+                    <input type="number" class="matrix-input" id="bb" value="1" step="0.1" min="-2" max="2">
+                </div>
+            </div>
+
+            <div class="preset-section">
+                <h4>預設效果</h4>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-preset="identity">原始</button>
+                    <button class="preset-btn" data-preset="grayscale">灰階</button>
+                    <button class="preset-btn" data-preset="sepia">復古</button>
+                    <button class="preset-btn" data-preset="negative">負片</button>
+                    <button class="preset-btn" data-preset="swap-rg">R↔G</button>
+                    <button class="preset-btn" data-preset="swap-rb">R↔B</button>
+                    <button class="preset-btn" data-preset="swap-gb">G↔B</button>
+                    <button class="preset-btn" data-preset="red-only">僅紅</button>
+                    <button class="preset-btn" data-preset="green-only">僅綠</button>
+                    <button class="preset-btn" data-preset="blue-only">僅藍</button>
+                    <button class="preset-btn" data-preset="vintage">懷舊</button>
+                    <button class="preset-btn" data-preset="cool">冷色調</button>
+                    <button class="preset-btn" data-preset="warm">暖色調</button>
+                </div>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group">
+                <button id="apply-btn" class="btn btn-primary" disabled>套用混合</button>
+                <button id="reset-btn" class="btn btn-secondary">重置矩陣</button>
+                <button id="download-btn" class="btn btn-success" disabled>下載結果</button>
+            </div>
+        </section>
+
+        <!-- 進度顯示區域 -->
+        <section class="card">
+            <h2 class="card-title">處理進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 結果顯示區域 -->
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">處理結果</h2>
+            <div class="image-comparison">
+                <div class="image-box">
+                    <h4>原始圖片</h4>
+                    <canvas id="original-canvas"></canvas>
+                </div>
+                <div class="image-box">
+                    <h4>處理後</h4>
+                    <canvas id="result-canvas"></canvas>
+                </div>
+            </div>
+            <div id="result-stats" class="result-stats"></div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>通道混合：</strong>透過 3×3 矩陣定義輸出 RGB 如何由輸入 RGB 組合而成</li>
+                <li><strong>矩陣乘法：</strong>每個輸出通道是所有輸入通道的加權和</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>應用場景：</strong>色彩校正、濾鏡效果、色盲模擬、藝術風格轉換</li>
+                <li><strong>效能目標：</strong>1080p 圖片處理時間 &lt; 100ms</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #261 - 通道混合
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>
