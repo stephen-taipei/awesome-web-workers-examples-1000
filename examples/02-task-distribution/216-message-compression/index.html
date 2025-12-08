@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#216 訊息壓縮 - Web Workers 範例</title>
+    <meta name="description" content="使用 CompressionStream API 在 Web Worker 中實現訊息自動壓縮傳輸">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>訊息壓縮</h1>
+            <p class="subtitle">Message Compression</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#216</span>
+                <span class="badge badge-secondary">任務分流</span>
+                <span class="badge badge-warning">進階</span>
+            </div>
+        </header>
+
+        <!-- 輸入控制區域 -->
+        <section class="card">
+            <h2 class="card-title">訊息設定</h2>
+
+            <!-- 訊息內容輸入 -->
+            <div class="form-group">
+                <label class="form-label" for="message-input">訊息內容</label>
+                <textarea
+                    id="message-input"
+                    class="form-textarea"
+                    rows="6"
+                    placeholder="輸入要傳輸的訊息內容..."
+                >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea>
+            </div>
+
+            <!-- 壓縮演算法選擇 -->
+            <div class="form-group">
+                <label class="form-label">壓縮演算法</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="algorithm" value="gzip" checked>
+                        <span class="radio-custom"></span>
+                        GZIP
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="algorithm" value="deflate">
+                        <span class="radio-custom"></span>
+                        Deflate
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="algorithm" value="deflate-raw">
+                        <span class="radio-custom"></span>
+                        Deflate (Raw)
+                    </label>
+                </div>
+            </div>
+
+            <!-- 快速範例按鈕 -->
+            <div class="form-group">
+                <label class="form-label">快速範例</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-preset="small">小型文本 (500B)</button>
+                    <button class="preset-btn" data-preset="medium">中型文本 (5KB)</button>
+                    <button class="preset-btn" data-preset="large">大型文本 (50KB)</button>
+                    <button class="preset-btn" data-preset="json">JSON 資料</button>
+                    <button class="preset-btn" data-preset="repetitive">高重複率文本</button>
+                </div>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group">
+                <button id="compress-btn" class="btn btn-primary">
+                    壓縮並傳送
+                </button>
+                <button id="decompress-btn" class="btn btn-secondary">
+                    解壓縮並傳回
+                </button>
+                <button id="compare-btn" class="btn btn-success">
+                    效能比較
+                </button>
+            </div>
+        </section>
+
+        <!-- 壓縮統計區域 -->
+        <section class="card">
+            <h2 class="card-title">壓縮統計</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-icon">📄</div>
+                    <div class="stat-content">
+                        <span class="stat-label">原始大小</span>
+                        <span id="original-size" class="stat-value">-</span>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-content">
+                        <span class="stat-label">壓縮後大小</span>
+                        <span id="compressed-size" class="stat-value">-</span>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon">📉</div>
+                    <div class="stat-content">
+                        <span class="stat-label">壓縮率</span>
+                        <span id="compression-ratio" class="stat-value">-</span>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-content">
+                        <span class="stat-label">處理時間</span>
+                        <span id="process-time" class="stat-value">-</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 視覺化比較 -->
+        <section id="visualization-section" class="card hidden">
+            <h2 class="card-title">大小視覺化比較</h2>
+            <div class="size-comparison">
+                <div class="size-bar-container">
+                    <label>原始大小</label>
+                    <div class="size-bar original">
+                        <div id="original-bar" class="size-bar-fill" style="width: 100%"></div>
+                        <span id="original-bar-label" class="size-bar-label">-</span>
+                    </div>
+                </div>
+                <div class="size-bar-container">
+                    <label>壓縮後</label>
+                    <div class="size-bar compressed">
+                        <div id="compressed-bar" class="size-bar-fill" style="width: 0%"></div>
+                        <span id="compressed-bar-label" class="size-bar-label">-</span>
+                    </div>
+                </div>
+            </div>
+            <div id="savings-info" class="savings-info">
+                節省空間：<strong id="space-saved">-</strong>
+            </div>
+        </section>
+
+        <!-- 演算法比較區域 -->
+        <section id="comparison-section" class="card hidden">
+            <h2 class="card-title">演算法效能比較</h2>
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>演算法</th>
+                            <th>壓縮後大小</th>
+                            <th>壓縮率</th>
+                            <th>壓縮時間</th>
+                            <th>解壓時間</th>
+                        </tr>
+                    </thead>
+                    <tbody id="comparison-tbody">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 傳輸日誌 -->
+        <section class="card">
+            <h2 class="card-title">傳輸日誌</h2>
+            <div id="log-container" class="log-container">
+                <div class="log-placeholder">等待操作...</div>
+            </div>
+            <button id="clear-log-btn" class="btn btn-secondary btn-sm">清除日誌</button>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>技術：</strong>使用 <code>CompressionStream</code> / <code>DecompressionStream</code> API</li>
+                <li><strong>支援演算法：</strong>GZIP、Deflate、Deflate-Raw</li>
+                <li><strong>應用場景：</strong>大量數據傳輸、減少記憶體佔用、加速訊息傳遞</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>效能優勢：</strong>在 Worker 中進行壓縮/解壓縮，不阻塞主執行緒</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #216 - 訊息壓縮
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>
