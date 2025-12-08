@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#220 背壓控制 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 實現背壓控制機制，防止訊息過載並維持系統穩定">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>背壓控制</h1>
+            <p class="subtitle">Backpressure Control</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#220</span>
+                <span class="badge badge-secondary">通訊協調</span>
+                <span class="badge badge-danger">高級</span>
+            </div>
+        </header>
+
+        <!-- 輸入控制區域 -->
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+
+            <!-- 數值輸入 -->
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="message-rate">訊息發送速率 (每秒)</label>
+                    <input
+                        type="number"
+                        id="message-rate"
+                        class="form-input"
+                        value="100"
+                        min="1"
+                        max="1000"
+                        placeholder="每秒發送訊息數"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="process-time">處理時間 (毫秒)</label>
+                    <input
+                        type="number"
+                        id="process-time"
+                        class="form-input"
+                        value="50"
+                        min="1"
+                        max="1000"
+                        placeholder="每則訊息處理時間"
+                    >
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="buffer-size">緩衝區大小</label>
+                    <input
+                        type="number"
+                        id="buffer-size"
+                        class="form-input"
+                        value="50"
+                        min="10"
+                        max="500"
+                        placeholder="最大緩衝訊息數"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="high-watermark">高水位閾值 (%)</label>
+                    <input
+                        type="number"
+                        id="high-watermark"
+                        class="form-input"
+                        value="80"
+                        min="50"
+                        max="95"
+                        placeholder="觸發背壓閾值"
+                    >
+                </div>
+            </div>
+
+            <!-- 快速設定按鈕 -->
+            <div class="form-group">
+                <label class="form-label">快速設定</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-rate="50" data-time="20">輕負載</button>
+                    <button class="preset-btn" data-rate="100" data-time="50">中負載</button>
+                    <button class="preset-btn" data-rate="200" data-time="30">高負載</button>
+                    <button class="preset-btn" data-rate="500" data-time="10">極限測試</button>
+                </div>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">
+                    開始模擬
+                </button>
+                <button id="stop-btn" class="btn btn-danger" disabled>
+                    停止模擬
+                </button>
+                <button id="reset-btn" class="btn btn-secondary">
+                    重置統計
+                </button>
+            </div>
+        </section>
+
+        <!-- 即時狀態區域 -->
+        <section class="card">
+            <h2 class="card-title">即時狀態</h2>
+            <div class="status-grid">
+                <div class="status-item">
+                    <span class="status-label">發送狀態</span>
+                    <span id="sender-status" class="status-value status-idle">等待中</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">背壓狀態</span>
+                    <span id="backpressure-status" class="status-value status-normal">正常</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">緩衝區使用</span>
+                    <span id="buffer-usage" class="status-value">0 / 50</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">緩衝區狀態</span>
+                    <div class="buffer-bar-wrapper">
+                        <div id="buffer-bar" class="buffer-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 統計資訊區域 -->
+        <section class="card">
+            <h2 class="card-title">統計資訊</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="stat-number" id="sent-count">0</span>
+                    <span class="stat-label">已發送訊息</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="processed-count">0</span>
+                    <span class="stat-label">已處理訊息</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="dropped-count">0</span>
+                    <span class="stat-label">丟棄訊息</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="paused-count">0</span>
+                    <span class="stat-label">暫停次數</span>
+                </div>
+            </div>
+            <div class="throughput-info">
+                <span>實際吞吐量：<strong id="throughput">0</strong> 訊息/秒</span>
+                <span>丟棄率：<strong id="drop-rate">0%</strong></span>
+            </div>
+        </section>
+
+        <!-- 訊息日誌區域 -->
+        <section class="card">
+            <h2 class="card-title">事件日誌</h2>
+            <div id="log-container" class="log-container">
+                <div class="log-entry log-info">系統準備就緒，等待開始模擬...</div>
+            </div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>背壓機制：</strong>當 Worker 處理速度跟不上發送速度時，自動觸發背壓控制</li>
+                <li><strong>高水位閾值：</strong>緩衝區使用量達到閾值時暫停發送，防止過載</li>
+                <li><strong>低水位閾值：</strong>緩衝區使用量降低後恢復發送，自動調節流量</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>應用場景：</strong>資料串流處理、即時訊息系統、高頻交易系統</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #220 - 背壓控制
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>
