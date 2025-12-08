@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atomics Operations - Web Worker Example #205</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Atomics Operations</h1>
+            <p class="subtitle">Web Worker Example #205 - Thread-Safe Atomic Operations</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Atomics API</h2>
+                <p>The Atomics API provides atomic operations on SharedArrayBuffer to prevent race conditions. These operations are guaranteed to be indivisible - no other thread can observe a partial state during the operation.</p>
+                <div class="formula-box">
+                    <p><strong>Atomics Methods:</strong></p>
+                    <pre class="formula">
+// Atomic read/write
+Atomics.load(array, index)      // Atomic read
+Atomics.store(array, index, v)  // Atomic write
+
+// Atomic arithmetic
+Atomics.add(array, i, v)        // array[i] += v, returns old value
+Atomics.sub(array, i, v)        // array[i] -= v, returns old value
+
+// Atomic bitwise
+Atomics.and(array, i, v)        // array[i] &= v
+Atomics.or(array, i, v)         // array[i] |= v
+Atomics.xor(array, i, v)        // array[i] ^= v
+
+// Compare and exchange
+Atomics.compareExchange(array, i, expected, replacement)
+// If array[i] === expected, set to replacement
+
+// Synchronization
+Atomics.wait(array, i, value)   // Block until array[i] !== value
+Atomics.notify(array, i, count) // Wake up waiting threads
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Race Condition Demo</h2>
+                <p class="demo-explanation">This demo shows the difference between regular operations and atomic operations when multiple workers increment a shared counter.</p>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="workerCount">Number of Workers:</label>
+                        <select id="workerCount">
+                            <option value="2">2 Workers</option>
+                            <option value="4" selected>4 Workers</option>
+                            <option value="8">8 Workers</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="incrementCount">Increments per Worker:</label>
+                        <input type="number" id="incrementCount" value="10000" min="1000" max="100000" step="1000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="operationType">Operation Type:</label>
+                        <select id="operationType">
+                            <option value="both" selected>Compare Both</option>
+                            <option value="regular">Regular Only</option>
+                            <option value="atomic">Atomic Only</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="startBtn" class="btn btn-primary">Start Test</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Running tests...</p>
+            </section>
+
+            <section class="comparison-section">
+                <h2>Counter Comparison</h2>
+                <div class="counter-display">
+                    <div class="counter-box regular">
+                        <h3>Regular Increment</h3>
+                        <div class="counter-value" id="regularCounter">0</div>
+                        <div class="counter-expected">Expected: <span id="regularExpected">-</span></div>
+                        <div class="counter-diff" id="regularDiff">-</div>
+                    </div>
+                    <div class="counter-box atomic">
+                        <h3>Atomic Increment</h3>
+                        <div class="counter-value" id="atomicCounter">0</div>
+                        <div class="counter-expected">Expected: <span id="atomicExpected">-</span></div>
+                        <div class="counter-diff" id="atomicDiff">-</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Operation Timeline</h2>
+                <canvas id="timelineCanvas" width="800" height="200"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Regular Lost Updates</span>
+                        <span id="regularLost" class="result-value error">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Atomic Lost Updates</span>
+                        <span id="atomicLost" class="result-value success">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Regular Time</span>
+                        <span id="regularTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Atomic Time</span>
+                        <span id="atomicTime" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Atomic Operations Summary</h3>
+                <div id="operationsSummary" class="operations-summary"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #205</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

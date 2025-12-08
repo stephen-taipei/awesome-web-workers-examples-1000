@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semaphore Implementation - Web Worker Example #207</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Semaphore Implementation</h1>
+            <p class="subtitle">Web Worker Example #207 - Counting Semaphore for Resource Limiting</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Semaphores</h2>
+                <p>A Semaphore is a synchronization primitive that maintains a count. Unlike a mutex (binary semaphore), a counting semaphore allows multiple threads to access a limited resource pool simultaneously.</p>
+                <div class="formula-box">
+                    <p><strong>Semaphore Implementation:</strong></p>
+                    <pre class="formula">
+// Semaphore with count N allows N concurrent accesses
+
+class Semaphore {
+    constructor(sharedArray, index, maxCount) {
+        this.array = sharedArray;
+        this.index = index;
+        Atomics.store(this.array, this.index, maxCount);
+    }
+
+    acquire() {
+        while (true) {
+            const current = Atomics.load(this.array, this.index);
+            if (current > 0) {
+                // Try to decrement
+                const old = Atomics.compareExchange(
+                    this.array, this.index, current, current - 1
+                );
+                if (old === current) return; // Got a permit
+            }
+            // Wait for a permit to become available
+            Atomics.wait(this.array, this.index, 0);
+        }
+    }
+
+    release() {
+        Atomics.add(this.array, this.index, 1);
+        Atomics.notify(this.array, this.index, 1);
+    }
+}
+
+Use cases:
+- Connection pool (limit concurrent connections)
+- Rate limiting (limit concurrent requests)
+- Resource pool (limit concurrent file handles)
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Resource Pool Demo</h2>
+                <p class="demo-explanation">Simulate workers accessing a limited pool of resources. The semaphore ensures only N workers can use resources simultaneously.</p>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="workerCount">Number of Workers:</label>
+                        <select id="workerCount">
+                            <option value="4">4 Workers</option>
+                            <option value="8" selected>8 Workers</option>
+                            <option value="12">12 Workers</option>
+                            <option value="16">16 Workers</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="semaphoreCount">Semaphore Count:</label>
+                        <select id="semaphoreCount">
+                            <option value="1">1 (Mutex)</option>
+                            <option value="2">2</option>
+                            <option value="3" selected>3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="tasksPerWorker">Tasks per Worker:</label>
+                        <input type="number" id="tasksPerWorker" value="5" min="1" max="20">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="taskDuration">Task Duration (ms):</label>
+                        <input type="number" id="taskDuration" value="500" min="100" max="2000" step="100">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="startBtn" class="btn btn-primary">Start Demo</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Running...</p>
+            </section>
+
+            <section class="semaphore-status">
+                <h2>Semaphore State</h2>
+                <div class="status-display">
+                    <div class="semaphore-visual">
+                        <div class="permit-slots" id="permitSlots"></div>
+                        <div class="semaphore-info">
+                            <span class="available-label">Available:</span>
+                            <span class="available-value" id="availableCount">-</span>
+                            <span class="of-label">of</span>
+                            <span class="max-value" id="maxCount">-</span>
+                        </div>
+                    </div>
+                    <div class="queue-display">
+                        <span class="queue-label">Waiting Queue:</span>
+                        <div class="waiting-workers" id="waitingWorkers"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Worker Activity</h2>
+                <div class="worker-grid" id="workerGrid"></div>
+            </section>
+
+            <section class="timeline-section">
+                <h2>Resource Usage Timeline</h2>
+                <canvas id="timelineCanvas" width="800" height="300"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Total Tasks</span>
+                        <span id="totalTasks" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Duration</span>
+                        <span id="totalDuration" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Avg Wait Time</span>
+                        <span id="avgWaitTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Max Concurrent</span>
+                        <span id="maxConcurrent" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Throughput Analysis</h3>
+                <div id="throughputAnalysis" class="throughput-analysis"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #207</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

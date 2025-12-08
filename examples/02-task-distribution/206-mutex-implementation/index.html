@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mutex Implementation - Web Worker Example #206</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Mutex Implementation</h1>
+            <p class="subtitle">Web Worker Example #206 - Lock Acquisition/Release Mechanism</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Mutex (Mutual Exclusion)</h2>
+                <p>A Mutex ensures that only one thread can access a critical section at a time. Using Atomics.wait and Atomics.notify, we can implement blocking mutexes that efficiently wait without busy-spinning.</p>
+                <div class="formula-box">
+                    <p><strong>Mutex Implementation:</strong></p>
+                    <pre class="formula">
+// Mutex states: 0 = unlocked, 1 = locked
+
+class Mutex {
+    constructor(sharedArray, index) {
+        this.array = sharedArray;
+        this.index = index;
+    }
+
+    lock() {
+        // Try to acquire: set 0 -> 1
+        while (true) {
+            const old = Atomics.compareExchange(
+                this.array, this.index, 0, 1
+            );
+            if (old === 0) return; // Got the lock
+
+            // Wait until unlocked (value becomes 0)
+            Atomics.wait(this.array, this.index, 1);
+        }
+    }
+
+    unlock() {
+        // Release: set back to 0
+        Atomics.store(this.array, this.index, 0);
+        // Wake one waiting thread
+        Atomics.notify(this.array, this.index, 1);
+    }
+}
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Critical Section Demo</h2>
+                <p class="demo-explanation">Multiple workers will access a shared counter. With mutex protection, the critical section (read-modify-write) becomes atomic.</p>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="workerCount">Number of Workers:</label>
+                        <select id="workerCount">
+                            <option value="2">2 Workers</option>
+                            <option value="4" selected>4 Workers</option>
+                            <option value="8">8 Workers</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="operationsCount">Operations per Worker:</label>
+                        <input type="number" id="operationsCount" value="1000" min="100" max="10000" step="100">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="criticalWorkTime">Critical Work (ms):</label>
+                        <input type="number" id="criticalWorkTime" value="1" min="0" max="10" step="1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="useMutex">Use Mutex:</label>
+                        <select id="useMutex">
+                            <option value="compare" selected>Compare Both</option>
+                            <option value="yes">With Mutex</option>
+                            <option value="no">Without Mutex</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="startBtn" class="btn btn-primary">Start Demo</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Running...</p>
+            </section>
+
+            <section class="mutex-status">
+                <h2>Mutex State</h2>
+                <div class="status-display">
+                    <div class="lock-indicator" id="lockIndicator">
+                        <div class="lock-icon" id="lockIcon">🔓</div>
+                        <div class="lock-text" id="lockText">Unlocked</div>
+                    </div>
+                    <div class="owner-info">
+                        <span class="owner-label">Current Owner:</span>
+                        <span class="owner-value" id="currentOwner">None</span>
+                    </div>
+                    <div class="queue-info">
+                        <span class="queue-label">Waiting Queue:</span>
+                        <span class="queue-value" id="waitingQueue">0 workers</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="comparison-section">
+                <h2>Counter Results</h2>
+                <div class="counter-display">
+                    <div class="counter-box no-mutex">
+                        <h3>Without Mutex</h3>
+                        <div class="counter-value" id="noMutexCounter">-</div>
+                        <div class="counter-expected">Expected: <span id="noMutexExpected">-</span></div>
+                        <div class="counter-diff" id="noMutexDiff">-</div>
+                    </div>
+                    <div class="counter-box with-mutex">
+                        <h3>With Mutex</h3>
+                        <div class="counter-value" id="withMutexCounter">-</div>
+                        <div class="counter-expected">Expected: <span id="withMutexExpected">-</span></div>
+                        <div class="counter-diff" id="withMutexDiff">-</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Lock Acquisition Timeline</h2>
+                <canvas id="timelineCanvas" width="800" height="250"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Lock Acquisitions</span>
+                        <span id="totalAcquisitions" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Wait Time</span>
+                        <span id="totalWaitTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Avg Lock Hold</span>
+                        <span id="avgHoldTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Contention Rate</span>
+                        <span id="contentionRate" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Worker Statistics</h3>
+                <div id="workerStats" class="worker-stats"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #206</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
