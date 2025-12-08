@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#144 Nelder-Mead Method - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#144 Nelder-Mead Method</h1>
+            <p class="description">Direct search method (Simplex method) for multidimensional optimization</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="functionType">Objective Function:</label>
+                <select id="functionType">
+                    <option value="rosenbrock" selected>Rosenbrock: f(x,y) = (a-x)² + b(y-x²)²</option>
+                    <option value="himmelblau">Himmelblau: (x²+y-11)² + (x+y²-7)²</option>
+                    <option value="rastrigin">Rastrigin: 10n + Σ(xᵢ² - 10cos(2πxᵢ))</option>
+                    <option value="sphere">Sphere: Σxᵢ²</option>
+                    <option value="ackley">Ackley Function</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Coefficients:</label>
+                <div class="param-grid">
+                    <div>
+                        <span>Reflection (α):</span>
+                        <input type="number" id="alpha" value="1.0" step="0.1">
+                    </div>
+                    <div>
+                        <span>Expansion (γ):</span>
+                        <input type="number" id="gamma" value="2.0" step="0.1">
+                    </div>
+                    <div>
+                        <span>Contraction (ρ):</span>
+                        <input type="number" id="rho" value="0.5" step="0.1">
+                    </div>
+                    <div>
+                        <span>Shrink (σ):</span>
+                        <input type="number" id="sigma" value="0.5" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Initial Simplex Start Point:</label>
+                <div class="param-row">
+                    <span>x₀:</span>
+                    <input type="number" id="initX" value="-1.2" step="0.1">
+                    <span>y₀:</span>
+                    <input type="number" id="initY" value="1.0" step="0.1">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="maxIterations">Maximum Iterations:</label>
+                <select id="maxIterations">
+                    <option value="100">100</option>
+                    <option value="500" selected>500</option>
+                    <option value="1000">1000</option>
+                    <option value="5000">5000</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="tolerance">Convergence Tolerance:</label>
+                <select id="tolerance">
+                    <option value="1e-4" selected>10⁻⁴</option>
+                    <option value="1e-6">10⁻⁶</option>
+                    <option value="1e-8">10⁻⁸</option>
+                </select>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadPreset('standard')">Standard</button>
+                <button class="btn-secondary" onclick="loadPreset('aggressive')">Aggressive Expansion</button>
+                <button class="btn-secondary" onclick="loadPreset('conservative')">Conservative</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Run Optimization</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Nelder-Mead</h3>
+            <p>The Nelder-Mead method is a heuristic search method used for finding the minimum or maximum of an objective function in a multidimensional space. It uses the concept of a simplex, which is a special polytope of n + 1 vertices in n dimensions.</p>
+
+            <h4>Operations</h4>
+            <ul>
+                <li><strong>Reflection:</strong> Moves the worst point through the centroid of the remaining points.</li>
+                <li><strong>Expansion:</strong> If reflection is very good, try to go further in that direction.</li>
+                <li><strong>Contraction:</strong> If reflection is poor, try an intermediate point.</li>
+                <li><strong>Shrink:</strong> If all else fails, shrink the simplex towards the best point.</li>
+            </ul>
+
+            <h4>Advantages</h4>
+            <ul>
+                <li>Does not require derivatives (gradient-free).</li>
+                <li>Robust for discontinuous or noisy functions.</li>
+                <li>Simple to implement and apply.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

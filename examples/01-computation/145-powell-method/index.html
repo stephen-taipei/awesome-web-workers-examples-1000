@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#145 Powell's Method - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#145 Powell's Method</h1>
+            <p class="description">Conjugate direction method for multidimensional optimization without derivatives</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="functionType">Objective Function:</label>
+                <select id="functionType">
+                    <option value="rosenbrock" selected>Rosenbrock: f(x,y) = (a-x)² + b(y-x²)²</option>
+                    <option value="himmelblau">Himmelblau: (x²+y-11)² + (x+y²-7)²</option>
+                    <option value="quadratic">Quadratic: Elliptical Bowl</option>
+                    <option value="wood">Wood Function (4D projected)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Line Search Parameters:</label>
+                <div class="param-row">
+                    <span>Tolerance:</span>
+                    <input type="number" id="lineTol" value="1e-4" step="1e-5">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Initial Point:</label>
+                <div class="param-row">
+                    <span>x₀:</span>
+                    <input type="number" id="initX" value="-1.0" step="0.1">
+                    <span>y₀:</span>
+                    <input type="number" id="initY" value="1.0" step="0.1">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="maxIterations">Maximum Iterations:</label>
+                <select id="maxIterations">
+                    <option value="10">10</option>
+                    <option value="50">50</option>
+                    <option value="100" selected>100</option>
+                    <option value="500">500</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="tolerance">Global Tolerance:</label>
+                <select id="tolerance">
+                    <option value="1e-4" selected>10⁻⁴</option>
+                    <option value="1e-6">10⁻⁶</option>
+                    <option value="1e-8">10⁻⁸</option>
+                </select>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadPreset('rosenbrock')">Rosenbrock</button>
+                <button class="btn-secondary" onclick="loadPreset('himmelblau')">Himmelblau</button>
+                <button class="btn-secondary" onclick="loadPreset('quadratic')">Quadratic</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Run Optimization</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Powell's Method</h3>
+            <p>Powell's method is an algorithm for finding a local minimum of a function. It does not require the calculation of derivatives. The method minimizes the function by a bi-directional search along each search vector, in turn.</p>
+
+            <h4>Key Concepts</h4>
+            <ul>
+                <li><strong>Conjugate Directions:</strong> The method constructs a set of conjugate directions, which allows it to minimize quadratic functions in a finite number of steps.</li>
+                <li><strong>Line Search:</strong> At each step, a one-dimensional minimization (line search) is performed along the current direction.</li>
+                <li><strong>Direction Update:</strong> New search directions are generated based on the displacement of the best point found in the current cycle.</li>
+            </ul>
+
+            <h4>Advantages</h4>
+            <ul>
+                <li>Derivative-free optimization.</li>
+                <li>More efficient than basic coordinate descent (especially for valleys that are not aligned with axes).</li>
+                <li>Generally robust.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
