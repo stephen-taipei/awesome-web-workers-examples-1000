@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker 池監控儀表板 - Web Workers 示例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Worker 池監控儀表板</h1>
+            <p>即時視覺化監控 Worker 池的狀態、負載與任務執行情況。</p>
+        </header>
+
+        <div class="controls">
+            <button id="addWorkerBtn">新增 Worker</button>
+            <button id="removeWorkerBtn">移除 Worker</button>
+            <button id="addTaskBtn">提交隨機任務</button>
+            <button id="addBatchTaskBtn">提交批次任務 (10個)</button>
+            <button id="toggleAutoTaskBtn">開啟自動投遞任務</button>
+        </div>
+
+        <div class="dashboard-container">
+            <div class="stats-panel">
+                <h3>系統狀態</h3>
+                <div class="stat-item">
+                    <span class="label">Worker 數量:</span>
+                    <span class="value" id="workerCountDisplay">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">等待中任務:</span>
+                    <span class="value" id="pendingTasksDisplay">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">執行中任務:</span>
+                    <span class="value" id="activeTasksDisplay">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">已完成任務:</span>
+                    <span class="value" id="completedTasksDisplay">0</span>
+                </div>
+                 <div class="stat-item">
+                    <span class="label">總處理時間:</span>
+                    <span class="value" id="totalTimeDisplay">0s</span>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <h3>即時監控圖表</h3>
+                <canvas id="monitorCanvas" width="800" height="400"></canvas>
+            </div>
+        </div>
+
+        <div class="worker-list-panel">
+            <h3>Worker 詳細狀態</h3>
+             <div id="workerList" class="worker-list">
+                <!-- Worker status cards will be inserted here -->
+             </div>
+        </div>
+
+        <div class="log-panel">
+            <h3>系統日誌</h3>
+            <div id="logOutput" class="log-output"></div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
