@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Logging Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Task Logging with Web Worker</h1>
+    <div class="container">
+        <div class="controls">
+            <button id="startTasksBtn">Start Tasks</button>
+            <button id="clearLogsBtn">Clear Logs</button>
+        </div>
+        <div class="status-container">
+            <p>Task Status: <span id="taskStatus">Idle</span></p>
+        </div>
+        <div class="logs-container">
+            <h2>Execution Logs</h2>
+            <div id="logsOutput" class="logs-output"></div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
