@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Filter - Web Worker Example #271</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Instagram Filter</h1>
+            <p class="subtitle">Web Worker Example #271 - Social Media Style Filters</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Instagram Filter</h2>
+                <p>Instagram-style filters combine multiple color transformations to create distinctive visual aesthetics. These filters typically include contrast adjustments, color channel manipulation, vignette effects, and saturation changes to produce the characteristic social media look.</p>
+                <div class="formula-box">
+                    <p><strong>Combined Filter Effects:</strong></p>
+                    <pre class="formula">
+Instagram filters combine multiple effects:
+
+1. Contrast Adjustment:
+   newValue = ((value - 128) × contrast) + 128
+
+2. Brightness Adjustment:
+   newValue = value + brightness
+
+3. Saturation (HSL conversion):
+   S_new = S × saturation
+
+4. Color Tinting:
+   R += tint.r, G += tint.g, B += tint.b
+
+5. Vignette Effect:
+   distance = sqrt((x-cx)² + (y-cy)²) / maxDist
+   factor = 1 - (distance × vignetteStrength)²
+   RGB = RGB × factor
+
+Popular Presets:
+- Clarendon: +contrast, +saturation, slight blue shadows
+- Gingham: Vintage fade, desaturated, warm highlights
+- Juno: Warm tones, enhanced colors, slight vignette
+- Lark: Desaturated, exposed, warm highlights
+- Reyes: Vintage, low contrast, cream tones
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+
+                <div class="input-group">
+                    <label for="imageInput">Select Image:</label>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+
+                <div class="input-group">
+                    <label for="filterSelect">Filter Preset:</label>
+                    <select id="filterSelect">
+                        <option value="clarendon">Clarendon - Bright & Bold</option>
+                        <option value="gingham">Gingham - Vintage Fade</option>
+                        <option value="juno">Juno - Warm & Vibrant</option>
+                        <option value="lark">Lark - Light & Airy</option>
+                        <option value="reyes">Reyes - Dusty Vintage</option>
+                        <option value="slumber">Slumber - Dreamy Desaturated</option>
+                        <option value="crema">Crema - Soft Cream</option>
+                        <option value="ludwig">Ludwig - Minimal Warmth</option>
+                        <option value="aden">Aden - Pastel Colors</option>
+                        <option value="perpetua">Perpetua - Blue-Green Tint</option>
+                    </select>
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="intensity">Filter Intensity:</label>
+                        <input type="range" id="intensity" min="0" max="100" value="100">
+                        <span id="intensityValue">100%</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="vignette">Vignette Strength:</label>
+                        <input type="range" id="vignette" min="0" max="100" value="30">
+                        <span id="vignetteValue">30%</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="applyBtn" class="btn btn-primary" disabled>Apply Instagram Filter</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                    <button id="downloadBtn" class="btn btn-outline" disabled>Download Result</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="canvas-container">
+                    <div class="canvas-wrapper">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                    </div>
+                    <div class="canvas-wrapper">
+                        <h3 id="filterName">Filtered Result</h3>
+                        <canvas id="resultCanvas"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Processing Statistics</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Image Size</span>
+                        <span id="imageSize" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Pixels</span>
+                        <span id="totalPixels" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Throughput</span>
+                        <span id="throughput" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Filter Parameters</h3>
+                <div id="filterParams" class="filter-params"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #271</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
