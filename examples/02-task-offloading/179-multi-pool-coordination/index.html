@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#179 多池協調 - Web Workers 範例</title>
+    <meta name="description" content="展示多個不同類型的 Worker 池如何協同工作，處理複雜的多階段任務流程">
+    <link rel="stylesheet" href="../../01-computation/001-prime-generator/style.css">
+    <style>
+        .pipeline-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        .pool-column {
+            flex: 1;
+            min-width: 250px;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        .pool-header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+            font-weight: bold;
+        }
+        .pool-cpu { border-color: #ff6b6b; color: #ff6b6b; }
+        .pool-io { border-color: #4ecdc4; color: #4ecdc4; }
+        .pool-render { border-color: #ffe66d; color: #ffe66d; }
+
+        .workers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .worker-node {
+            aspect-ratio: 1;
+            background-color: var(--bg-input);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .worker-node.busy {
+            border-color: currentColor;
+            animation: pulse 1s infinite;
+        }
+        .worker-node.busy::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: currentColor;
+            border-radius: 50%;
+            top: 2px;
+            right: 2px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .queue-box {
+            background-color: var(--bg-primary);
+            padding: 10px;
+            border-radius: 4px;
+            min-height: 100px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .task-item {
+            background-color: var(--bg-card);
+            padding: 5px 8px;
+            margin-bottom: 5px;
+            border-radius: 3px;
+            border-left: 3px solid var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .control-panel {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .arrow-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--text-muted);
+            padding-top: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>多池協調 (流水線)</h1>
+            <p class="subtitle">Multi-pool Coordination & Pipelining</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#179</span>
+                <span class="badge badge-secondary">任務分流</span>
+                <span class="badge badge-danger">高級</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">任務控制</h2>
+            <div class="control-panel">
+                <div>
+                    <p>模擬一個複雜的數據處理流水線：</p>
+                    <ol>
+                        <li><strong>數據獲取 (IO Pool)</strong>: 模擬從網路或磁碟讀取數據。</li>
+                        <li><strong>數據處理 (CPU Pool)</strong>: 模擬解析、過濾或加密數據。</li>
+                        <li><strong>結果渲染 (Render Pool)</strong>: 模擬生成圖像或格式化報告。</li>
+                    </ol>
+                </div>
+                <div class="btn-group">
+                    <button id="add-job-btn" class="btn btn-primary">提交新作業</button>
+                    <button id="auto-mode-btn" class="btn btn-secondary">自動模式: 關</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">處理流水線監控</h2>
+
+            <div class="pipeline-container">
+                <!-- 第一階段：IO 池 -->
+                <div class="pool-column" style="color: #4ecdc4">
+                    <div class="pool-header pool-io">
+                        I/O Pool (4)
+                        <div style="font-size: 0.8rem; font-weight: normal; margin-top: 5px;">階段 1: 數據獲取</div>
+                    </div>
+                    <div id="io-workers" class="workers-grid"></div>
+                    <div class="queue-box">
+                        <div>等待中: <span id="io-queue-count">0</span></div>
+                        <div id="io-queue-list" style="margin-top: 5px;"></div>
+                    </div>
+                </div>
+
+                <div class="arrow-divider">➔</div>
+
+                <!-- 第二階段：CPU 池 -->
+                <div class="pool-column" style="color: #ff6b6b">
+                    <div class="pool-header pool-cpu">
+                        CPU Pool (2)
+                        <div style="font-size: 0.8rem; font-weight: normal; margin-top: 5px;">階段 2: 數據運算</div>
+                    </div>
+                    <div id="cpu-workers" class="workers-grid"></div>
+                    <div class="queue-box">
+                        <div>等待中: <span id="cpu-queue-count">0</span></div>
+                        <div id="cpu-queue-list" style="margin-top: 5px;"></div>
+                    </div>
+                </div>
+
+                <div class="arrow-divider">➔</div>
+
+                <!-- 第三階段：渲染池 -->
+                <div class="pool-column" style="color: #ffe66d">
+                    <div class="pool-header pool-render">
+                        Render Pool (2)
+                        <div style="font-size: 0.8rem; font-weight: normal; margin-top: 5px;">階段 3: 結果生成</div>
+                    </div>
+                    <div id="render-workers" class="workers-grid"></div>
+                    <div class="queue-box">
+                        <div>等待中: <span id="render-queue-count">0</span></div>
+                        <div id="render-queue-list" style="margin-top: 5px;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">完成作業</h2>
+            <div id="completed-jobs" style="max-height: 150px; overflow-y: auto; font-family: var(--font-mono); font-size: 0.9rem;">
+                <!-- 完成的作業列表 -->
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>關於多池協調</h3>
+            <ul>
+                <li><strong>專用資源池：</strong>不同類型的任務（如 I/O 密集型 vs CPU 密集型）需要不同的資源配置。使用專用池可以避免某一類任務耗盡所有資源。</li>
+                <li><strong>流水線並行 (Pipelining)：</strong>作業被分解為多個階段，當作業 A 進入第二階段時，作業 B 可以開始第一階段，提高整體吞吐量。</li>
+                <li><strong>背壓 (Backpressure)：</strong>如果 CPU 池處理速度慢於 I/O 池，中間佇列會積壓。實際系統中需要機制來暫停上游生產，防止記憶體溢出（本範例僅展示佇列堆積）。</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #179 - 多池協調
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

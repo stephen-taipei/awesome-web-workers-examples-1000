@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#177 動態負載均衡 - Web Workers 範例</title>
+    <meta name="description" content="展示如何動態分配任務到多個 Web Worker，以達到最佳的負載均衡">
+    <link rel="stylesheet" href="../../01-computation/001-prime-generator/style.css">
+    <style>
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .worker-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .worker-card.active {
+            border-color: var(--success-color);
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.2);
+        }
+        .worker-card.busy {
+            border-color: var(--warning-color);
+        }
+        .worker-id {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        .worker-load {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        .worker-status {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+        .task-queue {
+            background-color: var(--bg-input);
+            padding: 10px;
+            border-radius: var(--border-radius);
+            height: 50px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        .task-item {
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .stat-box {
+            background-color: var(--bg-secondary);
+            padding: 10px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--success-color);
+        }
+        .chart-container {
+            height: 200px;
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            padding: 10px;
+            gap: 10px;
+        }
+        .chart-bar {
+            flex: 1;
+            background-color: var(--primary-color);
+            opacity: 0.7;
+            transition: height 0.3s;
+            border-radius: 4px 4px 0 0;
+            position: relative;
+        }
+        .chart-bar:hover {
+            opacity: 1;
+        }
+        .chart-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>動態負載均衡</h1>
+            <p class="subtitle">Dynamic Load Balancing</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#177</span>
+                <span class="badge badge-secondary">任務分流</span>
+                <span class="badge badge-danger">高級</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">系統控制</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label">Worker 數量</label>
+                    <input type="number" id="worker-count" class="form-input" value="4" min="1" max="8">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">任務產生速率 (ms)</label>
+                    <input type="number" id="task-rate" class="form-input" value="500" min="100" max="2000">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">負載均衡策略</label>
+                <select id="strategy-select" class="form-input">
+                    <option value="round-robin">輪詢 (Round Robin)</option>
+                    <option value="random">隨機 (Random)</option>
+                    <option value="least-connections">最少連接 (Least Connections)</option>
+                    <option value="weighted-round-robin">加權輪詢 (Weighted Round Robin)</option>
+                </select>
+            </div>
+
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">開始模擬</button>
+                <button id="stop-btn" class="btn btn-danger" disabled>停止模擬</button>
+                <button id="add-task-btn" class="btn btn-secondary" disabled>手動加入任務</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Worker 狀態監控</h2>
+            <div id="workers-container" class="dashboard">
+                <!-- Worker 卡片將由 JS 生成 -->
+            </div>
+
+            <h3>待處理任務佇列</h3>
+            <div id="task-queue" class="task-queue">
+                <!-- 任務指示器 -->
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div>總完成任務</div>
+                    <div id="total-tasks" class="stat-value">0</div>
+                </div>
+                <div class="stat-box">
+                    <div>平均處理時間</div>
+                    <div id="avg-time" class="stat-value">0ms</div>
+                </div>
+                <div class="stat-box">
+                    <div>系統吞吐量</div>
+                    <div id="throughput" class="stat-value">0/s</div>
+                </div>
+            </div>
+
+            <h3>負載分佈圖</h3>
+            <div id="load-chart" class="chart-container">
+                <!-- 圖表將由 JS 更新 -->
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>關於動態負載均衡</h3>
+            <ul>
+                <li><strong>最少連接 (Least Connections)：</strong>將新任務分配給當前正在處理任務數最少的 Worker，這是動態負載均衡最常用的策略。</li>
+                <li><strong>加權輪詢 (Weighted Round Robin)：</strong>可以為效能較好的 Worker 分配更高的權重，使其處理更多任務。</li>
+                <li><strong>任務異質性：</strong>本範例中，任務的執行時間是隨機的 (100ms - 2000ms)，模擬真實世界中任務複雜度不一的情況。</li>
+                <li><strong>Worker 異質性：</strong>模擬了不同 Worker 可能有不同的處理能力 (透過隨機延遲係數)。</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #177 - 動態負載均衡
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
