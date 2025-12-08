@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Parallelism - Web Worker Example #239</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Data Parallelism</h1>
+            <p class="subtitle">Web Worker Example #239 - SIMD-Style Parallel Processing</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Data Parallelism</h2>
+                <p>Data Parallelism (SIMD - Single Instruction, Multiple Data) is a parallel computing paradigm where the same operation is applied to multiple data elements simultaneously. Data is split across workers, each performing identical operations on their portion, then results are combined.</p>
+                <div class="formula-box">
+                    <p><strong>Data Parallel Operations:</strong></p>
+                    <pre class="formula">
+Data Parallelism Model:
+
+┌─────────────────────────────────────────────────┐
+│              Original Data Array                │
+│  [d₀, d₁, d₂, d₃, d₄, d₅, d₆, d₇, ... dₙ]     │
+└─────────────────────────────────────────────────┘
+                    ↓ Split
+    ┌───────────┬───────────┬───────────┐
+    ↓           ↓           ↓           ↓
+┌───────┐  ┌───────┐  ┌───────┐  ┌───────┐
+│Worker1│  │Worker2│  │Worker3│  │Worker4│
+│[d₀-d₂]│  │[d₃-d₅]│  │[d₆-d₈]│  │[d₉-dₙ]│
+│  f(x) │  │  f(x) │  │  f(x) │  │  f(x) │
+└───────┘  └───────┘  └───────┘  └───────┘
+    ↓           ↓           ↓           ↓
+    └───────────┴───────────┴───────────┘
+                    ↓ Combine
+┌─────────────────────────────────────────────────┐
+│               Result Array                       │
+│  [r₀, r₁, r₂, r₃, r₄, r₅, r₆, r₇, ... rₙ]     │
+└─────────────────────────────────────────────────┘
+
+Common Operations:
+• Map: Apply function to each element
+• Filter: Select elements matching condition
+• Reduce: Aggregate to single value
+• Scan: Prefix sum / cumulative operation
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="operation">Operation:</label>
+                        <select id="operation">
+                            <option value="map">Map (Transform)</option>
+                            <option value="filter">Filter (Select)</option>
+                            <option value="reduce">Reduce (Aggregate)</option>
+                            <option value="mapreduce">MapReduce</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="workerCount">Workers:</label>
+                        <select id="workerCount">
+                            <option value="2">2 Workers</option>
+                            <option value="4" selected>4 Workers</option>
+                            <option value="8">8 Workers</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="dataSize">Data Size:</label>
+                        <select id="dataSize">
+                            <option value="10000">10,000 elements</option>
+                            <option value="100000" selected>100,000 elements</option>
+                            <option value="1000000">1,000,000 elements</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="chunkStrategy">Chunking:</label>
+                        <select id="chunkStrategy">
+                            <option value="equal">Equal Split</option>
+                            <option value="dynamic">Dynamic Load</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="operationDescription" class="problem-desc"></div>
+
+                <div class="button-group">
+                    <button id="startBtn" class="btn btn-primary">Run Parallel</button>
+                    <button id="sequentialBtn" class="btn btn-outline">Run Sequential</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Worker Progress</h2>
+                <canvas id="parallelCanvas" width="600" height="300"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Status</span>
+                        <span id="status" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Parallel Time</span>
+                        <span id="parallelTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Sequential Time</span>
+                        <span id="sequentialTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Speedup</span>
+                        <span id="speedup" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Elements Processed</span>
+                        <span id="elementsProcessed" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Result Size</span>
+                        <span id="resultSize" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Throughput</span>
+                        <span id="throughput" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Efficiency</span>
+                        <span id="efficiency" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Result Preview</h3>
+                <div id="resultPreview" class="result-preview"></div>
+
+                <h3>Worker Statistics</h3>
+                <div id="workerStats" class="worker-stats"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #239</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

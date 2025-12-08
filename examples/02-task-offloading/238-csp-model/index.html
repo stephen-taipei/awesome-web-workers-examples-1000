@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSP Model - Web Worker Example #238</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CSP Model</h1>
+            <p class="subtitle">Web Worker Example #238 - Communicating Sequential Processes</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About CSP Model</h2>
+                <p>Communicating Sequential Processes (CSP) is a formal language for describing patterns of interaction in concurrent systems. Unlike shared memory, CSP processes communicate through channels - typed conduits through which values are sent and received synchronously.</p>
+                <div class="formula-box">
+                    <p><strong>CSP Channel Operations:</strong></p>
+                    <pre class="formula">
+Channel Types:
+┌─────────────────────────────────────────────┐
+│  Unbuffered Channel (Synchronous)           │
+│  ┌─────┐    send()    ┌─────┐              │
+│  │ P1  │ ──────────→  │ Ch  │  ← blocked   │
+│  └─────┘   blocked    └─────┘    until     │
+│            until       │  ↓      recv()    │
+│            recv()      ▼                    │
+│                     ┌─────┐                 │
+│                     │ P2  │  recv()        │
+│                     └─────┘                 │
+└─────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────┐
+│  Buffered Channel (Asynchronous)            │
+│  ┌─────┐            ┌───────────┐          │
+│  │ P1  │ ─send()─→  │ [v1,v2,v3]│ buffer   │
+│  └─────┘            └───────────┘          │
+│   non-blocking          │                   │
+│   until full            ▼                   │
+│                     ┌─────┐                 │
+│                     │ P2  │  recv()        │
+│                     └─────┘  non-blocking  │
+│                              until empty   │
+└─────────────────────────────────────────────┘
+
+Patterns:
+• Pipeline: A → ch1 → B → ch2 → C
+• Fan-out:  A → ch → [B1, B2, B3]
+• Fan-in:   [A1, A2, A3] → ch → B
+• Select:   wait for first of multiple channels
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="pattern">Pattern:</label>
+                        <select id="pattern">
+                            <option value="pipeline">Pipeline</option>
+                            <option value="fanout">Fan-Out</option>
+                            <option value="fanin">Fan-In</option>
+                            <option value="pingpong">Ping-Pong</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="channelType">Channel Type:</label>
+                        <select id="channelType">
+                            <option value="unbuffered">Unbuffered (Sync)</option>
+                            <option value="buffered">Buffered (Async)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="bufferSize">Buffer Size:</label>
+                        <input type="number" id="bufferSize" value="5" min="1" max="20">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="messageCount">Messages:</label>
+                        <select id="messageCount">
+                            <option value="10">10 Messages</option>
+                            <option value="25" selected>25 Messages</option>
+                            <option value="50">50 Messages</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="patternDescription" class="problem-desc"></div>
+
+                <div class="button-group">
+                    <button id="startBtn" class="btn btn-primary">Start CSP Demo</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Setting up channels...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Channel Visualization</h2>
+                <canvas id="cspCanvas" width="600" height="400"></canvas>
+            </section>
+
+            <section id="channelLog" class="message-section">
+                <h2>Channel Operations</h2>
+                <div id="logContainer" class="log-container"></div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Status</span>
+                        <span id="status" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Messages Sent</span>
+                        <span id="sentCount" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Messages Received</span>
+                        <span id="recvCount" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Execution Time</span>
+                        <span id="execTime" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Avg Latency</span>
+                        <span id="avgLatency" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Max Buffer Usage</span>
+                        <span id="maxBuffer" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Blocked Ops</span>
+                        <span id="blockedOps" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Throughput</span>
+                        <span id="throughput" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Process States</h3>
+                <div id="processStates" class="process-states"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #238</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
