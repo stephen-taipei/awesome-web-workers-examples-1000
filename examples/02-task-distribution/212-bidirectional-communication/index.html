@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#212 雙向通訊 - Web Workers 範例</title>
+    <meta name="description" content="使用 Promise 包裝器實現 Web Worker 的請求-回應通訊模式">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>雙向通訊</h1>
+            <p class="subtitle">Bi-directional Communication</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#212</span>
+                <span class="badge badge-secondary">通訊協調</span>
+                <span class="badge badge-warning">中級</span>
+            </div>
+        </header>
+
+        <!-- 功能說明區域 -->
+        <section class="card">
+            <h2 class="card-title">功能說明</h2>
+            <p>此範例展示如何使用 <strong>Promise 包裝器</strong> 實現主執行緒與 Worker 之間的請求-回應模式。</p>
+            <ul class="feature-list">
+                <li>每個請求都有唯一 ID，確保回應正確匹配</li>
+                <li>使用 Promise 讓非同步呼叫更直覺</li>
+                <li>支援超時處理和錯誤處理</li>
+                <li>可同時發送多個請求，獨立等待回應</li>
+            </ul>
+        </section>
+
+        <!-- 操作區域 -->
+        <section class="card">
+            <h2 class="card-title">請求測試</h2>
+
+            <!-- 單一請求測試 -->
+            <div class="form-group">
+                <label class="form-label">計算數字平方</label>
+                <div class="input-row">
+                    <input
+                        type="number"
+                        id="square-input"
+                        class="form-input"
+                        value="7"
+                        placeholder="輸入數字"
+                    >
+                    <button id="square-btn" class="btn btn-primary">發送請求</button>
+                </div>
+            </div>
+
+            <!-- 延遲請求測試 -->
+            <div class="form-group">
+                <label class="form-label">延遲回應測試 (模擬耗時操作)</label>
+                <div class="input-row">
+                    <input
+                        type="number"
+                        id="delay-input"
+                        class="form-input"
+                        value="2000"
+                        min="100"
+                        max="10000"
+                        placeholder="延遲毫秒數"
+                    >
+                    <button id="delay-btn" class="btn btn-secondary">發送延遲請求</button>
+                </div>
+            </div>
+
+            <!-- 批量請求測試 -->
+            <div class="form-group">
+                <label class="form-label">批量請求測試</label>
+                <div class="input-row">
+                    <input
+                        type="number"
+                        id="batch-input"
+                        class="form-input"
+                        value="5"
+                        min="1"
+                        max="20"
+                        placeholder="請求數量"
+                    >
+                    <button id="batch-btn" class="btn btn-success">批量發送</button>
+                </div>
+            </div>
+
+            <!-- 超時測試 -->
+            <div class="form-group">
+                <label class="form-label">超時測試 (請求將在 3 秒後超時)</label>
+                <button id="timeout-btn" class="btn btn-danger">發送會超時的請求</button>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+        </section>
+
+        <!-- 請求佇列顯示 -->
+        <section class="card">
+            <h2 class="card-title">請求狀態</h2>
+            <div id="pending-requests" class="pending-list">
+                <p class="empty-message">目前沒有待處理的請求</p>
+            </div>
+        </section>
+
+        <!-- 結果顯示區域 -->
+        <section class="card">
+            <h2 class="card-title">通訊記錄</h2>
+            <div id="log-container" class="log-container">
+                <p class="empty-message">尚無通訊記錄</p>
+            </div>
+            <button id="clear-log-btn" class="btn btn-secondary btn-small">清除記錄</button>
+        </section>
+
+        <!-- 程式碼說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>通訊模式：</strong>請求-回應模式 (Request-Response Pattern)</li>
+                <li><strong>核心技術：</strong>使用 <code>Promise</code> 包裝 <code>postMessage</code></li>
+                <li><strong>請求追蹤：</strong>每個請求有唯一 <code>requestId</code>，用於匹配回應</li>
+                <li><strong>錯誤處理：</strong>支援超時和 Worker 錯誤回報</li>
+                <li><strong>並行請求：</strong>可同時發送多個請求，各自獨立等待結果</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #212 - 雙向通訊
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>
