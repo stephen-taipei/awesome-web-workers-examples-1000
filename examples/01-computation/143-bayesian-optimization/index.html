@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bayesian Optimization - Web Worker Example #143</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Bayesian Optimization</h1>
+            <p class="subtitle">Web Worker Example #143 - Gaussian Processes</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Bayesian Optimization</h2>
+                <p>Bayesian Optimization (BO) is a strategy for global optimization of black-box functions. It builds a probabilistic model (Gaussian Process) of the objective function and uses an Acquisition Function to decide where to sample next.</p>
+                <div class="formula-box">
+                    <p><strong>Core Components:</strong></p>
+                    <pre class="formula">
+1. Gaussian Process (GP):
+   Models f(x) ~ GP(m(x), k(x, x'))
+   Provides mean μ(x) and variance σ²(x)
+
+2. Acquisition Function (Expected Improvement):
+   EI(x) = (μ(x) - f_best - ξ)Φ(Z) + σ(x)φ(Z)
+   where Z = (μ(x) - f_best - ξ) / σ(x)
+
+3. Strategy:
+   Select x_next = argmax EI(x)
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Optimization Loop</h2>
+
+                <div class="input-group">
+                    <label for="targetFunc">Target Function:</label>
+                    <select id="targetFunc">
+                        <option value="sin_x_x">f(x) = x * sin(x)</option>
+                        <option value="gramacy_lee">Gramacy & Lee (1D)</option>
+                        <option value="forrester">Forrester Function</option>
+                    </select>
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="initialSamples">Initial Samples:</label>
+                        <input type="number" id="initialSamples" value="3" min="2" max="10">
+                    </div>
+                    <div class="input-group">
+                        <label for="maxIterations">Max Iterations:</label>
+                        <input type="number" id="maxIterations" value="10" min="1" max="50">
+                    </div>
+                    <div class="input-group">
+                        <label for="exploration">Exploration (ξ):</label>
+                        <input type="number" id="exploration" value="0.01" step="0.01">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="stepBtn" class="btn btn-outline" disabled>Step (+1)</button>
+                    <button id="runBtn" class="btn btn-primary">Run Auto</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <div class="canvas-wrapper">
+                    <canvas id="boCanvas" width="800" height="500"></canvas>
+                    <div id="loadingOverlay" class="loading-overlay hidden">
+                        <div class="spinner"></div>
+                        <span>Training GP...</span>
+                    </div>
+                </div>
+                <div class="legend">
+                    <span class="legend-item"><span class="dot true-func"></span>True Function</span>
+                    <span class="legend-item"><span class="dot gp-mean"></span>GP Mean</span>
+                    <span class="legend-item"><span class="dot confidence"></span>95% Confidence</span>
+                    <span class="legend-item"><span class="dot sample"></span>Samples</span>
+                    <span class="legend-item"><span class="dot acquisition"></span>Acquisition (EI)</span>
+                </div>
+            </section>
+
+            <section id="resultSection" class="result-section">
+                <h2>Optimization Status</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Iteration</span>
+                        <span id="iterDisplay">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Current Best X</span>
+                        <span id="bestXDisplay">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Current Best Y</span>
+                        <span id="bestYDisplay">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Next Sample</span>
+                        <span id="nextSampleDisplay">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #143</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
