@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#147 Subgradient Method - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#147 Subgradient Method</h1>
+            <p class="description">Optimization method for non-differentiable convex functions</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="functionType">Objective Function:</label>
+                <select id="functionType">
+                    <option value="abs" selected>Absolute Value: f(x) = |x| + |y|</option>
+                    <option value="hinge">Hinge Loss: max(0, 1-x) + max(0, 1-y)</option>
+                    <option value="max_component">Max Component: max(|x|, |y|)</option>
+                    <option value="l1_regularized">L1 Regularized: (x-c)² + λ|x|</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Step Size Rule (αₖ):</label>
+                <select id="stepRule">
+                    <option value="constant" selected>Constant (a)</option>
+                    <option value="decay_sqrt">Square Root Decay (a / √k)</option>
+                    <option value="decay_linear">Linear Decay (a / k)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Step Parameter (a):</label>
+                <input type="number" id="stepParam" value="0.1" step="0.01">
+            </div>
+
+            <div class="control-group">
+                <label>Initial Point:</label>
+                <div class="param-row">
+                    <span>x₀:</span>
+                    <input type="number" id="initX" value="2.0" step="0.1">
+                    <span>y₀:</span>
+                    <input type="number" id="initY" value="1.5" step="0.1">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="maxIterations">Maximum Iterations:</label>
+                <select id="maxIterations">
+                    <option value="100">100</option>
+                    <option value="500">500</option>
+                    <option value="1000" selected>1000</option>
+                    <option value="2000">2000</option>
+                </select>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadPreset('abs')">L1 Norm</button>
+                <button class="btn-secondary" onclick="loadPreset('hinge')">Hinge Loss</button>
+                <button class="btn-secondary" onclick="loadPreset('slow')">Slow Decay</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Run Optimization</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Subgradient Method</h3>
+            <p>The subgradient method is an iterative method for minimizing a convex function that is not necessarily differentiable. It extends the gradient descent method by using a subgradient instead of the gradient.</p>
+
+            <h4>Key Characteristics</h4>
+            <ul>
+                <li><strong>Non-differentiable:</strong> Works on functions with "kinks" or sharp corners (like absolute value).</li>
+                <li><strong>Step Size:</strong> Unlike gradient descent, the subgradient method requires careful step size selection (e.g., diminishing step sizes) to guarantee convergence. Constant step size only guarantees convergence to a neighborhood.</li>
+                <li><strong>No Monotonicity:</strong> The function value is not guaranteed to decrease at every step. We often keep track of the best value found so far.</li>
+            </ul>
+
+            <h4>Subgradient</h4>
+            <div class="formula-box">
+                <div class="formula">g ∈ ∂f(x) ⟺ f(y) ≥ f(x) + gᵀ(y - x) for all y</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
