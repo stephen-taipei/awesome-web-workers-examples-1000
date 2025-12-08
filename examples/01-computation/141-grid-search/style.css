@@ -1,0 +1,92 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    min-height: 100vh;
+    color: #e2e8f0;
+    line-height: 1.6;
+}
+
+.container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+
+header { text-align: center; margin-bottom: 2rem; }
+
+h1 { color: #38bdf8; font-size: 2.4rem; margin-bottom: 0.5rem; }
+.subtitle { color: #7dd3fc; }
+
+section {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+h2 { color: #38bdf8; font-size: 1.3rem; margin-bottom: 1rem; }
+
+.description p { color: #94a3b8; margin-bottom: 1rem; }
+
+.formula-box {
+    background: rgba(15, 23, 42, 0.5);
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #38bdf8;
+    font-family: 'Courier New', monospace;
+    color: #bae6fd;
+    white-space: pre;
+    font-size: 0.85rem;
+    overflow-x: auto;
+}
+
+.params-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+
+.input-group { margin-bottom: 1rem; }
+.input-group label { display: block; margin-bottom: 0.4rem; color: #bae6fd; font-size: 0.9rem; font-weight: 500; }
+
+.input-group select, .input-group input {
+    padding: 0.7rem;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.5);
+    color: #fff; font-size: 0.95rem;
+    width: 100%;
+}
+
+.input-group select:focus, .input-group input:focus { outline: none; border-color: #38bdf8; box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); }
+
+.hint { font-size: 0.75rem; color: #64748b; margin-left: 0.5rem; }
+
+.button-group { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
+
+.btn { flex: 1; min-width: 120px; padding: 0.8rem 1.5rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+.btn-primary { background: linear-gradient(135deg, #0ea5e9, #0284c7); color: white; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 25px rgba(14, 165, 233, 0.4); }
+.btn-outline { background: transparent; color: #38bdf8; border: 2px solid #38bdf8; }
+.btn-outline:hover:not(:disabled) { background: rgba(56, 189, 248, 0.1); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.hidden { display: none !important; }
+
+.status-section { text-align: center; }
+.progress-bar-container { background: rgba(15, 23, 42, 0.5); border-radius: 10px; height: 10px; overflow: hidden; margin-bottom: 0.5rem; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, #38bdf8, #0ea5e9); width: 0%; transition: width 0.1s; }
+.status-text { color: #94a3b8; font-size: 0.9rem; }
+
+.visualization { display: flex; justify-content: center; }
+.canvas-container { position: relative; display: inline-flex; gap: 10px; }
+canvas { background: #000; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.2); max-width: 100%; height: auto; }
+
+.colorbar { width: 20px; display: flex; flex-direction: column; }
+.colorbar-gradient { flex: 1; background: linear-gradient(to bottom, red, yellow, lime, cyan, blue); border-radius: 4px; }
+.colorbar-labels { display: flex; flex-direction: column; justify-content: space-between; height: 100%; position: absolute; right: -40px; top: 0; font-size: 0.8rem; color: #94a3b8; }
+#cbMax, #cbMin { background: rgba(15, 23, 42, 0.8); padding: 2px 4px; border-radius: 4px; }
+
+.results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+.result-item { background: rgba(15, 23, 42, 0.5); padding: 1rem; border-radius: 8px; text-align: center; }
+.result-label { display: block; color: #7dd3fc; font-size: 0.8rem; margin-bottom: 0.3rem; text-transform: uppercase; }
+#bestX, #bestY, #minVal, #timeElapsed { color: #e2e8f0; font-weight: 600; font-family: 'Courier New', monospace; font-size: 1.1rem; }
+
+footer { text-align: center; padding: 1.5rem; color: #64748b; }
+footer a { color: #38bdf8; text-decoration: none; }

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Search - Web Worker Example #142</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Random Search</h1>
+            <p class="subtitle">Web Worker Example #142 - Stochastic Optimization</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Random Search</h2>
+                <p>Random Search is a family of numerical optimization methods that do not require the gradient of the problem to be optimized. It can hence be used on functions that are not continuous or differentiable.</p>
+                <div class="formula-box">
+                    <p><strong>Pure Random Search:</strong></p>
+                    <pre class="formula">
+1. Sample x uniformly from [lower, upper].
+2. Evaluate f(x).
+3. Update best solution if f(x) < f(best).
+4. Repeat N times.
+
+Probability of finding a point in top 1% volume:
+P = 1 - (0.99)^N
+For N=500, P ≈ 99.3%
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Search Configuration</h2>
+
+                <div class="input-group">
+                    <label for="functionSelect">Objective Function:</label>
+                    <select id="functionSelect">
+                        <option value="rastrigin">Rastrigin Function (Multimodal)</option>
+                        <option value="ackley">Ackley Function</option>
+                        <option value="schwefel">Schwefel Function</option>
+                        <option value="michalewicz">Michalewicz Function</option>
+                    </select>
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="sampleCount">Samples:</label>
+                        <input type="number" id="sampleCount" value="1000" min="100" max="100000">
+                    </div>
+                    <div class="input-group">
+                        <label for="batchSize">Batch Size:</label>
+                        <input type="number" id="batchSize" value="50">
+                        <span class="hint">Update UI every N samples</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="startBtn" class="btn btn-primary">Start Search</button>
+                    <button id="stopBtn" class="btn btn-outline" disabled>Stop</button>
+                    <button id="clearBtn" class="btn btn-outline">Clear</button>
+                </div>
+            </section>
+
+            <section id="statusSection" class="status-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <div class="status-text">
+                    <span id="progressText">0%</span> |
+                    <span id="evalCount">0 / 0 samples</span>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <div class="canvas-wrapper">
+                    <canvas id="plotCanvas" width="600" height="400"></canvas>
+                    <div class="overlay-info">Red: Samples | Green: Best Found</div>
+                </div>
+            </section>
+
+            <section id="resultSection" class="result-section hidden">
+                <h2>Current Best</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Best X</span>
+                        <span id="bestX">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Best Y</span>
+                        <span id="bestY">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Minimum Value</span>
+                        <span id="minVal">-</span>
+                    </div>
+                </div>
+
+                <h3>Convergence Log</h3>
+                <div id="logContainer" class="log-container"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #142</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
