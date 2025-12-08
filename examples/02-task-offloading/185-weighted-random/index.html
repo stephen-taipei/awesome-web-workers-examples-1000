@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 加權隨機負載均衡示例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Web Workers 加權隨機 (Weighted Random)</h1>
+        <p>此示例演示如何使用加權隨機算法在多個 Web Worker 之間分配任務。權重較高的 Worker 被選中的機率較大。</p>
+
+        <div class="controls">
+            <div class="worker-config">
+                <h3>Worker 配置</h3>
+                <div id="worker-inputs">
+                    <!-- Worker inputs will be generated here -->
+                </div>
+                <button id="update-weights">更新權重</button>
+            </div>
+
+            <div class="task-controls">
+                <h3>任務控制</h3>
+                <button id="add-task">提交新任務</button>
+                <button id="auto-task">自動產生任務 (開/關)</button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div>總任務數: <span id="total-tasks">0</span></div>
+            <div>理論分佈機率: <span id="prob-dist">-</span></div>
+        </div>
+
+        <div id="workers-container" class="workers-container">
+            <!-- Workers will be visualized here -->
+        </div>
+
+        <div class="log-container">
+            <h3>系統日誌</h3>
+            <div id="log" class="log"></div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
