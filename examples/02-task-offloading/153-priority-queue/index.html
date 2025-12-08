@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Priority Queue Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Priority Queue Scheduling</h1>
+    <p>Tasks with higher priority (High > Medium > Low) skip ahead in the queue.</p>
+
+    <div class="controls">
+        <div class="control-group">
+            <button class="high" id="addHighBtn">Add High Priority</button>
+            <button class="medium" id="addMediumBtn">Add Medium Priority</button>
+            <button class="low" id="addLowBtn">Add Low Priority</button>
+        </div>
+        <div>
+            <button id="addMixedBtn">Add Mixed Batch (10 tasks)</button>
+        </div>
+    </div>
+
+    <div class="status-panel">
+        <div class="pool-status">
+            <h2>Worker Status (Fixed Pool: 2)</h2>
+            <div id="workerList" class="worker-list"></div>
+        </div>
+
+        <div class="queue-status">
+            <h2>Priority Queue</h2>
+            <div class="stats">
+                <div>Pending: <span id="pendingCount">0</span></div>
+            </div>
+            <div id="taskQueue" class="task-queue"></div>
+        </div>
+    </div>
+
+    <div class="log-panel" id="logPanel">
+        <div>System Log:</div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
