@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saturation Adjustment - Web Worker Example #255</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Saturation Adjustment</h1>
+            <p class="subtitle">Web Worker Example #255 - 色彩飽和度調整</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Saturation Adjustment</h2>
+                <p>飽和度調整改變圖像色彩的鮮豔程度。高飽和度使顏色更加鮮豔，低飽和度使顏色更加灰暗。這需要將 RGB 色彩空間轉換為 HSL（色相、飽和度、亮度）色彩空間進行處理。</p>
+                <div class="formula-box">
+                    <p><strong>HSL 色彩空間轉換：</strong></p>
+                    <pre class="formula">
+RGB → HSL 轉換：
+  max = max(R, G, B) / 255
+  min = min(R, G, B) / 255
+  L = (max + min) / 2
+
+  若 max = min：S = 0, H = 0
+  否則：
+    d = max - min
+    S = L > 0.5 ? d / (2 - max - min) : d / (max + min)
+
+    H = {  (G-B)/d + (G<B ? 6 : 0), if max = R
+        {  (B-R)/d + 2,              if max = G
+        {  (R-G)/d + 4,              if max = B
+    H = H / 6
+
+飽和度調整：
+  S' = clamp(S × saturationFactor, 0, 1)
+
+HSL → RGB 轉換後輸出
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Controls</h2>
+
+                <div class="input-group">
+                    <label for="imageInput">選擇圖片：</label>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+
+                <div class="sample-images">
+                    <p>或使用範例圖片：</p>
+                    <div class="sample-buttons">
+                        <button class="btn btn-sample" data-sample="colorful">彩色</button>
+                        <button class="btn btn-sample" data-sample="nature">自然</button>
+                        <button class="btn btn-sample" data-sample="portrait">人像</button>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label for="saturationSlider">Saturation: <span id="saturationValue">100</span>%</label>
+                    <input type="range" id="saturationSlider" min="0" max="200" value="100">
+                    <div class="slider-labels">
+                        <span>Grayscale</span>
+                        <span>Normal</span>
+                        <span>Vivid</span>
+                    </div>
+                </div>
+
+                <div class="presets">
+                    <p>Quick Presets:</p>
+                    <div class="preset-buttons">
+                        <button class="btn btn-preset" data-value="0">Grayscale</button>
+                        <button class="btn btn-preset" data-value="50">Muted</button>
+                        <button class="btn btn-preset" data-value="100">Normal</button>
+                        <button class="btn btn-preset" data-value="150">Vibrant</button>
+                        <button class="btn btn-preset" data-value="200">Hyper</button>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="livePreview" checked>
+                        即時預覽
+                    </label>
+                </div>
+
+                <div class="button-group">
+                    <button id="applyBtn" class="btn btn-primary" disabled>Apply Saturation</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                    <button id="downloadBtn" class="btn btn-outline" disabled>Download Result</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Image Preview</h2>
+                <div class="canvas-container">
+                    <div class="canvas-wrapper">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas" width="400" height="300"></canvas>
+                    </div>
+                    <div class="canvas-wrapper">
+                        <h3>Adjusted</h3>
+                        <canvas id="resultCanvas" width="400" height="300"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Processing Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Image Size</span>
+                        <span id="imageSize" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Pixels</span>
+                        <span id="totalPixels" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Saturation Factor</span>
+                        <span id="saturationApplied" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <div class="color-analysis">
+                    <h3>Color Distribution</h3>
+                    <div class="color-bars">
+                        <div class="color-bar-group">
+                            <span class="bar-label">Before</span>
+                            <canvas id="colorBarBefore" width="256" height="30"></canvas>
+                        </div>
+                        <div class="color-bar-group">
+                            <span class="bar-label">After</span>
+                            <canvas id="colorBarAfter" width="256" height="30"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Avg Saturation (Before)</span>
+                        <span id="avgSatBefore" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Avg Saturation (After)</span>
+                        <span id="avgSatAfter" class="result-value">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #255</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

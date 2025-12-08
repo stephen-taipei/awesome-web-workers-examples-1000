@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invert Color Filter - Web Worker Example #252</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Invert Color Filter</h1>
+            <p class="subtitle">Web Worker Example #252 - 顏色反轉處理</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Invert Color Filter</h2>
+                <p>反色濾鏡將每個像素的顏色值反轉，創造出底片效果。這是最基本的影像處理操作之一，通過 Web Worker 在背景執行緒處理大量像素數據。</p>
+                <div class="formula-box">
+                    <p><strong>反色運算公式：</strong></p>
+                    <pre class="formula">
+對於每個像素的 RGB 值：
+  R' = 255 - R
+  G' = 255 - G
+  B' = 255 - B
+  A' = A  (保持透明度不變)
+
+其中：
+  - (R, G, B, A) 為原始像素值
+  - (R', G', B', A') 為反轉後的像素值
+  - 每個通道值範圍：0 ~ 255
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Controls</h2>
+
+                <div class="input-group">
+                    <label for="imageInput">選擇圖片：</label>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+
+                <div class="sample-images">
+                    <p>或使用範例圖片：</p>
+                    <div class="sample-buttons">
+                        <button class="btn btn-sample" data-sample="gradient">漸層</button>
+                        <button class="btn btn-sample" data-sample="pattern">圖案</button>
+                        <button class="btn btn-sample" data-sample="landscape">風景</button>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="applyBtn" class="btn btn-primary" disabled>Apply Invert Filter</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                    <button id="downloadBtn" class="btn btn-outline" disabled>Download Result</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Image Preview</h2>
+                <div class="canvas-container">
+                    <div class="canvas-wrapper">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas" width="400" height="300"></canvas>
+                    </div>
+                    <div class="canvas-wrapper">
+                        <h3>Inverted</h3>
+                        <canvas id="resultCanvas" width="400" height="300"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Processing Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Image Size</span>
+                        <span id="imageSize" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Pixels</span>
+                        <span id="totalPixels" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Throughput</span>
+                        <span id="throughput" class="result-value">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #252</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
