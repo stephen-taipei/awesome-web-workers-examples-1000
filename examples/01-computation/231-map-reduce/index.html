@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map-Reduce - Web Worker Example #231</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Map-Reduce</h1>
+            <p class="subtitle">Web Worker Example #231 - Distributed Map-Reduce Pattern</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Map-Reduce</h2>
+                <p>Map-Reduce is a programming model for processing large datasets in parallel. Data is first transformed by map functions running on multiple workers, then combined by reduce functions to produce the final result.</p>
+                <div class="formula-box">
+                    <p><strong>Map-Reduce Pattern:</strong></p>
+                    <pre class="formula">
+Map-Reduce Flow:
+  Input Data → Split → Map → Shuffle → Reduce → Output
+
+Map Phase:
+  map(key, value) → [(key', value'), ...]
+  - Processes each input element independently
+  - Emits intermediate key-value pairs
+  - Runs in parallel across workers
+
+Shuffle Phase:
+  - Groups intermediate values by key
+  - Sorts and partitions data for reducers
+
+Reduce Phase:
+  reduce(key, [values]) → result
+  - Combines all values for each key
+  - Produces final aggregated results
+
+Example - Word Count:
+  map("hello world") → [("hello", 1), ("world", 1)]
+  reduce("hello", [1, 1, 1]) → ("hello", 3)
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Map-Reduce Configuration</h2>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="jobType">Job Type:</label>
+                        <select id="jobType">
+                            <option value="wordcount">Word Count</option>
+                            <option value="sum">Numeric Sum</option>
+                            <option value="average">Numeric Average</option>
+                            <option value="frequency">Character Frequency</option>
+                            <option value="inverted-index">Inverted Index</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="workerCount">Number of Workers:</label>
+                        <select id="workerCount">
+                            <option value="2">2 Workers</option>
+                            <option value="4" selected>4 Workers</option>
+                            <option value="6">6 Workers</option>
+                            <option value="8">8 Workers</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="dataSize">Data Size:</label>
+                        <select id="dataSize">
+                            <option value="small">Small (100 items)</option>
+                            <option value="medium" selected>Medium (1000 items)</option>
+                            <option value="large">Large (10000 items)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="customInput">Custom Input (optional):</label>
+                    <textarea id="customInput" rows="3" placeholder="Enter custom text for word count, or comma-separated numbers for sum/average..."></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button id="runBtn" class="btn btn-primary">Run Map-Reduce</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section class="progress-section hidden" id="progressSection">
+                <h2>Processing Progress</h2>
+                <div class="phase-progress">
+                    <div class="phase" id="phaseMap">
+                        <span class="phase-name">Map</span>
+                        <div class="phase-bar-container">
+                            <div class="phase-bar" id="mapProgress"></div>
+                        </div>
+                        <span class="phase-percent" id="mapPercent">0%</span>
+                    </div>
+                    <div class="phase" id="phaseShuffle">
+                        <span class="phase-name">Shuffle</span>
+                        <div class="phase-bar-container">
+                            <div class="phase-bar" id="shuffleProgress"></div>
+                        </div>
+                        <span class="phase-percent" id="shufflePercent">0%</span>
+                    </div>
+                    <div class="phase" id="phaseReduce">
+                        <span class="phase-name">Reduce</span>
+                        <div class="phase-bar-container">
+                            <div class="phase-bar" id="reduceProgress"></div>
+                        </div>
+                        <span class="phase-percent" id="reducePercent">0%</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Map-Reduce Visualization</h2>
+                <canvas id="mrCanvas" width="700" height="400"></canvas>
+            </section>
+
+            <section class="workers-section">
+                <h2>Worker Status</h2>
+                <div id="workersGrid" class="workers-grid"></div>
+            </section>
+
+            <section id="resultSection" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Time (ms)</span>
+                        <span id="totalTime" class="stat-value">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Map Time (ms)</span>
+                        <span id="mapTime" class="stat-value">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Reduce Time (ms)</span>
+                        <span id="reduceTime" class="stat-value">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Items Processed</span>
+                        <span id="itemsProcessed" class="stat-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Output</h3>
+                <div id="resultOutput" class="result-output"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #231</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
