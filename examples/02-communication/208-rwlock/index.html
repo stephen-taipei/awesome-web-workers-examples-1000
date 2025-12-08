@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read-Write Lock (RWLock) - Web Worker Example #208</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Read-Write Lock (RWLock)</h1>
+            <p class="subtitle">Web Worker Example #208 - SharedArrayBuffer Synchronization</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About RWLock</h2>
+                <p>A Read-Write Lock allows multiple concurrent readers OR a single exclusive writer. This is efficient for read-heavy workloads where data is read frequently but modified rarely.</p>
+                <div class="formula-box">
+                    <p><strong>RWLock States:</strong></p>
+                    <pre class="formula">
+Lock State Layout (SharedArrayBuffer):
+┌─────────────────────────────────────────┐
+│ state[0] = lock state                   │
+│   0: unlocked                           │
+│   > 0: number of active readers         │
+│   -1: writer holding lock               │
+├─────────────────────────────────────────┤
+│ state[1] = waiting writers count        │
+├─────────────────────────────────────────┤
+│ state[2] = shared data value            │
+└─────────────────────────────────────────┘
+
+Read Lock:  Wait until no writer, increment reader count
+Write Lock: Wait until no readers/writers, set to -1
+Unlock:     Decrement count or release writer lock
+
+Uses Atomics.wait() and Atomics.notify() for blocking
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="readerCount">Reader Workers:</label>
+                        <input type="number" id="readerCount" value="4" min="1" max="8">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="writerCount">Writer Workers:</label>
+                        <input type="number" id="writerCount" value="2" min="1" max="4">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="readOps">Read Operations:</label>
+                        <input type="number" id="readOps" value="50" min="10" max="200">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="writeOps">Write Operations:</label>
+                        <input type="number" id="writeOps" value="10" min="5" max="50">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="readDelay">Read Delay (ms):</label>
+                        <input type="number" id="readDelay" value="10" min="1" max="100">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="writeDelay">Write Delay (ms):</label>
+                        <input type="number" id="writeDelay" value="50" min="10" max="200">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="startBtn" class="btn btn-primary">Start RWLock Demo</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Lock State Visualization</h2>
+                <canvas id="lockCanvas" width="700" height="350"></canvas>
+            </section>
+
+            <section id="logSection" class="log-section">
+                <h2>Activity Log</h2>
+                <div id="logContainer" class="log-container"></div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Total Reads</span>
+                        <span id="totalReads" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Writes</span>
+                        <span id="totalWrites" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Final Value</span>
+                        <span id="finalValue" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Execution Time</span>
+                        <span id="execTime" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Max Concurrent Readers</span>
+                        <span id="maxReaders" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Read Wait Time (avg)</span>
+                        <span id="avgReadWait" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Write Wait Time (avg)</span>
+                        <span id="avgWriteWait" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Data Consistency</span>
+                        <span id="consistency" class="result-value">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #208</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
