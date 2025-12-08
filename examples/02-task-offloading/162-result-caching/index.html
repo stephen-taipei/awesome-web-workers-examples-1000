@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>162. 結果快取 (Result Caching)</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        .input-group {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        input {
+            padding: 8px;
+            font-size: 16px;
+            width: 100px;
+        }
+        button {
+            padding: 8px 16px;
+            font-size: 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:disabled { background: #ccc; }
+        .log-area {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background: #fff;
+            font-family: monospace;
+        }
+        .log-item {
+            margin: 5px 0;
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .cache-hit { color: #28a745; font-weight: bold; }
+        .cache-miss { color: #dc3545; }
+        .stats {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>162. 結果快取範例</h1>
+        <p>此範例展示如何使用 LRU Cache 快取 Worker 的計算結果，避免對相同輸入重複進行昂貴的計算。</p>
+
+        <div class="input-group">
+            <label for="fib-input">計算費波那契數 N = </label>
+            <input type="number" id="fib-input" value="40" min="1" max="50">
+            <button id="calc-btn">計算</button>
+            <button id="clear-cache-btn" style="background: #6c757d; margin-left: 10px;">清空快取</button>
+        </div>
+
+        <div class="stats">
+            快取狀態: <span id="cache-stats">大小: 0 / 容量: 5</span>
+        </div>
+
+        <h3>執行日誌</h3>
+        <div id="log-container" class="log-area"></div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

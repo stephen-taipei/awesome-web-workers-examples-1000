@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>161. 進度追蹤 (Progress Tracking)</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .progress-bar {
+            width: 0%;
+            height: 30px;
+            background-color: #28a745;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            transition: width 0.1s ease;
+            font-weight: bold;
+        }
+        .btn {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:disabled {
+            background: #ccc;
+        }
+        .info-panel {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>161. 進度追蹤範例</h1>
+        <p>此範例展示如何從 Web Worker 即時回報任務進度到主執行緒。</p>
+
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar">0%</div>
+        </div>
+
+        <button id="start-btn" class="btn">開始長任務</button>
+
+        <div class="info-panel">
+            <p>當前階段: <span id="status-text">等待開始...</span></p>
+            <p>已處理項目: <span id="processed-count">0</span> / <span id="total-count">1,000,000</span></p>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
