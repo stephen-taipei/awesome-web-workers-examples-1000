@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pipeline Pattern - Web Worker Example #233</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pipeline Pattern</h1>
+            <p class="subtitle">Web Worker Example #233 - 管道模式</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Pipeline Pattern</h2>
+                <p>Pipeline 模式將處理流程分解為多個連續的階段（Stage），每個階段由獨立的 Worker 處理。資料像流水線一樣依序經過各階段，實現串流處理。這種模式特別適用於需要多步驟處理的場景，可以同時處理多個項目。</p>
+                <div class="formula-box">
+                    <p><strong>Pipeline 執行流程：</strong></p>
+                    <pre class="formula">
+Input Stream → [Stage 1] → [Stage 2] → [Stage 3] → Output
+
+┌─────────────────────────────────────────────────────────┐
+│   Time →                                                │
+│   ┌───────┐                                             │
+│   │Item 1 │→ Stage1 → Stage2 → Stage3 → Output         │
+│   └───────┘                                             │
+│       ┌───────┐                                         │
+│       │Item 2 │→ Stage1 → Stage2 → Stage3 → Output     │
+│       └───────┘                                         │
+│           ┌───────┐                                     │
+│           │Item 3 │→ Stage1 → Stage2 → Stage3 → Output │
+│           └───────┘                                     │
+└─────────────────────────────────────────────────────────┘
+
+特點：
+• 各階段並行執行不同項目
+• 持續吞吐量穩定
+• 適合資料串流處理
+• 延遲 = 單項目通過所有階段的時間
+• 吞吐量 = 最慢階段的處理速度
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Pipeline Configuration</h2>
+
+                <div class="input-group">
+                    <label for="pipelineSelect">Pipeline Type:</label>
+                    <select id="pipelineSelect">
+                        <option value="imageProcess">Image Processing (影像處理)</option>
+                        <option value="textAnalysis">Text Analysis (文字分析)</option>
+                        <option value="dataETL">Data ETL (資料轉換)</option>
+                        <option value="cryptoChain">Crypto Chain (加密鏈)</option>
+                    </select>
+                </div>
+
+                <div id="pipelineDescription" class="problem-desc"></div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="itemCount">Items to Process:</label>
+                        <input type="number" id="itemCount" value="20" min="1" max="100">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="itemSize">Item Size (KB):</label>
+                        <input type="number" id="itemSize" value="100" min="10" max="1000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="bufferSize">Buffer Size:</label>
+                        <input type="number" id="bufferSize" value="3" min="1" max="10">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="stageDelay">Stage Delay (ms):</label>
+                        <input type="number" id="stageDelay" value="50" min="0" max="500">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="runBtn" class="btn btn-primary">Start Pipeline</button>
+                    <button id="pauseBtn" class="btn btn-secondary">Pause</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Pipeline Visualization</h2>
+                <canvas id="pipelineCanvas" width="700" height="350"></canvas>
+            </section>
+
+            <section id="progressContainer" class="progress-section">
+                <h2>Stage Progress</h2>
+                <div id="stageProgress" class="stage-progress"></div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Status</span>
+                        <span id="status" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Items Processed</span>
+                        <span id="itemsProcessed" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Time</span>
+                        <span id="totalTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Throughput</span>
+                        <span id="throughput" class="result-value highlight">-</span>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Avg Latency</span>
+                        <span id="avgLatency" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Stage 1 Time</span>
+                        <span id="stage1Time" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Stage 2 Time</span>
+                        <span id="stage2Time" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Stage 3 Time</span>
+                        <span id="stage3Time" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Item Timeline</h3>
+                <div id="itemTimeline" class="timeline-container"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #233</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

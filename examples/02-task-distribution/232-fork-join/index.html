@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fork-Join Pattern - Web Worker Example #232</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Fork-Join Pattern</h1>
+            <p class="subtitle">Web Worker Example #232 - 分治並行模式</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Fork-Join Pattern</h2>
+                <p>Fork-Join 是一種分治並行模式，將大型任務遞迴分解為較小的子任務（Fork），並行處理後再合併結果（Join）。這種模式特別適用於可以自然分割的問題，如陣列處理、排序、搜尋等。</p>
+                <div class="formula-box">
+                    <p><strong>Fork-Join 執行流程：</strong></p>
+                    <pre class="formula">
+┌─────────────────────────────────────────────┐
+│                Main Task                     │
+└─────────────────┬───────────────────────────┘
+                  │ FORK (分割)
+        ┌─────────┼─────────┐
+        ▼         ▼         ▼
+    ┌───────┐ ┌───────┐ ┌───────┐
+    │Task 1 │ │Task 2 │ │Task 3 │
+    └───┬───┘ └───┬───┘ └───┬───┘
+        │         │         │
+        ▼         ▼         ▼
+    ┌───────┐ ┌───────┐ ┌───────┐
+    │Result1│ │Result2│ │Result3│
+    └───────┘ └───────┘ └───────┘
+        │         │         │
+        └─────────┼─────────┘
+                  │ JOIN (合併)
+                  ▼
+         ┌────────────────┐
+         │  Final Result  │
+         └────────────────┘
+
+應用場景：
+• 大型陣列的平行處理
+• Merge Sort / Quick Sort
+• 矩陣運算
+• 檔案批次處理
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Task Configuration</h2>
+
+                <div class="input-group">
+                    <label for="taskSelect">Task Type:</label>
+                    <select id="taskSelect">
+                        <option value="arraySum">Array Sum (陣列求和)</option>
+                        <option value="mergeSort">Merge Sort (合併排序)</option>
+                        <option value="primeCount">Prime Count (質數計數)</option>
+                        <option value="matrixMult">Matrix Multiply (矩陣乘法)</option>
+                    </select>
+                </div>
+
+                <div id="taskDescription" class="problem-desc"></div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="dataSize">Data Size:</label>
+                        <input type="number" id="dataSize" value="1000000" min="1000" max="10000000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="workerCount">Worker Count:</label>
+                        <input type="number" id="workerCount" value="4" min="1" max="16">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="threshold">Split Threshold:</label>
+                        <input type="number" id="threshold" value="10000" min="100" max="100000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="depth">Max Depth:</label>
+                        <input type="number" id="depth" value="4" min="1" max="8">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="runBtn" class="btn btn-primary">Execute Fork-Join</button>
+                    <button id="compareBtn" class="btn btn-secondary">Compare Sequential</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Fork-Join Tree Visualization</h2>
+                <canvas id="forkJoinCanvas" width="700" height="400"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Status</span>
+                        <span id="status" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Result</span>
+                        <span id="resultValue" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Fork-Join Time</span>
+                        <span id="parallelTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Sequential Time</span>
+                        <span id="sequentialTime" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Speedup</span>
+                        <span id="speedup" class="result-value highlight">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Tasks Created</span>
+                        <span id="taskCount" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Max Depth</span>
+                        <span id="maxDepth" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Efficiency</span>
+                        <span id="efficiency" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Task Execution Timeline</h3>
+                <div id="timelineContainer" class="timeline-container"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #232</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
