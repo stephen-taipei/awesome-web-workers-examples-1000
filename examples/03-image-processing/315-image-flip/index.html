@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圖片翻轉 (Image Flip) - Web Workers 示例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>圖片翻轉 (Image Flip)</h1>
+            <p class="subtitle">Horizontal and Vertical Flip</p>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-beginner">Image Processing</span>
+                <span class="badge badge-beginner">Geometric</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能描述</h2>
+            <p>對圖片進行水平或垂直翻轉（鏡像）。這是一種簡單的座標映射操作。</p>
+            <div class="formula-box">
+                <div class="formula">
+Horizontal: x' = width - 1 - x
+Vertical: y' = height - 1 - y
+                </div>
+            </div>
+        </section>
+
+        <section class="controls">
+            <h2>參數設定</h2>
+            <div class="input-group">
+                <label for="flipMode">翻轉方向</label>
+                <select id="flipMode">
+                    <option value="horizontal">水平翻轉 (Horizontal)</option>
+                    <option value="vertical">垂直翻轉 (Vertical)</option>
+                    <option value="both">雙向翻轉 (Both)</option>
+                </select>
+            </div>
+
+            <div class="upload-area" id="dropZone">
+                <div class="upload-icon">📁</div>
+                <p>拖放圖片至此，或點擊上傳</p>
+                <input type="file" id="fileInput" accept="image/*" class="hidden">
+            </div>
+
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary" disabled>翻轉</button>
+            </div>
+        </section>
+
+        <section id="progressSection" class="progress-section hidden">
+            <div class="progress-bar-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <p id="progressText" class="progress-text">處理中...</p>
+        </section>
+
+        <section class="results">
+            <h2>處理結果</h2>
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">處理時間</span>
+                    <span id="processTime" class="result-value">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">原始尺寸</span>
+                    <span id="originalSize" class="result-value">-</span>
+                </div>
+            </div>
+
+            <div class="image-comparison">
+                <div class="image-panel">
+                    <h3>原始圖片</h3>
+                    <canvas id="originalCanvas"></canvas>
+                </div>
+                <div class="image-panel">
+                    <h3>翻轉後圖片</h3>
+                    <canvas id="resultCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h7y/WebWorkers1000" target="_blank">GitHub</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
