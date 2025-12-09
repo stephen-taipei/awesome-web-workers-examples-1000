@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SharedArrayBuffer - Web Worker Example #204</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SharedArrayBuffer</h1>
+            <p class="subtitle">Web Worker Example #204 - Cross-Thread Shared Memory</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About SharedArrayBuffer</h2>
+                <p>SharedArrayBuffer allows multiple Web Workers and the main thread to share the same memory space. Unlike regular ArrayBuffer which must be transferred (losing ownership), SharedArrayBuffer provides true shared memory for parallel computations.</p>
+                <div class="formula-box">
+                    <p><strong>SharedArrayBuffer Features:</strong></p>
+                    <pre class="formula">
+// Create shared memory buffer
+const sharedBuffer = new SharedArrayBuffer(1024);
+
+// Create typed array view on shared buffer
+const sharedArray = new Int32Array(sharedBuffer);
+
+// Pass to Worker (no transfer needed)
+worker.postMessage({ buffer: sharedBuffer });
+
+// Both main thread and worker see same memory
+// Changes are visible across threads instantly
+
+Security Requirements:
+- Cross-Origin-Opener-Policy: same-origin
+- Cross-Origin-Embedder-Policy: require-corp
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Shared Memory Demo</h2>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="workerCount">Number of Workers:</label>
+                        <select id="workerCount">
+                            <option value="2">2 Workers</option>
+                            <option value="4" selected>4 Workers</option>
+                            <option value="8">8 Workers</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="arraySize">Shared Array Size:</label>
+                        <select id="arraySize">
+                            <option value="16">16 elements</option>
+                            <option value="32" selected>32 elements</option>
+                            <option value="64">64 elements</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="iterations">Write Iterations:</label>
+                        <input type="number" id="iterations" value="100" min="10" max="1000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="delay">Delay (ms):</label>
+                        <input type="number" id="delay" value="50" min="10" max="500">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="startBtn" class="btn btn-primary">Start Demo</button>
+                    <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Running...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Shared Memory State</h2>
+                <div id="memoryGrid" class="memory-grid"></div>
+                <div class="legend">
+                    <span class="legend-item"><span class="color-box worker-0"></span>Worker 0</span>
+                    <span class="legend-item"><span class="color-box worker-1"></span>Worker 1</span>
+                    <span class="legend-item"><span class="color-box worker-2"></span>Worker 2</span>
+                    <span class="legend-item"><span class="color-box worker-3"></span>Worker 3</span>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Total Writes</span>
+                        <span id="totalWrites" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Duration</span>
+                        <span id="duration" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Writes/sec</span>
+                        <span id="writesPerSec" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Final Sum</span>
+                        <span id="finalSum" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Worker Activity Log</h3>
+                <div id="activityLog" class="activity-log"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #204</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
