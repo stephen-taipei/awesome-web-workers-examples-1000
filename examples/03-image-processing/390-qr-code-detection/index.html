@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers QR 碼檢測 (QR Code Detection)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>QR 碼檢測 (QR Code Detection)</h1>
+            <p class="subtitle">利用 Web Worker 與 Finder Pattern 搜尋定位 QR 碼</p>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">Finder Pattern</span>
+                <span class="badge badge-beginner">Advanced</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能描述</h2>
+            <p>本示例演示如何檢測圖片中的 QR 碼位置。QR 碼具有三個獨特的「定位圖案 (Finder Patterns)」，其黑白比例在水平和垂直方向上都呈現 1:1:3:1:1 的特徵。本示例通過掃描這些特徵來定位 QR 碼的中心。</p>
+            <div class="formula-box">
+                <div class="formula">
+Pattern Ratio:
+Black : White : Black : White : Black
+  1   :   1   :   3   :   1   :   1
+                </div>
+            </div>
+        </section>
+
+        <section class="upload-section">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">🔳</div>
+                <p>點擊或拖圖至此處上傳 QR 碼圖片</p>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+            </div>
+        </section>
+
+        <section class="controls hidden" id="controls">
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary">開始檢測</button>
+            </div>
+        </section>
+
+        <section class="results hidden" id="results">
+            <div class="image-comparison">
+                <div class="image-panel">
+                    <h3>原始圖片</h3>
+                    <canvas id="sourceCanvas"></canvas>
+                    <div class="image-info" id="sourceInfo"></div>
+                </div>
+                <div class="image-panel">
+                    <h3>檢測結果</h3>
+                    <canvas id="targetCanvas"></canvas>
+                    <div class="image-info" id="targetInfo"></div>
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">檢測耗時</span>
+                    <span class="result-value" id="processTime">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">定位點數量</span>
+                    <span class="result-value" id="patternCount">-</span>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - 0390 QR Code Detection</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
