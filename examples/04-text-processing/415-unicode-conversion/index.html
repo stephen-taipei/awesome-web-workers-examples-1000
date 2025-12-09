@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unicode 轉換 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Unicode 轉換</h1>
+            <div class="subtitle">Unicode Converter</div>
+            <div class="badges">
+                <span class="badge badge-beginner">入門</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">Code Points</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能描述</h2>
+            <p>顯示文本的 Unicode 資訊，包括 Code Points、HTML 實體、JavaScript 轉義序列等。</p>
+        </section>
+
+        <div class="main-content" style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <div class="editor-pane" style="flex: 1;">
+                <div class="pane-header" style="margin-bottom: 0.5rem; color: #a7f3d0;">輸入文本</div>
+                <textarea id="input" style="width: 100%; height: 300px; background: rgba(0,0,0,0.3); color: #fff; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 1rem; font-family: monospace;" placeholder="在此輸入文本...">Hello 世界 👋</textarea>
+            </div>
+            <div class="preview-pane" style="flex: 1;">
+                <div class="pane-header" style="margin-bottom: 0.5rem; color: #a7f3d0;">
+                    <span>Unicode 資訊</span>
+                    <span id="processTime" style="float: right; font-size: 0.8rem; color: #6ee7b7;">0ms</span>
+                </div>
+                <div id="output" style="width: 100%; height: 300px; background: rgba(0,0,0,0.3); color: #a7f3d0; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 1rem; font-family: monospace; overflow: auto;"></div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Web Workers 1000 範例系列 - 415 Unicode 轉換</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
