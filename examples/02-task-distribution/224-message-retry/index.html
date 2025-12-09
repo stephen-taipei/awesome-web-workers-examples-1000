@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#224 訊息重傳機制 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 實作訊息重傳機制，確保失敗的訊息能自動重試並保證送達">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>訊息重傳機制</h1>
+            <p class="subtitle">Message Retry System</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#224</span>
+                <span class="badge badge-secondary">任務分發</span>
+                <span class="badge badge-warning">中級</span>
+            </div>
+        </header>
+
+        <!-- 控制區域 -->
+        <section class="card">
+            <h2 class="card-title">重傳設定</h2>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="max-retries">最大重試次數</label>
+                    <input
+                        type="number"
+                        id="max-retries"
+                        class="form-input"
+                        value="3"
+                        min="1"
+                        max="10"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="retry-delay">重試延遲 (ms)</label>
+                    <input
+                        type="number"
+                        id="retry-delay"
+                        class="form-input"
+                        value="1000"
+                        min="100"
+                        max="10000"
+                        step="100"
+                    >
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="failure-rate">模擬失敗率 (%)</label>
+                    <input
+                        type="number"
+                        id="failure-rate"
+                        class="form-input"
+                        value="50"
+                        min="0"
+                        max="100"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="backoff-type">退避策略</label>
+                    <select id="backoff-type" class="form-input">
+                        <option value="fixed">固定延遲</option>
+                        <option value="linear">線性退避</option>
+                        <option value="exponential" selected>指數退避</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 訊息輸入 -->
+            <div class="form-group">
+                <label class="form-label" for="message-input">訊息內容</label>
+                <input
+                    type="text"
+                    id="message-input"
+                    class="form-input"
+                    value="Hello, Worker!"
+                    placeholder="輸入要傳送的訊息"
+                >
+            </div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group">
+                <button id="send-btn" class="btn btn-primary">
+                    發送訊息
+                </button>
+                <button id="batch-btn" class="btn btn-secondary">
+                    批次發送 (5 則)
+                </button>
+                <button id="clear-btn" class="btn btn-danger">
+                    清除記錄
+                </button>
+            </div>
+        </section>
+
+        <!-- 統計區域 -->
+        <section class="card">
+            <h2 class="card-title">傳送統計</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="stat-number" id="total-sent">0</span>
+                    <span class="stat-label">總發送</span>
+                </div>
+                <div class="stat-box success">
+                    <span class="stat-number" id="total-success">0</span>
+                    <span class="stat-label">成功</span>
+                </div>
+                <div class="stat-box warning">
+                    <span class="stat-number" id="total-retries">0</span>
+                    <span class="stat-label">重試次數</span>
+                </div>
+                <div class="stat-box danger">
+                    <span class="stat-number" id="total-failed">0</span>
+                    <span class="stat-label">最終失敗</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 訊息佇列區域 -->
+        <section class="card">
+            <h2 class="card-title">重傳佇列</h2>
+            <div id="queue-container" class="queue-container">
+                <p class="empty-message">佇列為空</p>
+            </div>
+        </section>
+
+        <!-- 訊息記錄區域 -->
+        <section class="card">
+            <h2 class="card-title">訊息記錄</h2>
+            <div id="log-container" class="log-container">
+                <p class="empty-message">尚無訊息記錄</p>
+            </div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>功能：</strong>實作訊息重傳機制，失敗時自動重試直到成功或達到最大重試次數</li>
+                <li><strong>退避策略：</strong>支援固定延遲、線性退避、指數退避三種策略</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>重傳佇列：</strong>使用佇列管理待重傳的訊息，確保順序處理</li>
+                <li><strong>通訊模式：</strong>使用 <code>postMessage</code> 進行雙向通訊，含訊息 ID 追蹤</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #224 - 訊息重傳機制
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

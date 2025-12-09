@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#227 訊息過期機制 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 實作訊息過期機制，透過 TTL 設定自動清理過期訊息">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>訊息過期機制</h1>
+            <p class="subtitle">Message Expiration (TTL) System</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#227</span>
+                <span class="badge badge-secondary">任務分發</span>
+                <span class="badge badge-success">初級</span>
+            </div>
+        </header>
+
+        <!-- 控制區域 -->
+        <section class="card">
+            <h2 class="card-title">TTL 設定</h2>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="default-ttl">預設 TTL (秒)</label>
+                    <input
+                        type="number"
+                        id="default-ttl"
+                        class="form-input"
+                        value="10"
+                        min="1"
+                        max="300"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="cleanup-interval">清理間隔 (秒)</label>
+                    <input
+                        type="number"
+                        id="cleanup-interval"
+                        class="form-input"
+                        value="1"
+                        min="1"
+                        max="60"
+                    >
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="custom-ttl">自訂 TTL (秒，0=使用預設)</label>
+                    <input
+                        type="number"
+                        id="custom-ttl"
+                        class="form-input"
+                        value="0"
+                        min="0"
+                        max="300"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="message-input">訊息內容</label>
+                    <input
+                        type="text"
+                        id="message-input"
+                        class="form-input"
+                        placeholder="輸入訊息內容"
+                        value="Hello World"
+                    >
+                </div>
+            </div>
+
+            <!-- TTL 快速設定 -->
+            <div class="form-group">
+                <label class="form-label">快速設定 TTL</label>
+                <div class="ttl-presets">
+                    <button class="preset-btn" data-ttl="5">5 秒</button>
+                    <button class="preset-btn" data-ttl="10">10 秒</button>
+                    <button class="preset-btn" data-ttl="30">30 秒</button>
+                    <button class="preset-btn" data-ttl="60">1 分鐘</button>
+                    <button class="preset-btn" data-ttl="0">永不過期</button>
+                </div>
+            </div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group">
+                <button id="send-btn" class="btn btn-primary">
+                    發送訊息
+                </button>
+                <button id="batch-btn" class="btn btn-secondary">
+                    批次發送 (隨機 TTL)
+                </button>
+                <button id="cleanup-btn" class="btn btn-warning">
+                    立即清理
+                </button>
+                <button id="clear-btn" class="btn btn-danger">
+                    清除全部
+                </button>
+            </div>
+        </section>
+
+        <!-- 統計區域 -->
+        <section class="card">
+            <h2 class="card-title">訊息統計</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="stat-number" id="total-sent">0</span>
+                    <span class="stat-label">總發送</span>
+                </div>
+                <div class="stat-box success">
+                    <span class="stat-number" id="active-count">0</span>
+                    <span class="stat-label">有效訊息</span>
+                </div>
+                <div class="stat-box warning">
+                    <span class="stat-number" id="expiring-soon">0</span>
+                    <span class="stat-label">即將過期</span>
+                </div>
+                <div class="stat-box danger">
+                    <span class="stat-number" id="expired-count">0</span>
+                    <span class="stat-label">已過期</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 訊息佇列區域 -->
+        <section class="card">
+            <h2 class="card-title">訊息佇列</h2>
+            <div class="queue-header">
+                <span>訊息數量: <strong id="queue-count">0</strong></span>
+                <span>目前時間: <strong id="current-time">--:--:--</strong></span>
+            </div>
+            <div id="queue-container" class="queue-container">
+                <p class="empty-message">佇列為空</p>
+            </div>
+        </section>
+
+        <!-- 過期記錄 -->
+        <section class="card">
+            <h2 class="card-title">過期記錄</h2>
+            <div id="expired-container" class="expired-container">
+                <p class="empty-message">尚無過期記錄</p>
+            </div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>功能：</strong>為訊息設定 TTL (Time To Live)，超過時間自動清理</li>
+                <li><strong>TTL 機制：</strong>訊息建立時記錄時間戳，Worker 定期檢查並清理過期訊息</li>
+                <li><strong>清理策略：</strong>支援定時清理與立即清理兩種模式</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>視覺化：</strong>即時顯示訊息剩餘時間與狀態</li>
+                <li><strong>應用場景：</strong>快取管理、會話超時、暫存資料清理等</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #227 - 訊息過期機制
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

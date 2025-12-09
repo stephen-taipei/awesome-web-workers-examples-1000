@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#225 訊息排序機制 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 實作訊息排序機制，確保非同步訊息按照正確順序處理">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>訊息排序機制</h1>
+            <p class="subtitle">Message Ordering System</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#225</span>
+                <span class="badge badge-secondary">任務分發</span>
+                <span class="badge badge-warning">中級</span>
+            </div>
+        </header>
+
+        <!-- 控制區域 -->
+        <section class="card">
+            <h2 class="card-title">排序設定</h2>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="message-count">訊息數量</label>
+                    <input
+                        type="number"
+                        id="message-count"
+                        class="form-input"
+                        value="10"
+                        min="1"
+                        max="50"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="processing-mode">處理模式</label>
+                    <select id="processing-mode" class="form-input">
+                        <option value="random">隨機延遲 (模擬亂序)</option>
+                        <option value="ordered">按序號處理</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="min-delay">最小延遲 (ms)</label>
+                    <input
+                        type="number"
+                        id="min-delay"
+                        class="form-input"
+                        value="100"
+                        min="0"
+                        max="5000"
+                        step="100"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="max-delay">最大延遲 (ms)</label>
+                    <input
+                        type="number"
+                        id="max-delay"
+                        class="form-input"
+                        value="2000"
+                        min="100"
+                        max="10000"
+                        step="100"
+                    >
+                </div>
+            </div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group">
+                <button id="send-btn" class="btn btn-primary">
+                    發送批次訊息
+                </button>
+                <button id="clear-btn" class="btn btn-danger">
+                    清除記錄
+                </button>
+            </div>
+        </section>
+
+        <!-- 視覺化比較區域 -->
+        <section class="card">
+            <h2 class="card-title">排序比較</h2>
+            <div class="comparison-container">
+                <div class="comparison-panel">
+                    <h3>接收順序 (未排序)</h3>
+                    <div id="received-order" class="order-display">
+                        <p class="empty-message">等待訊息...</p>
+                    </div>
+                </div>
+                <div class="comparison-panel">
+                    <h3>處理順序 (已排序)</h3>
+                    <div id="processed-order" class="order-display">
+                        <p class="empty-message">等待處理...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 統計區域 -->
+        <section class="card">
+            <h2 class="card-title">排序統計</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="stat-number" id="total-sent">0</span>
+                    <span class="stat-label">已發送</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="total-received">0</span>
+                    <span class="stat-label">已接收</span>
+                </div>
+                <div class="stat-box success">
+                    <span class="stat-number" id="total-processed">0</span>
+                    <span class="stat-label">已處理</span>
+                </div>
+                <div class="stat-box warning">
+                    <span class="stat-number" id="waiting-count">0</span>
+                    <span class="stat-label">等待中</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 等待緩衝區 -->
+        <section class="card">
+            <h2 class="card-title">排序緩衝區</h2>
+            <div id="buffer-container" class="buffer-container">
+                <p class="empty-message">緩衝區為空</p>
+            </div>
+            <div class="buffer-info">
+                <span>下一個期望序號: <strong id="expected-seq">1</strong></span>
+            </div>
+        </section>
+
+        <!-- 訊息記錄 -->
+        <section class="card">
+            <h2 class="card-title">訊息記錄</h2>
+            <div id="log-container" class="log-container">
+                <p class="empty-message">尚無訊息記錄</p>
+            </div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>功能：</strong>確保非同步處理的訊息按照原始順序輸出，即使訊息以亂序到達</li>
+                <li><strong>序號機制：</strong>每則訊息都帶有唯一序號，用於追蹤和重新排序</li>
+                <li><strong>緩衝區：</strong>提前到達的訊息會暫存於緩衝區，等待前面的訊息處理完畢</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>應用場景：</strong>視訊串流、日誌處理、交易系統等需要保證順序的場景</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #225 - 訊息排序機制
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
