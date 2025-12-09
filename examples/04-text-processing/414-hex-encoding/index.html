@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>十六進制轉換 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>十六進制轉換</h1>
+            <div class="subtitle">Hex Converter</div>
+            <div class="badges">
+                <span class="badge badge-beginner">入門</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">Hex</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能描述</h2>
+            <p>將文本轉換為十六進制 (Hex) 表示，或將 Hex 轉換回文本。</p>
+        </section>
+
+        <div class="control-panel" style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
+            <label style="color: #a7f3d0; margin-right: 1rem;">操作模式:</label>
+            <label><input type="radio" name="mode" value="toHex" checked> 文本 -> Hex</label>
+            <label style="margin-left: 1rem;"><input type="radio" name="mode" value="fromHex"> Hex -> 文本</label>
+
+            <label style="color: #a7f3d0; margin-left: 2rem; margin-right: 0.5rem;">分隔符:</label>
+            <select id="separator" style="padding: 0.3rem; border-radius: 4px; background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(16,185,129,0.3);">
+                <option value=" ">Space ( )</option>
+                <option value="">None</option>
+                <option value=":">Colon (:)</option>
+                <option value="-">Dash (-)</option>
+            </select>
+        </div>
+
+        <div class="main-content" style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <div class="editor-pane" style="flex: 1;">
+                <div class="pane-header" style="margin-bottom: 0.5rem; color: #a7f3d0;">輸入</div>
+                <textarea id="input" style="width: 100%; height: 300px; background: rgba(0,0,0,0.3); color: #fff; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 1rem; font-family: monospace;" placeholder="在此輸入..."></textarea>
+            </div>
+            <div class="preview-pane" style="flex: 1;">
+                <div class="pane-header" style="margin-bottom: 0.5rem; color: #a7f3d0;">
+                    <span>結果</span>
+                    <span id="processTime" style="float: right; font-size: 0.8rem; color: #6ee7b7;">0ms</span>
+                </div>
+                <div id="output" style="width: 100%; height: 300px; background: rgba(0,0,0,0.3); color: #a7f3d0; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 1rem; font-family: monospace; white-space: pre-wrap; overflow: auto; word-break: break-all;"></div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Web Workers 1000 範例系列 - 414 十六進制轉換</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

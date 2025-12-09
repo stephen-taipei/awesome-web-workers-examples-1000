@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>綜合基準測試 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>綜合基準測試</h1>
+            <div class="subtitle">Comprehensive Benchmark Suite</div>
+            <div class="badges">
+                <span class="badge badge-beginner">效能工具</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">Scoring</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能描述</h2>
+            <p>執行一系列綜合測試，包含整數運算、浮點運算、記憶體操作與 JSON 處理，並計算出一個綜合效能評分。</p>
+        </section>
+
+        <div class="control-panel" style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px; text-align: center;">
+            <button id="startBtn" class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 3rem;">開始跑分</button>
+        </div>
+
+        <div class="main-content" style="margin-top: 1rem;">
+             <div class="preview-pane">
+                <div class="pane-header" style="margin-bottom: 0.5rem; color: #a7f3d0;">
+                    <span>測試項目</span>
+                </div>
+                <div id="resultsList" class="results-grid" style="grid-template-columns: 1fr;">
+                    <!-- Items -->
+                </div>
+
+                <div id="finalScoreArea" style="margin-top: 2rem; text-align: center; display: none;">
+                    <h3 style="color: #34d399; margin-bottom: 0.5rem;">綜合評分</h3>
+                    <div id="finalScore" style="font-size: 4rem; font-weight: bold; color: #10b981; text-shadow: 0 0 20px rgba(16,185,129,0.5);">0</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Web Workers 1000 範例系列 - 530 綜合基準測試</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

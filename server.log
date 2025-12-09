@@ -1,18 +1,31 @@
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/http/server.py", line 1314, in <module>
-    test(
-  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/http/server.py", line 1261, in test
-    with ServerClass(addr, HandlerClass) as httpd:
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/socketserver.py", line 457, in __init__
-    self.server_bind()
-  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/http/server.py", line 1308, in server_bind
-    return super().server_bind()
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/http/server.py", line 136, in server_bind
-    socketserver.TCPServer.server_bind(self)
-  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/socketserver.py", line 478, in server_bind
-    self.socket.bind(self.server_address)
-OSError: [Errno 98] Address already in use
+127.0.0.1 - - [09/Dec/2025 10:09:21] "GET /examples/05-performance-tools/528-gc-impact/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:21] "GET /examples/05-performance-tools/528-gc-impact/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:21] "GET /examples/05-performance-tools/528-gc-impact/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:21] "GET /examples/05-performance-tools/528-gc-impact/worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:23] "GET /examples/05-performance-tools/529-multicore-performance/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:23] "GET /examples/05-performance-tools/529-multicore-performance/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:23] "GET /examples/05-performance-tools/529-multicore-performance/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:24] "GET /examples/05-performance-tools/530-comprehensive-benchmark/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:24] "GET /examples/05-performance-tools/530-comprehensive-benchmark/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:24] "GET /examples/05-performance-tools/530-comprehensive-benchmark/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:24] "GET /examples/05-performance-tools/530-comprehensive-benchmark/worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:25] "GET /examples/05-performance-tools/531-execution-time-analysis/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:25] "GET /examples/05-performance-tools/531-execution-time-analysis/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:25] "GET /examples/05-performance-tools/531-execution-time-analysis/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:25] "GET /examples/05-performance-tools/531-execution-time-analysis/worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:26] "GET /examples/05-performance-tools/532-memory-analysis/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:26] "GET /examples/05-performance-tools/532-memory-analysis/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:26] "GET /examples/05-performance-tools/532-memory-analysis/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:26] "GET /examples/05-performance-tools/532-memory-analysis/worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:27] "GET /examples/05-performance-tools/533-call-count-statistics/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:27] "GET /examples/05-performance-tools/533-call-count-statistics/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:27] "GET /examples/05-performance-tools/533-call-count-statistics/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:27] "GET /examples/05-performance-tools/533-call-count-statistics/worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:28] "GET /examples/05-performance-tools/534-hotspot-analysis/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:28] "GET /examples/05-performance-tools/534-hotspot-analysis/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:28] "GET /examples/05-performance-tools/534-hotspot-analysis/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:28] "GET /examples/05-performance-tools/534-hotspot-analysis/worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:30] "GET /examples/05-performance-tools/535-call-graph-generation/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:30] "GET /examples/05-performance-tools/535-call-graph-generation/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:30] "GET /examples/05-performance-tools/535-call-graph-generation/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 10:09:30] "GET /examples/05-performance-tools/535-call-graph-generation/worker.js HTTP/1.1" 200 -

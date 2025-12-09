@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>垃圾回收影響測試 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>垃圾回收影響測試</h1>
+            <div class="subtitle">Garbage Collection Impact Test</div>
+            <div class="badges">
+                <span class="badge badge-beginner">效能工具</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">Memory</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能描述</h2>
+            <p>這個範例模擬大量的記憶體分配與釋放，以測試垃圾回收 (GC) 對 Web Worker 執行效能的影響。它會測量在有/無記憶體壓力的情況下，定期任務的執行延遲。</p>
+        </section>
+
+        <div class="control-panel" style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
+            <div class="input-group">
+                <label for="objectCount">分配物件數量 (每批次):</label>
+                <input type="number" id="objectCount" value="100000" min="1000" max="1000000">
+            </div>
+             <div class="input-group">
+                <label for="allocationInterval">分配間隔 (ms):</label>
+                <input type="number" id="allocationInterval" value="100" min="10" max="1000">
+            </div>
+            <div class="button-group">
+                <button id="startBtn" class="btn btn-primary">開始測試</button>
+                <button id="stopBtn" class="btn btn-secondary" disabled>停止測試</button>
+            </div>
+        </div>
+
+        <div class="main-content" style="margin-top: 1rem;">
+             <div class="preview-pane">
+                <div class="pane-header" style="margin-bottom: 0.5rem; color: #a7f3d0;">
+                    <span>測試結果</span>
+                    <span id="status" style="float: right; font-size: 0.8rem; color: #6ee7b7;">準備就緒</span>
+                </div>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">平均延遲 (ms)</span>
+                        <span class="result-value" id="avgLatency">0.00</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">最大延遲 (ms)</span>
+                        <span class="result-value" id="maxLatency">0.00</span>
+                    </div>
+                     <div class="result-item">
+                        <span class="result-label">總 GC 次數 (估計)</span>
+                        <span class="result-value" id="gcCount">-</span>
+                    </div>
+                     <div class="result-item">
+                        <span class="result-label">總執行時間</span>
+                        <span class="result-value" id="totalTime">0s</span>
+                    </div>
+                </div>
+                <canvas id="latencyChart" style="width: 100%; height: 200px; margin-top: 1rem; background: rgba(0,0,0,0.3); border-radius: 8px;"></canvas>
+            </div>
+        </div>
+
+        <footer>
+            <p>Web Workers 1000 範例系列 - 528 垃圾回收影響</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

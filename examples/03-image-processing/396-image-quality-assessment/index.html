@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圖片品質評估 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>圖片品質評估</h1>
+            <div class="subtitle">Image Quality Assessment</div>
+            <div class="badges">
+                <span class="badge badge-beginner">進階</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">OffscreenCanvas</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能描述</h2>
+            <p>使用 Web Worker 評估圖片品質，計算銳利度 (Laplacian Variance)、對比度 (RMS Contrast) 與亮度等指標，提供一個綜合品質分數。</p>
+            <div class="formula-box">
+                <div class="formula">
+Sharpness = Variance(Laplacian(Image))
+Contrast = RMS(Image)
+Quality Score = Weighted Sum of Metrics
+                </div>
+            </div>
+        </section>
+
+        <section class="control-panel">
+            <div class="upload-area" id="dropZone">
+                <div class="upload-icon">🖼️</div>
+                <p>拖放圖片到此處，或點擊上傳</p>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+            </div>
+
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary" disabled>開始評估</button>
+            </div>
+        </section>
+
+        <section class="progress-section hidden" id="progressSection">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="progress-text" id="progressText">處理中... 0%</div>
+        </section>
+
+        <section class="result-section hidden" id="resultSection">
+            <div class="image-panel">
+                <h3>原始圖片</h3>
+                <canvas id="previewCanvas"></canvas>
+                <div class="image-info" id="imageInfo"></div>
+            </div>
+
+            <div class="results-grid" style="margin-top: 1rem;">
+                <div class="result-item">
+                    <span class="result-label">綜合品質分數</span>
+                    <span class="result-value" id="qualityScore">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">銳利度 (Sharpness)</span>
+                    <span class="result-value" id="sharpnessVal">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">對比度 (Contrast)</span>
+                    <span class="result-value" id="contrastVal">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">平均亮度 (Brightness)</span>
+                    <span class="result-value" id="brightnessVal">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">處理時間</span>
+                    <span class="result-value" id="processTime">-</span>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 範例系列 - 396 圖片品質評估</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
