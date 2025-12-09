@@ -1,0 +1,8 @@
+127.0.0.1 - - [09/Dec/2025 07:36:09] "GET /examples/03-image-processing/332-smart-crop/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 07:36:09] "GET /examples/03-image-processing/332-smart-crop/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 07:36:09] "GET /examples/03-image-processing/332-smart-crop/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 07:36:09] "GET /examples/03-image-processing/332-smart-crop/worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 07:36:31] "GET /examples/03-image-processing/339-image-alignment/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 07:36:31] "GET /examples/03-image-processing/339-image-alignment/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 07:36:31] "GET /examples/03-image-processing/339-image-alignment/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 07:36:31] "GET /examples/03-image-processing/339-image-alignment/worker.js HTTP/1.1" 200 -

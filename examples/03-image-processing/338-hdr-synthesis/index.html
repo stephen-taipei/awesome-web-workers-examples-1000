@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HDR Synthesis - Web Worker Example #338</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>HDR Synthesis</h1>
+            <p class="subtitle">Web Worker Example #338 - High Dynamic Range Imaging</p>
+            <div class="badges">
+                <span class="badge badge-advanced">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About HDR Synthesis</h2>
+                <p>Combines images taken at different exposure levels (bracketing) to capture a greater dynamic range of luminosity than standard imaging techniques.</p>
+            </section>
+
+            <section class="controls">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop exposure bracketed images here (Dark, Normal, Bright)</p>
+                    <input type="file" id="fileInput" accept="image/*" multiple hidden>
+                </div>
+                <div id="fileList" style="text-align:center; color: #aaa; margin-bottom: 1rem;"></div>
+
+                <div class="button-group">
+                    <button id="hdrBtn" class="btn btn-primary" disabled>Create HDR</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                 <div class="image-comparison">
+                    <div class="image-panel" id="previewPanel"></div>
+                    <div class="image-panel">
+                        <h3>HDR Result (Tone Mapped)</h3>
+                        <canvas id="resultCanvas"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

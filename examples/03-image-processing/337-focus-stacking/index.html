@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Stacking - Web Worker Example #337</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Focus Stacking</h1>
+            <p class="subtitle">Web Worker Example #337 - Depth of Field Extension</p>
+            <div class="badges">
+                <span class="badge badge-advanced">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Focus Stacking</h2>
+                <p>Combines multiple images focused at different distances to create a single image with a greater depth of field (sharp from front to back). It analyzes local contrast (sharpness) to pick the best pixels.</p>
+            </section>
+
+            <section class="controls">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop images with different focal points here</p>
+                    <input type="file" id="fileInput" accept="image/*" multiple hidden>
+                </div>
+                <div id="fileList" style="text-align:center; color: #aaa; margin-bottom: 1rem;"></div>
+
+                <div class="button-group">
+                    <button id="stackBtn" class="btn btn-primary" disabled>Focus Stack</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                 <div class="image-comparison">
+                     <!-- Images will be previewed here -->
+                    <div class="image-panel" id="previewPanel">
+                        <!-- previews -->
+                    </div>
+                    <div class="image-panel">
+                        <h3>Result</h3>
+                        <canvas id="resultCanvas"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
