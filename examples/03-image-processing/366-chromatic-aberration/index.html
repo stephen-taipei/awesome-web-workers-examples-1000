@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 色差效果 (Chromatic Aberration)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 色差效果</h1>
+            <div class="subtitle">Chromatic Aberration</div>
+            <div class="badges">
+                <span class="badge badge-beginner">影像處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <p>模擬鏡頭色差，將紅、綠、藍通道進行分離和位移。</p>
+        </section>
+
+        <div class="upload-area" id="dropZone">
+            <div class="upload-icon">📁</div>
+            <p>拖放圖片至此，或點擊上傳</p>
+            <input type="file" id="fileInput" accept="image/*" hidden>
+        </div>
+
+        <section class="controls">
+             <div class="input-group">
+                <label>類型 (Type)</label>
+                <select id="type">
+                    <option value="radial">徑向 (Radial)</option>
+                    <option value="linear">線性 (Linear)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>強度 (Intensity)</label>
+                <input type="range" id="intensity" min="-50" max="50" value="10">
+                <span id="intensityVal">10</span>
+            </div>
+             <div class="input-group">
+                <label>方向/旋轉 (Angle/Rotation)</label>
+                <input type="range" id="direction" min="0" max="360" value="0">
+                <span id="directionVal">0°</span>
+            </div>
+        </section>
+
+        <section class="image-comparison">
+            <div class="image-panel">
+                <h3>原始圖片</h3>
+                <div class="canvas-container">
+                    <canvas id="sourceCanvas"></canvas>
+                </div>
+                <div class="image-info" id="sourceInfo">請上傳圖片</div>
+            </div>
+            <div class="image-panel">
+                <h3>處理結果</h3>
+                <canvas id="targetCanvas"></canvas>
+                <div class="image-info" id="targetInfo">等待處理...</div>
+            </div>
+        </section>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
