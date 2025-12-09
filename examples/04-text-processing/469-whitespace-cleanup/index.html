@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whitespace Cleanup - Web Worker Example #469</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Whitespace Cleanup</h1>
+        <p>Clean up various whitespace issues in text.</p>
+
+        <div class="input-area">
+            <label for="inputText">Input Text:</label>
+            <textarea id="inputText" placeholder="Paste text with messy whitespace here..."></textarea>
+        </div>
+
+        <div class="controls">
+            <div>
+                <label for="mode">Action:</label>
+                <select id="mode">
+                    <option value="trim">Trim Lines (Start/End)</option>
+                    <option value="single-space">Reduce Multiple Spaces</option>
+                    <option value="tab-to-space">Convert Tabs to Spaces</option>
+                    <option value="space-to-tab">Convert Spaces to Tabs</option>
+                </select>
+            </div>
+            <button id="processBtn">Clean Whitespace</button>
+        </div>
+
+        <div class="output-area">
+            <label for="outputText">Output Text:</label>
+            <div id="outputContainer" class="output-container">
+                <pre id="outputText"></pre>
+            </div>
+            <div class="stats">
+                <span id="timing">Time: 0ms</span>
+                <span id="charCount">Chars: 0</span>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
