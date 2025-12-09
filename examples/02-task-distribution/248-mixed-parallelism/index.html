@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mixed Parallelism - Web Worker Example #248</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Mixed Parallelism</h1>
+            <p class="subtitle">Web Worker Example #248 - Multi-Pattern Parallel Processing</p>
+            <div class="badges">
+                <span class="badge badge-advanced">Advanced</span>
+                <span class="badge badge-worker">Multi-Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Mixed Parallelism</h2>
+                <p>Mixed Parallelism combines multiple parallel patterns (data parallelism, task parallelism, and pipeline parallelism) to achieve optimal performance for complex workloads. This approach adapts to different computational characteristics.</p>
+                <div class="formula-box">
+                    <p><strong>Parallel Pattern Combinations:</strong></p>
+                    <pre class="formula">
+1. Data Parallelism:
+   - Divide data into chunks
+   - Process chunks in parallel
+   - T = T_seq / P + T_overhead
+
+2. Task Parallelism:
+   - Different workers do different tasks
+   - Concurrent execution of independent tasks
+   - T = max(T_task1, T_task2, ..., T_taskN)
+
+3. Pipeline Parallelism:
+   - Chain of processing stages
+   - Each stage runs in parallel
+   - T = T_fill + T_steady + T_drain
+
+4. Mixed Strategy:
+   - Combine patterns based on workload
+   - Dynamic switching for optimal throughput
+   - Efficiency = Work_done / (Workers × Time)
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="patternSelect">Parallelism Pattern:</label>
+                    <select id="patternSelect">
+                        <option value="data">Data Parallelism Only</option>
+                        <option value="task">Task Parallelism Only</option>
+                        <option value="pipeline">Pipeline Parallelism Only</option>
+                        <option value="mixed" selected>Mixed (Adaptive)</option>
+                    </select>
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="workerCount">Worker Count:</label>
+                        <input type="number" id="workerCount" value="4" min="2" max="16">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="dataSize">Data Size:</label>
+                        <select id="dataSize">
+                            <option value="10000">10K items</option>
+                            <option value="50000" selected>50K items</option>
+                            <option value="100000">100K items</option>
+                            <option value="500000">500K items</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="taskComplexity">Task Complexity:</label>
+                        <select id="taskComplexity">
+                            <option value="light">Light</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="heavy">Heavy</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="pipelineStages">Pipeline Stages:</label>
+                        <input type="number" id="pipelineStages" value="4" min="2" max="8">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="runBtn" class="btn btn-primary">Run Mixed Parallelism</button>
+                    <button id="compareBtn" class="btn btn-secondary">Compare All Patterns</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Worker Activity</h2>
+                <canvas id="activityCanvas" width="700" height="300"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Pattern Used</span>
+                        <span id="patternUsed" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Time</span>
+                        <span id="totalTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Items Processed</span>
+                        <span id="itemsProcessed" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Throughput</span>
+                        <span id="throughput" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Worker Efficiency</span>
+                        <span id="efficiency" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Load Balance</span>
+                        <span id="loadBalance" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Speedup</span>
+                        <span id="speedup" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Parallel Overhead</span>
+                        <span id="overhead" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Worker Statistics</h3>
+                <div id="workerStats" class="worker-stats"></div>
+            </section>
+
+            <section id="comparisonContainer" class="comparison-section hidden">
+                <h2>Pattern Comparison</h2>
+                <canvas id="comparisonCanvas" width="700" height="250"></canvas>
+                <div id="comparisonTable" class="comparison-table"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #248</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
