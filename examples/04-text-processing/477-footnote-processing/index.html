@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Footnote Processing - Web Worker Example #477</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Footnote Processing</h1>
+            <p class="subtitle">Web Worker Example #477 - Extract & Format Footnotes</p>
+            <div class="badges">
+                <span class="badge badge-text">Text Processing</span>
+                <span class="badge badge-worker">Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <h2>Input Text</h2>
+                <div class="controls">
+                    <div>
+                        <label for="action">Action:</label>
+                        <select id="action">
+                            <option value="extract">Extract Footnotes</option>
+                            <option value="renumber">Renumber Footnotes</option>
+                            <option value="markdown-to-html">Markdown [^1] to HTML</option>
+                        </select>
+                    </div>
+                </div>
+                <textarea id="inputText" placeholder="Here is a statement.[^1] And another fact.[^note]
+
+[^1]: Source A
+[^note]: Source B"></textarea>
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary">Process</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </section>
+
+            <section class="output-section">
+                <h2>Result</h2>
+                <div class="output-area">
+                    <button class="copy-btn" id="copyBtn">Copy</button>
+                    <pre><code id="outputText"></code></pre>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">Time: <strong id="timeStats">-</strong></div>
+                    <div class="stat-item">Footnotes: <strong id="countStats">-</strong></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

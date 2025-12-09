@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Generation - Web Worker Example #473</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>List Generation</h1>
+            <p class="subtitle">Web Worker Example #473 - Text to List Converter</p>
+            <div class="badges">
+                <span class="badge badge-text">Text Processing</span>
+                <span class="badge badge-worker">Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <h2>Input Lines</h2>
+                <div class="controls">
+                    <div>
+                        <label for="type">List Type:</label>
+                        <select id="type">
+                            <option value="bullet">Bulleted List (*)</option>
+                            <option value="dash">Dashed List (-)</option>
+                            <option value="plus">Plus List (+)</option>
+                            <option value="numbered">Numbered List (1.)</option>
+                            <option value="letter">Lettered List (a.)</option>
+                            <option value="html-ul">HTML &lt;ul&gt;</option>
+                            <option value="html-ol">HTML &lt;ol&gt;</option>
+                            <option value="markdown-task">Markdown Task List</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="sort">Sorting:</label>
+                        <select id="sort">
+                            <option value="none">None (As is)</option>
+                            <option value="asc">Ascending (A-Z)</option>
+                            <option value="desc">Descending (Z-A)</option>
+                            <option value="length">Length</option>
+                        </select>
+                    </div>
+                </div>
+                <textarea id="inputText" placeholder="Enter items (one per line)...
+Apples
+Oranges
+Bananas
+Grapes"></textarea>
+                <div class="button-group">
+                    <button id="convertBtn" class="btn btn-primary">Generate List</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </section>
+
+            <section class="output-section">
+                <h2>Output List</h2>
+                <div class="output-area">
+                    <button class="copy-btn" id="copyBtn">Copy</button>
+                    <pre><code id="outputText"></code></pre>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">Time: <strong id="timeStats">-</strong></div>
+                    <div class="stat-item">Items: <strong id="countStats">-</strong></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

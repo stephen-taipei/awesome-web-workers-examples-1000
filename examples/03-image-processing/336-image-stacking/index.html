@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Stacking - Web Worker Example #336</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Image Stacking</h1>
+            <p class="subtitle">Web Worker Example #336 - Noise Reduction via Averaging</p>
+            <div class="badges">
+                <span class="badge badge-advanced">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Image Stacking</h2>
+                <p>Combines multiple noisy images of the same static scene to create a cleaner image. By averaging the pixel values, random noise is cancelled out, improving the signal-to-noise ratio.</p>
+            </section>
+
+            <section class="controls">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop multiple noisy images here</p>
+                    <input type="file" id="fileInput" accept="image/*" multiple hidden>
+                </div>
+                <div id="fileList" style="text-align:center; color: #aaa; margin-bottom: 1rem;"></div>
+
+                <div class="button-group">
+                    <button id="stackBtn" class="btn btn-primary" disabled>Stack Images (Average)</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                 <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>First Image (Reference)</h3>
+                        <canvas id="refCanvas"></canvas>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Stacked Result</h3>
+                        <canvas id="resultCanvas"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

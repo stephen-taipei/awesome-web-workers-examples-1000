@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Blending - Web Worker Example #335</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Image Blending</h1>
+            <p class="subtitle">Web Worker Example #335 - Poisson Blending</p>
+            <div class="badges">
+                <span class="badge badge-advanced">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Image Blending</h2>
+                <p>Seamlessly blends a source image into a target image using Poisson Blending (solving the Poisson equation). This technique matches the gradients of the source image while respecting the boundaries of the target image.</p>
+            </section>
+
+            <section class="controls">
+                <div style="display: flex; gap: 1rem;">
+                    <div class="upload-area" id="targetUpload" style="flex:1;">
+                        <p>1. Target (Background)</p>
+                        <input type="file" id="targetInput" accept="image/*" hidden>
+                    </div>
+                    <div class="upload-area" id="sourceUpload" style="flex:1;">
+                        <p>2. Source (Foreground)</p>
+                        <input type="file" id="sourceInput" accept="image/*" hidden>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Position Offset (X, Y):</label>
+                    <div style="display: flex; gap: 1rem;">
+                        <input type="number" id="offsetX" value="100">
+                        <input type="number" id="offsetY" value="100">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="blendBtn" class="btn btn-primary" disabled>Poisson Blend</button>
+                    <button id="naiveBtn" class="btn btn-secondary" disabled>Naive Paste (Compare)</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Result</h3>
+                        <canvas id="resultCanvas"></canvas>
+                        <div id="status">Ready</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

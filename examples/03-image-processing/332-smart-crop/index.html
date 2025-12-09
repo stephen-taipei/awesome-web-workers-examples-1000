@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Crop - Web Worker Example #332</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Smart Crop</h1>
+            <p class="subtitle">Web Worker Example #332 - Content-Aware Cropping</p>
+            <div class="badges">
+                <span class="badge badge-advanced">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Smart Crop</h2>
+                <p>Automatically crop images to a specific aspect ratio while preserving the most important content. It uses saliency detection (edge density and center bias) to find the best region.</p>
+            </section>
+
+            <section class="controls">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label for="ratioSelect">Target Aspect Ratio:</label>
+                    <select id="ratioSelect">
+                        <option value="1">1:1 (Square)</option>
+                        <option value="1.3333">4:3 (Standard)</option>
+                        <option value="1.7778">16:9 (Widescreen)</option>
+                        <option value="0.75">3:4 (Portrait)</option>
+                        <option value="0.5625">9:16 (Story)</option>
+                    </select>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Smart Crop</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original Image</h3>
+                        <canvas id="originalCanvas"></canvas>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Smart Cropped</h3>
+                        <canvas id="resultCanvas"></canvas>
+                        <div id="cropInfo" style="margin-top: 5px; color: #aaa; font-size: 0.9em;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultSection" class="hidden">
+                <h2>Performance</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span>Processing Time</span>
+                        <div id="processingTime" class="result-value">-</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

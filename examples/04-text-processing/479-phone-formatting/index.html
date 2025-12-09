@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Formatting - Web Worker Example #479</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Phone Formatting</h1>
+            <p class="subtitle">Web Worker Example #479 - Standardize Phone Numbers</p>
+            <div class="badges">
+                <span class="badge badge-text">Text Processing</span>
+                <span class="badge badge-worker">Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <h2>Input Phone Numbers</h2>
+                <div class="controls">
+                    <div>
+                        <label for="format">Format:</label>
+                        <select id="format">
+                            <option value="us">US (XXX) XXX-XXXX</option>
+                            <option value="e164">E.164 +1XXXXXXXXXX</option>
+                            <option value="dot">Dot XXX.XXX.XXXX</option>
+                            <option value="international">Intl +XX XXX XXX XXXX</option>
+                        </select>
+                    </div>
+                </div>
+                <textarea id="inputText" placeholder="1234567890
+(123) 456-7890
+123-456-7890
++1 123 456 7890"></textarea>
+                <div class="button-group">
+                    <button id="formatBtn" class="btn btn-primary">Format Numbers</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </section>
+
+            <section class="output-section">
+                <h2>Formatted List</h2>
+                <div class="output-area">
+                    <button class="copy-btn" id="copyBtn">Copy</button>
+                    <pre><code id="outputText"></code></pre>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">Time: <strong id="timeStats">-</strong></div>
+                    <div class="stat-item">Valid: <strong id="countStats">-</strong></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

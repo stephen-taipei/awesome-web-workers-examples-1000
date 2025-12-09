@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Generation - Web Worker Example #472</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Table Generation</h1>
+            <p class="subtitle">Web Worker Example #472 - Text to Table Converter</p>
+            <div class="badges">
+                <span class="badge badge-text">Text Processing</span>
+                <span class="badge badge-worker">Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <h2>Input Text</h2>
+                <div class="controls">
+                    <div>
+                        <label for="delimiter">Delimiter:</label>
+                        <select id="delimiter">
+                            <option value="comma">Comma (CSV)</option>
+                            <option value="tab">Tab (TSV)</option>
+                            <option value="pipe">Pipe (|)</option>
+                            <option value="semicolon">Semicolon (;)</option>
+                            <option value="auto">Auto-detect</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="format">Output Format:</label>
+                        <select id="format">
+                            <option value="ascii">ASCII Table</option>
+                            <option value="markdown">Markdown Table</option>
+                            <option value="html">HTML Table</option>
+                            <option value="latex">LaTeX Table</option>
+                        </select>
+                    </div>
+                </div>
+                <textarea id="inputText" placeholder="Enter delimited text here...
+Name,Age,Role
+Alice,28,Engineer
+Bob,34,Designer
+Charlie,42,Manager"></textarea>
+                <div class="button-group">
+                    <button id="convertBtn" class="btn btn-primary">Convert Table</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </section>
+
+            <section class="output-section">
+                <h2>Output Table</h2>
+                <div class="output-area">
+                    <button class="copy-btn" id="copyBtn">Copy</button>
+                    <pre><code id="outputText"></code></pre>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">Processing time: <strong id="timeStats">-</strong></div>
+                    <div class="stat-item">Rows: <strong id="rowStats">-</strong></div>
+                    <div class="stat-item">Columns: <strong id="colStats">-</strong></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
