@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swirl Effect - Web Worker Example #323</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Swirl Effect</h1>
+            <p class="subtitle">Web Worker Example #323 - Radial Twist Distortion</p>
+            <div class="badges">
+                <span class="badge badge-worker">Single Worker</span>
+                <span class="badge" style="background: #f59e0b; color: white;">Intermediate</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Swirl Effect</h2>
+                <p>Twists the image around a center point, creating a whirlpool or vortex effect.</p>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label>Angle (Twist): <span id="valAngle">5</span> rad</label>
+                    <input type="range" id="angle" min="-20" max="20" step="0.5" value="5">
+
+                    <label>Radius: <span id="valRadius">0.5</span></label>
+                    <input type="range" id="radius" min="0.1" max="1.5" step="0.1" value="0.5">
+
+                    <label>Center X: <span id="valCx">0.5</span></label>
+                    <input type="range" id="cx" min="0" max="1" step="0.05" value="0.5">
+
+                    <label>Center Y: <span id="valCy">0.5</span></label>
+                    <input type="range" id="cy" min="0" max="1" step="0.05" value="0.5">
+                </div>
+
+                <div class="button-group">
+                    <button id="applyBtn" class="btn btn-primary" disabled>Apply Effect</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original</h3>
+                        <canvas id="sourceCanvas"></canvas>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Result</h3>
+                        <canvas id="resultCanvas"></canvas>
+                        <p id="processingTime"></p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #323</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

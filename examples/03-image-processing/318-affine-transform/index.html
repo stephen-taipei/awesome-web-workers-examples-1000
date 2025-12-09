@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affine Transform - Web Worker Example #318</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Affine Transform</h1>
+            <p class="subtitle">Web Worker Example #318 - Scale, Rotate, Shear, Translate</p>
+            <div class="badges">
+                <span class="badge badge-worker">Single Worker</span>
+                <span class="badge" style="background: #f59e0b; color: white;">Intermediate</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Affine Transform</h2>
+                <p>Apply geometric transformations including scaling, rotation, shearing, and translation. The transformation is represented by a 3x3 matrix (conceptually 2x3 plus [0,0,1]).</p>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label>Scale X: <span id="valSx">1.0</span></label>
+                    <input type="range" id="sx" min="0.1" max="3" step="0.1" value="1.0">
+
+                    <label>Scale Y: <span id="valSy">1.0</span></label>
+                    <input type="range" id="sy" min="0.1" max="3" step="0.1" value="1.0">
+
+                    <label>Rotate (deg): <span id="valRot">0</span></label>
+                    <input type="range" id="rot" min="-180" max="180" step="1" value="0">
+
+                    <label>Shear X: <span id="valShx">0</span></label>
+                    <input type="range" id="shx" min="-2" max="2" step="0.1" value="0">
+
+                    <label>Shear Y: <span id="valShy">0</span></label>
+                    <input type="range" id="shy" min="-2" max="2" step="0.1" value="0">
+                </div>
+
+                <div class="button-group">
+                    <button id="applyBtn" class="btn btn-primary" disabled>Apply</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original</h3>
+                        <canvas id="sourceCanvas"></canvas>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Transformed</h3>
+                        <canvas id="resultCanvas"></canvas>
+                        <p id="processingTime"></p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #318</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
