@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corner Detection - Web Worker Example #377</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Corner Detection</h1>
+            <p class="subtitle">Web Worker Example #377 - Harris Corner Detector</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Harris Corner Detection</h2>
+                <p>The Harris Corner Detector is a mathematical operator that finds features in an image that are corner-like. It is based on the variation of intensity in different directions.</p>
+            </section>
+
+            <section class="controls">
+                <h2>Settings</h2>
+                <div class="input-group">
+                    <label for="threshold">Threshold (Score): <span id="thresholdVal">10000</span></label>
+                    <input type="range" id="threshold" min="1000" max="100000" value="10000" step="1000">
+                </div>
+                 <div class="input-group">
+                    <label>
+                        <input type="checkbox" id="overlayInput" checked> Overlay on Original
+                    </label>
+                </div>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Detect Corners</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <p id="originalInfo" class="image-info">No image loaded</p>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Corners</h3>
+                        <canvas id="processedCanvas"></canvas>
+                        <p id="processedInfo" class="image-info">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Corners Found</span>
+                        <span id="cornerCount" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="download-section">
+                    <button id="downloadBtn" class="btn btn-primary">Download Image</button>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
