@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 鏡頭光暈 (Lens Flare)</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .canvas-container {
+            position: relative;
+            display: inline-block;
+        }
+        #lightSourceOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+            pointer-events: all;
+        }
+        .light-marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid yellow;
+            border-radius: 50%;
+            background: rgba(255, 255, 0, 0.3);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            box-shadow: 0 0 10px yellow;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 鏡頭光暈</h1>
+            <div class="subtitle">Lens Flare</div>
+            <div class="badges">
+                <span class="badge badge-beginner">影像處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <p>模擬相機鏡頭對著強光拍攝時產生的光暈效果（Lens Flare）。點擊圖片設定光源位置。</p>
+        </section>
+
+        <div class="upload-area" id="dropZone">
+            <div class="upload-icon">📁</div>
+            <p>拖放圖片至此，或點擊上傳</p>
+            <input type="file" id="fileInput" accept="image/*" hidden>
+        </div>
+
+        <section class="controls">
+            <div class="input-group">
+                <label>閾值 (Threshold)</label>
+                <input type="range" id="threshold" min="0" max="255" value="230">
+                <span id="thresholdVal">230</span>
+            </div>
+            <div class="input-group">
+                <label>光暈強度 (Intensity)</label>
+                <input type="range" id="intensity" min="0" max="200" value="100">
+                <span id="intensityVal">1.0</span>
+            </div>
+             <div class="input-group">
+                <label>光暈數量 (Artifacts)</label>
+                <input type="range" id="artifacts" min="1" max="10" value="5">
+                <span id="artifactsVal">5</span>
+            </div>
+        </section>
+
+        <section class="image-comparison">
+            <div class="image-panel">
+                <h3>原始圖片</h3>
+                <div class="canvas-container">
+                    <canvas id="sourceCanvas"></canvas>
+                    <div id="lightSourceOverlay"></div>
+                    <div id="lightMarker" class="light-marker" style="display:none; left: 50%; top: 50%;"></div>
+                </div>
+                <div class="image-info" id="sourceInfo">請上傳圖片</div>
+            </div>
+            <div class="image-panel">
+                <h3>處理結果</h3>
+                <canvas id="targetCanvas"></canvas>
+                <div class="image-info" id="targetInfo">等待處理...</div>
+            </div>
+        </section>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
