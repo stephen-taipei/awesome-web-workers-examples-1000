@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polar Coordinates - Web Worker Example #330</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Polar Coordinates</h1>
+            <p class="subtitle">Web Worker Example #330 - Cartesian ↔ Polar Conversion</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Intermediate</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Polar Coordinates</h2>
+                <p>Transform images between Cartesian (Rectangular) and Polar coordinates. This creates effects like "Little Planet" (Polar to Cartesian) or unrolling a circle (Cartesian to Polar).</p>
+                <div class="formula-box">
+                    <p><strong>Transformations:</strong></p>
+                    <pre class="formula">
+Rectangular to Polar (Circle Swirl):
+  x = center + r * cos(theta)
+  y = center + r * sin(theta)
+  where r maps to y_src, theta maps to x_src
+
+Polar to Rectangular (Unroll):
+  r = sqrt(dx^2 + dy^2)
+  theta = atan2(dy, dx)
+  x_src = map(theta, -PI..PI, 0..width)
+  y_src = map(r, 0..radius, 0..height)
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input & Controls</h2>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label>Transformation Type</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="mode" value="rect-to-polar" checked>
+                            Rectilinear to Polar (Swirl/Little Planet)
+                        </label>
+                        <label>
+                            <input type="radio" name="mode" value="polar-to-rect">
+                            Polar to Rectilinear (Unroll)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Apply Transform</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <p id="originalInfo" class="image-info">No image loaded</p>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Transformed</h3>
+                        <canvas id="processedCanvas"></canvas>
+                        <p id="processedInfo" class="image-info">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Processing Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Pixels Processed</span>
+                        <span id="pixelsProcessed" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Worker Status</span>
+                        <span id="workerStatus" class="result-value">Ready</span>
+                    </div>
+                </div>
+
+                <div class="download-section">
+                    <button id="downloadBtn" class="btn btn-primary">Download Image</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #330</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
