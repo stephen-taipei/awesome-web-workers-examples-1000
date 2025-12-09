@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TF-IDF - Web Worker Example #437</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TF-IDF</h1>
+            <p class="subtitle">Web Worker Example #437 - Term Frequency-Inverse Document Frequency</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Intermediate</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="controls">
+                <h2>Corpus</h2>
+                <div class="input-group">
+                    <label>Documents (One per line):</label>
+                    <textarea id="documentsInput" rows="10" style="width: 100%; background: rgba(0,0,0,0.3); color: #fff; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 10px;">
+The cat sat on the mat
+The dog sat on the log
+The cat chased the mouse
+The dog chased the cat
+The mouse ate the cheese
+                    </textarea>
+                </div>
+                <div class="button-group">
+                    <button id="analyzeBtn" class="btn btn-primary">Calculate TF-IDF</button>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Top Keywords per Document</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Analysis Time</span>
+                        <span id="analysisTime" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <div id="resultList" style="margin-top: 15px;"></div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
