@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citation Formatting - Web Worker Example #478</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Citation Formatting</h1>
+            <p class="subtitle">Web Worker Example #478 - Format References</p>
+            <div class="badges">
+                <span class="badge badge-text">Text Processing</span>
+                <span class="badge badge-worker">Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <h2>Citation Data (JSON)</h2>
+                <div class="controls">
+                    <div>
+                        <label for="style">Style:</label>
+                        <select id="style">
+                            <option value="apa">APA 7</option>
+                            <option value="mla">MLA 9</option>
+                            <option value="chicago">Chicago (Notes)</option>
+                            <option value="ieee">IEEE</option>
+                        </select>
+                    </div>
+                </div>
+                <textarea id="inputText" placeholder='[
+  {
+    "type": "book",
+    "author": "Smith, John",
+    "title": "The Art of Coding",
+    "year": 2023,
+    "publisher": "Tech Press"
+  },
+  {
+    "type": "journal",
+    "author": "Doe, Jane and Wilson, Sam",
+    "title": "Web Workers in Depth",
+    "journal": "Journal of Web Performance",
+    "year": 2022,
+    "volume": "10",
+    "issue": "2",
+    "pages": "100-115"
+  }
+]'></textarea>
+                <div class="button-group">
+                    <button id="formatBtn" class="btn btn-primary">Format Citations</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </section>
+
+            <section class="output-section">
+                <h2>Formatted Citations</h2>
+                <div class="output-area">
+                    <button class="copy-btn" id="copyBtn">Copy</button>
+                    <pre><code id="outputText"></code></pre>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">Time: <strong id="timeStats">-</strong></div>
+                    <div class="stat-item">Count: <strong id="countStats">-</strong></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
