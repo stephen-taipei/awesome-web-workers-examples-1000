@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>距離變換 (Distance Transform) - Web Workers 示例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>距離變換 (Distance Transform)</h1>
+            <p class="subtitle">Euclidean Distance Transform</p>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-advanced">Image Processing</span>
+                <span class="badge badge-advanced">Morphology</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能描述</h2>
+            <p>距離變換計算二值圖像中每個前景像素到最近背景像素的距離。結果通常以灰階圖像顯示，亮度代表距離。</p>
+            <div class="formula-box">
+                <div class="formula">
+dist(x, y) = min ||(x, y) - (x', y')||
+for all background pixels (x', y')
+Metric: Euclidean
+                </div>
+            </div>
+        </section>
+
+        <section class="controls">
+            <h2>參數設定</h2>
+            <div class="input-group">
+                <label for="threshold">二值化閾值 (0-255)</label>
+                <input type="range" id="threshold" min="0" max="255" value="128">
+                <span id="thresholdVal">128</span>
+            </div>
+
+            <div class="upload-area" id="dropZone">
+                <div class="upload-icon">📁</div>
+                <p>拖放圖片至此，或點擊上傳</p>
+                <input type="file" id="fileInput" accept="image/*" class="hidden">
+            </div>
+
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary" disabled>計算距離變換</button>
+            </div>
+        </section>
+
+        <section id="progressSection" class="progress-section hidden">
+            <div class="progress-bar-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <p id="progressText" class="progress-text">處理中...</p>
+        </section>
+
+        <section class="results">
+            <h2>處理結果</h2>
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">處理時間</span>
+                    <span id="processTime" class="result-value">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">最大距離</span>
+                    <span id="maxDist" class="result-value">-</span>
+                </div>
+            </div>
+
+            <div class="image-comparison">
+                <div class="image-panel">
+                    <h3>原始圖片</h3>
+                    <canvas id="originalCanvas"></canvas>
+                </div>
+                <div class="image-panel">
+                    <h3>距離變換圖</h3>
+                    <canvas id="resultCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h7y/WebWorkers1000" target="_blank">GitHub</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
