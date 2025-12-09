@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Line Numbering - Web Worker Example #467</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Line Numbering</h1>
+        <p>Add sequential line numbers to each line of text.</p>
+
+        <div class="input-area">
+            <label for="inputText">Input Text:</label>
+            <textarea id="inputText" placeholder="Paste your code or text here..."></textarea>
+        </div>
+
+        <div class="controls">
+            <div>
+                <label for="startNum">Start Number:</label>
+                <input type="number" id="startNum" value="1" min="0">
+            </div>
+            <div>
+                <label for="padWidth">Padding Width:</label>
+                <input type="number" id="padWidth" value="4" min="1" max="10">
+            </div>
+            <div>
+                <label for="separator">Separator:</label>
+                <input type="text" id="separator" value=". " style="width: 40px;">
+            </div>
+            <button id="processBtn">Add Line Numbers</button>
+        </div>
+
+        <div class="output-area">
+            <label for="outputText">Output Text:</label>
+            <div id="outputContainer" class="output-container">
+                <pre id="outputText"></pre>
+            </div>
+            <div class="stats">
+                <span id="timing">Time: 0ms</span>
+                <span id="lineCount">Lines: 0</span>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

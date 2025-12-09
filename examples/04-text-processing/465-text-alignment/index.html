@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Alignment - Web Worker Example #465</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Text Alignment</h1>
+        <p>Align text Left, Right, or Center within a specified width using padding characters.</p>
+
+        <div class="input-area">
+            <label for="inputText">Input Text:</label>
+            <textarea id="inputText" placeholder="Enter text here...
+Multiple lines
+Supported"></textarea>
+        </div>
+
+        <div class="controls">
+            <div>
+                <label for="alignType">Alignment:</label>
+                <select id="alignType">
+                    <option value="left">Left</option>
+                    <option value="center">Center</option>
+                    <option value="right">Right</option>
+                </select>
+            </div>
+            <div>
+                <label for="width">Width (chars):</label>
+                <input type="number" id="width" value="80" min="10" max="200">
+            </div>
+            <div>
+                <label for="padChar">Pad Char:</label>
+                <input type="text" id="padChar" value=" " maxlength="1" style="width: 30px;">
+            </div>
+            <button id="processBtn">Align Text</button>
+        </div>
+
+        <div class="output-area">
+            <label for="outputText">Output Text:</label>
+            <div id="outputContainer" class="output-container">
+                <pre id="outputText"></pre>
+            </div>
+            <div class="stats">
+                <span id="timing">Time: 0ms</span>
+                <span id="lineCount">Lines: 0</span>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

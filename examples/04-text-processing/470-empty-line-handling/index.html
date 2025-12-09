@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empty Line Handling - Web Worker Example #470</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Empty Line Handling</h1>
+        <p>Manage empty lines in your text.</p>
+
+        <div class="input-area">
+            <label for="inputText">Input Text:</label>
+            <textarea id="inputText" placeholder="Enter text with empty lines..."></textarea>
+        </div>
+
+        <div class="controls">
+            <div>
+                <label for="mode">Action:</label>
+                <select id="mode">
+                    <option value="remove-all">Remove All Empty Lines</option>
+                    <option value="collapse">Collapse Multiple Empty Lines</option>
+                    <option value="add-between">Add Empty Line Between Lines</option>
+                </select>
+            </div>
+            <button id="processBtn">Process Lines</button>
+        </div>
+
+        <div class="output-area">
+            <label for="outputText">Output Text:</label>
+            <div id="outputContainer" class="output-container">
+                <pre id="outputText"></pre>
+            </div>
+            <div class="stats">
+                <span id="timing">Time: 0ms</span>
+                <span id="lineCount">Lines: 0</span>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
