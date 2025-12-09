@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 模板引擎 (Template Engine)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>模板引擎 (Template Engine)</h1>
+            <div class="subtitle">變數替換與渲染</div>
+            <div class="badges">
+                <span class="badge badge-beginner">文本處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">Regex</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能說明</h2>
+            <p>此範例展示一個簡易的模板引擎。在模板中使用 <code>{{ variable }}</code> 語法，系統將根據提供的 JSON 數據進行替換。</p>
+        </section>
+
+        <section class="controls">
+            <div class="button-group" style="margin-bottom: 1rem;">
+                <button id="loadSampleBtn" class="btn btn-secondary">載入範例</button>
+                <button id="processBtn" class="btn btn-primary">渲染模板</button>
+            </div>
+
+            <div class="grid-layout">
+                <div class="input-pane">
+                    <h3>模板 (Template)</h3>
+                    <textarea id="templateText" placeholder="Hello {{ name }}!"></textarea>
+                </div>
+                <div class="input-pane">
+                    <h3>數據 (JSON Data)</h3>
+                    <textarea id="jsonText" placeholder='{ "name": "World" }'></textarea>
+                </div>
+            </div>
+        </section>
+
+        <section class="results">
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">處理時間</span>
+                    <span class="result-value" id="processTime">-</span>
+                </div>
+            </div>
+
+            <div class="output-pane">
+                <h3>渲染結果</h3>
+                <pre id="renderResult" class="code-output"></pre>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - 426 Template Engine</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
