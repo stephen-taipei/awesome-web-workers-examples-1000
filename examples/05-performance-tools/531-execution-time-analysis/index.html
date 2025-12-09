@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>執行時間分析 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>執行時間分析</h1>
+            <div class="subtitle">Execution Time Analysis (Profiling)</div>
+            <div class="badges">
+                <span class="badge badge-beginner">效能工具</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">Instrumentation</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能描述</h2>
+            <p>這個範例展示如何通過包裝函數 (Instrumentation) 來測量 Worker 內部各個函數的執行時間，找出效能瓶頸。</p>
+        </section>
+
+        <div class="control-panel" style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
+            <button id="runBtn" class="btn btn-primary">執行複雜任務</button>
+        </div>
+
+        <div class="main-content" style="margin-top: 1rem;">
+             <div class="preview-pane">
+                <div class="pane-header" style="margin-bottom: 0.5rem; color: #a7f3d0;">
+                    <span>分析報告</span>
+                </div>
+                <div id="reportTable" style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; font-family: monospace;">
+                    <p style="text-align: center; color: #666;">等待執行結果...</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Web Workers 1000 範例系列 - 531 執行時間分析</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

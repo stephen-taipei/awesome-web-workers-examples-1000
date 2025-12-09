@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>記憶體分析 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>記憶體分析</h1>
+            <div class="subtitle">Memory Analysis</div>
+            <div class="badges">
+                <span class="badge badge-beginner">效能工具</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">performance.memory</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能描述</h2>
+            <p>即時監控 Worker 的記憶體使用量 (JS Heap)，並視覺化其變化趨勢。</p>
+            <p style="font-size: 0.9rem; color: #fbbf24;">注意：此功能依賴非標準的 `performance.memory` API，僅在 Chrome/Edge 等 Chromium 瀏覽器中有效。若您的瀏覽器不支援，將顯示模擬數據。</p>
+        </section>
+
+        <div class="control-panel" style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
+            <div class="button-group">
+                <button id="startBtn" class="btn btn-primary">開始監控</button>
+                <button id="allocBtn" class="btn btn-secondary" disabled>分配記憶體 (+50MB)</button>
+                <button id="clearBtn" class="btn btn-outline" disabled>釋放記憶體</button>
+                <button id="stopBtn" class="btn btn-secondary" disabled>停止</button>
+            </div>
+        </div>
+
+        <div class="main-content" style="margin-top: 1rem;">
+             <div class="preview-pane">
+                <div class="pane-header" style="margin-bottom: 0.5rem; color: #a7f3d0;">
+                    <span>記憶體趨勢圖</span>
+                    <span id="currentMem" style="float: right; font-size: 0.9rem; font-weight: bold;">- MB</span>
+                </div>
+                <canvas id="memChart" style="width: 100%; height: 250px; background: rgba(0,0,0,0.3); border-radius: 8px;"></canvas>
+            </div>
+        </div>
+
+        <footer>
+            <p>Web Workers 1000 範例系列 - 532 記憶體分析</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

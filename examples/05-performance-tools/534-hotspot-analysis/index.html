@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>熱點分析 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>熱點分析</h1>
+            <div class="subtitle">Hotspot Analysis (Sampling)</div>
+            <div class="badges">
+                <span class="badge badge-beginner">效能工具</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">Sampling</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能描述</h2>
+            <p>這個範例模擬了一個基於「採樣」(Sampling) 的熱點分析器。由於 JS 在 Worker 中是單執行緒的，無法真正的並行採樣，這裡我們演示如何通過記錄函數進入/退出的時間戳來模擬採樣數據，找出佔用 CPU 時間最長的函數。</p>
+        </section>
+
+        <div class="control-panel" style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
+            <button id="runBtn" class="btn btn-primary">開始分析</button>
+        </div>
+
+        <div class="main-content" style="margin-top: 1rem;">
+             <div class="preview-pane">
+                <div class="pane-header" style="margin-bottom: 0.5rem; color: #a7f3d0;">
+                    <span>熱點函數 (Self Time)</span>
+                </div>
+                <div id="hotspotChart" style="display: flex; flex-direction: column; gap: 0.5rem;"></div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Web Workers 1000 範例系列 - 534 熱點分析</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
