@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrast Adjustment - Web Worker Example #254</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Contrast Adjustment</h1>
+            <p class="subtitle">Web Worker Example #254 - 圖片對比度調整</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Contrast Adjustment</h2>
+                <p>對比度調整改變圖像中最亮和最暗區域之間的差異。高對比度使圖像更加鮮明，低對比度使圖像更加柔和。透過線性映射公式，我們可以精確控制對比度的強度。</p>
+                <div class="formula-box">
+                    <p><strong>對比度調整公式：</strong></p>
+                    <pre class="formula">
+對於每個像素的 RGB 值：
+  factor = (259 × (contrast + 255)) / (255 × (259 - contrast))
+
+  R' = clamp(factor × (R - 128) + 128, 0, 255)
+  G' = clamp(factor × (G - 128) + 128, 0, 255)
+  B' = clamp(factor × (B - 128) + 128, 0, 255)
+  A' = A  (保持透明度不變)
+
+其中：
+  - contrast: 對比度調整值 (-255 ~ +255)
+  - factor: 對比度因子（自動計算）
+  - 128 為中間灰度值，作為對比度調整的基準點
+  - 正值增加對比度，負值減少對比度
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Controls</h2>
+
+                <div class="input-group">
+                    <label for="imageInput">選擇圖片：</label>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+
+                <div class="sample-images">
+                    <p>或使用範例圖片：</p>
+                    <div class="sample-buttons">
+                        <button class="btn btn-sample" data-sample="lowcontrast">低對比</button>
+                        <button class="btn btn-sample" data-sample="photo">照片</button>
+                        <button class="btn btn-sample" data-sample="text">文字</button>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label for="contrastSlider">Contrast: <span id="contrastValue">0</span></label>
+                    <input type="range" id="contrastSlider" min="-100" max="100" value="0">
+                    <div class="slider-labels">
+                        <span>Less Contrast</span>
+                        <span>More Contrast</span>
+                    </div>
+                </div>
+
+                <div class="factor-display">
+                    <span>Factor: </span><span id="factorValue">1.00</span>
+                </div>
+
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="livePreview" checked>
+                        即時預覽
+                    </label>
+                </div>
+
+                <div class="button-group">
+                    <button id="applyBtn" class="btn btn-primary" disabled>Apply Contrast</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                    <button id="downloadBtn" class="btn btn-outline" disabled>Download Result</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Image Preview</h2>
+                <div class="canvas-container">
+                    <div class="canvas-wrapper">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas" width="400" height="300"></canvas>
+                    </div>
+                    <div class="canvas-wrapper">
+                        <h3>Adjusted</h3>
+                        <canvas id="resultCanvas" width="400" height="300"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Processing Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Image Size</span>
+                        <span id="imageSize" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Pixels</span>
+                        <span id="totalPixels" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Contrast Applied</span>
+                        <span id="contrastApplied" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <div class="histogram-container">
+                    <h3>Histogram Comparison</h3>
+                    <canvas id="histogramCanvas" width="512" height="150"></canvas>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #254</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

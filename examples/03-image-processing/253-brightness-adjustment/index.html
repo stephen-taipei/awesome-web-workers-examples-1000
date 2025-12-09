@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brightness Adjustment - Web Worker Example #253</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Brightness Adjustment</h1>
+            <p class="subtitle">Web Worker Example #253 - 圖片亮度調整</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Brightness Adjustment</h2>
+                <p>亮度調整是影像處理中最基本的操作之一。透過對每個像素的 RGB 值進行加減運算，可以使圖片整體變亮或變暗。使用 Web Worker 可以在不阻塞主執行緒的情況下處理大量像素數據。</p>
+                <div class="formula-box">
+                    <p><strong>亮度調整公式：</strong></p>
+                    <pre class="formula">
+對於每個像素的 RGB 值：
+  R' = clamp(R + brightness, 0, 255)
+  G' = clamp(G + brightness, 0, 255)
+  B' = clamp(B + brightness, 0, 255)
+  A' = A  (保持透明度不變)
+
+其中：
+  - brightness: 亮度調整值 (-255 ~ +255)
+  - clamp(x, min, max): 將 x 限制在 [min, max] 範圍內
+  - 正值使圖片變亮，負值使圖片變暗
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Controls</h2>
+
+                <div class="input-group">
+                    <label for="imageInput">選擇圖片：</label>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+
+                <div class="sample-images">
+                    <p>或使用範例圖片：</p>
+                    <div class="sample-buttons">
+                        <button class="btn btn-sample" data-sample="gradient">漸層</button>
+                        <button class="btn btn-sample" data-sample="portrait">人像</button>
+                        <button class="btn btn-sample" data-sample="night">夜景</button>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label for="brightnessSlider">Brightness: <span id="brightnessValue">0</span></label>
+                    <input type="range" id="brightnessSlider" min="-150" max="150" value="0">
+                    <div class="slider-labels">
+                        <span>Darker</span>
+                        <span>Brighter</span>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="livePreview" checked>
+                        即時預覽
+                    </label>
+                </div>
+
+                <div class="button-group">
+                    <button id="applyBtn" class="btn btn-primary" disabled>Apply Brightness</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                    <button id="downloadBtn" class="btn btn-outline" disabled>Download Result</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Image Preview</h2>
+                <div class="canvas-container">
+                    <div class="canvas-wrapper">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas" width="400" height="300"></canvas>
+                    </div>
+                    <div class="canvas-wrapper">
+                        <h3>Adjusted</h3>
+                        <canvas id="resultCanvas" width="400" height="300"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Processing Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Image Size</span>
+                        <span id="imageSize" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Pixels</span>
+                        <span id="totalPixels" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Brightness Applied</span>
+                        <span id="brightnessApplied" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <div class="histogram-container">
+                    <h3>Brightness Histogram</h3>
+                    <canvas id="histogramCanvas" width="512" height="150"></canvas>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #253</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
