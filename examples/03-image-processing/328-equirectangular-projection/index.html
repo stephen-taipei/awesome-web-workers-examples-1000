@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equirectangular Projection - Web Worker Example #328</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Equirectangular Projection</h1>
+            <p class="subtitle">Web Worker Example #328 - 360° Panorama Viewer</p>
+            <div class="badges">
+                <span class="badge badge-worker">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Equirectangular Projection</h2>
+                <p>Convert an Equirectangular (Spherical) 360° image into a Rectilinear (Perspective) view. This allows viewing a portion of a panoramic image as if looking through a camera.</p>
+                <div class="formula-box">
+                    <p><strong>Transformation Formula:</strong></p>
+                    <pre class="formula">
+1. Convert dest (x, y) to 3D Ray (Camera Space)
+2. Rotate Ray by Yaw/Pitch (World Space)
+3. Convert Ray (x, y, z) to Spherical (lat, lon)
+4. Map (lat, lon) to Equirectangular (u, v)
+5. Sample source image at (u, v)
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input & Controls</h2>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop a 360° image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label>View Direction</label>
+                    <div style="display: flex; gap: 1rem;">
+                        <div style="flex: 1;">
+                            <label for="yawRange">Yaw: <span id="yawValue">0</span>°</label>
+                            <input type="range" id="yawRange" min="-180" max="180" step="1" value="0">
+                        </div>
+                        <div style="flex: 1;">
+                            <label for="pitchRange">Pitch: <span id="pitchValue">0</span>°</label>
+                            <input type="range" id="pitchRange" min="-90" max="90" step="1" value="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="fovRange">Field of View (FOV): <span id="fovValue">90</span>°</label>
+                    <input type="range" id="fovRange" min="30" max="150" step="1" value="90">
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Update View</button>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" id="autoUpdate" checked>
+                        <label for="autoUpdate">Real-time (Low Res)</label>
+                    </div>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Equirectangular Source (Scaled)</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <p id="originalInfo" class="image-info">No image loaded</p>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Rectilinear View</h3>
+                        <canvas id="processedCanvas"></canvas>
+                        <p id="processedInfo" class="image-info">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Processing Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">View Resolution</span>
+                        <span id="viewRes" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Worker Status</span>
+                        <span id="workerStatus" class="result-value">Ready</span>
+                    </div>
+                </div>
+
+                <div class="download-section">
+                    <button id="downloadBtn" class="btn btn-primary">Download View</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #328</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

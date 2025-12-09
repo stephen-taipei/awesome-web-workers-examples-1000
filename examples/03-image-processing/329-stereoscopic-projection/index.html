@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stereoscopic Projection - Web Worker Example #329</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Stereoscopic Projection</h1>
+            <p class="subtitle">Web Worker Example #329 - Anaglyph 3D Generation</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Intermediate</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Stereoscopic Projection</h2>
+                <p>Generate a Red-Cyan Anaglyph 3D image from a single 2D image by simulating binocular parallax. This creates a perception of depth when viewed with 3D glasses.</p>
+                <div class="formula-box">
+                    <p><strong>Anaglyph Method (Dubois):</strong></p>
+                    <pre class="formula">
+1. Simulate Left/Right views by shifting the image horizontally.
+   Left Image = Original shifted Left by Parallax/2
+   Right Image = Original shifted Right by Parallax/2
+
+2. Combine channels:
+   R_out = Left_Red
+   G_out = Right_Green
+   B_out = Right_Blue
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input & Controls</h2>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label for="parallaxRange">Parallax (Depth): <span id="parallaxValue">10</span>px</label>
+                    <input type="range" id="parallaxRange" min="-50" max="50" step="1" value="10">
+                    <div style="font-size: 0.8em; color: #888; display: flex; justify-content: space-between;">
+                        <span>Pop Out (Negative)</span>
+                        <span>Recede (Positive)</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Generate 3D</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <p id="originalInfo" class="image-info">No image loaded</p>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Anaglyph 3D (Red-Cyan)</h3>
+                        <canvas id="processedCanvas"></canvas>
+                        <p id="processedInfo" class="image-info">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Processing Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Pixels Processed</span>
+                        <span id="pixelsProcessed" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Worker Status</span>
+                        <span id="workerStatus" class="result-value">Ready</span>
+                    </div>
+                </div>
+
+                <div class="download-section">
+                    <button id="downloadBtn" class="btn btn-primary">Download 3D Image</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #329</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
