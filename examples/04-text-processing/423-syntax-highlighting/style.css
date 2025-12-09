@@ -1,0 +1,24 @@
+@import url('../416-html-entity-conversion/style.css');
+
+.preview-box {
+    height: 100%;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 1rem;
+    overflow: auto;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #e2e8f0;
+    white-space: pre;
+}
+
+/* Syntax Highlighting Colors (Dracula-like) */
+.token-keyword { color: #ff79c6; font-weight: bold; } /* Pink */
+.token-string { color: #f1fa8c; } /* Yellow */
+.token-comment { color: #6272a4; font-style: italic; } /* Blue/Grey */
+.token-number { color: #bd93f9; } /* Purple */
+.token-operator { color: #ff79c6; } /* Pink */
+.token-function { color: #50fa7b; } /* Green */
+.token-builtin { color: #8be9fd; font-style: italic; } /* Cyan */

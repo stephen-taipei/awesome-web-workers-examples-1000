@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers SQL 格式化 (SQL Formatter)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SQL 格式化 (SQL Formatter)</h1>
+            <p class="subtitle">Web Worker 處理 SQL 查詢語句的格式化與關鍵字大寫</p>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-beginner">Text Processing</span>
+            </div>
+        </header>
+
+        <section>
+            <div class="controls">
+                <button id="formatBtn" class="btn btn-primary">格式化 (Format)</button>
+                <button id="clearBtn" class="btn btn-secondary" style="margin-left: auto;">清除 (Clear)</button>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor-box">
+                    <h3>輸入 SQL (Input)</h3>
+                    <textarea id="inputArea" placeholder='在此輸入 SQL...
+select * from users where id = 1'></textarea>
+                    <div class="stats" id="inputStats">0 字元</div>
+                </div>
+                <div class="editor-box">
+                    <h3>格式化結果 (Output)</h3>
+                    <div style="position: relative; height: 100%; display: flex; flex-direction: column;">
+                        <textarea id="outputArea" readonly placeholder="結果..."></textarea>
+                        <div id="loading" class="loading-overlay" style="display: none;">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <div class="stats">
+                        <span id="outputStats">0 字元</span>
+                        <span id="timeStats" style="margin-left: 1rem; color: #38bdf8;"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p style="text-align: center; color: #64748b;">Web Workers 1000 示例 - 0421 SQL Formatter</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

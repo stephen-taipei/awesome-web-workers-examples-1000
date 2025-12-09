@@ -1,24 +1,50 @@
-127.0.0.1 - - [09/Dec/2025 07:44:28] "GET /examples/03-image-processing/388-face-detection/index.html HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:28] "GET /examples/03-image-processing/388-face-detection/main.js HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:28] "GET /examples/03-image-processing/388-face-detection/style.css HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:29] "GET /examples/03-image-processing/389-skin-color-detection/index.html HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:29] "GET /examples/03-image-processing/389-skin-color-detection/style.css HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:29] "GET /examples/03-image-processing/389-skin-color-detection/main.js HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:30] "GET /examples/03-image-processing/390-qr-code-detection/index.html HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:30] "GET /examples/03-image-processing/390-qr-code-detection/main.js HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:30] "GET /examples/03-image-processing/390-qr-code-detection/style.css HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:30] "GET /examples/03-image-processing/391-barcode-detection/index.html HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:30] "GET /examples/03-image-processing/391-barcode-detection/style.css HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:30] "GET /examples/03-image-processing/391-barcode-detection/main.js HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:31] "GET /examples/03-image-processing/392-text-region-detection/index.html HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:31] "GET /examples/03-image-processing/392-text-region-detection/main.js HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:31] "GET /examples/03-image-processing/392-text-region-detection/style.css HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:32] "GET /examples/03-image-processing/393-line-detection/index.html HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:32] "GET /examples/03-image-processing/393-line-detection/style.css HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:32] "GET /examples/03-image-processing/393-line-detection/main.js HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:33] "GET /examples/03-image-processing/394-circle-detection/index.html HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:33] "GET /examples/03-image-processing/394-circle-detection/main.js HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:33] "GET /examples/03-image-processing/394-circle-detection/style.css HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:33] "GET /examples/03-image-processing/395-ellipse-detection/index.html HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:33] "GET /examples/03-image-processing/395-ellipse-detection/style.css HTTP/1.1" 200 -
-127.0.0.1 - - [09/Dec/2025 07:44:33] "GET /examples/03-image-processing/395-ellipse-detection/main.js HTTP/1.1" 200 -
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/http/server.py", line 1314, in <module>
+    test(
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/http/server.py", line 1261, in test
+    with ServerClass(addr, HandlerClass) as httpd:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/http/server.py", line 1308, in server_bind
+    return super().server_bind()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/home/jules/.pyenv/versions/3.12.12/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+127.0.0.1 - - [09/Dec/2025 09:06:15] "GET /examples/04-text-processing/416-html-entity-conversion/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:15] "GET /examples/04-text-processing/416-html-entity-conversion/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:15] "GET /examples/04-text-processing/416-html-entity-conversion/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:15] "GET /examples/04-text-processing/416-html-entity-conversion/worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:17] "GET /examples/04-text-processing/417-string-escaping/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:17] "GET /examples/04-text-processing/417-string-escaping/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:17] "GET /examples/04-text-processing/417-string-escaping/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:17] "GET /examples/04-text-processing/417-string-escaping/worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:18] "GET /examples/04-text-processing/418-json-beautify/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:18] "GET /examples/04-text-processing/418-json-beautify/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:18] "GET /examples/04-text-processing/418-json-beautify/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:18] "GET /examples/04-text-processing/418-json-beautify/worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:19] "GET /examples/04-text-processing/419-json-minify/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:19] "GET /examples/04-text-processing/419-json-minify/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:19] "GET /examples/04-text-processing/419-json-minify/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:19] "GET /examples/04-text-processing/419-json-minify/worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:20] "GET /examples/04-text-processing/420-xml-beautify/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:20] "GET /examples/04-text-processing/420-xml-beautify/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:20] "GET /examples/04-text-processing/420-xml-beautify/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:20] "GET /examples/04-text-processing/420-xml-beautify/worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:20] "GET /examples/04-text-processing/421-sql-formatter/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:20] "GET /examples/04-text-processing/421-sql-formatter/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:20] "GET /examples/04-text-processing/421-sql-formatter/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:20] "GET /examples/04-text-processing/421-sql-formatter/worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:21] "GET /examples/04-text-processing/422-code-formatter/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:21] "GET /examples/04-text-processing/422-code-formatter/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:21] "GET /examples/04-text-processing/422-code-formatter/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:21] "GET /examples/04-text-processing/422-code-formatter/worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:22] "GET /examples/04-text-processing/423-syntax-highlighting/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:22] "GET /examples/04-text-processing/423-syntax-highlighting/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:22] "GET /examples/04-text-processing/423-syntax-highlighting/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Dec/2025 09:06:22] "GET /examples/04-text-processing/423-syntax-highlighting/worker.js HTTP/1.1" 200 -

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 程式碼格式化 (Code Formatter)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>程式碼格式化 (Code Formatter)</h1>
+            <p class="subtitle">Web Worker 處理 C-style 語言的基礎縮排與格式化</p>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-beginner">Text Processing</span>
+            </div>
+        </header>
+
+        <section>
+            <div class="controls">
+                <button id="formatBtn" class="btn btn-primary">格式化 (Format)</button>
+                <div style="margin-left: 1rem; color: #cbd5e1; font-size: 0.9rem;">
+                    縮排:
+                    <select id="indentSelect" style="background: #0f172a; color: white; border: 1px solid #334155; padding: 0.3rem; border-radius: 4px;">
+                        <option value="2">2 空格</option>
+                        <option value="4" selected>4 空格</option>
+                        <option value="tab">Tab</option>
+                    </select>
+                </div>
+                <button id="clearBtn" class="btn btn-secondary" style="margin-left: auto;">清除 (Clear)</button>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor-box">
+                    <h3>輸入程式碼 (Input)</h3>
+                    <textarea id="inputArea" placeholder='在此輸入 C/Java/JS 風格代碼...
+function test(){if(true){return;}}'></textarea>
+                    <div class="stats" id="inputStats">0 字元</div>
+                </div>
+                <div class="editor-box">
+                    <h3>格式化結果 (Output)</h3>
+                    <div style="position: relative; height: 100%; display: flex; flex-direction: column;">
+                        <textarea id="outputArea" readonly placeholder="結果..."></textarea>
+                        <div id="loading" class="loading-overlay" style="display: none;">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <div class="stats">
+                        <span id="outputStats">0 字元</span>
+                        <span id="timeStats" style="margin-left: 1rem; color: #38bdf8;"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p style="text-align: center; color: #64748b;">Web Workers 1000 示例 - 0422 Code Formatter</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

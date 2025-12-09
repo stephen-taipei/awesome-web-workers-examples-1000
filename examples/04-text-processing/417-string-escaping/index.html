@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 字串轉義 (String Escaping)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>字串轉義 (String Escaping)</h1>
+            <p class="subtitle">Web Worker 處理 JSON/JavaScript 風格的字串轉義與反轉義</p>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-beginner">Text Processing</span>
+            </div>
+        </header>
+
+        <section>
+            <div class="controls">
+                <button id="escapeBtn" class="btn btn-primary">轉義 (Escape)</button>
+                <button id="unescapeBtn" class="btn btn-primary">反轉義 (Unescape)</button>
+                <button id="clearBtn" class="btn btn-secondary">清除 (Clear)</button>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor-box">
+                    <h3>輸入 (Input)</h3>
+                    <textarea id="inputArea" placeholder="輸入包含特殊字符的文本...
+例如: First line
+Second line"></textarea>
+                    <div class="stats" id="inputStats">0 字元</div>
+                </div>
+                <div class="editor-box">
+                    <h3>輸出 (Output)</h3>
+                    <div style="position: relative; height: 100%; display: flex; flex-direction: column;">
+                        <textarea id="outputArea" readonly placeholder="結果..."></textarea>
+                        <div id="loading" class="loading-overlay" style="display: none;">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <div class="stats">
+                        <span id="outputStats">0 字元</span>
+                        <span id="timeStats" style="margin-left: 1rem; color: #38bdf8;"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p style="text-align: center; color: #64748b;">Web Workers 1000 示例 - 0417 String Escaping</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

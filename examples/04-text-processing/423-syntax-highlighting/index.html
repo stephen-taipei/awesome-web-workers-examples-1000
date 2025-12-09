@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 程式碼高亮 (Syntax Highlighting)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>程式碼高亮 (Syntax Highlighting)</h1>
+            <p class="subtitle">Web Worker 處理語法分析並生成帶顏色的 HTML</p>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-beginner">Text Processing</span>
+            </div>
+        </header>
+
+        <section>
+            <div class="controls">
+                <button id="highlightBtn" class="btn btn-primary">高亮 (Highlight)</button>
+                <div style="margin-left: 1rem; color: #cbd5e1; font-size: 0.9rem;">
+                    語言:
+                    <select id="langSelect" style="background: #0f172a; color: white; border: 1px solid #334155; padding: 0.3rem; border-radius: 4px;">
+                        <option value="js">JavaScript</option>
+                        <option value="python">Python</option>
+                        <option value="css">CSS</option>
+                        <option value="html">HTML</option>
+                    </select>
+                </div>
+                <button id="clearBtn" class="btn btn-secondary" style="margin-left: auto;">清除 (Clear)</button>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor-box">
+                    <h3>輸入程式碼 (Source)</h3>
+                    <textarea id="inputArea" placeholder="// 輸入代碼..."></textarea>
+                    <div class="stats" id="inputStats">0 字元</div>
+                </div>
+                <div class="editor-box">
+                    <h3>高亮預覽 (Preview)</h3>
+                    <div style="position: relative; height: 100%; display: flex; flex-direction: column;">
+                        <div id="outputArea" class="preview-box"></div>
+                        <div id="loading" class="loading-overlay" style="display: none;">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <div class="stats">
+                        <span id="timeStats" style="margin-left: 1rem; color: #38bdf8;"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p style="text-align: center; color: #64748b;">Web Workers 1000 示例 - 0423 Syntax Highlighting</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

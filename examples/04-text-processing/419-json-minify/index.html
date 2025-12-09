@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers JSON 壓縮 (JSON Minify)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JSON 壓縮 (JSON Minify)</h1>
+            <p class="subtitle">Web Worker 處理大型 JSON 數據的最小化壓縮</p>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-beginner">Text Processing</span>
+            </div>
+        </header>
+
+        <section>
+            <div class="controls">
+                <button id="minifyBtn" class="btn btn-primary">壓縮 (Minify)</button>
+                <button id="clearBtn" class="btn btn-secondary" style="margin-left: auto;">清除 (Clear)</button>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor-box">
+                    <h3>輸入 JSON (Input)</h3>
+                    <textarea id="inputArea" placeholder='在此輸入 JSON...
+{
+    "key": "value"
+}'></textarea>
+                    <div class="stats" id="inputStats">0 字元</div>
+                </div>
+                <div class="editor-box">
+                    <h3>壓縮結果 (Output)</h3>
+                    <div style="position: relative; height: 100%; display: flex; flex-direction: column;">
+                        <textarea id="outputArea" readonly placeholder="結果..."></textarea>
+                        <div id="loading" class="loading-overlay" style="display: none;">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <div class="stats">
+                        <span id="outputStats">0 字元</span>
+                        <span id="compressionRatio" style="margin-left: 1rem; color: #4ade80;"></span>
+                        <span id="timeStats" style="margin-left: 1rem; color: #38bdf8;"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p style="text-align: center; color: #64748b;">Web Workers 1000 示例 - 0419 JSON Minify</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
