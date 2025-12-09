@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker 健康檢查示例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Worker 健康檢查 (Worker Health Check)</h1>
+        <p>此示例展示如何透過心跳機制 (Heartbeat) 監控 Worker 的健康狀態。</p>
+
+        <div class="controls">
+            <button id="addWorkerBtn">新增 Worker</button>
+            <button id="pingAllBtn">立即 Ping 所有</button>
+        </div>
+
+        <div id="workerContainer" class="worker-container">
+            <!-- Workers will be displayed here -->
+        </div>
+
+        <div class="log-panel">
+            <h3>系統日誌</h3>
+            <div id="logContent" class="log-content"></div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

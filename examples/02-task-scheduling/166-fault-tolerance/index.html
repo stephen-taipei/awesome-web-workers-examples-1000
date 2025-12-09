@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>故障轉移示例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>故障轉移 (Fault Tolerance)</h1>
+        <p>此示例展示當 Worker 在執行任務期間發生故障時，系統如何自動檢測並將任務重新分配給其他健康的 Worker。</p>
+
+        <div class="controls">
+            <button id="addTaskBtn" class="primary">新增任務</button>
+            <button id="killRandomBtn" class="danger">隨機殺死一個正在工作的 Worker</button>
+        </div>
+
+        <div class="status-panel">
+            <div class="stat-item">待處理任務: <span id="pendingCount">0</span></div>
+            <div class="stat-item">進行中任務: <span id="runningCount">0</span></div>
+            <div class="stat-item">已完成任務: <span id="completedCount">0</span></div>
+            <div class="stat-item">失敗重試: <span id="retryCount" class="highlight">0</span></div>
+        </div>
+
+        <div class="panel-layout">
+            <div class="worker-section">
+                <h3>Worker 池狀態</h3>
+                <div id="workerContainer" class="worker-container">
+                    <!-- Workers will be displayed here -->
+                </div>
+            </div>
+
+            <div class="task-section">
+                <h3>任務列表</h3>
+                <div id="taskContainer" class="task-container">
+                    <!-- Tasks will be displayed here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="log-panel">
+            <h3>系統日誌</h3>
+            <div id="logContent" class="log-content"></div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

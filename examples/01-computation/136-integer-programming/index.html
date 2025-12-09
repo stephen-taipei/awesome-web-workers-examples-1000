@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integer Programming - Web Worker Example #136</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Integer Programming</h1>
+            <p class="subtitle">Web Worker Example #136 - Branch and Bound</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Integer Programming</h2>
+                <p>Integer Programming (IP) extends Linear Programming by requiring some or all variables to be integers. The Branch and Bound algorithm systematically explores the solution space by dividing it into subproblems and pruning branches that cannot contain optimal solutions.</p>
+                <div class="formula-box">
+                    <p><strong>Branch and Bound Algorithm:</strong></p>
+                    <pre class="formula">
+Integer LP Problem:
+  Maximize:   z = c^T x
+  Subject to: Ax ≤ b
+              x_i ∈ Z (integers) for some/all i
+              x ≥ 0
+
+Algorithm:
+1. Solve LP relaxation (ignore integer constraints)
+2. If solution is integer → Optimal IP solution
+3. Otherwise, select fractional variable x_i = v:
+   - Branch 1: Add constraint x_i ≤ ⌊v⌋
+   - Branch 2: Add constraint x_i ≥ ⌈v⌉
+4. Solve LP relaxation for each branch
+5. Pruning rules:
+   - Infeasible: Prune branch
+   - Integer solution: Update best if better
+   - LP bound ≤ best integer: Prune branch
+6. Repeat until all branches explored
+
+Branching Strategies:
+  - Most fractional: Choose variable closest to 0.5
+  - Pseudo-cost: Estimate based on history
+  - Strong branching: Test multiple choices
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Problem Setup</h2>
+
+                <div class="input-group">
+                    <label for="problemSelect">Example Problem:</label>
+                    <select id="problemSelect">
+                        <option value="knapsack">Knapsack Problem</option>
+                        <option value="assignment">Assignment Problem</option>
+                        <option value="facility">Facility Location</option>
+                        <option value="custom">Custom Problem</option>
+                    </select>
+                </div>
+
+                <div id="customProblem" class="custom-problem hidden">
+                    <div class="input-group">
+                        <label for="objective">Objective (max c₁x₁ + c₂x₂):</label>
+                        <div class="coef-inputs">
+                            <input type="number" id="c1" value="5" step="1" placeholder="c₁">
+                            <span>x₁ +</span>
+                            <input type="number" id="c2" value="8" step="1" placeholder="c₂">
+                            <span>x₂</span>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Constraints (≤):</label>
+                        <div class="constraint-row">
+                            <input type="number" id="a11" value="1" step="1">
+                            <span>x₁ +</span>
+                            <input type="number" id="a12" value="1" step="1">
+                            <span>x₂ ≤</span>
+                            <input type="number" id="b1" value="6" step="1">
+                        </div>
+                        <div class="constraint-row">
+                            <input type="number" id="a21" value="5" step="1">
+                            <span>x₁ +</span>
+                            <input type="number" id="a22" value="9" step="1">
+                            <span>x₂ ≤</span>
+                            <input type="number" id="b2" value="45" step="1">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="problemDescription" class="problem-desc"></div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="branchStrategy">Branching Strategy:</label>
+                        <select id="branchStrategy">
+                            <option value="mostFractional">Most Fractional</option>
+                            <option value="firstFractional">First Fractional</option>
+                            <option value="maxCoefficient">Max Coefficient</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="maxNodes">Max Nodes:</label>
+                        <input type="number" id="maxNodes" value="1000" min="10" max="10000">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="solveBtn" class="btn btn-primary">Solve IP</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Solving...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Branch and Bound Tree</h2>
+                <canvas id="treeCanvas" width="550" height="400"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Solution</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Status</span>
+                        <span id="status" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Optimal x₁</span>
+                        <span id="optX1" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Optimal x₂</span>
+                        <span id="optX2" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Optimal Value</span>
+                        <span id="optValue" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Nodes Explored</span>
+                        <span id="nodesExplored" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Nodes Pruned</span>
+                        <span id="nodesPruned" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">LP Relaxation</span>
+                        <span id="lpBound" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Integrality Gap</span>
+                        <span id="gap" class="result-value">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #136</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

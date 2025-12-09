@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>閒置 Worker 回收示例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>閒置 Worker 回收 (Idle Worker Reclaim)</h1>
+        <p>此示例展示如何管理 Worker 池，並自動回收長時間閒置的 Worker 以釋放資源。</p>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="idleTimeout">閒置逾時 (毫秒):</label>
+                <input type="number" id="idleTimeout" value="3000" min="1000" step="1000">
+            </div>
+            <div class="control-group">
+                <label for="checkInterval">檢查間隔 (毫秒):</label>
+                <input type="number" id="checkInterval" value="1000" min="500" step="500">
+            </div>
+            <button id="updateConfigBtn">更新設定</button>
+            <button id="addTaskBtn" class="primary">新增任務</button>
+            <button id="addBurstBtn">新增一批任務 (10個)</button>
+        </div>
+
+        <div class="status-panel">
+            <div class="stat-item">活躍 Worker: <span id="activeCount">0</span></div>
+            <div class="stat-item">閒置 Worker: <span id="idleCount">0</span></div>
+            <div class="stat-item">總 Worker: <span id="totalCount">0</span></div>
+        </div>
+
+        <div id="workerContainer" class="worker-container">
+            <!-- Workers will be displayed here -->
+        </div>
+
+        <div class="log-panel">
+            <h3>系統日誌</h3>
+            <div id="logContent" class="log-content"></div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
