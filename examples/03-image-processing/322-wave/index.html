@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wave Deformation - Web Worker Example #322</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Wave Deformation</h1>
+            <p class="subtitle">Web Worker Example #322 - Sinusoidal Distortion</p>
+            <div class="badges">
+                <span class="badge badge-worker">Single Worker</span>
+                <span class="badge" style="background: #f59e0b; color: white;">Intermediate</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Wave Deformation</h2>
+                <p>Apply ripple or wave effects to the image using sinusoidal displacement functions.</p>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label>Amplitude: <span id="valAmp">20</span> px</label>
+                    <input type="range" id="amplitude" min="0" max="100" value="20">
+
+                    <label>Frequency: <span id="valFreq">0.02</span></label>
+                    <input type="range" id="frequency" min="0.001" max="0.1" step="0.001" value="0.02">
+
+                    <label>Phase: <span id="valPhase">0</span></label>
+                    <input type="range" id="phase" min="0" max="6.28" step="0.1" value="0">
+
+                    <label>Direction:
+                        <select id="direction">
+                            <option value="horizontal">Horizontal Waves</option>
+                            <option value="vertical">Vertical Waves</option>
+                            <option value="both">Both (Grid)</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="button-group">
+                    <button id="applyBtn" class="btn btn-primary" disabled>Apply Effect</button>
+                    <button id="animateBtn" class="btn btn-secondary" disabled>Animate</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original</h3>
+                        <canvas id="sourceCanvas"></canvas>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Result</h3>
+                        <canvas id="resultCanvas"></canvas>
+                        <p id="processingTime"></p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #322</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
