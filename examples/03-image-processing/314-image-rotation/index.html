@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圖片旋轉 (Image Rotation) - Web Workers 示例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>圖片旋轉 (Image Rotation)</h1>
+            <p class="subtitle">Arbitrary Angle Rotation with Affine Transform</p>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-beginner">Image Processing</span>
+                <span class="badge badge-beginner">Geometric</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能描述</h2>
+            <p>將圖片繞中心旋轉任意角度。使用反向映射（Inverse Mapping）和雙線性插值來確保旋轉後的圖像品質。</p>
+            <div class="formula-box">
+                <div class="formula">
+x' = (x-cx)cosθ - (y-cy)sinθ + cx
+y' = (x-cx)sinθ + (y-cy)cosθ + cy
+Inverse mapping avoids holes in destination image.
+                </div>
+            </div>
+        </section>
+
+        <section class="controls">
+            <h2>參數設定</h2>
+            <div class="input-group">
+                <label for="angle">旋轉角度 (-180° 到 180°)</label>
+                <input type="range" id="angle" min="-180" max="180" value="0">
+                <span id="angleVal">0°</span>
+            </div>
+
+            <div class="input-group">
+                <label for="interpolation">插值方法</label>
+                <select id="interpolation">
+                    <option value="nearest">最近鄰 (Nearest Neighbor)</option>
+                    <option value="bilinear" selected>雙線性 (Bilinear)</option>
+                </select>
+            </div>
+
+            <div class="upload-area" id="dropZone">
+                <div class="upload-icon">📁</div>
+                <p>拖放圖片至此，或點擊上傳</p>
+                <input type="file" id="fileInput" accept="image/*" class="hidden">
+            </div>
+
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary" disabled>旋轉</button>
+            </div>
+        </section>
+
+        <section id="progressSection" class="progress-section hidden">
+            <div class="progress-bar-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <p id="progressText" class="progress-text">處理中...</p>
+        </section>
+
+        <section class="results">
+            <h2>處理結果</h2>
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">處理時間</span>
+                    <span id="processTime" class="result-value">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">原始尺寸</span>
+                    <span id="originalSize" class="result-value">-</span>
+                </div>
+                 <div class="result-item">
+                    <span class="result-label">結果尺寸</span>
+                    <span id="resultSize" class="result-value">-</span>
+                </div>
+            </div>
+
+            <div class="image-comparison">
+                <div class="image-panel">
+                    <h3>原始圖片</h3>
+                    <canvas id="originalCanvas"></canvas>
+                </div>
+                <div class="image-panel">
+                    <h3>旋轉後圖片</h3>
+                    <canvas id="resultCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h7y/WebWorkers1000" target="_blank">GitHub</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
