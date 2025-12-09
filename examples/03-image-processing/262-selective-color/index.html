@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#262 選擇性調色 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 進行選擇性調色，透過顏色遮罩選取特定顏色範圍進行調整">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>選擇性調色</h1>
+            <p class="subtitle">Selective Color Adjustment</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#262</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-warning">中級</span>
+            </div>
+        </header>
+
+        <!-- 圖片上傳區域 -->
+        <section class="card">
+            <h2 class="card-title">圖片來源</h2>
+            <div class="upload-area" id="upload-area">
+                <div class="upload-placeholder">
+                    <div class="upload-icon">📷</div>
+                    <p>拖放圖片到此處，或點擊選擇檔案</p>
+                    <p class="upload-hint">支援 JPG、PNG、WebP 格式</p>
+                </div>
+                <input type="file" id="file-input" accept="image/*" hidden>
+            </div>
+            <div class="btn-group" style="margin-top: 15px;">
+                <button id="load-sample-btn" class="btn btn-secondary">載入範例圖片</button>
+            </div>
+        </section>
+
+        <!-- 顏色選擇區域 -->
+        <section class="card">
+            <h2 class="card-title">顏色選取</h2>
+
+            <div class="color-selection">
+                <div class="color-picker-section">
+                    <h4>選擇目標顏色</h4>
+                    <div class="color-picker-row">
+                        <input type="color" id="target-color" value="#ff0000">
+                        <div class="color-preview" id="color-preview"></div>
+                        <button id="pick-color-btn" class="btn btn-secondary btn-small">從圖片選取</button>
+                    </div>
+                </div>
+
+                <div class="tolerance-section">
+                    <h4>顏色容差</h4>
+                    <div class="slider-group">
+                        <label>色相 (Hue)：<span id="hue-tolerance-value">30</span>°</label>
+                        <input type="range" id="hue-tolerance" min="0" max="180" value="30">
+                    </div>
+                    <div class="slider-group">
+                        <label>飽和度 (Saturation)：<span id="sat-tolerance-value">50</span>%</label>
+                        <input type="range" id="sat-tolerance" min="0" max="100" value="50">
+                    </div>
+                    <div class="slider-group">
+                        <label>亮度 (Lightness)：<span id="lum-tolerance-value">50</span>%</label>
+                        <input type="range" id="lum-tolerance" min="0" max="100" value="50">
+                    </div>
+                </div>
+            </div>
+
+            <div class="preset-colors">
+                <h4>快速選取</h4>
+                <div class="color-presets">
+                    <button class="color-preset" data-color="#ff0000" style="background: #ff0000;" title="紅色"></button>
+                    <button class="color-preset" data-color="#ff8800" style="background: #ff8800;" title="橙色"></button>
+                    <button class="color-preset" data-color="#ffff00" style="background: #ffff00;" title="黃色"></button>
+                    <button class="color-preset" data-color="#00ff00" style="background: #00ff00;" title="綠色"></button>
+                    <button class="color-preset" data-color="#00ffff" style="background: #00ffff;" title="青色"></button>
+                    <button class="color-preset" data-color="#0000ff" style="background: #0000ff;" title="藍色"></button>
+                    <button class="color-preset" data-color="#ff00ff" style="background: #ff00ff;" title="洋紅"></button>
+                    <button class="color-preset" data-color="#ffffff" style="background: #ffffff;" title="白色"></button>
+                    <button class="color-preset" data-color="#808080" style="background: #808080;" title="灰色"></button>
+                    <button class="color-preset" data-color="#000000" style="background: #000000;" title="黑色"></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 調整參數 -->
+        <section class="card">
+            <h2 class="card-title">調整參數</h2>
+
+            <div class="adjustment-sliders">
+                <div class="slider-group">
+                    <label>色相偏移：<span id="hue-shift-value">0</span>°</label>
+                    <input type="range" id="hue-shift" min="-180" max="180" value="0">
+                </div>
+                <div class="slider-group">
+                    <label>飽和度調整：<span id="sat-adjust-value">0</span>%</label>
+                    <input type="range" id="sat-adjust" min="-100" max="100" value="0">
+                </div>
+                <div class="slider-group">
+                    <label>亮度調整：<span id="lum-adjust-value">0</span>%</label>
+                    <input type="range" id="lum-adjust" min="-100" max="100" value="0">
+                </div>
+            </div>
+
+            <div class="mode-selection">
+                <label>
+                    <input type="checkbox" id="invert-selection">
+                    反轉選取（調整選取範圍以外的顏色）
+                </label>
+                <label>
+                    <input type="checkbox" id="show-mask">
+                    顯示遮罩預覽
+                </label>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group">
+                <button id="apply-btn" class="btn btn-primary" disabled>套用調整</button>
+                <button id="reset-btn" class="btn btn-secondary">重置參數</button>
+                <button id="download-btn" class="btn btn-success" disabled>下載結果</button>
+            </div>
+        </section>
+
+        <!-- 進度顯示區域 -->
+        <section class="card">
+            <h2 class="card-title">處理進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 結果顯示區域 -->
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">處理結果</h2>
+            <div class="image-comparison">
+                <div class="image-box">
+                    <h4>原始圖片</h4>
+                    <canvas id="original-canvas"></canvas>
+                </div>
+                <div class="image-box">
+                    <h4>處理後</h4>
+                    <canvas id="result-canvas"></canvas>
+                </div>
+            </div>
+            <div id="result-stats" class="result-stats"></div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>選擇性調色：</strong>只對圖片中特定顏色範圍的像素進行調整</li>
+                <li><strong>HSL 色彩空間：</strong>使用色相、飽和度、亮度定義顏色，更符合人眼感知</li>
+                <li><strong>顏色遮罩：</strong>根據容差計算每個像素的匹配程度，實現平滑過渡</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>效能目標：</strong>1080p 圖片處理時間 &lt; 200ms</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #262 - 選擇性調色
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>

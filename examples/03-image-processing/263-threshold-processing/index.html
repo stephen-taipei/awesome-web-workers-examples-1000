@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#263 閾值處理 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 進行影像閾值處理，實現二值化效果">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>閾值處理</h1>
+            <p class="subtitle">Threshold Processing</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#263</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-success">初級</span>
+            </div>
+        </header>
+
+        <!-- 圖片上傳區域 -->
+        <section class="card">
+            <h2 class="card-title">圖片來源</h2>
+            <div class="upload-area" id="upload-area">
+                <div class="upload-placeholder">
+                    <div class="upload-icon">📷</div>
+                    <p>拖放圖片到此處，或點擊選擇檔案</p>
+                    <p class="upload-hint">支援 JPG、PNG、WebP 格式</p>
+                </div>
+                <input type="file" id="file-input" accept="image/*" hidden>
+            </div>
+            <div class="btn-group" style="margin-top: 15px;">
+                <button id="load-sample-btn" class="btn btn-secondary">載入範例圖片</button>
+            </div>
+        </section>
+
+        <!-- 閾值設定區域 -->
+        <section class="card">
+            <h2 class="card-title">閾值設定</h2>
+
+            <div class="method-selection">
+                <h4>閾值方法</h4>
+                <div class="method-buttons">
+                    <button class="method-btn active" data-method="global">全域閾值</button>
+                    <button class="method-btn" data-method="otsu">Otsu 自動</button>
+                    <button class="method-btn" data-method="adaptive-mean">自適應 (均值)</button>
+                    <button class="method-btn" data-method="adaptive-gaussian">自適應 (高斯)</button>
+                </div>
+            </div>
+
+            <div class="threshold-controls">
+                <!-- 全域閾值設定 -->
+                <div id="global-controls" class="control-group">
+                    <div class="slider-group">
+                        <label>閾值：<span id="threshold-value">128</span></label>
+                        <input type="range" id="threshold" min="0" max="255" value="128">
+                    </div>
+                    <div class="threshold-preview">
+                        <div class="threshold-bar">
+                            <div class="threshold-indicator" id="threshold-indicator"></div>
+                        </div>
+                        <div class="threshold-labels">
+                            <span>0 (黑)</span>
+                            <span>255 (白)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 自適應閾值設定 -->
+                <div id="adaptive-controls" class="control-group hidden">
+                    <div class="slider-group">
+                        <label>區塊大小：<span id="block-size-value">11</span></label>
+                        <input type="range" id="block-size" min="3" max="51" value="11" step="2">
+                    </div>
+                    <div class="slider-group">
+                        <label>常數 C：<span id="constant-c-value">2</span></label>
+                        <input type="range" id="constant-c" min="-20" max="20" value="2">
+                    </div>
+                </div>
+
+                <!-- Otsu 說明 -->
+                <div id="otsu-info" class="control-group hidden">
+                    <p class="method-description">
+                        Otsu 演算法會自動計算最佳閾值，使得前景與背景之間的類間變異數最大化。
+                    </p>
+                    <p id="otsu-threshold-result" class="otsu-result"></p>
+                </div>
+            </div>
+
+            <div class="output-options">
+                <h4>輸出選項</h4>
+                <div class="option-buttons">
+                    <label class="option-label">
+                        <input type="radio" name="output-mode" value="binary" checked>
+                        <span>二值化 (黑白)</span>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="output-mode" value="binary-inv">
+                        <span>反向二值化</span>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="output-mode" value="truncate">
+                        <span>截斷</span>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="output-mode" value="to-zero">
+                        <span>歸零</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group">
+                <button id="apply-btn" class="btn btn-primary" disabled>套用閾值</button>
+                <button id="reset-btn" class="btn btn-secondary">重置設定</button>
+                <button id="download-btn" class="btn btn-success" disabled>下載結果</button>
+            </div>
+        </section>
+
+        <!-- 進度顯示區域 -->
+        <section class="card">
+            <h2 class="card-title">處理進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 直方圖區域 -->
+        <section class="card">
+            <h2 class="card-title">灰階直方圖</h2>
+            <div class="histogram-container">
+                <canvas id="histogram-canvas" width="512" height="150"></canvas>
+                <div class="histogram-info" id="histogram-info"></div>
+            </div>
+        </section>
+
+        <!-- 結果顯示區域 -->
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">處理結果</h2>
+            <div class="image-comparison">
+                <div class="image-box">
+                    <h4>原始圖片</h4>
+                    <canvas id="original-canvas"></canvas>
+                </div>
+                <div class="image-box">
+                    <h4>處理後</h4>
+                    <canvas id="result-canvas"></canvas>
+                </div>
+            </div>
+            <div id="result-stats" class="result-stats"></div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>閾值處理：</strong>將灰階影像轉換為二值影像，像素值高於閾值設為白色，低於則設為黑色</li>
+                <li><strong>全域閾值：</strong>使用單一固定閾值處理整張圖片</li>
+                <li><strong>Otsu 演算法：</strong>自動計算最佳閾值，適合雙峰直方圖的影像</li>
+                <li><strong>自適應閾值：</strong>根據像素鄰域計算局部閾值，適合光照不均的影像</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>效能目標：</strong>1080p 圖片處理時間 &lt; 50ms</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #263 - 閾值處理
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>
