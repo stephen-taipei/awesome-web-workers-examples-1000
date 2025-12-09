@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Benchmark - Web Worker Example #502</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Memory Benchmark</h1>
+            <p class="subtitle">Web Worker Example #502 - Allocation & Access Speed</p>
+            <div class="badges">
+                <span class="badge badge-text">Performance</span>
+                <span class="badge badge-worker">Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <h2>Configuration</h2>
+                <div class="controls">
+                    <div>
+                        <label for="size">Chunk Size (MB):</label>
+                        <select id="size">
+                            <option value="16">16 MB</option>
+                            <option value="64">64 MB</option>
+                            <option value="256">256 MB</option>
+                            <option value="512">512 MB</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="ops">Operations:</label>
+                        <select id="ops">
+                            <option value="write">Sequential Write</option>
+                            <option value="read">Sequential Read</option>
+                            <option value="random">Random Access</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button id="runBtn" class="btn btn-primary">Run Benchmark</button>
+                </div>
+            </section>
+
+            <section class="output-section">
+                <h2>Results</h2>
+                <div class="output-area">
+                    <pre><code id="outputText">Ready...</code></pre>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">Throughput: <strong id="speed">-</strong></div>
+                    <div class="stat-item">Time: <strong id="timeStats">-</strong></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLOPS Benchmark - Web Worker Example #503</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>FLOPS Benchmark</h1>
+            <p class="subtitle">Web Worker Example #503 - Floating Point Operations</p>
+            <div class="badges">
+                <span class="badge badge-text">Performance</span>
+                <span class="badge badge-worker">Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <h2>Configuration</h2>
+                <div class="controls">
+                    <div>
+                        <label for="iterations">Iterations (Millions):</label>
+                        <select id="iterations">
+                            <option value="100">100 Million</option>
+                            <option value="500">500 Million</option>
+                            <option value="1000">1 Billion</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="precision">Precision:</label>
+                        <select id="precision">
+                            <option value="32">Float32</option>
+                            <option value="64">Float64 (Standard JS)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button id="runBtn" class="btn btn-primary">Run Benchmark</button>
+                </div>
+            </section>
+
+            <section class="output-section">
+                <h2>Results</h2>
+                <div class="output-area">
+                    <pre><code id="outputText">Ready...</code></pre>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">Performance: <strong id="gflops">-</strong></div>
+                    <div class="stat-item">Time: <strong id="timeStats">-</strong></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

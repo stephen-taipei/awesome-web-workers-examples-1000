@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Readability Score - Web Worker Example #498</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Readability Score</h1>
+            <p class="subtitle">Web Worker Example #498 - Text Analysis</p>
+            <div class="badges">
+                <span class="badge badge-text">Text Processing</span>
+                <span class="badge badge-worker">Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <h2>Input Text</h2>
+                <textarea id="inputText" placeholder="Enter text to analyze..."></textarea>
+                <div class="button-group">
+                    <button id="analyzeBtn" class="btn btn-primary">Calculate Scores</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </section>
+
+            <section class="output-section">
+                <h2>Scores</h2>
+                <div class="stats-grid" id="results">
+                    <!-- Results inserted here -->
+                    <div style="text-align:center; color: #64748b; grid-column: 1/-1;">Click Calculate to see results</div>
+                </div>
+
+                <div class="stats" style="margin-top: 2rem;">
+                    <div class="stat-item">Sentences: <strong id="sentCount">-</strong></div>
+                    <div class="stat-item">Words: <strong id="wordCount">-</strong></div>
+                    <div class="stat-item">Syllables: <strong id="syllCount">-</strong></div>
+                    <div class="stat-item">Time: <strong id="timeStats">-</strong></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

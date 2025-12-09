@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree Structure - Web Worker Example #474</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Tree Structure</h1>
+            <p class="subtitle">Web Worker Example #474 - Indent to Tree Converter</p>
+            <div class="badges">
+                <span class="badge badge-text">Text Processing</span>
+                <span class="badge badge-worker">Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <h2>Input (Indented Text)</h2>
+                <div class="controls">
+                    <div>
+                        <label for="style">Tree Style:</label>
+                        <select id="style">
+                            <option value="ascii">ASCII Tree</option>
+                            <option value="json">JSON Structure</option>
+                            <option value="html">HTML List</option>
+                            <option value="directory">Directory Style</option>
+                        </select>
+                    </div>
+                </div>
+                <textarea id="inputText" placeholder="Use tabs or spaces for indentation...
+Project
+  src
+    index.js
+    components
+      Button.js
+      Header.js
+  package.json"></textarea>
+                <div class="button-group">
+                    <button id="convertBtn" class="btn btn-primary">Generate Tree</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </section>
+
+            <section class="output-section">
+                <h2>Output Tree</h2>
+                <div class="output-area">
+                    <button class="copy-btn" id="copyBtn">Copy</button>
+                    <pre><code id="outputText"></code></pre>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">Time: <strong id="timeStats">-</strong></div>
+                    <div class="stat-item">Nodes: <strong id="nodeStats">-</strong></div>
+                    <div class="stat-item">Depth: <strong id="depthStats">-</strong></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

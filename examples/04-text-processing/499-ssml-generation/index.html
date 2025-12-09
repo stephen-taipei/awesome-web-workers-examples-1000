@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSML Generation - Web Worker Example #499</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SSML Generation</h1>
+            <p class="subtitle">Web Worker Example #499 - Text to Speech Markup</p>
+            <div class="badges">
+                <span class="badge badge-text">Text Processing</span>
+                <span class="badge badge-worker">Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <h2>Input Text</h2>
+                <div class="controls">
+                    <div>
+                        <label for="speed">Speaking Rate:</label>
+                        <select id="speed">
+                            <option value="x-slow">Extra Slow</option>
+                            <option value="slow">Slow</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="fast">Fast</option>
+                            <option value="x-fast">Extra Fast</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="pitch">Pitch:</label>
+                        <select id="pitch">
+                            <option value="x-low">Extra Low</option>
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                            <option value="x-high">Extra High</option>
+                        </select>
+                    </div>
+                </div>
+                <textarea id="inputText" placeholder="Enter text to convert...
+Hello world! This is a test of SSML generation.
+It allows you to control how text-to-speech engines pronounce words."></textarea>
+                <div class="button-group">
+                    <button id="generateBtn" class="btn btn-primary">Generate SSML</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </section>
+
+            <section class="output-section">
+                <h2>Generated SSML</h2>
+                <div class="output-area">
+                    <button class="copy-btn" id="copyBtn">Copy</button>
+                    <pre><code id="outputText"></code></pre>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">Time: <strong id="timeStats">-</strong></div>
+                    <div class="stat-item">Tags: <strong id="tagCount">-</strong></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

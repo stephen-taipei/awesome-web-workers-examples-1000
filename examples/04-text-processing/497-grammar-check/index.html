@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Check - Web Worker Example #497</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Grammar Check</h1>
+            <p class="subtitle">Web Worker Example #497 - Rule-Based Checker</p>
+            <div class="badges">
+                <span class="badge badge-text">Text Processing</span>
+                <span class="badge badge-worker">Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <h2>Input Text</h2>
+                <textarea id="inputText" placeholder="Enter text to check...
+I has a apple.
+Their are to many mistakes here.
+Its raining today."></textarea>
+                <div class="button-group">
+                    <button id="checkBtn" class="btn btn-primary">Check Grammar</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </section>
+
+            <section class="output-section">
+                <h2>Suggestions</h2>
+                <div class="output-area" id="outputArea" style="background: #0f172a; padding: 1rem; border-radius: 8px; min-height: 100px;">
+                    <p style="color: #64748b;">No issues found yet.</p>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">Time: <strong id="timeStats">-</strong></div>
+                    <div class="stat-item">Issues: <strong id="issueStats">-</strong></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
