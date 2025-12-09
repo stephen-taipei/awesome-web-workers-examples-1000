@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>呼叫次數統計 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>呼叫次數統計</h1>
+            <div class="subtitle">Call Count Statistics</div>
+            <div class="badges">
+                <span class="badge badge-beginner">效能工具</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">Wrapper</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能描述</h2>
+            <p>統計特定函數的被呼叫次數，用於識別熱點代碼 (Hot Paths)。</p>
+        </section>
+
+        <div class="control-panel" style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
+            <button id="runBtn" class="btn btn-primary">執行隨機任務</button>
+        </div>
+
+        <div class="main-content" style="margin-top: 1rem;">
+             <div class="preview-pane">
+                <div class="pane-header" style="margin-bottom: 0.5rem; color: #a7f3d0;">
+                    <span>統計結果</span>
+                </div>
+                <div id="statsChart" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <!-- Bars will be here -->
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Web Workers 1000 範例系列 - 533 呼叫次數統計</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
