@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 過濾處理 (Filtering) - 455</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 過濾處理</h1>
+            <div class="subtitle">Text Filtering (Regex/Keyword)</div>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-beginner">Filter</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>過濾處理 (Filtering)</h2>
+                <p>此範例展示如何使用關鍵字或正則表達式過濾文本行。Web Worker 負責遍歷所有行並應用過濾條件。</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="inputText">輸入文本 (Input Text):</label>
+                    <textarea id="inputText" rows="8" placeholder="Enter lines to filter...">Apple
+Banana
+Cherry
+Date
+Elderberry
+Fig
+Grape</textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="filterType">過濾模式 (Filter Mode):</label>
+                    <select id="filterType">
+                        <option value="include">包含關鍵字 (Include)</option>
+                        <option value="exclude">排除關鍵字 (Exclude)</option>
+                        <option value="regex">正則表達式匹配 (Regex Match)</option>
+                        <option value="regexExclude">正則表達式排除 (Regex Exclude)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="filterValue">過濾條件 (Condition):</label>
+                    <input type="text" id="filterValue" placeholder="e.g., 'a' or '^A.*'">
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary">開始過濾</button>
+                </div>
+            </section>
+
+            <section class="results">
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">原始行數</span>
+                        <span class="result-value" id="origCount">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">剩餘行數</span>
+                        <span class="result-value" id="resultCount">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">處理時間</span>
+                        <span class="result-value" id="processTime">-</span>
+                    </div>
+                </div>
+
+                <div class="result-box">
+                    <h3>過濾結果</h3>
+                    <textarea id="outputText" rows="8" readonly></textarea>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+    <style>
+        textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #fff;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+        textarea[readonly] {
+            background: rgba(0,0,0,0.5);
+            color: #a7f3d0;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 1px solid rgba(16,185,129,0.3);
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+    </style>
+</body>
+</html>

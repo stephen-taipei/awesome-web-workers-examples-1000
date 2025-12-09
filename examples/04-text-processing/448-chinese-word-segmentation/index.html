@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 中文分詞 (Chinese Word Segmentation) - 448</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 中文分詞</h1>
+            <div class="subtitle">Chinese Word Segmentation (Maximum Matching)</div>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-advanced">NLP</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>分詞處理 (Word Segmentation)</h2>
+                <p>此範例展示如何使用最大匹配法 (Maximum Matching) 進行中文分詞。Web Worker 負責在後台執行分詞算法，避免阻塞 UI。注意：這是一個基於小型字典的簡化演示，僅供學習用途。</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="inputText">輸入文本 (Input Text):</label>
+                    <textarea id="inputText" rows="6" placeholder="請在此輸入要分詞的中文文本...">今天天氣真好，我們一起去公園散步吧。</textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="algorithm">算法 (Algorithm):</label>
+                    <select id="algorithm">
+                        <option value="fmm">正向最大匹配 (FMM)</option>
+                        <option value="bmm">逆向最大匹配 (BMM)</option>
+                    </select>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary">開始分詞</button>
+                </div>
+            </section>
+
+            <section class="results">
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">處理時間</span>
+                        <span class="result-value" id="processTime">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">詞數</span>
+                        <span class="result-value" id="wordCount">-</span>
+                    </div>
+                </div>
+
+                <div class="result-box">
+                    <h3>分詞結果</h3>
+                    <div id="outputArea" class="output-content"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+    <style>
+        .output-content {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            min-height: 100px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #e5e7eb;
+        }
+        .word {
+            display: inline-block;
+            padding: 2px 6px;
+            margin: 2px;
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 4px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .word:hover {
+            background: rgba(16, 185, 129, 0.4);
+        }
+        textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #fff;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+    </style>
+</body>
+</html>

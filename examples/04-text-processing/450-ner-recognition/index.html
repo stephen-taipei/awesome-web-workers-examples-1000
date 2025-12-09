@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 命名實體識別 (NER) - 450</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 命名實體識別</h1>
+            <div class="subtitle">Named Entity Recognition (Rule-based)</div>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-advanced">Regex</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>命名實體識別 (NER)</h2>
+                <p>此範例展示使用正則表達式和規則來識別文本中的命名實體，例如電子郵件、日期、電話號碼和簡單的人名/地名。</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="inputText">輸入文本 (Input Text):</label>
+                    <textarea id="inputText" rows="6" placeholder="Paste text here...">Contact John Doe at john.doe@example.com or call 123-456-7890. The meeting is on 2023-10-25 in New York.</textarea>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary">開始識別</button>
+                </div>
+            </section>
+
+            <section class="results">
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">處理時間</span>
+                        <span class="result-value" id="processTime">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">實體數量</span>
+                        <span class="result-value" id="entityCount">-</span>
+                    </div>
+                </div>
+
+                <div class="result-box">
+                    <h3>識別結果</h3>
+                    <div id="outputArea" class="output-content"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+    <style>
+        .output-content {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            min-height: 100px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #e5e7eb;
+            white-space: pre-wrap;
+        }
+        .entity {
+            padding: 2px 4px;
+            border-radius: 4px;
+            margin: 0 2px;
+            font-weight: bold;
+            color: #fff;
+            position: relative;
+            cursor: help;
+        }
+        .entity::after {
+            content: attr(data-type);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            display: none;
+            white-space: nowrap;
+        }
+        .entity:hover::after {
+            display: block;
+        }
+        .entity-EMAIL { background-color: #3b82f6; }
+        .entity-DATE { background-color: #10b981; }
+        .entity-PHONE { background-color: #f59e0b; }
+        .entity-PERSON { background-color: #ec4899; }
+        .entity-LOCATION { background-color: #8b5cf6; }
+
+        textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #fff;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+    </style>
+</body>
+</html>
