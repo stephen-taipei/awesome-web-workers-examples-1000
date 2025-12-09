@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 詞頻統計 (Word Frequency)</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 詞頻統計</h1>
+            <div class="subtitle">Word Frequency Counter</div>
+            <div class="badges">
+                <span class="badge badge-beginner">文本處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+            </div>
+        </header>
+
+        <section class="input-section">
+            <textarea id="inputText" placeholder="請在此輸入或貼上大量文本..."></textarea>
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary">開始統計</button>
+                <button id="loadSampleBtn" class="btn btn-secondary" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">載入範例</button>
+            </div>
+        </section>
+
+        <section class="output-section">
+            <h2>統計結果 <span id="timeTaken" style="font-size: 0.9rem; color: #6ee7b7; font-weight: normal; margin-left: 1rem;"></span></h2>
+            <div class="results-area">
+                <table id="resultTable">
+                    <thead>
+                        <tr>
+                            <th>排名</th>
+                            <th>詞彙</th>
+                            <th>出現次數</th>
+                            <th>頻率 (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="4" style="text-align:center">尚無資料</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

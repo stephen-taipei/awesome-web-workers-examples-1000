@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 字數統計 (Word Count)</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 字數統計</h1>
+            <div class="subtitle">Comprehensive Text Statistics</div>
+            <div class="badges">
+                <span class="badge badge-beginner">文本處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+            </div>
+        </header>
+
+        <section class="input-section">
+            <textarea id="inputText" placeholder="請在此輸入或貼上文本..."></textarea>
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary">開始統計</button>
+            </div>
+        </section>
+
+        <section class="output-section">
+            <h2>統計結果 <span id="timeTaken" style="font-size: 0.9rem; color: #6ee7b7; font-weight: normal; margin-left: 1rem;"></span></h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-value" id="totalChars">0</span>
+                    <span class="stat-label">字元數 (含空格)</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="totalCharsNoSpace">0</span>
+                    <span class="stat-label">字元數 (不含空格)</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="totalWords">0</span>
+                    <span class="stat-label">單詞數 (Words)</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="totalLines">0</span>
+                    <span class="stat-label">行數 (Lines)</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="totalParagraphs">0</span>
+                    <span class="stat-label">段落數 (Paragraphs)</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="cjkChars">0</span>
+                    <span class="stat-label">中日韓字元</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="avgWordLen">0</span>
+                    <span class="stat-label">平均詞長</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
