@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker HDR Effect - Example 273</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>HDR Effect (Local Contrast Enhancement)</h1>
+        <p>Create pseudo-HDR effect through local contrast enhancement and tone mapping using Web Workers.</p>
+
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="imageInput">Select Image:</label>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+
+                <div class="form-group">
+                    <label for="strength">HDR Strength: <span id="strengthVal">50%</span></label>
+                    <input type="range" id="strength" min="0" max="100" value="50">
+                </div>
+
+                <div class="form-group">
+                    <label for="radius">Local Radius: <span id="radiusVal">15px</span></label>
+                    <input type="range" id="radius" min="5" max="50" value="15">
+                </div>
+
+                <div class="form-group">
+                    <label for="gamma">Gamma: <span id="gammaVal">1.0</span></label>
+                    <input type="range" id="gamma" min="50" max="200" value="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="saturation">Saturation: <span id="saturationVal">120%</span></label>
+                    <input type="range" id="saturation" min="50" max="200" value="120">
+                </div>
+
+                <button id="applyBtn" disabled>Apply HDR Effect</button>
+                <button id="resetBtn" class="secondary" disabled>Reset Image</button>
+
+                <div class="stats">
+                    <div class="stat-item">Status: <span id="statusText">Ready</span></div>
+                    <div class="stat-item">Processing Time: <span id="timeVal">-</span></div>
+                    <div class="stat-item">Image Size: <span id="sizeVal">-</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <div class="canvas-container">
+                    <h3>Original</h3>
+                    <canvas id="originalCanvas"></canvas>
+                </div>
+                <div class="canvas-container">
+                    <h3>HDR Result</h3>
+                    <canvas id="resultCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

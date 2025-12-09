@@ -1,0 +1,194 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #1a1a2e;
+    color: #eee;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    background: #16213e;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    max-width: 1200px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    color: #4caf50;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    text-align: center;
+    color: #a0a0a0;
+    margin-bottom: 2rem;
+}
+
+h3 {
+    color: #4caf50;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.layout {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.controls {
+    flex: 0 0 280px;
+    background: #0f3460;
+    padding: 1.5rem;
+    border: 1px solid #4caf50;
+    border-radius: 6px;
+}
+
+.visualization {
+    flex: 1;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.canvas-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+canvas {
+    background: #0a0a0a;
+    border: 2px solid #4caf50;
+    border-radius: 4px;
+    max-width: 100%;
+    height: auto;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #4caf50;
+}
+
+input[type="file"] {
+    width: 100%;
+    padding: 0.5rem;
+    background: #1a1a40;
+    border: 1px solid #4caf50;
+    border-radius: 4px;
+    color: #eee;
+    font-size: 0.9rem;
+}
+
+input[type="range"] {
+    width: 100%;
+    margin-top: 0.5rem;
+    accent-color: #4caf50;
+}
+
+select {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #4caf50;
+    border-radius: 4px;
+    background: #1a1a40;
+    color: #eee;
+    font-size: 1rem;
+}
+
+button {
+    width: 100%;
+    background-color: #4caf50;
+    color: #1a1a2e;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background 0.2s;
+    margin-top: 0.5rem;
+}
+
+button:hover {
+    background-color: #66bb6a;
+}
+
+button:disabled {
+    background-color: #4a4a6a;
+    color: #888;
+    cursor: not-allowed;
+}
+
+button.secondary {
+    background-color: #16213e;
+    color: #4caf50;
+    border: 1px solid #4caf50;
+}
+
+button.secondary:hover {
+    background-color: #1a3a5c;
+}
+
+.stats {
+    margin-top: 2rem;
+    border-top: 1px solid #4caf50;
+    padding-top: 1rem;
+}
+
+.stat-item {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+}
+
+.stat-item span {
+    font-weight: bold;
+    color: #4caf50;
+}
+
+.histogram-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #0f3460;
+}
+
+.histogram-section h3 {
+    margin-bottom: 1rem;
+}
+
+.histogram-container {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.histogram-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.histogram-item span {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #81c784;
+}
+
+.histogram-item canvas {
+    border: 1px solid #0f3460;
+}
