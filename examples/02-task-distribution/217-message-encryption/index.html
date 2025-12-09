@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#217 訊息加密 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Crypto API 在 Web Worker 中實現訊息加密傳輸">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>訊息加密</h1>
+            <p class="subtitle">Message Encryption</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#217</span>
+                <span class="badge badge-secondary">任務分流</span>
+                <span class="badge badge-danger">高級</span>
+            </div>
+        </header>
+
+        <!-- 金鑰管理區域 -->
+        <section class="card">
+            <h2 class="card-title">金鑰管理</h2>
+
+            <!-- 加密演算法選擇 -->
+            <div class="form-group">
+                <label class="form-label">加密演算法</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="algorithm" value="AES-GCM" checked>
+                        <span class="radio-custom"></span>
+                        AES-GCM (推薦)
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="algorithm" value="AES-CBC">
+                        <span class="radio-custom"></span>
+                        AES-CBC
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="algorithm" value="AES-CTR">
+                        <span class="radio-custom"></span>
+                        AES-CTR
+                    </label>
+                </div>
+            </div>
+
+            <!-- 金鑰長度選擇 -->
+            <div class="form-group">
+                <label class="form-label">金鑰長度</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="keyLength" value="128">
+                        <span class="radio-custom"></span>
+                        128 位元
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="keyLength" value="192">
+                        <span class="radio-custom"></span>
+                        192 位元
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="keyLength" value="256" checked>
+                        <span class="radio-custom"></span>
+                        256 位元 (推薦)
+                    </label>
+                </div>
+            </div>
+
+            <!-- 金鑰操作按鈕 -->
+            <div class="btn-group">
+                <button id="generate-key-btn" class="btn btn-primary">
+                    產生新金鑰
+                </button>
+                <button id="export-key-btn" class="btn btn-secondary" disabled>
+                    匯出金鑰
+                </button>
+                <button id="import-key-btn" class="btn btn-secondary">
+                    匯入金鑰
+                </button>
+            </div>
+
+            <!-- 金鑰狀態顯示 -->
+            <div id="key-status" class="key-status">
+                <div class="key-status-icon">🔑</div>
+                <div class="key-status-content">
+                    <span class="key-status-label">金鑰狀態</span>
+                    <span id="key-status-text" class="key-status-text">尚未產生金鑰</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 訊息輸入區域 -->
+        <section class="card">
+            <h2 class="card-title">訊息加密/解密</h2>
+
+            <!-- 原始訊息輸入 -->
+            <div class="form-group">
+                <label class="form-label" for="plain-text">明文訊息</label>
+                <textarea
+                    id="plain-text"
+                    class="form-textarea"
+                    rows="4"
+                    placeholder="輸入要加密的訊息..."
+                >這是一段需要加密的機密訊息。Web Crypto API 提供了強大的加密功能！</textarea>
+            </div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group center">
+                <button id="encrypt-btn" class="btn btn-success" disabled>
+                    🔒 加密
+                </button>
+                <button id="decrypt-btn" class="btn btn-warning" disabled>
+                    🔓 解密
+                </button>
+            </div>
+
+            <!-- 加密後訊息顯示 -->
+            <div class="form-group">
+                <label class="form-label" for="cipher-text">密文 (Base64)</label>
+                <textarea
+                    id="cipher-text"
+                    class="form-textarea cipher"
+                    rows="4"
+                    placeholder="加密後的訊息將顯示在這裡..."
+                    readonly
+                ></textarea>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+        </section>
+
+        <!-- 加密詳情區域 -->
+        <section id="details-section" class="card hidden">
+            <h2 class="card-title">加密詳情</h2>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <span class="detail-label">演算法</span>
+                    <span id="detail-algorithm" class="detail-value">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">金鑰長度</span>
+                    <span id="detail-key-length" class="detail-value">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">IV/Nonce 長度</span>
+                    <span id="detail-iv-length" class="detail-value">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">原始大小</span>
+                    <span id="detail-plain-size" class="detail-value">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">加密後大小</span>
+                    <span id="detail-cipher-size" class="detail-value">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">處理時間</span>
+                    <span id="detail-time" class="detail-value">-</span>
+                </div>
+            </div>
+
+            <!-- IV 顯示 -->
+            <div class="form-group">
+                <label class="form-label">初始化向量 (IV/Nonce)</label>
+                <input type="text" id="iv-display" class="form-input mono" readonly>
+            </div>
+        </section>
+
+        <!-- 安全性說明 -->
+        <section class="card security-info">
+            <h2 class="card-title">安全性資訊</h2>
+            <div class="security-grid">
+                <div class="security-item good">
+                    <div class="security-icon">✅</div>
+                    <div class="security-content">
+                        <strong>AES-GCM</strong>
+                        <p>提供加密和認證，防止篡改</p>
+                    </div>
+                </div>
+                <div class="security-item good">
+                    <div class="security-icon">✅</div>
+                    <div class="security-content">
+                        <strong>隨機 IV</strong>
+                        <p>每次加密使用不同的隨機 IV</p>
+                    </div>
+                </div>
+                <div class="security-item warning">
+                    <div class="security-icon">⚠️</div>
+                    <div class="security-content">
+                        <strong>金鑰保護</strong>
+                        <p>金鑰僅存在於記憶體中，重新載入後需重新產生</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 傳輸日誌 -->
+        <section class="card">
+            <h2 class="card-title">操作日誌</h2>
+            <div id="log-container" class="log-container">
+                <div class="log-placeholder">等待操作...</div>
+            </div>
+            <button id="clear-log-btn" class="btn btn-secondary btn-sm">清除日誌</button>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>技術：</strong>使用 <code>Web Crypto API</code> (SubtleCrypto)</li>
+                <li><strong>支援演算法：</strong>AES-GCM、AES-CBC、AES-CTR</li>
+                <li><strong>金鑰長度：</strong>128、192、256 位元</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>安全性：</strong>所有加密操作在 Worker 中執行，金鑰不離開 Worker</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #217 - 訊息加密
+            </p>
+        </footer>
+    </div>
+
+    <!-- 金鑰匯入對話框 -->
+    <div id="import-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>匯入金鑰</h3>
+            <div class="form-group">
+                <label class="form-label">金鑰 (Base64)</label>
+                <textarea id="import-key-input" class="form-textarea" rows="3" placeholder="貼上匯出的金鑰..."></textarea>
+            </div>
+            <div class="btn-group">
+                <button id="confirm-import-btn" class="btn btn-primary">確認匯入</button>
+                <button id="cancel-import-btn" class="btn btn-secondary">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#219 流式傳輸 - Web Workers 範例</title>
+    <meta name="description" content="使用 Streams API 在 Web Worker 中實現串流數據傳遞">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>流式傳輸</h1>
+            <p class="subtitle">Streaming Transfer</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#219</span>
+                <span class="badge badge-secondary">任務分流</span>
+                <span class="badge badge-danger">高級</span>
+            </div>
+        </header>
+
+        <!-- 串流設定區域 -->
+        <section class="card">
+            <h2 class="card-title">串流設定</h2>
+
+            <!-- 資料量設定 -->
+            <div class="form-group">
+                <label class="form-label" for="data-size">資料量 (KB)</label>
+                <input
+                    type="range"
+                    id="data-size"
+                    class="form-range"
+                    min="10"
+                    max="1000"
+                    value="100"
+                    step="10"
+                >
+                <div class="range-labels">
+                    <span>10 KB</span>
+                    <span id="data-size-value">100 KB</span>
+                    <span>1000 KB</span>
+                </div>
+            </div>
+
+            <!-- 區塊大小設定 -->
+            <div class="form-group">
+                <label class="form-label" for="chunk-size">區塊大小 (KB)</label>
+                <input
+                    type="range"
+                    id="chunk-size"
+                    class="form-range"
+                    min="1"
+                    max="64"
+                    value="8"
+                    step="1"
+                >
+                <div class="range-labels">
+                    <span>1 KB</span>
+                    <span id="chunk-size-value">8 KB</span>
+                    <span>64 KB</span>
+                </div>
+            </div>
+
+            <!-- 延遲模擬 -->
+            <div class="form-group">
+                <label class="form-label" for="delay-time">每區塊延遲 (ms)</label>
+                <input
+                    type="range"
+                    id="delay-time"
+                    class="form-range"
+                    min="0"
+                    max="100"
+                    value="10"
+                    step="5"
+                >
+                <div class="range-labels">
+                    <span>0 ms</span>
+                    <span id="delay-time-value">10 ms</span>
+                    <span>100 ms</span>
+                </div>
+            </div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group">
+                <button id="start-stream-btn" class="btn btn-primary">
+                    🚀 開始串流傳輸
+                </button>
+                <button id="cancel-stream-btn" class="btn btn-danger" disabled>
+                    ⏹ 取消傳輸
+                </button>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+        </section>
+
+        <!-- 傳輸進度區域 -->
+        <section class="card">
+            <h2 class="card-title">傳輸進度</h2>
+
+            <!-- 進度條 -->
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">
+                        <span id="progress-percent">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 進度統計 -->
+            <div class="progress-stats">
+                <div class="stat-item">
+                    <span class="stat-label">已傳輸</span>
+                    <span id="transferred-size" class="stat-value">0 KB</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">總大小</span>
+                    <span id="total-size" class="stat-value">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">區塊數</span>
+                    <span id="chunk-count" class="stat-value">0 / -</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">傳輸速度</span>
+                    <span id="transfer-speed" class="stat-value">-</span>
+                </div>
+            </div>
+
+            <!-- 狀態訊息 -->
+            <div id="status-message" class="status-message">
+                準備就緒
+            </div>
+        </section>
+
+        <!-- 視覺化區域 -->
+        <section class="card">
+            <h2 class="card-title">串流視覺化</h2>
+            <div class="stream-visualization">
+                <div class="stream-source">
+                    <div class="stream-label">Worker</div>
+                    <div id="source-indicator" class="stream-indicator"></div>
+                </div>
+                <div class="stream-flow">
+                    <div id="stream-particles" class="stream-particles"></div>
+                    <div class="stream-arrow">→</div>
+                </div>
+                <div class="stream-destination">
+                    <div class="stream-label">主執行緒</div>
+                    <div id="destination-indicator" class="stream-indicator"></div>
+                </div>
+            </div>
+
+            <!-- 區塊接收區域 -->
+            <div class="chunks-container">
+                <label class="form-label">接收的區塊</label>
+                <div id="chunks-display" class="chunks-display">
+                    <div class="chunk-placeholder">等待接收資料...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 效能統計區域 -->
+        <section id="stats-section" class="card hidden">
+            <h2 class="card-title">傳輸統計</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-content">
+                        <span class="stat-label">總資料量</span>
+                        <span id="final-total-size" class="stat-value">-</span>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-content">
+                        <span class="stat-label">區塊數量</span>
+                        <span id="final-chunk-count" class="stat-value">-</span>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon">⏱️</div>
+                    <div class="stat-content">
+                        <span class="stat-label">總耗時</span>
+                        <span id="final-duration" class="stat-value">-</span>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon">🚀</div>
+                    <div class="stat-content">
+                        <span class="stat-label">平均速度</span>
+                        <span id="final-speed" class="stat-value">-</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 操作日誌 -->
+        <section class="card">
+            <h2 class="card-title">傳輸日誌</h2>
+            <div id="log-container" class="log-container">
+                <div class="log-placeholder">等待操作...</div>
+            </div>
+            <button id="clear-log-btn" class="btn btn-secondary btn-sm">清除日誌</button>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>技術：</strong>使用 <code>ReadableStream</code> 和 <code>TransformStream</code> API</li>
+                <li><strong>傳輸方式：</strong>使用 <code>postMessage</code> 傳輸 Transferable Streams</li>
+                <li><strong>應用場景：</strong>大檔案處理、即時數據處理、漸進式載入</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>優勢：</strong>低記憶體佔用、可中斷傳輸、即時處理</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #219 - 流式傳輸
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>
