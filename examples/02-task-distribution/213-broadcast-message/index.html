@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#213 廣播訊息 - Web Workers 範例</title>
+    <meta name="description" content="使用 BroadcastChannel API 實現一對多的訊息廣播">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>廣播訊息</h1>
+            <p class="subtitle">Broadcast Message</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#213</span>
+                <span class="badge badge-secondary">通訊協調</span>
+                <span class="badge badge-warning">中級</span>
+            </div>
+        </header>
+
+        <!-- 功能說明區域 -->
+        <section class="card">
+            <h2 class="card-title">功能說明</h2>
+            <p>此範例展示如何使用 <strong>BroadcastChannel API</strong> 實現一對多的訊息廣播，讓主執行緒和多個 Worker 之間能夠同步通訊。</p>
+            <ul class="feature-list">
+                <li>BroadcastChannel 允許同源的不同視窗、Tab 或 Worker 通訊</li>
+                <li>訊息會自動廣播給所有訂閱同一頻道的接收者</li>
+                <li>適合需要同步狀態或發送全域通知的場景</li>
+                <li>比逐一發送 postMessage 更簡潔高效</li>
+            </ul>
+        </section>
+
+        <!-- Worker 控制區域 -->
+        <section class="card">
+            <h2 class="card-title">Worker 管理</h2>
+
+            <div class="worker-controls">
+                <div class="form-group">
+                    <label class="form-label">建立 Worker</label>
+                    <div class="input-row">
+                        <input
+                            type="number"
+                            id="worker-count"
+                            class="form-input"
+                            value="3"
+                            min="1"
+                            max="10"
+                            placeholder="Worker 數量"
+                        >
+                        <button id="create-workers-btn" class="btn btn-primary">建立 Workers</button>
+                        <button id="terminate-all-btn" class="btn btn-danger">終止全部</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Worker 狀態列表 -->
+            <div id="worker-list" class="worker-list">
+                <p class="empty-message">尚未建立任何 Worker</p>
+            </div>
+        </section>
+
+        <!-- 廣播控制區域 -->
+        <section class="card">
+            <h2 class="card-title">廣播訊息</h2>
+
+            <!-- 文字廣播 -->
+            <div class="form-group">
+                <label class="form-label">發送文字訊息給所有 Worker</label>
+                <div class="input-row">
+                    <input
+                        type="text"
+                        id="broadcast-message"
+                        class="form-input"
+                        placeholder="輸入要廣播的訊息"
+                        value="Hello, Workers!"
+                    >
+                    <button id="broadcast-text-btn" class="btn btn-primary">廣播</button>
+                </div>
+            </div>
+
+            <!-- 指令廣播 -->
+            <div class="form-group">
+                <label class="form-label">廣播指令</label>
+                <div class="btn-group">
+                    <button id="broadcast-ping-btn" class="btn btn-secondary">PING 測試</button>
+                    <button id="broadcast-status-btn" class="btn btn-secondary">請求狀態</button>
+                    <button id="broadcast-reset-btn" class="btn btn-warning">重置計數器</button>
+                    <button id="broadcast-task-btn" class="btn btn-success">分配任務</button>
+                </div>
+            </div>
+
+            <!-- 頻道選擇 -->
+            <div class="form-group">
+                <label class="form-label">頻道管理</label>
+                <div class="channel-info">
+                    <span class="channel-label">當前頻道：</span>
+                    <span id="current-channel" class="channel-name">worker-broadcast</span>
+                </div>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+        </section>
+
+        <!-- 訊息記錄區域 -->
+        <section class="card">
+            <h2 class="card-title">通訊記錄</h2>
+            <div id="log-container" class="log-container">
+                <p class="empty-message">尚無通訊記錄</p>
+            </div>
+            <button id="clear-log-btn" class="btn btn-secondary btn-small">清除記錄</button>
+        </section>
+
+        <!-- 程式碼說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>通訊模式：</strong>一對多廣播 (One-to-Many Broadcast)</li>
+                <li><strong>核心技術：</strong>使用 <code>BroadcastChannel</code> API</li>
+                <li><strong>頻道概念：</strong>同一頻道名稱的所有端點都會收到訊息</li>
+                <li><strong>適用場景：</strong>狀態同步、全域通知、配置更新</li>
+                <li><strong>注意事項：</strong>發送者不會收到自己發送的訊息</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #213 - 廣播訊息
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>
