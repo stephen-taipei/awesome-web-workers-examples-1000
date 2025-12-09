@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#297 Canny 邊緣檢測 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 實現 Canny 邊緣檢測算法">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>Canny 邊緣檢測</h1>
+            <p class="subtitle">Canny Edge Detector</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#297</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-danger">高級</span>
+            </div>
+        </header>
+
+        <!-- 圖片上傳區域 -->
+        <section class="card">
+            <h2 class="card-title">圖片選擇</h2>
+            <div class="upload-area" id="upload-area">
+                <input type="file" id="file-input" accept="image/*" hidden>
+                <div class="upload-placeholder">
+                    <div class="upload-icon">🖼️</div>
+                    <p>點擊或拖放圖片至此處</p>
+                    <p class="upload-hint">支援 JPG, PNG, GIF, WebP 格式</p>
+                </div>
+            </div>
+            <div class="demo-buttons">
+                <button id="load-demo-btn" class="btn btn-secondary">載入範例圖片</button>
+            </div>
+        </section>
+
+        <!-- 參數設定區域 -->
+        <section class="card">
+            <h2 class="card-title">演算法參數</h2>
+
+            <div class="form-group">
+                <label class="form-label" for="sigma-input">高斯模糊 Sigma：<span id="sigma-value">1.0</span></label>
+                <input
+                    type="range"
+                    id="sigma-input"
+                    class="form-range"
+                    value="1.0"
+                    min="0.5"
+                    max="5.0"
+                    step="0.1"
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">雙閾值設定 (Hysteresis Thresholding)</label>
+                <div style="display: flex; gap: 20px;">
+                    <div style="flex: 1;">
+                        <label class="form-label" for="high-threshold">高閾值 (High)：<span id="high-val">100</span></label>
+                        <input
+                            type="range"
+                            id="high-threshold"
+                            class="form-range"
+                            value="100"
+                            min="0"
+                            max="255"
+                            step="1"
+                        >
+                    </div>
+                    <div style="flex: 1;">
+                        <label class="form-label" for="low-threshold">低閾值 (Low)：<span id="low-val">50</span></label>
+                        <input
+                            type="range"
+                            id="low-threshold"
+                            class="form-range"
+                            value="50"
+                            min="0"
+                            max="255"
+                            step="1"
+                        >
+                    </div>
+                </div>
+                <p class="form-hint">高於高閾值的為強邊緣（保留），低於低閾值的為非邊緣（捨棄），中間的若連接到強邊緣則保留。</p>
+            </div>
+
+            <div class="btn-group">
+                <button id="apply-btn" class="btn btn-primary" disabled>偵測邊緣</button>
+                <button id="reset-btn" class="btn btn-secondary" disabled>還原原圖</button>
+                <button id="download-btn" class="btn btn-info" disabled>下載結果</button>
+            </div>
+        </section>
+
+        <!-- 進度顯示區域 -->
+        <section class="card">
+            <h2 class="card-title">處理進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 圖片顯示區域 -->
+        <section class="card" id="preview-section" style="display: none;">
+            <h2 class="card-title">圖片預覽</h2>
+            <div class="preview-container">
+                <div class="preview-box">
+                    <h4>原圖</h4>
+                    <canvas id="original-canvas"></canvas>
+                </div>
+                <div class="preview-box">
+                    <h4>Canny 結果</h4>
+                    <canvas id="result-canvas"></canvas>
+                </div>
+            </div>
+            <div id="result-stats" class="result-stats"></div>
+        </section>
+
+        <!-- 演算法說明區域 -->
+        <section class="card info-section">
+            <h3>關於 Canny 演算法</h3>
+            <p>Canny 邊緣檢測被認為是邊緣檢測的「黃金標準」，包含多個步驟：</p>
+            <ol>
+                <li><strong>高斯濾波 (Gaussian Filter)：</strong>平滑圖像以去除噪聲。</li>
+                <li><strong>梯度計算 (Gradient Calculation)：</strong>使用 Sobel 算子計算梯度的強度和方向。</li>
+                <li><strong>非極大值抑制 (Non-Maximum Suppression)：</strong>沿梯度方向檢查，保留局部最大值，使邊緣變細。</li>
+                <li><strong>雙閾值 (Double Thresholding)：</strong>區分強邊緣、弱邊緣和噪聲。</li>
+                <li><strong>邊緣追蹤 (Edge Tracking by Hysteresis)：</strong>通過分析連通性，將與強邊緣相連的弱邊緣保留下來。</li>
+            </ol>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #297 - Canny 邊緣檢測
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
