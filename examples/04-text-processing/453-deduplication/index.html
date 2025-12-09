@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 去重處理 (Deduplication) - 453</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 去重處理</h1>
+            <div class="subtitle">Text Deduplication (Line-based)</div>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-beginner">Set</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>去重處理 (Deduplication)</h2>
+                <p>此範例展示如何移除文本中的重複行。使用 JavaScript 的 Set 數據結構在 Web Worker 中高效處理。</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="inputText">輸入文本 (Input Text):</label>
+                    <textarea id="inputText" rows="8" placeholder="Enter text with duplicate lines...">Apple
+Banana
+Apple
+Orange
+Banana
+Grape</textarea>
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        <input type="checkbox" id="ignoreCase"> 忽略大小寫 (Ignore Case)
+                    </label>
+                    <label style="margin-left: 1rem;">
+                        <input type="checkbox" id="trimWhitespace" checked> 去除首尾空白 (Trim Whitespace)
+                    </label>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary">去除重複</button>
+                </div>
+            </section>
+
+            <section class="results">
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">原始行數</span>
+                        <span class="result-value" id="origCount">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">結果行數</span>
+                        <span class="result-value" id="resultCount">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">處理時間</span>
+                        <span class="result-value" id="processTime">-</span>
+                    </div>
+                </div>
+
+                <div class="result-box">
+                    <h3>處理結果</h3>
+                    <textarea id="outputText" rows="8" readonly></textarea>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+    <style>
+        textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #fff;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+        textarea[readonly] {
+            background: rgba(0,0,0,0.5);
+            color: #a7f3d0;
+        }
+    </style>
+</body>
+</html>

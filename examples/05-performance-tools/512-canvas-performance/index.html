@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers Canvas 效能測試 (Canvas Performance) - 512</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers Canvas 效能測試</h1>
+            <div class="subtitle">OffscreenCanvas vs Main Thread</div>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-advanced">OffscreenCanvas</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>Canvas 效能 (Canvas Performance)</h2>
+                <p>此範例比較在主執行緒與 Web Worker (使用 OffscreenCanvas) 中繪製大量圖形的效能差異。</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="objectCount">物件數量 (Object Count):</label>
+                    <input type="number" id="objectCount" value="5000" min="100" max="50000" step="100">
+                </div>
+
+                <div class="button-group">
+                    <button id="startMainBtn" class="btn btn-primary">主執行緒渲染 (Main Thread)</button>
+                    <button id="startWorkerBtn" class="btn btn-secondary">Worker 渲染 (OffscreenCanvas)</button>
+                    <button id="stopBtn" class="btn btn-outline" disabled>停止 (Stop)</button>
+                </div>
+            </section>
+
+            <section class="results">
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">FPS (Main Thread)</span>
+                        <span class="result-value" id="fpsMain">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">FPS (Worker)</span>
+                        <span class="result-value" id="fpsWorker">-</span>
+                    </div>
+                </div>
+
+                <div class="canvas-container" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <div class="canvas-wrapper">
+                        <h3>Main Thread</h3>
+                        <canvas id="canvasMain" width="400" height="300" style="border: 1px solid #333; background: #000;"></canvas>
+                    </div>
+                    <div class="canvas-wrapper">
+                        <h3>Worker</h3>
+                        <canvas id="canvasWorker" width="400" height="300" style="border: 1px solid #333; background: #000;"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

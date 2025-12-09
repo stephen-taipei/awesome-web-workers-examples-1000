@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 斑點化效果 (Pointillize) - 357</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 斑點化效果</h1>
+            <div class="subtitle">Pointillize Effect using Random Sampling</div>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-beginner">Sampling</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>斑點化 (Pointillize)</h2>
+                <p>此範例展示如何使用隨機採樣創建點描畫（Pointillism）藝術效果。Web Worker 負責在畫布上繪製大量隨機位置與顏色的圓點。</p>
+            </section>
+
+            <section class="controls">
+                <div class="upload-area" id="dropZone">
+                    <div class="upload-icon">📁</div>
+                    <p>拖放圖片至此處或點擊上傳</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label for="pointSize">斑點大小 (Point Size): <span id="pointSizeVal">5</span></label>
+                    <input type="range" id="pointSize" min="2" max="30" value="5">
+                </div>
+
+                <div class="input-group">
+                    <label for="density">密度 (Density): <span id="densityVal">High</span></label>
+                    <select id="density">
+                        <option value="1.0">低 (Low)</option>
+                        <option value="2.0">中 (Medium)</option>
+                        <option value="4.0" selected>高 (High)</option>
+                        <option value="8.0">極高 (Ultra)</option>
+                    </select>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>應用效果</button>
+                    <button id="resetBtn" class="btn btn-secondary" disabled>重置</button>
+                </div>
+            </section>
+
+            <section class="progress-section hidden" id="progressSection">
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-text" id="progressText">處理中... 0%</div>
+            </section>
+
+            <section class="results">
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">處理時間</span>
+                        <span class="result-value" id="processTime">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">斑點數量</span>
+                        <span class="result-value" id="pointCountDisplay">-</span>
+                    </div>
+                </div>
+
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>原始圖片</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <div class="image-info" id="originalInfo"></div>
+                    </div>
+                    <div class="image-panel">
+                        <h3>處理結果</h3>
+                        <canvas id="resultCanvas"></canvas>
+                        <div class="image-info" id="resultInfo"></div>
+                        <div class="download-section">
+                            <a id="downloadLink" class="btn btn-outline hidden" download="pointillize.png">下載結果</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

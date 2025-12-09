@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 排序處理 (Line Sorting) - 454</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 排序處理</h1>
+            <div class="subtitle">Line Sorting (Multi-criteria)</div>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-beginner">Sort</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>排序處理 (Line Sorting)</h2>
+                <p>此範例展示如何對大量文本行進行排序。Web Worker 支持多種排序策略，如字母順序、長度順序、數字順序等。</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="inputText">輸入文本 (Input Text):</label>
+                    <textarea id="inputText" rows="8" placeholder="Enter lines to sort...">Zebra
+Apple
+10
+2
+Banana
+100</textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="sortType">排序方式 (Sort Type):</label>
+                    <select id="sortType">
+                        <option value="alpha">字母順序 (A-Z)</option>
+                        <option value="alphaDesc">字母倒序 (Z-A)</option>
+                        <option value="length">長度 (短 -> 長)</option>
+                        <option value="lengthDesc">長度 (長 -> 短)</option>
+                        <option value="numeric">數值 (小 -> 大)</option>
+                        <option value="numericDesc">數值 (大 -> 小)</option>
+                        <option value="random">隨機打亂 (Shuffle)</option>
+                    </select>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary">開始排序</button>
+                </div>
+            </section>
+
+            <section class="results">
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">處理時間</span>
+                        <span class="result-value" id="processTime">-</span>
+                    </div>
+                </div>
+
+                <div class="result-box">
+                    <h3>排序結果</h3>
+                    <textarea id="outputText" rows="8" readonly></textarea>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+    <style>
+        textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #fff;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+        textarea[readonly] {
+            background: rgba(0,0,0,0.5);
+            color: #a7f3d0;
+        }
+    </style>
+</body>
+</html>
