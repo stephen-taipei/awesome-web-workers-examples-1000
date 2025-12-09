@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 連通區域標記 (Connected Component Labeling)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>連通區域標記 (Connected Components)</h1>
+            <div class="subtitle">二值圖像連通元件分析</div>
+            <div class="badges">
+                <span class="badge badge-beginner">影像處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">Two-pass Algorithm</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能說明</h2>
+            <p>此範例使用兩次掃描演算法 (Two-pass algorithm) 對二值化圖片進行連通區域標記，並以不同顏色顯示各個連通區域。</p>
+            <ul>
+                <li>上傳圖片 (自動轉為二值圖)</li>
+                <li>設定連通性 (4-連通 或 8-連通)</li>
+                <li>標記並計算區域數量</li>
+            </ul>
+        </section>
+
+        <section class="controls">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <p>點擊上傳圖片或將圖片拖曳至此</p>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+            </div>
+
+            <div class="input-group">
+                <label>算法參數</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label for="threshold">二值化閾值 (0-255)</label>
+                        <input type="range" id="threshold" min="0" max="255" value="128" oninput="document.getElementById('thresholdVal').textContent = this.value">
+                        <span id="thresholdVal">128</span>
+                    </div>
+                    <div>
+                        <label for="connectivity">連通性</label>
+                        <select id="connectivity">
+                            <option value="8" selected>8-連通 (8-way)</option>
+                            <option value="4">4-連通 (4-way)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary" disabled>開始標記</button>
+            </div>
+        </section>
+
+        <section class="results">
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">處理時間</span>
+                    <span class="result-value" id="processTime">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">區域數量</span>
+                    <span class="result-value" id="componentCount">-</span>
+                </div>
+            </div>
+
+            <div class="progress-section hidden" id="progressSection">
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-text" id="progressText">準備中...</div>
+            </div>
+
+            <div class="image-comparison">
+                <div class="image-panel">
+                    <h3>原始圖片 / 二值圖預覽</h3>
+                    <canvas id="sourceCanvas"></canvas>
+                    <div class="image-info" id="sourceInfo"></div>
+                </div>
+                <div class="image-panel">
+                    <h3>標記結果</h3>
+                    <canvas id="resultCanvas"></canvas>
+                    <div class="image-info" id="resultInfo"></div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - 382 Connected Component Labeling</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
