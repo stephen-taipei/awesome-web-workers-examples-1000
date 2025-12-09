@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sepia Filter - Web Worker Example #268</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sepia Filter</h1>
+            <p class="subtitle">Web Worker Example #268 - Classic Vintage Photo Effect</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Sepia Filter</h2>
+                <p>The sepia tone filter applies a warm, brownish tint to images, creating a vintage or antique appearance. This effect mimics the look of old photographs from the late 19th and early 20th centuries.</p>
+                <div class="formula-box">
+                    <p><strong>Sepia Color Matrix Transform:</strong></p>
+                    <pre class="formula">
+For each pixel (R, G, B):
+
+newR = 0.393*R + 0.769*G + 0.189*B
+newG = 0.349*R + 0.686*G + 0.168*B
+newB = 0.272*R + 0.534*G + 0.131*B
+
+Matrix Form:
+┌───────┐   ┌─────────────────────────┐   ┌───┐
+│ newR  │   │ 0.393  0.769  0.189  0 │   │ R │
+│ newG  │ = │ 0.349  0.686  0.168  0 │ × │ G │
+│ newB  │   │ 0.272  0.534  0.131  0 │   │ B │
+│   1   │   │   0      0      0    1 │   │ 1 │
+└───────┘   └─────────────────────────┘   └───┘
+
+Values are clamped to [0, 255]
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+
+                <div class="input-group">
+                    <label for="imageInput">Select Image:</label>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="intensity">Filter Intensity:</label>
+                        <input type="range" id="intensity" min="0" max="100" value="100">
+                        <span id="intensityValue">100%</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="applyBtn" class="btn btn-primary" disabled>Apply Sepia Filter</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                    <button id="downloadBtn" class="btn btn-outline" disabled>Download Result</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="canvas-container">
+                    <div class="canvas-wrapper">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                    </div>
+                    <div class="canvas-wrapper">
+                        <h3>Sepia Result</h3>
+                        <canvas id="resultCanvas"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Processing Statistics</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Image Size</span>
+                        <span id="imageSize" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Pixels</span>
+                        <span id="totalPixels" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Throughput</span>
+                        <span id="throughput" class="result-value">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #268</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
