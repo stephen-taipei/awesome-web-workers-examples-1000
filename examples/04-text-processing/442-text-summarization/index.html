@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 文本摘要 (Text Summarization)</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 文本摘要</h1>
+            <div class="subtitle">Extractive Summarization</div>
+            <div class="badges">
+                <span class="badge badge-advanced">文本處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+            </div>
+        </header>
+
+        <section class="input-section">
+            <textarea id="inputText" placeholder="請在此輸入或貼上長篇文章..."></textarea>
+
+            <div class="input-group" style="margin-bottom: 1rem; width: 100%; max-width: 300px;">
+                <label>摘要句數 (Sentences)</label>
+                <input type="range" id="sentenceCount" min="1" max="10" value="3">
+                <span id="sentenceCountVal" style="color: #10b981; font-weight: bold;">3</span>
+            </div>
+
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary">生成摘要</button>
+                <button id="loadSampleBtn" class="btn btn-secondary">載入範例</button>
+            </div>
+        </section>
+
+        <section class="output-section">
+            <h2>摘要結果 <span id="timeTaken" style="font-size: 0.9rem; color: #6ee7b7; font-weight: normal; margin-left: 1rem;"></span></h2>
+            <div class="results-area">
+                <div id="summaryOutput" class="output-text">請先生成摘要...</div>
+            </div>
+        </section>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

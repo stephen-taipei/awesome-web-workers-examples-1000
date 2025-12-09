@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers ASCII 藝術 (ASCII Art)</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #asciiOutput {
+            background: #000;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 8px; /* Adjustable */
+            line-height: 8px; /* Match font size for density */
+            white-space: pre;
+            overflow-x: auto;
+            padding: 1rem;
+            border-radius: 8px;
+            width: 100%;
+            height: 500px;
+            overflow-y: scroll;
+            text-align: center; /* Center the block */
+        }
+        /* Center content horizontally */
+        #asciiOutput::-webkit-scrollbar { width: 8px; height: 8px; }
+        #asciiOutput::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+        .preview-thumb {
+            max-width: 200px;
+            max-height: 200px;
+            border: 1px solid #333;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers ASCII 藝術</h1>
+            <div class="subtitle">ASCII Art Generator</div>
+            <div class="badges">
+                <span class="badge badge-beginner">影像處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <p>將圖片像素轉換為 ASCII 字元畫。利用 Web Worker 處理像素映射。</p>
+        </section>
+
+        <div class="upload-area" id="dropZone">
+            <div class="upload-icon">📁</div>
+            <p>拖放圖片至此，或點擊上傳</p>
+            <input type="file" id="fileInput" accept="image/*" hidden>
+        </div>
+
+        <section class="controls">
+             <div class="input-group">
+                <label>字元集 (Charset)</label>
+                <select id="charset">
+                    <option value="standard">標準 (Standard)</option>
+                    <option value="simple">簡單 (Simple)</option>
+                    <option value="blocks">區塊 (Blocks)</option>
+                    <option value="binary">二進制 (Binary)</option>
+                    <option value="matrix">Matrix</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>寬度 (Columns)</label>
+                <input type="range" id="width" min="50" max="300" value="150">
+                <span id="widthVal">150</span>
+            </div>
+            <div class="input-group">
+                <label>反轉亮度 (Invert)</label>
+                <input type="checkbox" id="invert">
+            </div>
+            <div class="input-group">
+                <button id="copyBtn" class="btn btn-outline">複製到剪貼簿</button>
+            </div>
+        </section>
+
+        <section class="image-comparison">
+             <div class="image-panel">
+                <h3>原始預覽</h3>
+                <img id="sourcePreview" class="preview-thumb" style="display:none;">
+                 <div class="image-info" id="sourceInfo">請上傳圖片</div>
+            </div>
+             <div class="image-panel" style="grid-column: 1 / -1; text-align: left;">
+                <h3 style="text-align: center;">ASCII 結果</h3>
+                <div id="asciiOutput"></div>
+                <div class="image-info" id="targetInfo" style="text-align: center;">等待處理...</div>
+            </div>
+        </section>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
