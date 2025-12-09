@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autocomplete - Web Worker Example #435</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Autocomplete</h1>
+            <p class="subtitle">Web Worker Example #435 - Trie-based Prefix Search</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Intermediate</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="controls">
+                <h2>Dictionary Setup</h2>
+                <div class="input-group">
+                    <label>Dictionary (Words separated by space/newline):</label>
+                    <textarea id="dictionaryInput" rows="5" style="width: 100%; background: rgba(0,0,0,0.3); color: #fff; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 10px;">
+apple
+apricot
+application
+apply
+aptitude
+banana
+band
+bandana
+bandit
+cat
+caterpillar
+category
+cattle
+dog
+dolphin
+door
+dormitory
+elephant
+elevator
+eleven
+    </textarea>
+                </div>
+                <div class="button-group">
+                    <button id="buildBtn" class="btn btn-primary">Build Trie Index</button>
+                </div>
+                <p id="buildStatus" style="color: #34d399; margin-top: 5px; font-size: 0.9em;"></p>
+            </section>
+
+            <section class="controls" style="margin-top: 20px;">
+                <h2>Search</h2>
+                <div class="input-group" style="position: relative;">
+                    <label for="searchInput">Type to search:</label>
+                    <input type="text" id="searchInput" placeholder="Start typing..." autocomplete="off" disabled>
+                    <div id="suggestionsBox" style="position: absolute; top: 100%; left: 0; right: 0; background: #1a1a1a; border: 1px solid #333; border-radius: 0 0 8px 8px; z-index: 100; max-height: 200px; overflow-y: auto; display: none;">
+                    </div>
+                </div>
+
+                <div style="margin-top: 10px; font-size: 0.8em; color: #888;">
+                    Search Time: <span id="searchTime">-</span>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

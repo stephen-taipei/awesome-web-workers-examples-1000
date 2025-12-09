@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Text Index - Web Worker Example #436</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Full Text Index</h1>
+            <p class="subtitle">Web Worker Example #436 - Inverted Index Search</p>
+            <div class="badges">
+                <span class="badge badge-advanced">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="controls">
+                <h2>Documents</h2>
+                <div class="input-group">
+                    <label>Add Documents (JSON array of {id, text}):</label>
+                    <textarea id="documentsInput" rows="10" style="width: 100%; background: rgba(0,0,0,0.3); color: #fff; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 10px;">
+[
+    {"id": 1, "text": "The quick brown fox jumps over the lazy dog"},
+    {"id": 2, "text": "A quick movement of the enemy will jeopardize six gunboats"},
+    {"id": 3, "text": "Now is the time for all good men to come to the aid of their country"},
+    {"id": 4, "text": "The fox is an animal that belongs to the Canidae family"},
+    {"id": 5, "text": "A lazy dog is not a good guard dog"}
+]
+                    </textarea>
+                </div>
+                <div class="button-group">
+                    <button id="indexBtn" class="btn btn-primary">Build Inverted Index</button>
+                </div>
+                <p id="indexStatus" style="color: #34d399; margin-top: 5px; font-size: 0.9em;"></p>
+            </section>
+
+            <section class="controls" style="margin-top: 20px;">
+                <h2>Search</h2>
+                <div class="input-group">
+                    <label for="searchQuery">Query (Boolean AND support):</label>
+                    <input type="text" id="searchQuery" placeholder="e.g. fox OR dog" disabled>
+                </div>
+                <div class="button-group">
+                    <button id="searchBtn" class="btn btn-secondary" disabled>Search</button>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Documents Found</span>
+                        <span id="resultCount" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Search Time</span>
+                        <span id="searchTime" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Matched Documents</h3>
+                <div id="resultList" style="max-height: 300px; overflow-y: auto; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px;">
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

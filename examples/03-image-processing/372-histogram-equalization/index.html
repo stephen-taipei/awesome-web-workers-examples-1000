@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histogram Equalization - Web Worker Example #372</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Histogram Equalization</h1>
+            <p class="subtitle">Web Worker Example #372 - Contrast Enhancement</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Intermediate</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Histogram Equalization</h2>
+                <p>Improve image contrast by stretching out the intensity range. This method usually increases the global contrast of many images, especially when the usable data of the image is represented by close contrast values.</p>
+                <div class="formula-box">
+                    <p><strong>Method:</strong></p>
+                    <ol>
+                        <li>Calculate the histogram of the image.</li>
+                        <li>Calculate the Cumulative Distribution Function (CDF).</li>
+                        <li>Normalize the CDF.</li>
+                        <li>Map the original pixel values to new values using the normalized CDF.</li>
+                    </ol>
+                    <pre class="formula">
+h(v) = round( (cdf(v) - cdf_min) / ((width * height) - cdf_min) * (L - 1) )
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Apply Equalization</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <canvas id="originalHistogram" width="256" height="100" class="histogram-canvas"></canvas>
+                        <p id="originalInfo" class="image-info">No image loaded</p>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Equalized</h3>
+                        <canvas id="processedCanvas"></canvas>
+                        <canvas id="processedHistogram" width="256" height="100" class="histogram-canvas"></canvas>
+                        <p id="processedInfo" class="image-info">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="download-section">
+                    <button id="downloadBtn" class="btn btn-primary">Download Image</button>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+    <style>
+        .histogram-canvas {
+            width: 100%;
+            height: 100px;
+            background: #000;
+            margin-top: 10px;
+            border: 1px solid #333;
+        }
+    </style>
+</body>
+</html>
