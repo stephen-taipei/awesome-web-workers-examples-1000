@@ -428,14 +428,14 @@
 | 289 | 雙邊濾波 | Bilateral filter | 設定空間/顏色σ | 邊緣保持模糊 | 🔴 | 1080p: <800ms | ⬜ |
 | 290 | 銳化 | Sharpen | 設定強度 | 銳化核 | 🟢 | 1080p: <100ms | ⬜ |
 | 291 | USM 銳化 | Unsharp mask | 設定參數 | 高斯減法 | 🟡 | 1080p: <300ms | ⬜ |
-| 292 | 高反差保留 | High pass | 設定半徑 | 高通濾波 | 🟡 | 1080p: <300ms | ⬜ |
-| 293 | Sobel 邊緣 | Sobel 檢測 | 一鍵套用 | Sobel 算子 | 🟢 | 1080p: <150ms | ⬜ |
-| 294 | Prewitt 邊緣 | Prewitt 檢測 | 一鍵套用 | Prewitt 算子 | 🟢 | 1080p: <150ms | ⬜ |
-| 295 | Laplacian 邊緣 | Laplacian 檢測 | 一鍵套用 | Laplacian 算子 | 🟢 | 1080p: <150ms | ⬜ |
-| 296 | LoG 邊緣 | Laplacian of Gaussian | 設定σ | LoG 算子 | 🟡 | 1080p: <300ms | ⬜ |
-| 297 | Canny 邊緣 | Canny 檢測 | 設定閾值 | 非極大值抑制 | 🔴 | 1080p: <500ms | ⬜ |
-| 298 | Roberts 邊緣 | Roberts 檢測 | 一鍵套用 | Roberts 算子 | 🟢 | 1080p: <100ms | ⬜ |
-| 299 | 浮雕效果 | Emboss | 設定方向 | 浮雕核 | 🟢 | 1080p: <100ms | ⬜ |
+| 292 | 高反差保留 | High pass | 設定半徑 | 高通濾波 | 🟡 | 1080p: <300ms | ✅ |
+| 293 | Sobel 邊緣 | Sobel 檢測 | 一鍵套用 | Sobel 算子 | 🟢 | 1080p: <150ms | ✅ |
+| 294 | Prewitt 邊緣 | Prewitt 檢測 | 一鍵套用 | Prewitt 算子 | 🟢 | 1080p: <150ms | ✅ |
+| 295 | Laplacian 邊緣 | Laplacian 檢測 | 一鍵套用 | Laplacian 算子 | 🟢 | 1080p: <150ms | ✅ |
+| 296 | LoG 邊緣 | Laplacian of Gaussian | 設定σ | LoG 算子 | 🟡 | 1080p: <300ms | ✅ |
+| 297 | Canny 邊緣 | Canny 檢測 | 設定閾值 | 非極大值抑制 | 🔴 | 1080p: <500ms | ✅ |
+| 298 | Roberts 邊緣 | Roberts 檢測 | 一鍵套用 | Roberts 算子 | 🟢 | 1080p: <100ms | ✅ |
+| 299 | 浮雕效果 | Emboss | 設定方向 | 浮雕核 | 🟢 | 1080p: <100ms | ✅ |
 | 300 | 自訂卷積核 | 自定義核 | 輸入卷積核 | 通用卷積 | 🟡 | 取決於核大小 | ⬜ |
 | 301 | 中值濾波 | Median filter | 設定視窗大小 | 中值選擇 | 🟡 | 1080p: <500ms | ⬜ |
 | 302 | 最大值濾波 | Max filter | 設定視窗大小 | 膨脹 | 🟡 | 1080p: <300ms | ⬜ |

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#292 高反差保留 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 實現高反差保留濾鏡，用於銳化或邊緣檢測">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>高反差保留</h1>
+            <p class="subtitle">High Pass Filter</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#292</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-warning">中級</span>
+            </div>
+        </header>
+
+        <!-- 圖片上傳區域 -->
+        <section class="card">
+            <h2 class="card-title">圖片選擇</h2>
+            <div class="upload-area" id="upload-area">
+                <input type="file" id="file-input" accept="image/*" hidden>
+                <div class="upload-placeholder">
+                    <div class="upload-icon">🖼️</div>
+                    <p>點擊或拖放圖片至此處</p>
+                    <p class="upload-hint">支援 JPG, PNG, GIF, WebP 格式</p>
+                </div>
+            </div>
+            <div class="demo-buttons">
+                <button id="load-demo-btn" class="btn btn-secondary">載入範例圖片</button>
+            </div>
+        </section>
+
+        <!-- 參數設定區域 -->
+        <section class="card">
+            <h2 class="card-title">濾鏡參數</h2>
+
+            <div class="form-group">
+                <label class="form-label" for="radius-input">半徑：<span id="radius-value">2</span> 像素</label>
+                <input
+                    type="range"
+                    id="radius-input"
+                    class="form-range"
+                    value="2"
+                    min="1"
+                    max="50"
+                    step="0.5"
+                >
+                <p class="form-hint">半徑越大，保留的低頻成分越多（看起來越像原圖但帶有灰色）</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">快速設定</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-radius="1">銳利 (1px)</button>
+                    <button class="preset-btn" data-radius="2">標準 (2px)</button>
+                    <button class="preset-btn" data-radius="5">細節 (5px)</button>
+                    <button class="preset-btn" data-radius="10">輪廓 (10px)</button>
+                    <button class="preset-btn" data-radius="30">光影 (30px)</button>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button id="apply-btn" class="btn btn-primary" disabled>套用濾鏡</button>
+                <button id="reset-btn" class="btn btn-secondary" disabled>還原原圖</button>
+                <button id="download-btn" class="btn btn-info" disabled>下載結果</button>
+            </div>
+        </section>
+
+        <!-- 進度顯示區域 -->
+        <section class="card">
+            <h2 class="card-title">處理進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 圖片顯示區域 -->
+        <section class="card" id="preview-section" style="display: none;">
+            <h2 class="card-title">圖片預覽</h2>
+            <div class="preview-container">
+                <div class="preview-box">
+                    <h4>原圖</h4>
+                    <canvas id="original-canvas"></canvas>
+                </div>
+                <div class="preview-box">
+                    <h4>處理結果</h4>
+                    <canvas id="result-canvas"></canvas>
+                </div>
+            </div>
+            <div id="result-stats" class="result-stats"></div>
+        </section>
+
+        <!-- 演算法說明區域 -->
+        <section class="card info-section">
+            <h3>關於高反差保留 (High Pass)</h3>
+            <ul>
+                <li><strong>原理：</strong>從原圖中減去低頻成分（模糊後的影像），保留高頻成分（邊緣和細節）。</li>
+                <li><strong>公式：</strong><code>HighPass = Original - Blurred + 128</code></li>
+                <li><strong>偏移量 128：</strong>為了讓結果顯示在 0-255 的範圍內，通常會加上 128（中性灰），使得平坦區域呈現灰色，邊緣呈現亮或暗。</li>
+                <li><strong>用途：</strong>
+                    <ul style="margin-top: 8px; margin-left: 20px;">
+                        <li>圖像銳化 (Sharpening)：將高反差結果疊加到原圖上（如 "Overlay" 混合模式）。</li>
+                        <li>邊緣檢測：檢視圖片的細節和噪點。</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #292 - 高反差保留
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>
