@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OffscreenCanvas Performance - Web Worker Example #511</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>OffscreenCanvas Performance</h1>
+        <p>Benchmark 2D rendering performance in a Web Worker using OffscreenCanvas.</p>
+
+        <div class="controls">
+            <div>
+                <label for="objectCount">Object Count:</label>
+                <input type="number" id="objectCount" value="5000" min="100" max="50000">
+            </div>
+            <button id="runBtn">Start Benchmark</button>
+        </div>
+
+        <canvas id="displayCanvas" width="600" height="400" style="border: 1px solid #ccc; width: 100%; max-width: 600px;"></canvas>
+
+        <div class="results">
+            <div id="fps" class="score">FPS: 0</div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

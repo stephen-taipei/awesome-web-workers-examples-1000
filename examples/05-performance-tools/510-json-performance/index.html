@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Performance Benchmark - Web Worker Example #510</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>JSON Performance Benchmark</h1>
+        <p>Measure the speed of JSON parsing and serialization.</p>
+
+        <div class="controls">
+            <div>
+                <label for="complexity">Object Complexity:</label>
+                <select id="complexity">
+                    <option value="flat">Flat Object (Large)</option>
+                    <option value="deep">Deeply Nested</option>
+                    <option value="array">Array of Objects</option>
+                </select>
+            </div>
+            <div>
+                <label for="size">Size Factor:</label>
+                <input type="number" id="size" value="1000" min="100" max="10000">
+            </div>
+            <button id="runBtn">Run Benchmark</button>
+        </div>
+
+        <div class="results">
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Data Size (KB)</th>
+                        <th>Time (ms)</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

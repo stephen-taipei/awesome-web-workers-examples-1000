@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integer Arithmetic Benchmark - Web Worker Example #504</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Integer Arithmetic Benchmark</h1>
+        <p>Measure the performance of basic integer operations in a Web Worker.</p>
+
+        <div class="controls">
+            <div>
+                <label for="iterations">Iterations (millions):</label>
+                <input type="number" id="iterations" value="100" min="1" max="1000">
+            </div>
+            <button id="runBtn">Run Benchmark</button>
+        </div>
+
+        <div class="results">
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Time (ms)</th>
+                        <th>Ops / sec</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Results will be inserted here -->
+                </tbody>
+            </table>
+            <div id="totalScore" class="score"></div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

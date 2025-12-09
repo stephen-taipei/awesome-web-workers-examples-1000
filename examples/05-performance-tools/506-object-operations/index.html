@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Operations Benchmark - Web Worker Example #506</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Object Operations Benchmark</h1>
+        <p>Compare performance of Object vs Map for property access and manipulation.</p>
+
+        <div class="controls">
+            <div>
+                <label for="count">Object Count:</label>
+                <select id="count">
+                    <option value="100000">100k</option>
+                    <option value="500000" selected>500k</option>
+                    <option value="1000000">1M</option>
+                </select>
+            </div>
+            <button id="runBtn">Run Benchmark</button>
+        </div>
+
+        <div class="results">
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Type</th>
+                        <th>Time (ms)</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
