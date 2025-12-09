@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Tracing - Web Worker Example #230</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Message Tracing</h1>
+            <p class="subtitle">Web Worker Example #230 - Distributed Tracing for Worker Messages</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Message Tracing</h2>
+                <p>This example demonstrates distributed tracing capabilities for Web Worker communication. Each message chain is tracked with unique trace IDs, allowing you to observe the full lifecycle of requests across multiple workers.</p>
+                <div class="formula-box">
+                    <p><strong>Distributed Tracing Concepts:</strong></p>
+                    <pre class="formula">
+Trace Structure:
+  Trace ID    - Unique identifier for entire request chain
+  Span ID     - Unique identifier for single operation
+  Parent ID   - Link to parent span
+
+Span Attributes:
+  {
+    traceId: string,
+    spanId: string,
+    parentSpanId: string | null,
+    operationName: string,
+    startTime: timestamp,
+    endTime: timestamp,
+    duration: number,
+    tags: { key: value },
+    logs: [{ timestamp, message }]
+  }
+
+Propagation:
+  Main → Worker A → Worker B → Worker C
+  (Context propagated through message headers)
+
+Timing Analysis:
+  Total Duration = sum(span.duration)
+  Critical Path = longest chain of dependencies
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Tracing Control</h2>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="operationType">Operation Type:</label>
+                        <select id="operationType">
+                            <option value="sequential">Sequential (A → B → C)</option>
+                            <option value="parallel">Parallel (A, B, C)</option>
+                            <option value="fanout">Fan-Out/Fan-In</option>
+                            <option value="complex">Complex Flow</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="operationDelay">Base Delay (ms):</label>
+                        <input type="number" id="operationDelay" value="200" min="50" max="2000" step="50">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="addJitter">Add Jitter:</label>
+                        <select id="addJitter">
+                            <option value="false">No</option>
+                            <option value="true">Yes (±50%)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="startTraceBtn" class="btn btn-primary">Start New Trace</button>
+                    <button id="clearTracesBtn" class="btn btn-outline">Clear All Traces</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Trace Timeline</h2>
+                <canvas id="traceCanvas" width="700" height="400"></canvas>
+            </section>
+
+            <section class="traces-section">
+                <h2>Active Traces</h2>
+                <div id="tracesContainer" class="traces-container">
+                    <p class="empty-message">No traces yet. Start a new trace to begin.</p>
+                </div>
+            </section>
+
+            <section class="span-details-section hidden" id="spanDetailsSection">
+                <h2>Span Details</h2>
+                <div id="spanDetails" class="span-details"></div>
+            </section>
+
+            <section class="stats-section">
+                <h2>Tracing Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Traces</span>
+                        <span id="totalTraces" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Spans</span>
+                        <span id="totalSpans" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Avg Duration (ms)</span>
+                        <span id="avgDuration" class="stat-value">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Active Workers</span>
+                        <span id="activeWorkers" class="stat-value">0</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="logs-section">
+                <h2>Trace Logs</h2>
+                <div id="logsContainer" class="logs-container"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #230</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
