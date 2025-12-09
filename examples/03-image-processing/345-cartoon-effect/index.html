@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartoon Effect - Web Worker Example #345</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cartoon Effect</h1>
+            <p class="subtitle">Web Worker Example #345 - Cel Shading Style</p>
+            <div class="badges">
+                <span class="badge badge-advanced">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Cartoon Effect</h2>
+                <p>Create a cartoon or "cel-shaded" look by reducing the color palette (quantization) and adding bold outlines to edges.</p>
+                <div class="formula-box">
+                    <p><strong>Processing Pipeline:</strong></p>
+                    <ol>
+                        <li><strong>Color Quantization:</strong> Reduce colors to a few discrete levels (e.g., floor(color / 32) * 32).</li>
+                        <li><strong>Smoothing:</strong> Apply a median or bilateral filter to flatten colors.</li>
+                        <li><strong>Edge Detection:</strong> Detect edges and overlay them as black lines.</li>
+                    </ol>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label for="colorLevels">Color Levels (Quantization): <span id="colorLevelsValue">8</span></label>
+                    <input type="range" id="colorLevels" min="2" max="16" value="8">
+                </div>
+
+                <div class="input-group">
+                    <label for="edgeThreshold">Edge Threshold: <span id="edgeThresholdValue">30</span></label>
+                    <input type="range" id="edgeThreshold" min="10" max="100" value="30">
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Toonify</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <p id="originalInfo" class="image-info">No image loaded</p>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Cartoon</h3>
+                        <canvas id="resultCanvas"></canvas>
+                        <p id="resultInfo" class="image-info">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="download-section">
+                    <button id="downloadBtn" class="btn btn-primary">Download Result</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #345</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

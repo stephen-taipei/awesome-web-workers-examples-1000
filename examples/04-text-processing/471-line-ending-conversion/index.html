@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Line Ending Conversion - Web Worker Example #471</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Line Ending Conversion</h1>
+        <p>Convert line endings between LF (Unix) and CRLF (Windows).</p>
+
+        <div class="input-area">
+            <label for="inputText">Input Text:</label>
+            <textarea id="inputText" placeholder="Enter text with mixed line endings..."></textarea>
+        </div>
+
+        <div class="controls">
+            <div>
+                <label for="format">Target Format:</label>
+                <select id="format">
+                    <option value="lf">LF (\n) - Unix/Linux/macOS</option>
+                    <option value="crlf">CRLF (\r\n) - Windows</option>
+                </select>
+            </div>
+            <button id="processBtn">Convert Line Endings</button>
+        </div>
+
+        <div class="output-area">
+            <label for="outputText">Output Text (Debug View):</label>
+            <div id="outputContainer" class="output-container">
+                <pre id="outputText"></pre>
+            </div>
+            <div class="stats">
+                <span id="timing">Time: 0ms</span>
+                <span id="statsInfo">LF: 0 | CRLF: 0</span>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

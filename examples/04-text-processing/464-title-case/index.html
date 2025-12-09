@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title Case Converter - Web Worker Example #464</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Title Case Converter</h1>
+        <p>Convert text to Title Case using a Web Worker. Capitalize the first letter of each word.</p>
+
+        <div class="input-area">
+            <label for="inputText">Input Text:</label>
+            <textarea id="inputText" placeholder="Enter text here..."></textarea>
+        </div>
+
+        <div class="controls">
+            <button id="convertBtn">Convert to Title Case</button>
+        </div>
+
+        <div class="output-area">
+            <label for="outputText">Output Text:</label>
+            <div id="outputContainer" class="output-container">
+                <pre id="outputText"></pre>
+            </div>
+            <div class="stats">
+                <span id="timing">Time: 0ms</span>
+                <span id="charCount">Chars: 0</span>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
