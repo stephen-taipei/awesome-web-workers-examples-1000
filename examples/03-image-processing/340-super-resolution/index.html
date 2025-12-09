@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Resolution - Web Worker Example #340</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Super Resolution</h1>
+            <p class="subtitle">Web Worker Example #340 - Image Upscaling & Enhancement</p>
+            <div class="badges">
+                <span class="badge badge-advanced">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Super Resolution</h2>
+                <p>Upscale images while preserving details using Bicubic Interpolation followed by a sharpening pass. This technique provides better quality than standard resizing methods.</p>
+                <div class="formula-box">
+                    <p><strong>Processing Steps:</strong></p>
+                    <ul>
+                        <li><strong>Upscaling:</strong> Bicubic Interpolation (uses 4x4 neighborhood)</li>
+                        <li><strong>Enhancement:</strong> Unsharp Masking for edge sharpening</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label for="scaleSelect">Scale Factor:</label>
+                    <select id="scaleSelect">
+                        <option value="2">2x</option>
+                        <option value="3">3x</option>
+                        <option value="4">4x</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="sharpenStrength">Sharpening Strength: <span id="sharpenValue">0.5</span></label>
+                    <input type="range" id="sharpenStrength" min="0" max="1" step="0.1" value="0.5">
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Upscale Image</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <p id="originalInfo" class="image-info">No image loaded</p>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Super Resolution</h3>
+                        <canvas id="resultCanvas"></canvas>
+                        <p id="resultInfo" class="image-info">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="download-section">
+                    <button id="downloadBtn" class="btn btn-primary">Download Result</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #340</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
