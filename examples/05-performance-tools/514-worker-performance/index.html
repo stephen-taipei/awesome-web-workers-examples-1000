@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 通訊效能測試 (Worker Communication) - 514</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 通訊效能測試</h1>
+            <div class="subtitle">Message Passing Performance (RTT & Throughput)</div>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-beginner">Benchmark</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>Worker 通訊效能 (Worker Performance)</h2>
+                <p>此範例測試主執行緒與 Web Worker 之間的訊息傳遞延遲（Round-Trip Time, RTT）和吞吐量。</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="messageSize">訊息大小 (Payload Size):</label>
+                    <select id="messageSize">
+                        <option value="1024">1 KB</option>
+                        <option value="10240">10 KB</option>
+                        <option value="1048576">1 MB</option>
+                        <option value="10485760">10 MB</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="iterations">迭代次數 (Iterations):</label>
+                    <select id="iterations">
+                        <option value="100">100</option>
+                        <option value="1000">1,000</option>
+                        <option value="5000">5,000</option>
+                    </select>
+                </div>
+
+                <div class="button-group">
+                    <button id="startBtn" class="btn btn-primary">開始測試</button>
+                </div>
+            </section>
+
+            <section class="results">
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">平均 RTT</span>
+                        <span class="result-value" id="avgRTT">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">總耗時</span>
+                        <span class="result-value" id="totalTime">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">吞吐量</span>
+                        <span class="result-value" id="throughput">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

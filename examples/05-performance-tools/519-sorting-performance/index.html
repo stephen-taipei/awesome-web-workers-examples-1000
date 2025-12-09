@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 排序效能測試 (Sorting Performance) - 519</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 排序效能測試</h1>
+            <div class="subtitle">Sorting Algorithms Comparison</div>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-beginner">Algorithm</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>排序效能 (Sorting Performance)</h2>
+                <p>此範例比較不同排序算法在 Web Worker 中的執行效能。所有排序都在背景執行，不會凍結 UI。</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="arraySize">陣列大小 (Array Size):</label>
+                    <select id="arraySize">
+                        <option value="10000">10,000</option>
+                        <option value="100000">100,000</option>
+                        <option value="1000000">1,000,000</option>
+                        <option value="5000000">5,000,000</option>
+                    </select>
+                </div>
+
+                <div class="button-group">
+                    <button id="testNativeBtn" class="btn btn-primary">原生 Sort</button>
+                    <button id="testQuickBtn" class="btn btn-secondary">快速排序 (Quick)</button>
+                    <button id="testBubbleBtn" class="btn btn-outline">泡沫排序 (Bubble)</button>
+                </div>
+            </section>
+
+            <section class="results">
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">耗時</span>
+                        <span class="result-value" id="processTime">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">算法</span>
+                        <span class="result-value" id="algoName">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

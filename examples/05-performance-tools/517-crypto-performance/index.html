@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 加密效能測試 (Crypto Performance) - 517</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 加密效能測試</h1>
+            <div class="subtitle">Web Crypto API in Worker</div>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-advanced">Cryptography</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>加密效能 (Crypto Performance)</h2>
+                <p>此範例展示在 Web Worker 中使用 Web Crypto API 進行雜湊 (SHA-256) 和加密 (AES-GCM) 的效能。</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="dataSize">數據大小 (Data Size):</label>
+                    <select id="dataSize">
+                        <option value="1048576">1 MB</option>
+                        <option value="10485760">10 MB</option>
+                        <option value="52428800">50 MB</option>
+                        <option value="104857600">100 MB</option>
+                    </select>
+                </div>
+
+                <div class="button-group">
+                    <button id="testHashBtn" class="btn btn-primary">測試雜湊 (SHA-256)</button>
+                    <button id="testEncryptBtn" class="btn btn-secondary">測試加密 (AES-GCM)</button>
+                </div>
+            </section>
+
+            <section class="results">
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">耗時</span>
+                        <span class="result-value" id="processTime">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">速度</span>
+                        <span class="result-value" id="speed">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
