@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peer-to-Peer Pattern - Web Worker Example #236</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Peer-to-Peer Pattern</h1>
+            <p class="subtitle">Web Worker Example #236 - Decentralized Worker Communication</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Peer-to-Peer Pattern</h2>
+                <p>The Peer-to-Peer (P2P) pattern enables direct communication between Workers without a central coordinator. Each Worker can send messages to any other Worker, creating a decentralized mesh network. This pattern is ideal for distributed algorithms like gossip protocols, distributed consensus, and collaborative computations.</p>
+                <div class="formula-box">
+                    <p><strong>P2P Architecture:</strong></p>
+                    <pre class="formula">
+Traditional (Hub-and-Spoke):          Peer-to-Peer (Mesh):
+
+     Main Thread                      Worker A ←→ Worker B
+         ↓↑                               ↕   ╲   ╱   ↕
+    ┌────┼────┐                           ↕    ╲ ╱    ↕
+    ↓    ↓    ↓                           ↕     ╳     ↕
+   W1   W2   W3                           ↕    ╱ ╲    ↕
+                                      Worker C ←→ Worker D
+
+Key Concepts:
+• MessageChannel - Creates port pairs for direct communication
+• transferable - Ports are transferred, not copied
+• Gossip Protocol - Information spreads through peer messages
+• Consensus - Peers agree on shared state without central authority
+
+Use Cases:
+• Distributed sorting/merging
+• Collaborative filtering
+• Decentralized computation
+• Fault-tolerant systems
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="peerCount">Number of Peers:</label>
+                        <select id="peerCount">
+                            <option value="4">4 Peers</option>
+                            <option value="6" selected>6 Peers</option>
+                            <option value="8">8 Peers</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="algorithm">Algorithm:</label>
+                        <select id="algorithm">
+                            <option value="gossip">Gossip Protocol</option>
+                            <option value="consensus">Distributed Consensus</option>
+                            <option value="election">Leader Election</option>
+                            <option value="aggregate">Distributed Aggregation</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="dataSize">Data Size:</label>
+                        <select id="dataSize">
+                            <option value="100">100 items</option>
+                            <option value="500" selected>500 items</option>
+                            <option value="1000">1000 items</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="messageDelay">Message Delay (ms):</label>
+                        <input type="number" id="messageDelay" value="50" min="0" max="500" step="10">
+                    </div>
+                </div>
+
+                <div id="algorithmDescription" class="problem-desc"></div>
+
+                <div class="button-group">
+                    <button id="startBtn" class="btn btn-primary">Start P2P Network</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Initializing peers...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Network Topology</h2>
+                <canvas id="networkCanvas" width="600" height="400"></canvas>
+            </section>
+
+            <section id="messageLog" class="message-section">
+                <h2>Message Log</h2>
+                <div id="logContainer" class="log-container"></div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Status</span>
+                        <span id="status" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Messages</span>
+                        <span id="totalMessages" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Rounds</span>
+                        <span id="rounds" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Execution Time</span>
+                        <span id="execTime" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Consensus Value</span>
+                        <span id="consensusValue" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Leader Elected</span>
+                        <span id="leader" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Coverage</span>
+                        <span id="coverage" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Convergence</span>
+                        <span id="convergence" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Peer States</h3>
+                <div id="peerStates" class="peer-states"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #236</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
