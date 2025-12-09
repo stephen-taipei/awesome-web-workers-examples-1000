@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulge Distortion - Web Worker Example #325</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Bulge Distortion</h1>
+            <p class="subtitle">Web Worker Example #325 - Radial Expansion</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Intermediate</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Bulge Distortion</h2>
+                <p>Apply a bulge effect to the image, expanding content outward from a center point. This is the opposite of pinch distortion and creates a magnifying glass effect.</p>
+                <div class="formula-box">
+                    <p><strong>Bulge Formula:</strong></p>
+                    <pre class="formula">
+For each pixel (x, y), calculate distance r from center.
+If r < Radius:
+  Normalized dist d = r / Radius
+  Factor = 1 - Strength * (1 - d)
+  (u, v) = Center + (x - Center) * Factor
+
+Sample source image at (u, v).
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input & Controls</h2>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label for="strengthRange">Strength: <span id="strengthValue">0.5</span></label>
+                    <input type="range" id="strengthRange" min="0" max="1" step="0.01" value="0.5">
+                </div>
+
+                <div class="input-group">
+                    <label for="radiusRange">Radius: <span id="radiusValue">150</span>px</label>
+                    <input type="range" id="radiusRange" min="10" max="500" step="1" value="150">
+                </div>
+
+                <div class="input-group">
+                    <label>Center Position</label>
+                    <div style="display: flex; gap: 1rem;">
+                        <div style="flex: 1;">
+                            <label for="centerXRange">X: <span id="centerXValue">50</span>%</label>
+                            <input type="range" id="centerXRange" min="0" max="100" step="1" value="50">
+                        </div>
+                        <div style="flex: 1;">
+                            <label for="centerYRange">Y: <span id="centerYValue">50</span>%</label>
+                            <input type="range" id="centerYRange" min="0" max="100" step="1" value="50">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Apply Effect</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <p id="originalInfo" class="image-info">No image loaded</p>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Processed</h3>
+                        <canvas id="processedCanvas"></canvas>
+                        <p id="processedInfo" class="image-info">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Processing Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Pixels Processed</span>
+                        <span id="pixelsProcessed" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Worker Status</span>
+                        <span id="workerStatus" class="result-value">Ready</span>
+                    </div>
+                </div>
+
+                <div class="download-section">
+                    <button id="downloadBtn" class="btn btn-primary">Download Processed Image</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #325</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

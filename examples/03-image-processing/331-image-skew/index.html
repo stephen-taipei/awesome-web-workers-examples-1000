@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Skew - Web Worker Example #331</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Image Skew</h1>
+            <p class="subtitle">Web Worker Example #331 - Shear Transformation</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Intermediate</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Image Skew</h2>
+                <p>Apply a shear (skew) transformation to the image. This slants the image horizontally or vertically, simulating perspective or motion.</p>
+                <div class="formula-box">
+                    <p><strong>Shear Matrix:</strong></p>
+                    <pre class="formula">
+| x' |   | 1  shx | | x |
+|    | = |        | |   |
+| y' |   | shy  1 | | y |
+
+x' = x + shx * y
+y' = y + shy * x
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input & Controls</h2>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label>Skew Angles (Degrees)</label>
+                    <div style="display: flex; gap: 1rem;">
+                        <div style="flex: 1;">
+                            <label for="skewXRange">Horizontal (X): <span id="skewXValue">0</span>°</label>
+                            <input type="range" id="skewXRange" min="-45" max="45" step="1" value="0">
+                        </div>
+                        <div style="flex: 1;">
+                            <label for="skewYRange">Vertical (Y): <span id="skewYValue">0</span>°</label>
+                            <input type="range" id="skewYRange" min="-45" max="45" step="1" value="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Apply Skew</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <p id="originalInfo" class="image-info">No image loaded</p>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Skewed</h3>
+                        <canvas id="processedCanvas"></canvas>
+                        <p id="processedInfo" class="image-info">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Processing Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">New Dimensions</span>
+                        <span id="newDimensions" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Worker Status</span>
+                        <span id="workerStatus" class="result-value">Ready</span>
+                    </div>
+                </div>
+
+                <div class="download-section">
+                    <button id="downloadBtn" class="btn btn-primary">Download Image</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #331</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
