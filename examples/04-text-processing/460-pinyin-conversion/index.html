@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinyin Conversion - Web Worker Example #460</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pinyin Conversion</h1>
+            <p class="subtitle">Web Worker Example #460 - Chinese to Pinyin</p>
+            <div class="badges">
+                <span class="badge badge-intermediate">Intermediate</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Pinyin Conversion</h2>
+                <p>Converts Chinese characters to Pinyin with tone marks.</p>
+                <p class="note">Note: Uses a small demo dictionary for common characters.</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="inputText">Input Text:</label>
+                    <textarea id="inputText" rows="6" placeholder="输入中文... / 輸入中文...">你好世界。我爱编程。Web Workers 很有趣。</textarea>
+                </div>
+
+                <div class="input-group">
+                    <label><input type="checkbox" id="toneMarks" checked> Include Tone Marks</label>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary">Convert to Pinyin</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div class="input-group">
+                    <textarea id="outputText" rows="6" readonly></textarea>
+                </div>
+
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

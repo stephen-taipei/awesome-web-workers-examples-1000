@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synonym Replacement - Web Worker Example #457</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Synonym Replacement</h1>
+            <p class="subtitle">Web Worker Example #457 - Batch Text Replacement</p>
+            <div class="badges">
+                <span class="badge badge-intermediate">Intermediate</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Synonym Replacement</h2>
+                <p>Replaces occurrences of words with their defined synonyms. Useful for text standardization, obfuscation, or vocabulary enhancement.</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="synonymsMap">Synonym Map (JSON format: "target": "replacement"):</label>
+                    <textarea id="synonymsMap" rows="5" placeholder='{"happy": "joyful", "sad": "melancholy"}'>
+{
+    "happy": "joyful",
+    "sad": "melancholy",
+    "big": "gigantic",
+    "small": "tiny",
+    "good": "excellent"
+}</textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="inputText">Input Text:</label>
+                    <textarea id="inputText" rows="6" placeholder="Enter text to process...">The big dog was happy to see his small toy. It was a good day.</textarea>
+                </div>
+
+                <div class="input-group">
+                     <label><input type="checkbox" id="caseSensitive"> Case Sensitive</label>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary">Replace Synonyms</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div class="input-group">
+                    <textarea id="outputText" rows="6" readonly></textarea>
+                </div>
+
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Replacements</span>
+                        <span id="replacementCount" class="result-value">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
