@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 全文搜尋 (Full Text Search)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>全文搜尋 (Full Text Search)</h1>
+            <div class="subtitle">Boyer-Moore 搜尋算法</div>
+            <div class="badges">
+                <span class="badge badge-beginner">文本處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">Boyer-Moore</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能說明</h2>
+            <p>此範例展示 Boyer-Moore 字符串搜尋算法。在大段文本中快速查找目標字串的所有出現位置。</p>
+        </section>
+
+        <section class="controls">
+            <div class="input-pane">
+                <label>文本內容</label>
+                <textarea id="sourceText" placeholder="輸入大量文本..." style="height: 150px; margin-bottom: 1rem;"></textarea>
+            </div>
+
+            <div class="search-bar" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                <input type="text" id="searchTerm" placeholder="搜尋詞..." style="flex: 1; padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(96,165,250,0.3); background: rgba(0,0,0,0.3); color: #fff;">
+                <button id="searchBtn" class="btn btn-primary">搜尋</button>
+            </div>
+
+            <div class="button-group">
+                <button id="loadSampleBtn" class="btn btn-secondary">載入長文本</button>
+            </div>
+        </section>
+
+        <section class="results">
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">搜尋時間</span>
+                    <span class="result-value" id="processTime">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">找到數量</span>
+                    <span class="result-value" id="matchCount">-</span>
+                </div>
+            </div>
+
+            <div class="output-pane">
+                <h3>搜尋結果</h3>
+                <div id="resultsList" class="results-list"></div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - 431 Full Text Search</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

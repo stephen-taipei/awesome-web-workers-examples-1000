@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 抓取切割 (GrabCut)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>抓取切割 (GrabCut)</h1>
+            <div class="subtitle">迭代式圖割分割</div>
+            <div class="badges">
+                <span class="badge badge-beginner">影像處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">GMM</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能說明</h2>
+            <p>GrabCut 是基於 Graph Cut 的改進算法，利用高斯混合模型 (GMM) 迭代優化。您只需框選一個包含前景的矩形，算法會自動去除背景。</p>
+            <ul>
+                <li>上傳圖片 (建議 &lt; 400x400)</li>
+                <li>在圖片上拖曳框選前景區域</li>
+                <li>執行迭代分割</li>
+            </ul>
+        </section>
+
+        <section class="controls">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <p>點擊上傳圖片 (建議 &lt; 400x400)</p>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+            </div>
+
+            <div class="input-group">
+                <label>迭代參數</label>
+                <div>
+                    <label for="iterations">迭代次數 (1-10)</label>
+                    <input type="range" id="iterations" min="1" max="10" value="3" oninput="document.getElementById('iterVal').textContent = this.value">
+                    <span id="iterVal">3</span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary" disabled>執行 GrabCut</button>
+            </div>
+        </section>
+
+        <section class="results">
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">處理時間</span>
+                    <span class="result-value" id="processTime">-</span>
+                </div>
+            </div>
+
+            <div class="progress-section hidden" id="progressSection">
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-text" id="progressText">準備中...</div>
+            </div>
+
+            <div class="image-comparison">
+                <div class="image-panel">
+                    <h3>原始圖片 (請框選)</h3>
+                    <div style="position: relative; display: inline-block;">
+                        <canvas id="sourceCanvas" style="cursor: crosshair;"></canvas>
+                        <div id="selectionBox" style="position: absolute; border: 2px dashed #f00; background: rgba(255,0,0,0.2); display: none; pointer-events: none;"></div>
+                    </div>
+                </div>
+                <div class="image-panel">
+                    <h3>分割結果</h3>
+                    <canvas id="resultCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - 386 GrabCut</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

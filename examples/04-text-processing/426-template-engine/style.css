@@ -1,0 +1,33 @@
+@import url('../424-text-diff/style.css');
+
+.grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    height: 300px;
+}
+
+.input-pane {
+    display: flex;
+    flex-direction: column;
+}
+
+.output-pane {
+    margin-top: 1rem;
+}
+
+.code-output {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(96,165,250,0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    color: #e2e8f0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+    min-height: 150px;
+}
+
+@media (max-width: 768px) {
+    .grid-layout { grid-template-columns: 1fr; height: auto; }
+}

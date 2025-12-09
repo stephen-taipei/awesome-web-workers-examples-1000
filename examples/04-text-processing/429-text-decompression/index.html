@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 文本解壓 (Text Decompression)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>文本解壓 (Text Decompression)</h1>
+            <div class="subtitle">LZW 解壓算法</div>
+            <div class="badges">
+                <span class="badge badge-beginner">文本處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">LZW</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能說明</h2>
+            <p>此範例展示 LZW 解壓算法。輸入 Base64 壓縮數據 (來自編號 428 的輸出)，Worker 會進行解壓並還原原始文本。</p>
+        </section>
+
+        <section class="controls">
+            <div class="input-pane">
+                <label>壓縮數據 (Base64)</label>
+                <textarea id="sourceText" placeholder="輸入要解壓的 Base64 數據..." style="height: 150px; margin-bottom: 1rem;"></textarea>
+            </div>
+
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary">執行解壓</button>
+            </div>
+        </section>
+
+        <section class="results">
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">處理時間</span>
+                    <span class="result-value" id="processTime">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">還原大小</span>
+                    <span class="result-value" id="origSize">-</span>
+                </div>
+            </div>
+
+            <div class="output-pane">
+                <h3>還原結果 (Text)</h3>
+                <textarea id="resultText" readonly style="height: 150px;"></textarea>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - 429 Text Decompression</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

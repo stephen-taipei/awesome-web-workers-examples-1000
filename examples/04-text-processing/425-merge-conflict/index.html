@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 三方合併 (3-Way Merge)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>三方合併 (3-Way Merge)</h1>
+            <div class="subtitle">解決合併衝突</div>
+            <div class="badges">
+                <span class="badge badge-beginner">文本處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">Diff3</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能說明</h2>
+            <p>此範例展示 3-Way Merge 演算法。輸入「基礎版本」、「本地修改」與「遠端修改」，系統將自動合併並標記衝突。</p>
+        </section>
+
+        <section class="controls">
+            <div class="button-group" style="margin-bottom: 1rem;">
+                <button id="loadSampleBtn" class="btn btn-secondary">載入範例</button>
+                <button id="processBtn" class="btn btn-primary">執行合併</button>
+            </div>
+
+            <div class="merge-grid">
+                <div class="input-pane">
+                    <h3>Base (基礎版本)</h3>
+                    <textarea id="baseText" placeholder="Common Ancestor">function calculate(a, b) {
+    return a + b;
+}</textarea>
+                </div>
+                <div class="input-pane">
+                    <h3>Local (我的修改)</h3>
+                    <textarea id="localText" placeholder="Mine">function calculate(a, b) {
+    // Add logging
+    console.log(a, b);
+    return a + b;
+}</textarea>
+                </div>
+                <div class="input-pane">
+                    <h3>Remote (他人修改)</h3>
+                    <textarea id="remoteText" placeholder="Theirs">function calculate(a, b) {
+    return a * b; // Changed to multiply
+}</textarea>
+                </div>
+            </div>
+        </section>
+
+        <section class="results">
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">處理時間</span>
+                    <span class="result-value" id="processTime">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">衝突數</span>
+                    <span class="result-value" id="conflictCount">-</span>
+                </div>
+            </div>
+
+            <div class="output-pane">
+                <h3>合併結果</h3>
+                <pre id="mergeResult" class="code-output"></pre>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - 425 Merge Conflict</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 正則替換 (Regex Replace)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>正則替換 (Regex Replace)</h1>
+            <div class="subtitle">批量正則表達式處理</div>
+            <div class="badges">
+                <span class="badge badge-beginner">文本處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">RegExp</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能說明</h2>
+            <p>此範例展示在 Web Worker 中執行大規模的正則表達式搜尋與替換操作，避免阻塞主執行緒。</p>
+        </section>
+
+        <section class="controls">
+            <div class="input-pane">
+                <label>來源文本</label>
+                <textarea id="sourceText" placeholder="輸入要處理的文本..." style="height: 150px; margin-bottom: 1rem;"></textarea>
+            </div>
+
+            <div class="regex-controls" style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <label>查找模式 (Regex Pattern)</label>
+                    <input type="text" id="regexPattern" placeholder="\b(\w+)\b" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(96,165,250,0.3); background: rgba(0,0,0,0.3); color: #fff;">
+                </div>
+                <div>
+                    <label>替換為 (Replacement)</label>
+                    <input type="text" id="replacement" placeholder="[$1]" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(96,165,250,0.3); background: rgba(0,0,0,0.3); color: #fff;">
+                </div>
+                <div>
+                    <label>標誌 (Flags)</label>
+                    <input type="text" id="flags" value="g" placeholder="g, i, m" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(96,165,250,0.3); background: rgba(0,0,0,0.3); color: #fff;">
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="loadSampleBtn" class="btn btn-secondary">載入範例</button>
+                <button id="processBtn" class="btn btn-primary">執行替換</button>
+            </div>
+        </section>
+
+        <section class="results">
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">處理時間</span>
+                    <span class="result-value" id="processTime">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">匹配數量</span>
+                    <span class="result-value" id="matchCount">-</span>
+                </div>
+            </div>
+
+            <div class="output-pane">
+                <h3>結果文本</h3>
+                <textarea id="resultText" readonly style="height: 150px;"></textarea>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - 427 Regex Replace</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

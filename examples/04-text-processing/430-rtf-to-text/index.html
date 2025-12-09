@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers RTF 轉純文本 (RTF to Text)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>RTF 轉純文本 (RTF to Text)</h1>
+            <div class="subtitle">Rich Text Format 解析</div>
+            <div class="badges">
+                <span class="badge badge-beginner">文本處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">RTF</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能說明</h2>
+            <p>此範例展示如何解析 RTF (Rich Text Format) 格式並提取其中的純文本內容。</p>
+        </section>
+
+        <section class="controls">
+            <div class="input-pane">
+                <label>RTF 內容</label>
+                <textarea id="sourceText" placeholder="輸入 RTF 內容..." style="height: 150px; margin-bottom: 1rem;"></textarea>
+            </div>
+
+            <div class="button-group">
+                <button id="loadSampleBtn" class="btn btn-secondary">載入範例</button>
+                <button id="processBtn" class="btn btn-primary">轉換文本</button>
+            </div>
+        </section>
+
+        <section class="results">
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">處理時間</span>
+                    <span class="result-value" id="processTime">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">字元數</span>
+                    <span class="result-value" id="charCount">-</span>
+                </div>
+            </div>
+
+            <div class="output-pane">
+                <h3>純文本結果</h3>
+                <textarea id="resultText" readonly style="height: 150px;"></textarea>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - 430 RTF to Text</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
