@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spelling Suggestion - Web Worker Example #434</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Spelling Suggestion</h1>
+            <p class="subtitle">Web Worker Example #434 - Dictionary-based Correction</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Intermediate</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="controls">
+                <h2>Dictionary</h2>
+                <div class="input-group">
+                    <label for="dictionaryInput">Dictionary (Words separated by space/newline):</label>
+                    <textarea id="dictionaryInput" rows="10" style="width: 100%; background: rgba(0,0,0,0.3); color: #fff; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 10px;">
+the be to of and a in that have I it for not on with he as you do at this but his by from they we say her she or an will my one all would there their what so up out if about who get which go me when make can like time no just him know take people into year your good some could them see other than then now look only come its over think also back after use two how our work first well way even new want because any these give day most us
+apple banana orange computer software worker thread process memory storage
+javascript html css web browser server client database network
+                    </textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="wordInput">Misspelled Word:</label>
+                    <input type="text" id="wordInput" placeholder="e.g. appl" value="appl">
+                </div>
+
+                <div class="button-group">
+                    <button id="suggestBtn" class="btn btn-primary">Get Suggestions</button>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Suggestions</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <div id="suggestionList" style="margin-top: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
