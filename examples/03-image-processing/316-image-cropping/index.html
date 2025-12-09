@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Cropping - Web Worker Example #316</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #cropCanvas {
+            cursor: crosshair;
+            max-width: 100%;
+            height: auto;
+            border: 1px solid rgba(16,185,129,0.2);
+            background: #0a0a0a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Image Cropping</h1>
+            <p class="subtitle">Web Worker Example #316 - Region Selection & Pixel Copying</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Beginner</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Image Cropping</h2>
+                <p>Select a region of interest and crop the image. The cropping process is handled by a Web Worker to ensure UI responsiveness, especially for large images.</p>
+                <div class="formula-box">
+                    <p><strong>Cropping:</strong></p>
+                    <pre class="formula">
+Source Region: (x, y, width, height)
+Destination: (0, 0, width, height)
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <p id="selectionInfo">No selection</p>
+                </div>
+
+                <div class="button-group">
+                    <button id="cropBtn" class="btn btn-primary" disabled>Crop Image</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Workspace</h2>
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original (Draw to select)</h3>
+                        <canvas id="cropCanvas"></canvas>
+                        <p id="originalInfo" class="image-info">No image loaded</p>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Cropped Result</h3>
+                        <canvas id="resultCanvas"></canvas>
+                        <p id="resultInfo" class="image-info">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Original Size</span>
+                        <span id="originalSize" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Cropped Size</span>
+                        <span id="croppedSize" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="download-section">
+                    <button id="downloadBtn" class="btn btn-primary">Download Cropped Image</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #316</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
