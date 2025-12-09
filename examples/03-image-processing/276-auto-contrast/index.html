@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#276 自動對比 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 自動調整圖片對比度，採用百分位數映射演算法">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>自動對比</h1>
+            <p class="subtitle">Auto Contrast</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#276</span>
+                <span class="badge badge-secondary">圖像處理</span>
+                <span class="badge badge-warning">中級</span>
+            </div>
+        </header>
+
+        <!-- 圖片上傳區域 -->
+        <section class="card">
+            <h2 class="card-title">圖片選擇</h2>
+            <div class="upload-area" id="upload-area">
+                <div class="upload-placeholder">
+                    <span class="upload-icon">📷</span>
+                    <p>點擊或拖放圖片到此處</p>
+                    <p class="upload-hint">支援 JPG、PNG、WebP 格式</p>
+                </div>
+                <input type="file" id="file-input" accept="image/*" hidden>
+            </div>
+
+            <!-- 參數設定 -->
+            <div class="form-group">
+                <label class="form-label">裁剪百分比</label>
+                <div class="input-row">
+                    <div class="form-group">
+                        <label class="form-label" for="low-percentile">低端裁剪 (%)</label>
+                        <input
+                            type="number"
+                            id="low-percentile"
+                            class="form-input"
+                            value="1"
+                            min="0"
+                            max="10"
+                            step="0.5"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="high-percentile">高端裁剪 (%)</label>
+                        <input
+                            type="number"
+                            id="high-percentile"
+                            class="form-input"
+                            value="1"
+                            min="0"
+                            max="10"
+                            step="0.5"
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group">
+                <button id="worker-btn" class="btn btn-primary" disabled>
+                    使用 Worker 處理
+                </button>
+                <button id="main-thread-btn" class="btn btn-secondary" disabled>
+                    使用主執行緒處理
+                </button>
+                <button id="reset-btn" class="btn btn-danger" disabled>
+                    重置
+                </button>
+            </div>
+        </section>
+
+        <!-- 進度顯示區域 -->
+        <section class="card">
+            <h2 class="card-title">處理進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 結果顯示區域 -->
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">處理結果</h2>
+            <div class="image-comparison">
+                <div class="image-container">
+                    <h3>原始圖片</h3>
+                    <canvas id="original-canvas"></canvas>
+                </div>
+                <div class="image-container">
+                    <h3>處理後圖片</h3>
+                    <canvas id="result-canvas"></canvas>
+                </div>
+            </div>
+            <div id="result-stats" class="result-stats"></div>
+            <button id="download-btn" class="btn btn-primary">下載結果</button>
+        </section>
+
+        <!-- 效能比較區域 -->
+        <section id="comparison-section" class="card hidden">
+            <h2 class="card-title">效能比較</h2>
+            <div class="comparison-grid">
+                <div class="comparison-item worker">
+                    <p class="comparison-label">Web Worker</p>
+                    <p id="worker-time" class="comparison-value">-</p>
+                </div>
+                <div class="comparison-item main-thread">
+                    <p class="comparison-label">主執行緒</p>
+                    <p id="main-thread-time" class="comparison-value">-</p>
+                </div>
+            </div>
+            <div class="speedup-info">
+                <strong>結論：</strong>
+                <span id="speedup">請分別使用兩種方式處理以進行比較</span>
+            </div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>演算法：</strong>使用<code>百分位數映射 (Percentile Mapping)</code>，自動拉伸直方圖</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>資料傳輸：</strong>使用 <code>Transferable Objects</code> 提升效能</li>
+                <li><strong>效能目標：</strong>1080p 圖片 < 100ms</li>
+                <li><strong>效能優勢：</strong>使用 Worker 可避免阻塞主執行緒，保持頁面流暢</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #276 - 自動對比
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>
