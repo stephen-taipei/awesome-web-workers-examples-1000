@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Analysis - Web Worker Example #374</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .color-palette {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .color-swatch {
+            width: 80px;
+            height: 100px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 10px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .color-swatch:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+        .swatch-hex {
+            font-weight: bold;
+        }
+        .swatch-pct {
+            font-size: 0.7rem;
+            opacity: 0.9;
+        }
+        .chart-container {
+            margin-top: 20px;
+            height: 300px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            padding: 10px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Color Analysis</h1>
+            <p class="subtitle">Web Worker Example #374 - Dominant Color Extraction via K-Means</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Intermediate</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Color Analysis</h2>
+                <p>Extracts dominant colors from an image using K-Means clustering algorithm. This creates a representative color palette for the image.</p>
+            </section>
+
+            <section class="controls">
+                <h2>Settings</h2>
+                <div class="input-group">
+                    <label for="kSize">Number of Colors (K): <span id="kSizeVal">5</span></label>
+                    <input type="range" id="kSize" min="2" max="16" value="5" step="1">
+                </div>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Analyze Colors</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Image</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <p id="originalInfo" class="image-info">No image loaded</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Dominant Colors</h2>
+                <div id="paletteContainer" class="color-palette"></div>
+
+                <div class="chart-container">
+                    <canvas id="colorChart"></canvas>
+                </div>
+
+                <div class="results-grid" style="margin-top: 20px;">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Iterations</span>
+                        <span id="iterations" class="result-value">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLAHE - Web Worker Example #373</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CLAHE</h1>
+            <p class="subtitle">Web Worker Example #373 - Contrast Limited Adaptive Histogram Equalization</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About CLAHE</h2>
+                <p>CLAHE is a variant of Adaptive Histogram Equalization (AHE) which takes care of over-amplification of the contrast. It operates on small regions in the image, called tiles, rather than the entire image. The neighboring tiles are then combined using bilinear interpolation to remove the artificial boundaries.</p>
+            </section>
+
+            <section class="controls">
+                <h2>Settings</h2>
+                <div class="input-group">
+                    <label for="tileSize">Tile Size (Grid Size): <span id="tileSizeVal">8</span>x<span id="tileSizeVal2">8</span></label>
+                    <input type="range" id="tileSize" min="2" max="32" value="8" step="1">
+                </div>
+                <div class="input-group">
+                    <label for="clipLimit">Clip Limit: <span id="clipLimitVal">2.0</span></label>
+                    <input type="range" id="clipLimit" min="0" max="50" value="20" step="1">
+                    <small>Higher limit increases contrast but amplifies noise.</small>
+                </div>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Apply CLAHE</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <p id="originalInfo" class="image-info">No image loaded</p>
+                    </div>
+                    <div class="image-panel">
+                        <h3>CLAHE Processed</h3>
+                        <canvas id="processedCanvas"></canvas>
+                        <p id="processedInfo" class="image-info">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="download-section">
+                    <button id="downloadBtn" class="btn btn-primary">Download Image</button>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
