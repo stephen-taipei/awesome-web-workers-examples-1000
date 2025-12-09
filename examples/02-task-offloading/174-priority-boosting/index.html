@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Example 174: Priority Boosting</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Priority Boosting Scheduler</h1>
+        <p>Demonstrates a scheduling algorithm where older, low-priority tasks get a priority boost (aging) to prevent starvation.</p>
+
+        <div class="controls">
+            <button id="add-high-btn" class="btn-high">Add High Priority Task</button>
+            <button id="add-low-btn" class="btn-low">Add Low Priority Task</button>
+            <button id="toggle-scheduler" class="btn-control">Start Scheduler</button>
+        </div>
+
+        <div class="dashboard">
+            <div class="panel">
+                <h3>Pending Queue</h3>
+                <div id="queue-container" class="queue-list"></div>
+            </div>
+
+            <div class="panel">
+                <h3>Workers (Processing)</h3>
+                <div id="workers-container" class="worker-list"></div>
+            </div>
+
+            <div class="panel">
+                <h3>Completed</h3>
+                <div id="completed-container" class="completed-list"></div>
+            </div>
+        </div>
+
+        <div class="log-panel">
+            <h3>Event Log</h3>
+            <div id="log-output"></div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
