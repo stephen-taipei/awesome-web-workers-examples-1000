@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Levels Adjustment - Web Worker Example #259</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>色階調整</h1>
+            <p class="subtitle">Web Worker Example #259 - Histogram Stretching</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Levels Adjustment</h2>
+                <p>Levels adjustment remaps the tonal range of an image by setting input and output black/white points. This technique is essential for correcting exposure and enhancing contrast through histogram stretching.</p>
+                <div class="formula-box">
+                    <p><strong>Levels Adjustment Formula:</strong></p>
+                    <pre class="formula">
+Linear Remapping:
+
+  Input Range:  [inputBlack, inputWhite]
+  Output Range: [outputBlack, outputWhite]
+
+  For each pixel value V:
+
+  1. Clip to input range:
+     V_clipped = clamp(V, inputBlack, inputWhite)
+
+  2. Normalize to 0-1:
+     V_norm = (V_clipped - inputBlack) / (inputWhite - inputBlack)
+
+  3. Apply gamma (midtones):
+     V_gamma = V_norm^(1/gamma)
+
+  4. Map to output range:
+     V_out = outputBlack + V_gamma × (outputWhite - outputBlack)
+
+Common Adjustments:
+  • Increase contrast: Narrow input range
+  • Decrease contrast: Narrow output range
+  • Brighten shadows: Increase inputBlack
+  • Darken highlights: Decrease inputWhite
+  • Adjust midtones: Change gamma value
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+                <div class="input-group">
+                    <label for="imageInput">Upload Image:</label>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+
+                <div class="levels-controls">
+                    <h3>Input Levels</h3>
+                    <div class="range-group">
+                        <div class="slider-pair">
+                            <label>Black Point: <span id="inputBlackValue">0</span></label>
+                            <input type="range" id="inputBlackSlider" min="0" max="254" value="0">
+                        </div>
+                        <div class="slider-pair">
+                            <label>White Point: <span id="inputWhiteValue">255</span></label>
+                            <input type="range" id="inputWhiteSlider" min="1" max="255" value="255">
+                        </div>
+                    </div>
+
+                    <h3>Midtones (Gamma)</h3>
+                    <div class="slider-pair">
+                        <label>Gamma: <span id="gammaValue">1.00</span></label>
+                        <input type="range" id="gammaSlider" min="0.1" max="3.0" value="1.0" step="0.05">
+                    </div>
+
+                    <h3>Output Levels</h3>
+                    <div class="range-group">
+                        <div class="slider-pair">
+                            <label>Black Point: <span id="outputBlackValue">0</span></label>
+                            <input type="range" id="outputBlackSlider" min="0" max="254" value="0">
+                        </div>
+                        <div class="slider-pair">
+                            <label>White Point: <span id="outputWhiteValue">255</span></label>
+                            <input type="range" id="outputWhiteSlider" min="1" max="255" value="255">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="histogram-container">
+                    <h3>Histogram</h3>
+                    <canvas id="histogramCanvas" width="256" height="100"></canvas>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Apply Levels</button>
+                    <button id="autoBtn" class="btn btn-outline" disabled>Auto Levels</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                    <button id="downloadBtn" class="btn btn-outline" disabled>Download</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="canvas-container">
+                    <div class="canvas-wrapper">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                    </div>
+                    <div class="canvas-wrapper">
+                        <h3>Result</h3>
+                        <canvas id="resultCanvas"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Processing Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Image Size</span>
+                        <span id="imageSize" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Input Range</span>
+                        <span id="inputRange" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Output Range</span>
+                        <span id="outputRange" class="result-value">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #259</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

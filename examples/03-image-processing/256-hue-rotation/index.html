@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hue Rotation - Web Worker Example #256</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>色相旋轉</h1>
+            <p class="subtitle">Web Worker Example #256 - HSL Hue Shift</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Hue Rotation</h2>
+                <p>Hue rotation shifts all colors in an image around the color wheel by a specified angle. This technique adjusts the H (Hue) component in HSL color space while preserving saturation and lightness.</p>
+                <div class="formula-box">
+                    <p><strong>HSL Color Model:</strong></p>
+                    <pre class="formula">
+RGB to HSL Conversion:
+  M = max(R, G, B)
+  m = min(R, G, B)
+  L = (M + m) / 2
+
+  S = 0                    if M = m
+    = (M - m) / (1 - |2L - 1|)  otherwise
+
+  H = 0                           if M = m
+    = 60° × ((G - B) / (M - m))       if M = R
+    = 60° × ((B - R) / (M - m) + 2)   if M = G
+    = 60° × ((R - G) / (M - m) + 4)   if M = B
+
+Hue Rotation:
+  H' = (H + θ) mod 360°
+
+Where θ is the rotation angle in degrees
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+                <div class="input-group">
+                    <label for="imageInput">Upload Image:</label>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+
+                <div class="slider-group">
+                    <label for="hueSlider">Hue Rotation: <span id="hueValue">0</span>°</label>
+                    <input type="range" id="hueSlider" min="0" max="360" value="0" step="1">
+                    <div class="hue-preview"></div>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Apply Hue Rotation</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                    <button id="downloadBtn" class="btn btn-outline" disabled>Download Result</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="canvas-container">
+                    <div class="canvas-wrapper">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                    </div>
+                    <div class="canvas-wrapper">
+                        <h3>Result</h3>
+                        <canvas id="resultCanvas"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Processing Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Image Size</span>
+                        <span id="imageSize" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Pixels Processed</span>
+                        <span id="pixelCount" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Hue Shift</span>
+                        <span id="hueShift" class="result-value">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #256</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
