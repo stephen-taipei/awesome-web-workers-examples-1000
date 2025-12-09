@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 響應時間負載均衡示例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Web Workers 最小響應時間 (Least Response Time)</h1>
+        <p>此示例演示基於響應時間的負載均衡策略。系統會監控每個 Worker 的平均響應時間，並優先將任務分配給響應最快的 Worker。</p>
+
+        <div class="controls">
+            <div class="worker-config">
+                <h3>環境模擬</h3>
+                <p class="desc">您可以為每個 Worker 設定基礎延遲，模擬不同性能的機器或網絡環境。</p>
+                <div id="worker-inputs">
+                    <!-- Worker inputs -->
+                </div>
+            </div>
+
+            <div class="task-controls">
+                <h3>任務控制</h3>
+                <button id="add-task">提交任務</button>
+                <button id="auto-task">自動產生任務 (開/關)</button>
+                <button id="reset-stats" class="secondary">重置統計</button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div>總任務數: <span id="total-tasks">0</span></div>
+            <div>策略: <span class="highlight">優先選擇預估響應時間最短的 Worker</span></div>
+        </div>
+
+        <div id="workers-container" class="workers-container">
+            <!-- Workers will be visualized here -->
+        </div>
+
+        <div class="log-container">
+            <h3>系統日誌</h3>
+            <div id="log" class="log"></div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

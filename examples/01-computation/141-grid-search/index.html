@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Search - Web Worker Example #141</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Grid Search</h1>
+            <p class="subtitle">Web Worker Example #141 - Parameter Search</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Grid Search</h2>
+                <p>Grid Search is an exhaustive search method that evaluates a function at every point within a predefined grid of parameters. It is commonly used for hyperparameter optimization to find the best combination of parameters.</p>
+                <div class="formula-box">
+                    <p><strong>Method:</strong></p>
+                    <pre class="formula">
+Minimize f(x, y) over:
+x ∈ [x_min, x_max] with step Δx
+y ∈ [y_min, y_max] with step Δy
+
+Total evaluations = N_x × N_y
+Complexity: O(N²) for 2D
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Grid Configuration</h2>
+
+                <div class="input-group">
+                    <label for="functionSelect">Objective Function:</label>
+                    <select id="functionSelect">
+                        <option value="sphere">Sphere: x² + y²</option>
+                        <option value="rosenbrock">Rosenbrock: (1-x)² + 100(y-x²)²</option>
+                        <option value="himmelblau">Himmelblau: (x²+y-11)² + (x+y²-7)²</option>
+                        <option value="rastrigin">Rastrigin: 20 + x² - 10cos(2πx) + y² - 10cos(2πy)</option>
+                        <option value="ackley">Ackley Function</option>
+                    </select>
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="rangeXMin">X Min:</label>
+                        <input type="number" id="rangeXMin" value="-5" step="0.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="rangeXMax">X Max:</label>
+                        <input type="number" id="rangeXMax" value="5" step="0.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="rangeYMin">Y Min:</label>
+                        <input type="number" id="rangeYMin" value="-5" step="0.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="rangeYMax">Y Max:</label>
+                        <input type="number" id="rangeYMax" value="5" step="0.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="gridSize">Grid Resolution:</label>
+                        <input type="number" id="gridSize" value="100" min="10" max="500" step="10">
+                        <span class="hint">(e.g., 100 = 100x100 points)</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="startBtn" class="btn btn-primary">Start Search</button>
+                    <button id="stopBtn" class="btn btn-outline" disabled>Stop</button>
+                </div>
+            </section>
+
+            <section id="statusSection" class="status-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <div class="status-text">
+                    <span id="progressText">0%</span> |
+                    <span id="evalCount">0 / 0 evaluations</span>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <div class="canvas-container">
+                    <canvas id="heatmapCanvas" width="500" height="500"></canvas>
+                    <div class="colorbar">
+                        <div class="colorbar-gradient"></div>
+                        <div class="colorbar-labels">
+                            <span id="cbMax">Max</span>
+                            <span id="cbMin">Min</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultSection" class="result-section hidden">
+                <h2>Best Solution Found</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Best X</span>
+                        <span id="bestX">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Best Y</span>
+                        <span id="bestY">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Minimum Value</span>
+                        <span id="minVal">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Time Elapsed</span>
+                        <span id="timeElapsed">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #141</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

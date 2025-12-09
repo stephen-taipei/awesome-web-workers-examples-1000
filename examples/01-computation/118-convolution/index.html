@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#118 Convolution - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#118 Convolution</h1>
+            <p class="description">Fast convolution using FFT for signal filtering and analysis</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="method">Convolution Method:</label>
+                <select id="method">
+                    <option value="fft" selected>FFT Convolution (Fast)</option>
+                    <option value="direct">Direct Convolution (O(N*M))</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="signalType">Signal Type:</label>
+                <select id="signalType" onchange="updateSignalOptions()">
+                    <option value="sine">Sine Wave</option>
+                    <option value="square">Square Wave</option>
+                    <option value="pulse">Single Pulse</option>
+                    <option value="noisy">Noisy Signal</option>
+                    <option value="step">Step Function</option>
+                    <option value="custom">Custom Values</option>
+                </select>
+            </div>
+
+            <div id="waveOptions" class="control-group">
+                <label>Signal Parameters:</label>
+                <div class="param-row">
+                    <span>Frequency:</span>
+                    <input type="number" id="freq" value="5" min="1" max="50">
+                    <span>Amplitude:</span>
+                    <input type="number" id="amplitude" value="100" step="10">
+                </div>
+            </div>
+
+            <div id="customOptions" class="control-group" style="display: none;">
+                <label>Custom Signal Values (comma-separated):</label>
+                <input type="text" id="customValues" placeholder="e.g., 0, 1, 2, 3, 2, 1, 0">
+            </div>
+
+            <div class="control-group">
+                <label for="kernelType">Kernel (Filter) Type:</label>
+                <select id="kernelType" onchange="updateKernelOptions()">
+                    <option value="lowpass">Low-pass (Smoothing)</option>
+                    <option value="highpass">High-pass (Edge Detection)</option>
+                    <option value="gaussian">Gaussian Blur</option>
+                    <option value="derivative">First Derivative</option>
+                    <option value="laplacian">Laplacian</option>
+                    <option value="custom">Custom Kernel</option>
+                </select>
+            </div>
+
+            <div id="kernelOptions" class="control-group">
+                <label>Kernel Size:</label>
+                <select id="kernelSize">
+                    <option value="3">3</option>
+                    <option value="5" selected>5</option>
+                    <option value="7">7</option>
+                    <option value="9">9</option>
+                    <option value="15">15</option>
+                    <option value="31">31</option>
+                </select>
+            </div>
+
+            <div id="customKernelOptions" class="control-group" style="display: none;">
+                <label>Custom Kernel (comma-separated):</label>
+                <input type="text" id="customKernel" placeholder="e.g., 0.1, 0.2, 0.4, 0.2, 0.1">
+            </div>
+
+            <div class="control-group">
+                <label for="signalSize">Signal Size:</label>
+                <select id="signalSize">
+                    <option value="64">64 samples</option>
+                    <option value="128" selected>128 samples</option>
+                    <option value="256">256 samples</option>
+                    <option value="512">512 samples</option>
+                    <option value="1024">1024 samples</option>
+                    <option value="4096">4096 samples</option>
+                </select>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadPreset('smooth')">Smoothing</button>
+                <button class="btn-secondary" onclick="loadPreset('edge')">Edge Detection</button>
+                <button class="btn-secondary" onclick="loadPreset('denoise')">Denoise</button>
+                <button class="btn-secondary" onclick="loadPreset('derivative')">Derivative</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute Convolution</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Convolution</h3>
+            <p>Convolution combines two signals to produce a third signal. It's fundamental to filtering, smoothing, edge detection, and many signal processing applications.</p>
+
+            <h4>Convolution Formula</h4>
+            <div class="formula-box">
+                <div class="formula">(f * g)[n] = Σₖ f[k] · g[n - k]</div>
+                <div class="formula-note">Output is sum of weighted, shifted copies of the kernel</div>
+            </div>
+
+            <h4>FFT Convolution</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Time Domain</div>
+                    <div class="formula">y = x * h</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Frequency Domain</div>
+                    <div class="formula">Y = X · H</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Convolution Theorem</div>
+                    <div class="formula">x * h = IFFT(FFT(x) · FFT(h))</div>
+                </div>
+            </div>
+
+            <h4>Common Kernels</h4>
+            <ul>
+                <li><strong>Low-pass (Box):</strong> [1/n, 1/n, ..., 1/n] - Smoothing/averaging</li>
+                <li><strong>Gaussian:</strong> Bell curve - Natural smoothing</li>
+                <li><strong>High-pass:</strong> [-1, 2, -1] - Edge detection</li>
+                <li><strong>Derivative:</strong> [-1, 0, 1] - Rate of change</li>
+                <li><strong>Laplacian:</strong> [1, -2, 1] - Second derivative</li>
+            </ul>
+
+            <h4>Complexity</h4>
+            <ul>
+                <li><strong>Direct:</strong> O(N × M) where N = signal length, M = kernel length</li>
+                <li><strong>FFT:</strong> O((N+M) log(N+M)) - Much faster for large kernels</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

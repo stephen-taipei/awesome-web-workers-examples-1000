@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#122 Stochastic Gradient Descent - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#122 Stochastic Gradient Descent</h1>
+            <p class="description">Mini-batch optimization for large-scale machine learning</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="problemType">Problem Type:</label>
+                <select id="problemType">
+                    <option value="linear" selected>Linear Regression</option>
+                    <option value="polynomial">Polynomial Regression</option>
+                    <option value="logistic">Logistic Regression (Classification)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="datasetSize">Dataset Size:</label>
+                <select id="datasetSize">
+                    <option value="100">100 samples</option>
+                    <option value="500">500 samples</option>
+                    <option value="1000" selected>1000 samples</option>
+                    <option value="5000">5000 samples</option>
+                    <option value="10000">10000 samples</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="batchSize">Batch Size:</label>
+                <select id="batchSize">
+                    <option value="1">1 (Pure SGD)</option>
+                    <option value="16">16</option>
+                    <option value="32" selected>32</option>
+                    <option value="64">64</option>
+                    <option value="128">128</option>
+                    <option value="full">Full Batch (GD)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="learningRate">Learning Rate:</label>
+                <select id="learningRate">
+                    <option value="0.001">0.001</option>
+                    <option value="0.01" selected>0.01</option>
+                    <option value="0.1">0.1</option>
+                    <option value="0.5">0.5</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="momentum">Momentum:</label>
+                <select id="momentum">
+                    <option value="0" selected>0 (No momentum)</option>
+                    <option value="0.5">0.5</option>
+                    <option value="0.9">0.9 (Common)</option>
+                    <option value="0.99">0.99 (Nesterov-like)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="epochs">Epochs:</label>
+                <select id="epochs">
+                    <option value="10">10</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                    <option value="500">500</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="noiseLevel">Data Noise Level:</label>
+                <select id="noiseLevel">
+                    <option value="0.1">Low (0.1)</option>
+                    <option value="0.3" selected>Medium (0.3)</option>
+                    <option value="0.5">High (0.5)</option>
+                    <option value="1.0">Very High (1.0)</option>
+                </select>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadPreset('fast')">Fast Convergence</button>
+                <button class="btn-secondary" onclick="loadPreset('stable')">Stable Training</button>
+                <button class="btn-secondary" onclick="loadPreset('compare')">Compare Batch Sizes</button>
+                <button class="btn-secondary" onclick="loadPreset('momentum')">With Momentum</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Train Model</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Stochastic Gradient Descent</h3>
+            <p>SGD updates parameters using a subset (mini-batch) of training data, providing a balance between the noise of pure stochastic updates and the computational cost of full batch gradient descent.</p>
+
+            <h4>Update Rule</h4>
+            <div class="formula-box">
+                <div class="formula">θ_{t+1} = θ_t - α · ∇L_B(θ_t)</div>
+                <div class="formula-note">B = mini-batch, ∇L_B = average gradient over batch</div>
+            </div>
+
+            <h4>Momentum Update</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Velocity Update</div>
+                    <div class="formula">v_t = βv_{t-1} + ∇L_B(θ_t)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Parameter Update</div>
+                    <div class="formula">θ_{t+1} = θ_t - α · v_t</div>
+                </div>
+            </div>
+
+            <h4>Batch Size Trade-offs</h4>
+            <ul>
+                <li><strong>Small batch (1-16):</strong> Noisy updates, escapes local minima, high variance</li>
+                <li><strong>Medium batch (32-128):</strong> Good balance, efficient GPU utilization</li>
+                <li><strong>Large batch:</strong> Stable but may converge to sharp minima</li>
+                <li><strong>Full batch:</strong> Deterministic, slow per-epoch, true gradient</li>
+            </ul>
+
+            <h4>Advantages of SGD</h4>
+            <ul>
+                <li><strong>Scalability:</strong> Works with huge datasets that don't fit in memory</li>
+                <li><strong>Regularization:</strong> Noise helps escape sharp minima</li>
+                <li><strong>Online learning:</strong> Can update with streaming data</li>
+                <li><strong>Faster iterations:</strong> Many small updates vs few large ones</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

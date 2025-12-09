@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Logistic Map (Chaos) - Example 932</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Population Dynamics (Logistic Map)</h1>
+        <p>Visualizes the bifurcation diagram of the Logistic Map, showing the transition from stable population to chaos, computed in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="rMin">Growth Rate Min (r):</label>
+                    <input type="number" id="rMin" value="2.4" step="0.01" min="0" max="4">
+                </div>
+                <div class="form-group">
+                    <label for="rMax">Growth Rate Max (r):</label>
+                    <input type="number" id="rMax" value="4.0" step="0.01" min="0" max="4">
+                </div>
+                <div class="form-group">
+                    <label for="resolution">Resolution (Width):</label>
+                    <select id="resolution">
+                        <option value="400">400 px</option>
+                        <option value="800" selected>800 px</option>
+                        <option value="1200">1200 px</option>
+                    </select>
+                </div>
+                <button id="renderBtn">Generate Bifurcation Diagram</button>
+
+                <div class="stats">
+                    <div class="stat-item">Render Time: <span id="timeVal">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="bifurcationCanvas" width="800" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

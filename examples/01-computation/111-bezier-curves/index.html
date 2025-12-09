@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#111 Bezier Curves - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#111 Bezier Curves</h1>
+            <p class="description">Parametric curves using de Casteljau's algorithm</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>Control Points (x, y):</label>
+                <div id="controlPoints" class="data-points">
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="0" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="0" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="1" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="3" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="3" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="3" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="4" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="0" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                </div>
+                <button class="btn-add" onclick="addPoint()">+ Add Control Point</button>
+            </div>
+
+            <div class="control-group">
+                <label for="evalParam">Evaluate at t =</label>
+                <input type="number" id="evalParam" value="0.5" step="0.05" min="0" max="1">
+            </div>
+
+            <div class="control-group">
+                <label for="numSamples">Curve Samples:</label>
+                <input type="number" id="numSamples" value="100" min="10" max="500">
+            </div>
+
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="showConstruction" checked>
+                    Show de Casteljau construction
+                </label>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('linear')">Linear (2 pts)</button>
+                <button class="btn-secondary" onclick="loadSample('quadratic')">Quadratic (3 pts)</button>
+                <button class="btn-secondary" onclick="loadSample('cubic')">Cubic (4 pts)</button>
+                <button class="btn-secondary" onclick="loadSample('quartic')">Quartic (5 pts)</button>
+                <button class="btn-secondary" onclick="loadSample('scurve')">S-Curve (6 pts)</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute Bezier Curve</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Bezier Curves</h3>
+            <p>Bezier curves are parametric curves widely used in computer graphics, animation, and CAD systems. They're defined by control points and evaluated using de Casteljau's algorithm.</p>
+
+            <h4>Bezier Formula</h4>
+            <div class="formula-box">
+                <div class="formula">B(t) = Σᵢ₌₀ⁿ Pᵢ · Bᵢ,ₙ(t)</div>
+                <div class="formula-note">where Bᵢ,ₙ(t) = C(n,i) · tⁱ · (1-t)ⁿ⁻ⁱ (Bernstein polynomials)</div>
+            </div>
+
+            <h4>de Casteljau's Algorithm</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Base Case</div>
+                    <div class="formula">P₀ⁱ = Pᵢ (control points)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Recursion</div>
+                    <div class="formula">Pⱼⁱ = (1-t)Pⱼ₋₁ⁱ + tPⱼ₋₁ⁱ⁺¹</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Result</div>
+                    <div class="formula">B(t) = Pₙ⁰</div>
+                </div>
+            </div>
+
+            <h4>Properties</h4>
+            <ul>
+                <li><strong>Endpoint interpolation:</strong> Curve passes through P₀ and Pₙ</li>
+                <li><strong>Tangent at endpoints:</strong> Tangent at P₀ is along P₀P₁, at Pₙ along Pₙ₋₁Pₙ</li>
+                <li><strong>Convex hull:</strong> Curve lies within convex hull of control points</li>
+                <li><strong>Affine invariance:</strong> Transforming points then computing = computing then transforming</li>
+                <li><strong>Variation diminishing:</strong> Curve doesn't oscillate more than control polygon</li>
+            </ul>
+
+            <h4>Common Degrees</h4>
+            <ul>
+                <li><strong>Linear (n=1):</strong> Straight line segment</li>
+                <li><strong>Quadratic (n=2):</strong> Used in TrueType fonts</li>
+                <li><strong>Cubic (n=3):</strong> Used in PostScript, SVG, most graphics software</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

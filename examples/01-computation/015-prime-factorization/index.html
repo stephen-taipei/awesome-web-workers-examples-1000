@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#015 質因數分解 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 實現質因數分解，展示 RSA 安全基礎">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首 -->
+        <header class="header">
+            <h1>質因數分解</h1>
+            <p class="subtitle">Prime Factorization</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#015</span>
+                <span class="badge badge-secondary">計算密集型</span>
+                <span class="badge badge-warning">中級</span>
+            </div>
+            <div class="formula-display">
+                <span class="highlight">n = p₁<sup>a₁</sup> × p₂<sup>a₂</sup> × ... × pₖ<sup>aₖ</sup></span>
+                （算術基本定理）
+            </div>
+        </header>
+
+        <!-- 基本分解 -->
+        <section class="card">
+            <h2 class="card-title">🔢 質因數分解</h2>
+            <p class="card-description">
+                將任意正整數分解為質數的乘積
+            </p>
+
+            <div class="form-group">
+                <label class="form-label" for="number">輸入數字</label>
+                <input type="text" id="number" class="form-input" value="123456789" placeholder="輸入要分解的數字">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="method">分解方法</label>
+                <select id="method" class="form-input">
+                    <option value="auto">自動選擇</option>
+                    <option value="trial">試除法</option>
+                    <option value="pollard">Pollard's Rho</option>
+                    <option value="fermat">Fermat 分解法</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">範例數字</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-n="1234567890">1234567890</button>
+                    <button class="preset-btn" data-n="9999999967">9999999967 (質數)</button>
+                    <button class="preset-btn" data-n="600851475143">600851475143</button>
+                    <button class="preset-btn" data-n="3233">3233 (61×53)</button>
+                    <button class="preset-btn" data-n="1000000007">10⁹+7 (質數)</button>
+                </div>
+            </div>
+
+            <div id="error-message" class="error-message hidden"></div>
+
+            <div class="btn-group">
+                <button id="factorize-btn" class="btn btn-primary">分解</button>
+                <button id="stop-btn" class="btn btn-danger" disabled>停止</button>
+            </div>
+        </section>
+
+        <!-- RSA 攻擊 -->
+        <section class="card">
+            <h2 class="card-title">⚔️ RSA 攻擊演示</h2>
+            <p class="card-description">
+                透過分解 N 來破解 RSA 加密（展示為何需要大質數）
+            </p>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="rsa-n">公鑰 N (p × q)</label>
+                    <input type="text" id="rsa-n" class="form-input" value="3233" placeholder="N = p × q">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="rsa-e">公鑰 e</label>
+                    <input type="text" id="rsa-e" class="form-input" value="17" placeholder="公鑰指數">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="rsa-ciphertext">密文 C（選填）</label>
+                <input type="text" id="rsa-ciphertext" class="form-input" value="2790" placeholder="要解密的密文">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">預設 RSA 參數</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn rsa-preset" data-n="3233" data-e="17" data-c="2790">N=3233 (教科書)</button>
+                    <button class="preset-btn rsa-preset" data-n="10403" data-e="7" data-c="5000">N=10403 (101×103)</button>
+                    <button class="preset-btn rsa-preset" data-n="67591" data-e="65537">N=67591 (257×263)</button>
+                    <button class="preset-btn rsa-preset" data-n="1000000007" data-e="65537">N=10⁹+7 (質數)</button>
+                </div>
+            </div>
+
+            <button id="rsa-attack-btn" class="btn btn-danger">🔓 嘗試破解 RSA</button>
+        </section>
+
+        <!-- 數字分析 -->
+        <section class="card">
+            <h2 class="card-title">📊 數字分析</h2>
+            <p class="card-description">
+                分析數字的性質：質數判定、因子數量、歐拉函數等
+            </p>
+
+            <div class="form-group">
+                <label class="form-label" for="analyze-number">輸入數字</label>
+                <input type="text" id="analyze-number" class="form-input" value="123456" placeholder="輸入要分析的數字">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">範例</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn analyze-preset" data-n="1024">1024 (2¹⁰)</button>
+                    <button class="preset-btn analyze-preset" data-n="65536">65536 (2¹⁶)</button>
+                    <button class="preset-btn analyze-preset" data-n="362880">362880 (9!)</button>
+                    <button class="preset-btn analyze-preset" data-n="2147483647">2³¹-1 (Mersenne)</button>
+                </div>
+            </div>
+
+            <button id="analyze-btn" class="btn btn-secondary">分析數字</button>
+        </section>
+
+        <!-- 批量分解 -->
+        <section class="card">
+            <h2 class="card-title">📋 批量分解</h2>
+            <p class="card-description">
+                每行一個數字，批量進行質因數分解
+            </p>
+
+            <div class="form-group">
+                <label class="form-label" for="batch-input">數字列表</label>
+                <textarea id="batch-input" class="form-input" rows="6" placeholder="每行一個數字">123456
+654321
+1000000
+999983
+2147483647</textarea>
+            </div>
+
+            <button id="batch-btn" class="btn btn-secondary">批量分解</button>
+        </section>
+
+        <!-- 方法比較 -->
+        <section class="card">
+            <h2 class="card-title">⚡ 演算法比較</h2>
+            <p class="card-description">
+                比較試除法、Pollard's Rho 和 Fermat 分解法的效能
+            </p>
+
+            <div class="form-group">
+                <label class="form-label" for="compare-number">測試數字</label>
+                <input type="text" id="compare-number" class="form-input" value="1234567891011" placeholder="輸入要分解的數字">
+            </div>
+
+            <button id="compare-btn" class="btn btn-info">比較方法</button>
+        </section>
+
+        <!-- 進度 -->
+        <section class="card">
+            <h2 class="card-title">📈 計算進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 結果區域 -->
+        <section id="factorize-result" class="card result-section hidden"></section>
+        <section id="rsa-result" class="card result-section hidden"></section>
+        <section id="analyze-result" class="card result-section hidden"></section>
+        <section id="batch-result" class="card result-section hidden"></section>
+        <section id="compare-result" class="card result-section hidden"></section>
+
+        <!-- 說明 -->
+        <section class="card info-section">
+            <h3>🔐 關於此範例</h3>
+            <ul>
+                <li><strong>算術基本定理：</strong>任何大於 1 的整數都能唯一分解為質數的乘積</li>
+                <li><strong>試除法：</strong>最簡單的方法，嘗試 2 到 √n 的所有質數</li>
+                <li><strong>Pollard's Rho：</strong>隨機算法，對大多數數字效率更高</li>
+                <li><strong>Fermat 分解：</strong>適合兩個因子接近的情況（RSA 弱金鑰）</li>
+                <li><strong>RSA 安全性：</strong>基於大數分解的計算困難性</li>
+                <li><strong>注意：</strong>實際 RSA 使用 2048+ 位金鑰，無法在合理時間內分解</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #015 - 質因數分解
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

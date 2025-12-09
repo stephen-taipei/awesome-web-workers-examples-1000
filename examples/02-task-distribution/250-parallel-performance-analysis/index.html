@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parallel Performance Analysis - Web Worker Example #250</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Parallel Performance Analysis</h1>
+            <p class="subtitle">Web Worker Example #250 - Amdahl's Law & Performance Metrics</p>
+            <div class="badges">
+                <span class="badge badge-intermediate">Intermediate</span>
+                <span class="badge badge-worker">Multi-Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Parallel Performance Analysis</h2>
+                <p>This example demonstrates how to measure and analyze parallel execution performance using Amdahl's Law and related metrics. Understanding these principles helps optimize worker configurations for real-world applications.</p>
+                <div class="formula-box">
+                    <p><strong>Amdahl's Law & Performance Metrics:</strong></p>
+                    <pre class="formula">
+Amdahl's Law:
+  Speedup(n) = 1 / ((1-P) + P/n)
+  Where:
+    P = Parallelizable fraction (0-1)
+    n = Number of processors
+    1-P = Serial fraction
+
+Maximum Speedup:
+  lim(n→∞) Speedup = 1/(1-P)
+
+Gustafson's Law (Scaled Speedup):
+  Speedup(n) = n - (1-P)(n-1)
+
+Efficiency:
+  E = Speedup / n = Throughput_parallel / (n × Throughput_serial)
+
+Karp-Flatt Metric:
+  e = (1/Speedup - 1/n) / (1 - 1/n)
+  Measures serial fraction including overhead
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Analysis Configuration</h2>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="taskType">Task Type:</label>
+                        <select id="taskType">
+                            <option value="cpu_bound">CPU Bound (Math)</option>
+                            <option value="mixed" selected>Mixed Workload</option>
+                            <option value="memory_bound">Memory Bound</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="workloadSize">Workload Size:</label>
+                        <select id="workloadSize">
+                            <option value="small">Small (1M ops)</option>
+                            <option value="medium" selected>Medium (5M ops)</option>
+                            <option value="large">Large (20M ops)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="maxWorkers">Max Workers to Test:</label>
+                        <input type="number" id="maxWorkers" value="8" min="2" max="16">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="iterations">Test Iterations:</label>
+                        <input type="number" id="iterations" value="3" min="1" max="10">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="analyzeBtn" class="btn btn-primary">Run Performance Analysis</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Analyzing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Speedup Analysis</h2>
+                <canvas id="speedupCanvas" width="700" height="300"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Analysis Results</h2>
+
+                <div class="results-grid">
+                    <div class="result-item highlight">
+                        <span class="result-label">Parallelizable Fraction (P)</span>
+                        <span id="parallelFraction" class="result-value">-</span>
+                    </div>
+                    <div class="result-item highlight">
+                        <span class="result-label">Max Theoretical Speedup</span>
+                        <span id="maxSpeedup" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Serial Baseline</span>
+                        <span id="serialTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Best Parallel Time</span>
+                        <span id="bestParallelTime" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Achieved Speedup</span>
+                        <span id="achievedSpeedup" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Optimal Workers</span>
+                        <span id="optimalWorkers" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Peak Efficiency</span>
+                        <span id="peakEfficiency" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Karp-Flatt Metric</span>
+                        <span id="karpFlatt" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Efficiency Chart</h3>
+                <canvas id="efficiencyCanvas" width="700" height="200"></canvas>
+
+                <h3>Detailed Results</h3>
+                <div id="detailedResults" class="detailed-results"></div>
+
+                <h3>Recommendations</h3>
+                <div id="recommendations" class="recommendations"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #250</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

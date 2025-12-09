@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Example 175: Affinity Scheduling</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Affinity Scheduling</h1>
+        <p>Demonstrates assigning tasks to specific workers based on data locality (affinity). Workers "cache" data, and tasks requiring that data are routed to the worker that already has it.</p>
+
+        <div class="controls">
+            <button id="add-task-a" class="btn btn-a">Add Task (Dataset A)</button>
+            <button id="add-task-b" class="btn btn-b">Add Task (Dataset B)</button>
+            <button id="add-task-c" class="btn btn-c">Add Task (Dataset C)</button>
+            <div class="toggle-group">
+                <input type="checkbox" id="affinity-toggle" checked>
+                <label for="affinity-toggle">Enable Affinity Optimization</label>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="column">
+                <h3>Task Queue</h3>
+                <div id="queue-container" class="list-container"></div>
+            </div>
+
+            <div class="column workers-column">
+                <h3>Workers (Cache State)</h3>
+                <div id="workers-container" class="grid-container"></div>
+            </div>
+        </div>
+
+        <div class="metrics">
+            <div class="metric">
+                <div class="label">Cache Hits</div>
+                <div class="value" id="hits-val">0</div>
+            </div>
+            <div class="metric">
+                <div class="label">Cache Misses (Loads)</div>
+                <div class="value" id="misses-val">0</div>
+            </div>
+            <div class="metric">
+                <div class="label">Total Time</div>
+                <div class="value" id="time-val">0s</div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

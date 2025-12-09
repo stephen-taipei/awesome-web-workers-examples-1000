@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#194 降級策略 - Web Workers 範例</title>
+    <meta name="description" content="當系統負載過高時，自動切換至低品質或簡化運算模式">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>降級策略</h1>
+            <p class="subtitle">Service Degradation Strategy</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#194</span>
+                <span class="badge badge-secondary">任務分流</span>
+                <span class="badge badge-danger">高級</span>
+            </div>
+        </header>
+
+        <!-- 負載控制 -->
+        <section class="card">
+            <h2 class="card-title">負載模擬</h2>
+            <div class="control-panel">
+                <div class="form-group">
+                    <label class="form-label">當前系統負載: <span id="load-value">0</span>%</label>
+                    <input type="range" id="load-slider" class="range-input" min="0" max="100" value="0">
+                </div>
+                <div class="status-indicator">
+                    <span>服務狀態: </span>
+                    <span id="service-status" class="status-badge normal">正常</span>
+                </div>
+            </div>
+            <p class="description">拖動滑桿模擬系統負載。負載超過 80% 時將觸發降級策略。</p>
+        </section>
+
+        <!-- 圖片處理展示 -->
+        <section class="card">
+            <h2 class="card-title">圖片處理預覽</h2>
+            <div class="preview-area">
+                <div class="preview-box">
+                    <h3>原始圖片</h3>
+                    <img id="source-image" src="https://picsum.photos/id/237/400/300" alt="Source" crossorigin="anonymous">
+                </div>
+                <div class="preview-box">
+                    <h3>處理結果</h3>
+                    <canvas id="result-canvas" width="400" height="300"></canvas>
+                    <div id="process-info" class="process-info">尚未處理</div>
+                </div>
+            </div>
+            <div class="action-area">
+                <button id="process-btn" class="btn btn-primary">執行處理</button>
+            </div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>策略說明</h3>
+            <ul>
+                <li><strong>正常模式 (負載 < 80%)：</strong> 使用高品質濾鏡 (高斯模糊 + 邊緣檢測)，處理時間較長。</li>
+                <li><strong>降級模式 (負載 ≥ 80%)：</strong> 使用低品質濾鏡 (簡單灰階)，處理時間極短，優先保證服務可用性。</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #194 - 降級策略
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

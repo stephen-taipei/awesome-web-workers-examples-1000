@@ -1,0 +1,151 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0d1b2a;
+    color: #eee;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    background: #1b263b;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    max-width: 1100px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    color: #ffd60a;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    text-align: center;
+    color: #a0a0a0;
+    margin-bottom: 2rem;
+}
+
+h3 {
+    color: #ffd60a;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.layout {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.controls {
+    flex: 0 0 280px;
+    background: #415a77;
+    padding: 1.5rem;
+    border: 1px solid #778da9;
+    border-radius: 6px;
+}
+
+.visualization {
+    flex: 1;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.canvas-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+canvas {
+    background: #0a0a0a;
+    border: 2px solid #778da9;
+    border-radius: 4px;
+    max-width: 100%;
+    height: auto;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #ffd60a;
+}
+
+input[type="file"] {
+    width: 100%;
+    padding: 0.5rem;
+    background: #1b263b;
+    border: 1px solid #ffd60a;
+    border-radius: 4px;
+    color: #eee;
+    font-size: 0.9rem;
+}
+
+input[type="range"] {
+    width: 100%;
+    margin-top: 0.5rem;
+    accent-color: #ffd60a;
+}
+
+button {
+    width: 100%;
+    background-color: #ffd60a;
+    color: #0d1b2a;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background 0.2s;
+    margin-top: 0.5rem;
+}
+
+button:hover {
+    background-color: #ffea00;
+}
+
+button:disabled {
+    background-color: #5c6b7a;
+    color: #999;
+    cursor: not-allowed;
+}
+
+button.secondary {
+    background-color: #1b263b;
+    color: #ffd60a;
+    border: 1px solid #ffd60a;
+}
+
+button.secondary:hover {
+    background-color: #2c3e50;
+}
+
+.stats {
+    margin-top: 2rem;
+    border-top: 1px solid #778da9;
+    padding-top: 1rem;
+}
+
+.stat-item {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+}
+
+.stat-item span {
+    font-weight: bold;
+    color: #ffd60a;
+}

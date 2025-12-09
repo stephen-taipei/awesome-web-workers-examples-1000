@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adam Optimizer - Web Worker Example #123</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Adam Optimizer</h1>
+            <p class="subtitle">Web Worker Example #123 - Adaptive Moment Estimation</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Adam Optimizer</h2>
+                <p>Adam (Adaptive Moment Estimation) is an optimization algorithm that combines the benefits of AdaGrad and RMSprop. It computes adaptive learning rates for each parameter using estimates of first and second moments of the gradients.</p>
+                <div class="formula-box">
+                    <p><strong>Update Rules:</strong></p>
+                    <pre class="formula">
+m_t = β₁ * m_{t-1} + (1 - β₁) * g_t       (First moment)
+v_t = β₂ * v_{t-1} + (1 - β₂) * g_t²      (Second moment)
+m̂_t = m_t / (1 - β₁^t)                    (Bias correction)
+v̂_t = v_t / (1 - β₂^t)                    (Bias correction)
+θ_t = θ_{t-1} - α * m̂_t / (√v̂_t + ε)     (Update)
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="functionSelect">Test Function:</label>
+                    <select id="functionSelect">
+                        <option value="rosenbrock">Rosenbrock (Banana)</option>
+                        <option value="rastrigin">Rastrigin</option>
+                        <option value="sphere">Sphere</option>
+                        <option value="beale">Beale</option>
+                    </select>
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="learningRate">Learning Rate (α):</label>
+                        <input type="number" id="learningRate" value="0.01" step="0.001" min="0.0001">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="beta1">Beta 1 (β₁):</label>
+                        <input type="number" id="beta1" value="0.9" step="0.01" min="0" max="1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="beta2">Beta 2 (β₂):</label>
+                        <input type="number" id="beta2" value="0.999" step="0.001" min="0" max="1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="epsilon">Epsilon (ε):</label>
+                        <input type="number" id="epsilon" value="1e-8" step="1e-9">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="maxIter">Max Iterations:</label>
+                        <input type="number" id="maxIter" value="1000" min="100" max="10000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="tolerance">Tolerance:</label>
+                        <input type="number" id="tolerance" value="1e-6" step="1e-7">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="optimizeBtn" class="btn btn-primary">Start Optimization</button>
+                    <button id="stopBtn" class="btn btn-secondary hidden">Stop</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Initializing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Optimization Path</h2>
+                <div class="canvas-container">
+                    <canvas id="optimCanvas" width="500" height="400"></canvas>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Iterations:</span>
+                        <span id="iterCount" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Final Position:</span>
+                        <span id="finalPos" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Final Value:</span>
+                        <span id="finalValue" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Execution Time:</span>
+                        <span id="execTime" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="convergence-info">
+                    <h3>Convergence History</h3>
+                    <canvas id="lossCanvas" width="500" height="200"></canvas>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>
+                <a href="../index.html">Back to Examples</a> |
+                Web Workers Example #123 - Adam Optimizer
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

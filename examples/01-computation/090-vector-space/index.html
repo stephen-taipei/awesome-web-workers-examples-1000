@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#090 Vector Space - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#090 Vector Space</h1>
+            <p class="description">Compute basis, dimension, rank, and nullspace using row reduction (RREF)</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="operation">Operation:</label>
+                <select id="operation">
+                    <option value="all">Compute All Properties</option>
+                    <option value="rref">Row Reduced Echelon Form</option>
+                    <option value="rank">Rank & Nullity</option>
+                    <option value="basis">Column Space Basis</option>
+                    <option value="nullspace">Null Space Basis</option>
+                    <option value="rowspace">Row Space Basis</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="random">Random Matrix</option>
+                    <option value="manual">Manual Input</option>
+                </select>
+            </div>
+
+            <div id="randomInput">
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="rows">Rows (m):</label>
+                        <input type="number" id="rows" value="5" min="2" max="100">
+                    </div>
+                    <div class="control-group half">
+                        <label for="cols">Columns (n):</label>
+                        <input type="number" id="cols" value="4" min="2" max="100">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="matrixType">Matrix Type:</label>
+                    <select id="matrixType">
+                        <option value="random">Full Rank Random</option>
+                        <option value="rankDeficient">Rank Deficient</option>
+                        <option value="sparse">Sparse</option>
+                        <option value="integer">Integer Values</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="manualInput" style="display: none;">
+                <div class="control-group">
+                    <label for="matrixInput">Matrix A (vectors as rows or columns):</label>
+                    <textarea id="matrixInput" rows="5" placeholder="1, 2, 3&#10;4, 5, 6&#10;7, 8, 9"></textarea>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('independent')">Independent 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('dependent')">Dependent 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('tall')">Tall 4×2</button>
+                <button class="btn-secondary" onclick="loadSample('wide')">Wide 2×4</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Analyze Vector Space</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Vector Spaces</h3>
+            <p>Given a matrix A, we can analyze the associated vector spaces: column space (range), row space, and null space (kernel).</p>
+
+            <h4>Key Concepts</h4>
+            <table class="info-table">
+                <tr><th>Property</th><th>Definition</th><th>Formula</th></tr>
+                <tr><td>Rank</td><td>Dimension of column space</td><td>rank(A) = # pivot columns</td></tr>
+                <tr><td>Nullity</td><td>Dimension of null space</td><td>nullity(A) = n - rank(A)</td></tr>
+                <tr><td>Column Space</td><td>Span of columns</td><td>Col(A) = {Ax : x ∈ Rⁿ}</td></tr>
+                <tr><td>Null Space</td><td>Solutions to Ax = 0</td><td>Null(A) = {x : Ax = 0}</td></tr>
+            </table>
+
+            <h4>Rank-Nullity Theorem</h4>
+            <p><strong>rank(A) + nullity(A) = n</strong> (number of columns)</p>
+
+            <h4>Row Reduction (RREF)</h4>
+            <ul>
+                <li>Leading entry (pivot) is 1 in each nonzero row</li>
+                <li>Each pivot is the only nonzero in its column</li>
+                <li>Pivot columns indicate linearly independent columns</li>
+                <li>Free variables correspond to nullspace basis vectors</li>
+            </ul>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Testing linear independence</li>
+                <li>Finding basis for solution space</li>
+                <li>Image compression (low-rank approximation)</li>
+                <li>System solvability analysis</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

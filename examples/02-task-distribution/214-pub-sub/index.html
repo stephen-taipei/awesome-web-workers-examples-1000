@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#214 發布訂閱 - Web Workers 範例</title>
+    <meta name="description" content="使用發布訂閱模式實現 Worker 之間的解耦通訊">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>發布訂閱</h1>
+            <p class="subtitle">Pub/Sub Pattern</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#214</span>
+                <span class="badge badge-secondary">通訊協調</span>
+                <span class="badge badge-warning">中級</span>
+            </div>
+        </header>
+
+        <!-- 功能說明區域 -->
+        <section class="card">
+            <h2 class="card-title">功能說明</h2>
+            <p>此範例展示如何使用 <strong>發布訂閱模式 (Pub/Sub)</strong> 實現 Worker 之間的解耦通訊，讓訂閱者只接收感興趣的主題訊息。</p>
+            <ul class="feature-list">
+                <li>發布者和訂閱者完全解耦</li>
+                <li>支援多主題訂閱和動態訂閱管理</li>
+                <li>訂閱者只收到已訂閱主題的訊息</li>
+                <li>支援萬用字元訂閱 (如 system.*)</li>
+            </ul>
+        </section>
+
+        <!-- Worker 控制區域 -->
+        <section class="card">
+            <h2 class="card-title">Worker 管理</h2>
+
+            <div class="worker-controls">
+                <div class="form-group">
+                    <label class="form-label">建立 Worker</label>
+                    <div class="input-row">
+                        <input
+                            type="number"
+                            id="worker-count"
+                            class="form-input"
+                            value="3"
+                            min="1"
+                            max="10"
+                            placeholder="Worker 數量"
+                        >
+                        <button id="create-workers-btn" class="btn btn-primary">建立 Workers</button>
+                        <button id="terminate-all-btn" class="btn btn-danger">終止全部</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Worker 狀態列表 -->
+            <div id="worker-list" class="worker-list">
+                <p class="empty-message">尚未建立任何 Worker</p>
+            </div>
+        </section>
+
+        <!-- 主題訂閱管理區域 -->
+        <section class="card">
+            <h2 class="card-title">主題管理</h2>
+
+            <!-- 可用主題列表 -->
+            <div class="form-group">
+                <label class="form-label">可用主題</label>
+                <div class="topic-list" id="topic-list">
+                    <span class="topic-tag" data-topic="news">news</span>
+                    <span class="topic-tag" data-topic="alerts">alerts</span>
+                    <span class="topic-tag" data-topic="tasks">tasks</span>
+                    <span class="topic-tag" data-topic="system.status">system.status</span>
+                    <span class="topic-tag" data-topic="system.config">system.config</span>
+                    <span class="topic-tag" data-topic="data.update">data.update</span>
+                </div>
+            </div>
+
+            <!-- 自訂主題 -->
+            <div class="form-group">
+                <label class="form-label">新增自訂主題</label>
+                <div class="input-row">
+                    <input
+                        type="text"
+                        id="custom-topic"
+                        class="form-input"
+                        placeholder="輸入主題名稱 (如: my.custom.topic)"
+                    >
+                    <button id="add-topic-btn" class="btn btn-secondary">新增</button>
+                </div>
+            </div>
+
+            <!-- 訂閱控制 -->
+            <div class="form-group">
+                <label class="form-label">訂閱管理</label>
+                <div class="input-row">
+                    <select id="worker-select" class="form-input">
+                        <option value="">選擇 Worker...</option>
+                    </select>
+                    <select id="topic-select" class="form-input">
+                        <option value="">選擇主題...</option>
+                    </select>
+                    <button id="subscribe-btn" class="btn btn-success">訂閱</button>
+                    <button id="unsubscribe-btn" class="btn btn-warning">取消訂閱</button>
+                </div>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+        </section>
+
+        <!-- 發布訊息區域 -->
+        <section class="card">
+            <h2 class="card-title">發布訊息</h2>
+
+            <div class="form-group">
+                <label class="form-label">選擇主題</label>
+                <select id="publish-topic" class="form-input">
+                    <option value="">選擇要發布的主題...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">訊息內容</label>
+                <div class="input-row">
+                    <input
+                        type="text"
+                        id="publish-message"
+                        class="form-input"
+                        placeholder="輸入要發布的訊息"
+                        value="Hello, Subscribers!"
+                    >
+                    <button id="publish-btn" class="btn btn-primary">發布</button>
+                </div>
+            </div>
+
+            <!-- 快速發布 -->
+            <div class="form-group">
+                <label class="form-label">快速發布</label>
+                <div class="btn-group">
+                    <button class="btn btn-secondary quick-publish" data-topic="news" data-message="Breaking News!">
+                        發布新聞
+                    </button>
+                    <button class="btn btn-secondary quick-publish" data-topic="alerts" data-message="System Alert!">
+                        發布警報
+                    </button>
+                    <button class="btn btn-secondary quick-publish" data-topic="tasks" data-message="New Task Assigned">
+                        發布任務
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 訊息記錄區域 -->
+        <section class="card">
+            <h2 class="card-title">通訊記錄</h2>
+            <div id="log-container" class="log-container">
+                <p class="empty-message">尚無通訊記錄</p>
+            </div>
+            <button id="clear-log-btn" class="btn btn-secondary btn-small">清除記錄</button>
+        </section>
+
+        <!-- 程式碼說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>設計模式：</strong>發布訂閱模式 (Publish/Subscribe Pattern)</li>
+                <li><strong>核心概念：</strong>發布者和訂閱者透過主題 (Topic) 進行通訊</li>
+                <li><strong>解耦優勢：</strong>發布者不需要知道訂閱者是誰</li>
+                <li><strong>彈性訂閱：</strong>訂閱者可動態訂閱/取消訂閱任意主題</li>
+                <li><strong>事件分發：</strong>主執行緒作為訊息代理 (Message Broker)</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #214 - 發布訂閱
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>

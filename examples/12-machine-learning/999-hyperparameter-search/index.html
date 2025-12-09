@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Hyperparameter Search - Example 999</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Hyperparameter Search</h1>
+        <p>Simulates tuning machine learning hyperparameters (Grid Search vs Random Search) to minimize a loss function (Rosenbrock function) using a Web Worker.</p>
+        
+        <div class="controls-wrapper">
+            <div class="controls">
+                <h3>Search Configuration</h3>
+                <div class="form-group">
+                    <label for="strategy">Strategy:</label>
+                    <select id="strategy">
+                        <option value="grid">Grid Search</option>
+                        <option value="random">Random Search</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="iterations">Iterations (Random Only):</label>
+                    <input type="number" id="iterations" value="1000" min="100">
+                </div>
+                <div class="form-group">
+                    <label for="gridSize">Grid Size (NxN):</label>
+                    <input type="number" id="gridSize" value="50" min="10" max="200">
+                </div>
+                <div class="form-group">
+                    <label>Range X: [-2, 2]</label>
+                    <label>Range Y: [-1, 3]</label>
+                </div>
+                <button id="startBtn">Start Search</button>
+            </div>
+
+            <div class="stats">
+                <h3>Current Best</h3>
+                <div class="stat-item">Loss: <span id="bestLoss">-</span></div>
+                <div class="stat-item">Param X: <span id="bestX">-</span></div>
+                <div class="stat-item">Param Y: <span id="bestY">-</span></div>
+                <div class="stat-item">Progress: <span id="progress">0%</span></div>
+            </div>
+        </div>
+        
+        <div class="visualization">
+            <canvas id="searchCanvas" width="600" height="400"></canvas>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

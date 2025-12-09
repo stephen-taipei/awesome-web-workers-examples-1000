@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Parallelism - Web Worker Example #240</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Task Parallelism</h1>
+            <p class="subtitle">Web Worker Example #240 - Heterogeneous Task Parallel Execution</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Task Parallelism</h2>
+                <p>Task Parallelism executes different, independent tasks concurrently across multiple workers. Unlike data parallelism where the same operation runs on different data, task parallelism handles heterogeneous tasks - each worker performs a distinct computation type.</p>
+                <div class="formula-box">
+                    <p><strong>Task Parallel Model:</strong></p>
+                    <pre class="formula">
+Task Parallelism vs Data Parallelism:
+
+Data Parallel:   [Worker1: f(data1)] [Worker2: f(data2)] [Worker3: f(data3)]
+                 Same function f(), different data chunks
+
+Task Parallel:   [Worker1: Task_A()] [Worker2: Task_B()] [Worker3: Task_C()]
+                 Different functions, independent tasks
+
+Benefits:
+- Maximum resource utilization
+- Reduced total execution time
+- Independent failure handling
+- Natural fit for heterogeneous workloads
+
+Total Time = max(Task_A_time, Task_B_time, Task_C_time)
+Speedup = (T_A + T_B + T_C) / max(T_A, T_B, T_C)
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Task Configuration</h2>
+
+                <div class="task-list">
+                    <div class="task-item">
+                        <h3>Task A: Prime Calculation</h3>
+                        <div class="input-group">
+                            <label for="primeLimit">Find primes up to:</label>
+                            <input type="number" id="primeLimit" value="100000" min="1000" max="1000000">
+                        </div>
+                    </div>
+
+                    <div class="task-item">
+                        <h3>Task B: Matrix Multiplication</h3>
+                        <div class="input-group">
+                            <label for="matrixSize">Matrix size (N x N):</label>
+                            <input type="number" id="matrixSize" value="150" min="50" max="500">
+                        </div>
+                    </div>
+
+                    <div class="task-item">
+                        <h3>Task C: Fibonacci Sequence</h3>
+                        <div class="input-group">
+                            <label for="fibCount">Generate first N terms:</label>
+                            <input type="number" id="fibCount" value="10000" min="100" max="50000">
+                        </div>
+                    </div>
+
+                    <div class="task-item">
+                        <h3>Task D: Text Analysis</h3>
+                        <div class="input-group">
+                            <label for="textLength">Random text length:</label>
+                            <input type="number" id="textLength" value="100000" min="10000" max="500000">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="runParallelBtn" class="btn btn-primary">Run Tasks in Parallel</button>
+                    <button id="runSequentialBtn" class="btn btn-secondary">Run Tasks Sequentially</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <h2>Execution Progress</h2>
+                <div class="task-progress-list">
+                    <div class="task-progress" id="progressA">
+                        <span class="task-name">Task A (Primes)</span>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progressBarA"></div>
+                        </div>
+                        <span class="task-status" id="statusA">Pending</span>
+                    </div>
+                    <div class="task-progress" id="progressB">
+                        <span class="task-name">Task B (Matrix)</span>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progressBarB"></div>
+                        </div>
+                        <span class="task-status" id="statusB">Pending</span>
+                    </div>
+                    <div class="task-progress" id="progressC">
+                        <span class="task-name">Task C (Fibonacci)</span>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progressBarC"></div>
+                        </div>
+                        <span class="task-status" id="statusC">Pending</span>
+                    </div>
+                    <div class="task-progress" id="progressD">
+                        <span class="task-name">Task D (Text)</span>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progressBarD"></div>
+                        </div>
+                        <span class="task-status" id="statusD">Pending</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Execution Timeline</h2>
+                <canvas id="timelineCanvas" width="700" height="300"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Parallel Time</span>
+                        <span id="parallelTime" class="result-value highlight">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Sequential Time</span>
+                        <span id="sequentialTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Speedup</span>
+                        <span id="speedup" class="result-value highlight">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Efficiency</span>
+                        <span id="efficiency" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Task Results</h3>
+                <div class="task-results">
+                    <div class="task-result" id="resultA">
+                        <h4>Task A: Primes</h4>
+                        <p>Count: <span id="primeCount">-</span></p>
+                        <p>Time: <span id="primeTime">-</span> ms</p>
+                    </div>
+                    <div class="task-result" id="resultB">
+                        <h4>Task B: Matrix</h4>
+                        <p>Checksum: <span id="matrixChecksum">-</span></p>
+                        <p>Time: <span id="matrixTime">-</span> ms</p>
+                    </div>
+                    <div class="task-result" id="resultC">
+                        <h4>Task C: Fibonacci</h4>
+                        <p>Sum digits: <span id="fibSum">-</span></p>
+                        <p>Time: <span id="fibTime">-</span> ms</p>
+                    </div>
+                    <div class="task-result" id="resultD">
+                        <h4>Task D: Text</h4>
+                        <p>Word count: <span id="wordCount">-</span></p>
+                        <p>Time: <span id="textTime">-</span> ms</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #240</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

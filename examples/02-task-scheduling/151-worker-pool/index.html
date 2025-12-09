@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed Size Worker Pool</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f4f4f9;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover { background: #0056b3; }
+        button.add-task { background: #28a745; }
+        button.add-task:hover { background: #218838; }
+
+        .pool-visual {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .worker-node {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        .worker-idle {
+            background: #e9ecef;
+            color: #495057;
+            border-color: #adb5bd;
+        }
+        .worker-busy {
+            background: #ffeeba;
+            color: #856404;
+            border-color: #ffc107;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .queue-container {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            min-height: 50px;
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            align-items: center;
+            background: #f8f9fa;
+        }
+        .task-item {
+            background: #17a2b8;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .stat-box {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .log-container {
+            margin-top: 20px;
+            height: 200px;
+            overflow-y: auto;
+            background: #333;
+            color: #eee;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .log-entry { margin-bottom: 2px; }
+        .log-info { color: #81a1c1; }
+        .log-success { color: #a3be8c; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fixed Size Worker Pool</h1>
+        <p>A basic implementation of a worker pool that manages a fixed number of workers and a task queue.</p>
+
+        <div class="controls">
+            <label>Pool Size: <span id="poolSizeDisplay">4</span></label>
+            <input type="range" id="poolSize" min="1" max="12" value="4">
+            <button id="resetBtn">Reset Pool</button>
+        </div>
+
+        <div class="controls">
+            <button class="add-task" id="addFastBtn">Add Fast Task (0.5s)</button>
+            <button class="add-task" id="addSlowBtn">Add Slow Task (2s)</button>
+            <button class="add-task" id="addRandomBtn">Add Random Task</button>
+            <button class="add-task" id="addBatchBtn">Add Batch (10)</button>
+        </div>
+
+        <h3>Worker Pool Status</h3>
+        <div class="pool-visual" id="poolVisual">
+            <!-- Workers will be generated here -->
+        </div>
+
+        <h3>Task Queue (<span id="queueCount">0</span>)</h3>
+        <div class="queue-container" id="queueVisual">
+            <!-- Queue items -->
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-value" id="completedCount">0</div>
+                <div>Completed</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="avgTime">0ms</div>
+                <div>Avg Time</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="throughput">0/s</div>
+                <div>Throughput</div>
+            </div>
+        </div>
+
+        <h3>Event Log</h3>
+        <div class="log-container" id="logger"></div>
+    </div>
+
+    <script src="pool.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

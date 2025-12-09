@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#096 Trapezoidal Integration - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#096 Trapezoidal Integration</h1>
+            <p class="description">Numerical integration using the composite trapezoidal rule</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="functionSelect">Function f(x):</label>
+                <select id="functionSelect" onchange="updateFunction()">
+                    <option value="polynomial">x² (integral: x³/3)</option>
+                    <option value="sin">sin(x) (integral: -cos(x))</option>
+                    <option value="exp">e^x (integral: e^x)</option>
+                    <option value="gaussian">e^(-x²) (Gaussian)</option>
+                    <option value="sqrt">√x (integral: 2x^(3/2)/3)</option>
+                    <option value="rational">1/(1+x²) (integral: arctan(x))</option>
+                    <option value="custom">Custom function</option>
+                </select>
+            </div>
+
+            <div id="customInput" class="control-group" style="display: none;">
+                <label for="customFunction">Custom f(x):</label>
+                <input type="text" id="customFunction" placeholder="Math.sin(x) * Math.exp(-x)">
+                <small>Use JavaScript math syntax (Math.sin, Math.exp, Math.pow, etc.)</small>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="a">Lower Bound (a):</label>
+                    <input type="number" id="a" value="0" step="0.1">
+                </div>
+                <div class="control-group half">
+                    <label for="b">Upper Bound (b):</label>
+                    <input type="number" id="b" value="1" step="0.1">
+                </div>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="n">Number of Subintervals (n):</label>
+                    <input type="number" id="n" value="100" min="1" max="1000000">
+                </div>
+                <div class="control-group half">
+                    <label for="compareN">Compare with n =</label>
+                    <input type="number" id="compareN" value="1000" min="1" max="1000000">
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('polynomial')">∫x² [0,1]</button>
+                <button class="btn-secondary" onclick="loadSample('sin')">∫sin(x) [0,π]</button>
+                <button class="btn-secondary" onclick="loadSample('gaussian')">∫e^(-x²) [0,1]</button>
+                <button class="btn-secondary" onclick="loadSample('pi')">Compute π/4</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Integral</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Trapezoidal Rule</h3>
+            <p>The trapezoidal rule approximates the definite integral by summing areas of trapezoids under the curve.</p>
+
+            <h4>Formula</h4>
+            <div class="formula">
+                ∫f(x)dx ≈ h/2 × [f(a) + 2f(x₁) + 2f(x₂) + ... + 2f(x_{n-1}) + f(b)]
+            </div>
+            <p>where h = (b-a)/n is the step size</p>
+
+            <h4>Properties</h4>
+            <table class="info-table">
+                <tr><th>Property</th><th>Value</th></tr>
+                <tr><td>Order of accuracy</td><td>O(h²)</td></tr>
+                <tr><td>Error term</td><td>-h²(b-a)f''(ξ)/12</td></tr>
+                <tr><td>Exact for</td><td>Linear functions</td></tr>
+                <tr><td>Function evaluations</td><td>n + 1</td></tr>
+            </table>
+
+            <h4>Error Analysis</h4>
+            <ul>
+                <li><strong>Doubling n:</strong> Reduces error by factor of 4</li>
+                <li><strong>Best for:</strong> Smooth, non-oscillatory functions</li>
+                <li><strong>Caution:</strong> Large errors for highly curved functions</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master-Worker Pattern - Web Worker Example #235</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Master-Worker Pattern</h1>
+            <p class="subtitle">Web Worker Example #235 - 主從模式</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Master-Worker Pattern</h2>
+                <p>Master-Worker 模式由一個主控節點（Master）動態分配任務給多個工作節點（Worker）。Master 負責任務排程、負載平衡和結果收集。這種模式具有高度可擴展性，適用於任務數量不定或處理時間差異大的場景。</p>
+                <div class="formula-box">
+                    <p><strong>Master-Worker 執行流程：</strong></p>
+                    <pre class="formula">
+           ┌─────────────────────────────────────┐
+           │            MASTER                   │
+           │  ┌───────────────────────────────┐  │
+           │  │   Task Queue (待處理任務)      │  │
+           │  │   [T1][T2][T3][T4][T5]...     │  │
+           │  └───────────────────────────────┘  │
+           │            │ 分配任務               │
+           └────────────┼────────────────────────┘
+                        │
+        ┌───────────────┼───────────────┐
+        ▼               ▼               ▼
+   ┌─────────┐    ┌─────────┐    ┌─────────┐
+   │ Worker1 │    │ Worker2 │    │ Worker3 │
+   │  處理T1  │    │  處理T2  │    │  處理T3  │
+   └────┬────┘    └────┬────┘    └────┬────┘
+        │               │               │
+        └───────────────┼───────────────┘
+                        │ 回報結果
+                        ▼
+           ┌─────────────────────────────────────┐
+           │            MASTER                   │
+           │  • 收集結果                         │
+           │  • 分配下一個任務給空閒 Worker      │
+           │  • 負載平衡                         │
+           └─────────────────────────────────────┘
+
+特點：
+• 動態任務分配（Work Stealing）
+• 自動負載平衡
+• 容錯處理（Worker 失敗可重新分配）
+• 高度可擴展
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="taskSelect">Task Type:</label>
+                    <select id="taskSelect">
+                        <option value="imageRender">Image Rendering (影像渲染)</option>
+                        <option value="dataProcess">Data Processing (資料處理)</option>
+                        <option value="primeFind">Prime Finder (質數搜尋)</option>
+                        <option value="webCrawl">Web Crawl Simulation (網頁爬取)</option>
+                    </select>
+                </div>
+
+                <div id="taskDescription" class="problem-desc"></div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="workerCount">Worker Count:</label>
+                        <input type="number" id="workerCount" value="4" min="1" max="8">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="taskCount">Total Tasks:</label>
+                        <input type="number" id="taskCount" value="20" min="5" max="100">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="taskVariance">Task Variance (%):</label>
+                        <input type="number" id="taskVariance" value="50" min="0" max="100">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="dynamicAdd">Dynamic Add Tasks:</label>
+                        <select id="dynamicAdd">
+                            <option value="false">Disabled</option>
+                            <option value="true">Enabled</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="runBtn" class="btn btn-primary">Start Master-Worker</button>
+                    <button id="addTaskBtn" class="btn btn-secondary" disabled>Add Tasks</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Master-Worker Visualization</h2>
+                <canvas id="mwCanvas" width="700" height="400"></canvas>
+            </section>
+
+            <section class="queue-section">
+                <h2>Task Queue</h2>
+                <div class="queue-info">
+                    <span>Pending: <strong id="pendingCount">0</strong></span>
+                    <span>Processing: <strong id="processingCount">0</strong></span>
+                    <span>Completed: <strong id="completedCount">0</strong></span>
+                </div>
+                <div id="taskQueue" class="task-queue"></div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Status</span>
+                        <span id="status" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Tasks Completed</span>
+                        <span id="tasksCompleted" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Time</span>
+                        <span id="totalTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Throughput</span>
+                        <span id="throughput" class="result-value highlight">-</span>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Avg Task Time</span>
+                        <span id="avgTaskTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Load Balance</span>
+                        <span id="loadBalance" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Most Productive</span>
+                        <span id="mostProductive" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Worker Efficiency</span>
+                        <span id="efficiency" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Worker Statistics</h3>
+                <div id="workerStats" class="worker-stats"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #235</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

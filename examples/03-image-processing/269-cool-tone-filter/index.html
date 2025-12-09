@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cool Tone Filter - Web Worker Example #269</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cool Tone Filter</h1>
+            <p class="subtitle">Web Worker Example #269 - Blue Color Cast Effect</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Cool Tone Filter</h2>
+                <p>The cool tone filter applies a blue/cyan color cast to images, creating a cold, winter-like atmosphere. This effect is achieved by enhancing blue channel values while reducing red tones, commonly used in landscape and portrait photography for moody aesthetics.</p>
+                <div class="formula-box">
+                    <p><strong>Cool Tone Transform:</strong></p>
+                    <pre class="formula">
+For each pixel (R, G, B):
+
+// Reduce red, slightly increase green, boost blue
+newR = R × (1 - intensity × 0.2)
+newG = G × (1 + intensity × 0.05)
+newB = B × (1 + intensity × 0.3) + intensity × 20
+
+Alternative Matrix Form (with saturation adjustment):
+┌───────┐   ┌──────────────────────────────┐   ┌───┐
+│ newR  │   │ 0.85   0.05   0.05   0  │   │ R │
+│ newG  │ = │ 0.05   1.05   0.05   0  │ × │ G │
+│ newB  │   │ 0.10   0.10   1.30   20 │   │ B │
+│   1   │   │  0      0      0     1  │   │ 1 │
+└───────┘   └──────────────────────────────┘   └───┘
+
+Values are clamped to [0, 255]
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+
+                <div class="input-group">
+                    <label for="imageInput">Select Image:</label>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="intensity">Filter Intensity:</label>
+                        <input type="range" id="intensity" min="0" max="100" value="100">
+                        <span id="intensityValue">100%</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="blueBoost">Blue Boost:</label>
+                        <input type="range" id="blueBoost" min="0" max="50" value="30">
+                        <span id="blueBoostValue">30</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="applyBtn" class="btn btn-primary" disabled>Apply Cool Tone Filter</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                    <button id="downloadBtn" class="btn btn-outline" disabled>Download Result</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="canvas-container">
+                    <div class="canvas-wrapper">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                    </div>
+                    <div class="canvas-wrapper">
+                        <h3>Cool Tone Result</h3>
+                        <canvas id="resultCanvas"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Processing Statistics</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Image Size</span>
+                        <span id="imageSize" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Pixels</span>
+                        <span id="totalPixels" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Throughput</span>
+                        <span id="throughput" class="result-value">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #269</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

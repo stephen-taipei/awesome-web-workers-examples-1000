@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#054 Hilbert Transform - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#054 Hilbert Transform</h1>
+            <p class="description">Analytic Signal and Instantaneous Parameters using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Analysis Type:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="hilbert">Hilbert Transform</option>
+                    <option value="envelope">Signal Envelope</option>
+                    <option value="instantaneous">Instantaneous Parameters</option>
+                    <option value="hht">Hilbert-Huang Transform</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="signalData">Signal Data:</label>
+                <textarea id="signalData" rows="3" placeholder="0.1, 0.5, 0.8, 1.0, 0.8, 0.5..."></textarea>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('am')">AM Signal</button>
+                <button class="btn-secondary" onclick="loadSample('fm')">FM Signal</button>
+                <button class="btn-secondary" onclick="loadSample('chirp')">Chirp</button>
+                <button class="btn-secondary" onclick="loadSample('multicomp')">Multi-Component</button>
+            </div>
+
+            <div id="sampleRateGroup" class="control-group" style="display: none;">
+                <label for="sampleRate">Sample Rate (Hz):</label>
+                <input type="number" id="sampleRate" value="1000" min="1" max="100000">
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute Transform</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Hilbert Transform</h3>
+            <p>The <strong>Hilbert Transform</strong> is a linear operator that produces the analytic signal from a real-valued signal. It shifts all frequency components by 90° in phase.</p>
+
+            <h4>Applications</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Application</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>Envelope Detection</td>
+                    <td>Extract amplitude modulation from signals</td>
+                </tr>
+                <tr>
+                    <td>Instantaneous Frequency</td>
+                    <td>Time-varying frequency analysis</td>
+                </tr>
+                <tr>
+                    <td>Single-Sideband Modulation</td>
+                    <td>Communication systems</td>
+                </tr>
+                <tr>
+                    <td>Signal Demodulation</td>
+                    <td>AM/FM signal processing</td>
+                </tr>
+            </table>
+
+            <h4>Key Concepts</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Concept</th>
+                    <th>Formula</th>
+                </tr>
+                <tr>
+                    <td>Analytic Signal</td>
+                    <td>z(t) = x(t) + jH{x(t)}</td>
+                </tr>
+                <tr>
+                    <td>Envelope</td>
+                    <td>A(t) = |z(t)| = √(x² + H{x}²)</td>
+                </tr>
+                <tr>
+                    <td>Instantaneous Phase</td>
+                    <td>φ(t) = atan2(H{x}, x)</td>
+                </tr>
+                <tr>
+                    <td>Instantaneous Frequency</td>
+                    <td>f(t) = (1/2π) × dφ/dt</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

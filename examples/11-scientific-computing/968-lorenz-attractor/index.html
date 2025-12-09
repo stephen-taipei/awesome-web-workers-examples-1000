@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Lorenz Attractor - Example 968</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Lorenz Attractor (ODE Solver)</h1>
+        <p>Solving the Lorenz system of ordinary differential equations in a Web Worker to visualize chaotic behavior.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="sigma">Sigma (σ):</label>
+                    <input type="range" id="sigma" min="0" max="20" step="0.1" value="10">
+                    <span id="sigmaDisplay">10</span>
+                </div>
+                <div class="form-group">
+                    <label for="rho">Rho (ρ):</label>
+                    <input type="range" id="rho" min="0" max="50" step="0.1" value="28">
+                    <span id="rhoDisplay">28</span>
+                </div>
+                <div class="form-group">
+                    <label for="beta">Beta (β):</label>
+                    <input type="range" id="beta" min="0" max="10" step="0.1" value="2.66">
+                    <span id="betaDisplay">2.66</span>
+                </div>
+                <div class="form-group">
+                    <label for="speed">Speed (Steps/Frame):</label>
+                    <input type="range" id="speed" min="1" max="100" value="10">
+                </div>
+                <div class="buttons">
+                    <button id="startBtn">Start</button>
+                    <button id="resetBtn">Reset</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">Points: <span id="pointCount">0</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="lorenzCanvas" width="600" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

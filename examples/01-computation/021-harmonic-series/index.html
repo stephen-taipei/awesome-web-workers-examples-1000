@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harmonic Series Calculator - Web Worker Example #021</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Harmonic Series Calculator</h1>
+            <p class="subtitle">Web Worker Example #021 - High Precision Summation</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Harmonic Series</h2>
+                <p>The harmonic series is the sum: H(n) = 1 + 1/2 + 1/3 + ... + 1/n</p>
+                <div class="formula-box">
+                    <p><strong>Key Properties:</strong></p>
+                    <ul>
+                        <li>H(n) ≈ ln(n) + γ (Euler-Mascheroni constant γ ≈ 0.5772)</li>
+                        <li>The series diverges (grows without bound)</li>
+                        <li>Alternating harmonic series: 1 - 1/2 + 1/3 - ... = ln(2)</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+                <div class="input-group">
+                    <label for="calculationType">Calculation Type:</label>
+                    <select id="calculationType">
+                        <option value="harmonic">Harmonic Number H(n)</option>
+                        <option value="generalized">Generalized H(n,m) = Σ1/k^m</option>
+                        <option value="alternating">Alternating Harmonic</option>
+                        <option value="sequence">Harmonic Sequence</option>
+                        <option value="exceeding">Find n where H(n) > target</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="nInput">Number of terms (n):</label>
+                    <input type="number" id="nInput" min="1" value="1000000" placeholder="e.g., 1000000">
+                </div>
+                <div class="input-group hidden" id="mInputGroup">
+                    <label for="mInput">Power (m):</label>
+                    <input type="number" id="mInput" min="1" value="2" placeholder="e.g., 2">
+                </div>
+                <div class="input-group hidden" id="targetInputGroup">
+                    <label for="targetInput">Target value:</label>
+                    <input type="number" id="targetInput" step="0.1" value="10" placeholder="e.g., 10">
+                </div>
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Calculate</button>
+                    <button id="cancelBtn" class="btn btn-secondary hidden">Cancel</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <h2>Progress</h2>
+                <div class="progress-bar-container"><div id="progressBar" class="progress-bar"></div></div>
+                <p id="progressText" class="progress-text">Starting...</p>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div id="resultContent" class="result-content"></div>
+                <p class="execution-time">Execution time: <span id="executionTime">-</span></p>
+            </section>
+
+            <section id="errorContainer" class="error-section hidden">
+                <h2>Error</h2>
+                <p id="errorMessage" class="error-message"></p>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #021</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

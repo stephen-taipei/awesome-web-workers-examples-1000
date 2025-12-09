@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#004 最大公因數計算器 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 與歐幾里得算法計算最大公因數 (GCD)">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首 -->
+        <header class="header">
+            <h1>最大公因數計算器</h1>
+            <p class="subtitle">GCD Calculator (Greatest Common Divisor)</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#004</span>
+                <span class="badge badge-secondary">計算密集型</span>
+                <span class="badge badge-success">初級</span>
+            </div>
+            <div class="formula-display">
+                <span class="highlight">GCD(a, b)</span> = <span class="highlight">GCD(b, a mod b)</span>
+                <span style="margin-left: 10px; color: var(--text-muted);">— 歐幾里得算法</span>
+            </div>
+        </header>
+
+        <!-- 單對計算 -->
+        <section class="card">
+            <h2 class="card-title">計算兩數的 GCD</h2>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="input-a">數字 A</label>
+                    <input type="text" id="input-a" class="form-input" value="48" placeholder="輸入第一個數字">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="input-b">數字 B</label>
+                    <input type="text" id="input-b" class="form-input" value="18" placeholder="輸入第二個數字">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">快速設定</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-a="48" data-b="18">48, 18</button>
+                    <button class="preset-btn" data-a="1071" data-b="462">1071, 462</button>
+                    <button class="preset-btn" data-a="123456" data-b="789012">123456, 789012</button>
+                    <button class="preset-btn" data-a="9876543210" data-b="1234567890">大數測試</button>
+                </div>
+            </div>
+
+            <div id="error-message" class="error-message hidden"></div>
+
+            <div class="btn-group">
+                <button id="calculate-single-btn" class="btn btn-primary">計算 GCD</button>
+                <button id="show-steps-btn" class="btn btn-info">顯示計算步驟</button>
+                <button id="stop-btn" class="btn btn-danger" disabled>停止</button>
+            </div>
+        </section>
+
+        <!-- 多數計算 -->
+        <section class="card">
+            <h2 class="card-title">計算多個數字的 GCD</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                輸入多個數字 (以逗號、空格或換行分隔)
+            </p>
+
+            <div class="form-group">
+                <textarea id="multiple-input" class="form-textarea" placeholder="例如: 12, 18, 24, 36&#10;或&#10;12&#10;18&#10;24&#10;36">24, 36, 48, 60, 72</textarea>
+            </div>
+
+            <button id="calculate-multiple-btn" class="btn btn-secondary">計算多數 GCD</button>
+        </section>
+
+        <!-- 批量計算 -->
+        <section class="card">
+            <h2 class="card-title">批量計算數對的 GCD</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                每行輸入一對數字 (以逗號或空格分隔)
+            </p>
+
+            <div class="form-group">
+                <textarea id="batch-input" class="form-textarea" placeholder="例如:&#10;48, 18&#10;1071 462&#10;100, 75">12, 8
+56, 42
+100, 75
+144, 60
+225, 135</textarea>
+            </div>
+
+            <button id="calculate-batch-btn" class="btn btn-secondary">批量計算</button>
+        </section>
+
+        <!-- 隨機測試 -->
+        <section class="card">
+            <h2 class="card-title">隨機數測試</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                生成隨機數對並驗證互質機率 (理論值 6/π² ≈ 60.79%)
+            </p>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="random-count">生成數量</label>
+                    <input type="number" id="random-count" class="form-input" value="10000" min="1" max="100000">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="random-max">最大值</label>
+                    <input type="number" id="random-max" class="form-input" value="1000000" min="1">
+                </div>
+            </div>
+
+            <button id="random-btn" class="btn btn-info">開始隨機測試</button>
+        </section>
+
+        <!-- 進度 -->
+        <section class="card">
+            <h2 class="card-title">計算進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 結果區域 -->
+        <section id="single-result" class="card result-section hidden">
+            <h2 class="card-title">計算結果</h2>
+        </section>
+
+        <section id="steps-result" class="card result-section hidden">
+            <h2 class="card-title">計算步驟 (輾轉相除法)</h2>
+        </section>
+
+        <section id="multiple-result" class="card result-section hidden">
+            <h2 class="card-title">多數 GCD 結果</h2>
+        </section>
+
+        <section id="batch-result" class="card result-section hidden">
+            <h2 class="card-title">批量計算結果</h2>
+        </section>
+
+        <section id="random-result" class="card result-section hidden">
+            <h2 class="card-title">隨機測試結果</h2>
+        </section>
+
+        <!-- 說明 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>GCD 定義：</strong>能同時整除兩數的最大正整數</li>
+                <li><strong>演算法：</strong>歐幾里得算法 (輾轉相除法)，<code>GCD(a,b) = GCD(b, a mod b)</code></li>
+                <li><strong>時間複雜度：</strong>O(log(min(a, b)))</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker</li>
+                <li><strong>大數支援：</strong>使用 <code>BigInt</code> 處理超大整數</li>
+                <li><strong>互質機率：</strong>兩隨機正整數互質的機率趨近於 6/π² ≈ 60.79%</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #004 - 最大公因數計算器
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

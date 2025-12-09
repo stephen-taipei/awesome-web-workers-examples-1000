@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#102 Higher-Order Derivatives - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#102 Higher-Order Derivatives</h1>
+            <p class="description">Compute higher-order derivatives using finite differences and Richardson extrapolation</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="functionSelect">Function f(x):</label>
+                <select id="functionSelect" onchange="updateFunction()">
+                    <option value="sin">sin(x)</option>
+                    <option value="exp">e^x</option>
+                    <option value="polynomial">x^5 - 3x^3 + 2x</option>
+                    <option value="log">ln(x)</option>
+                    <option value="trig">sin(x) * cos(x)</option>
+                    <option value="gaussian">e^(-x^2)</option>
+                    <option value="custom">Custom function</option>
+                </select>
+            </div>
+
+            <div id="customInput" class="control-group" style="display: none;">
+                <label for="customFunction">Custom f(x):</label>
+                <input type="text" id="customFunction" placeholder="Math.sin(x) * Math.exp(-x)">
+                <small>Use JavaScript math syntax</small>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="x">Point x:</label>
+                    <input type="number" id="x" value="1" step="0.1">
+                </div>
+                <div class="control-group half">
+                    <label for="maxOrder">Maximum Order:</label>
+                    <select id="maxOrder">
+                        <option value="2">2nd derivative</option>
+                        <option value="3">3rd derivative</option>
+                        <option value="4" selected>4th derivative</option>
+                        <option value="5">5th derivative</option>
+                        <option value="6">6th derivative</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="h">Base Step Size h:</label>
+                    <input type="number" id="h" value="0.1" step="0.01" min="0.001">
+                </div>
+                <div class="control-group half">
+                    <label for="method">Method:</label>
+                    <select id="method">
+                        <option value="all">Compare All Methods</option>
+                        <option value="central">Central Differences</option>
+                        <option value="richardson">Richardson Extrapolation</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('sin')">sin(x), x=0</button>
+                <button class="btn-secondary" onclick="loadSample('exp')">e^x, x=0</button>
+                <button class="btn-secondary" onclick="loadSample('polynomial')">x^5, x=1</button>
+                <button class="btn-secondary" onclick="loadSample('gaussian')">Gaussian</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Derivatives</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Higher-Order Derivatives</h3>
+            <p>Higher-order derivatives measure how lower-order derivatives change. They are crucial in physics (acceleration, jerk), optimization (convexity), and Taylor series.</p>
+
+            <h4>Central Difference Formulas</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">2nd Derivative</div>
+                    <div class="formula">f''(x) ≈ [f(x+h) - 2f(x) + f(x-h)] / h²</div>
+                    <div class="formula-order">O(h²)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">3rd Derivative</div>
+                    <div class="formula">f'''(x) ≈ [f(x+2h) - 2f(x+h) + 2f(x-h) - f(x-2h)] / 2h³</div>
+                    <div class="formula-order">O(h²)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">4th Derivative</div>
+                    <div class="formula">f''''(x) ≈ [f(x+2h) - 4f(x+h) + 6f(x) - 4f(x-h) + f(x-2h)] / h⁴</div>
+                    <div class="formula-order">O(h²)</div>
+                </div>
+            </div>
+
+            <h4>Richardson Extrapolation</h4>
+            <p>Richardson extrapolation improves accuracy by combining estimates with different step sizes:</p>
+            <ul>
+                <li><strong>Basic idea:</strong> D(h) ≈ D + c₁h² + c₂h⁴ + ...</li>
+                <li><strong>Extrapolation:</strong> D* = [4D(h/2) - D(h)] / 3 gives O(h⁴)</li>
+                <li><strong>Higher order:</strong> Repeated extrapolation further reduces error</li>
+            </ul>
+
+            <h4>Applications</h4>
+            <ul>
+                <li><strong>Physics:</strong> f'' = acceleration, f''' = jerk, f'''' = snap</li>
+                <li><strong>Optimization:</strong> f'' determines convexity/concavity</li>
+                <li><strong>Taylor Series:</strong> All derivatives needed for approximation</li>
+                <li><strong>Numerical PDEs:</strong> Higher derivatives in wave/beam equations</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

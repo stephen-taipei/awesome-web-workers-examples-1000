@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Vector Field (Streamlines) - Example 963</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Vector Field Streamlines</h1>
+        <p>Visualizes a 2D vector field <code>F(x, y) = (u, v)</code> by integrating particle paths (streamlines) in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="eqU">u(x, y) =</label>
+                    <input type="text" id="eqU" value="cos(x) * y">
+                    <small>X-component of vector</small>
+                </div>
+                <div class="form-group">
+                    <label for="eqV">v(x, y) =</label>
+                    <input type="text" id="eqV" value="sin(y) * x">
+                    <small>Y-component of vector</small>
+                </div>
+                <div class="form-group">
+                    <label for="particleCount">Particles:</label>
+                    <input type="range" id="particleCount" min="100" max="5000" value="1000">
+                    <span id="countDisplay">1000</span>
+                </div>
+                <div class="form-group">
+                    <label for="stepSize">Step Size (dt):</label>
+                    <input type="number" id="stepSize" value="0.05" step="0.01">
+                </div>
+                <div class="buttons">
+                    <button id="startBtn">Start Simulation</button>
+                    <button id="resetBtn">Reset</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="fieldCanvas" width="500" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

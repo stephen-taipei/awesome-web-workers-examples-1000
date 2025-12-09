@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#218 訊息驗證 - Web Workers 範例</title>
+    <meta name="description" content="使用 HMAC 簽名在 Web Worker 中實現訊息完整性校驗">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>訊息驗證</h1>
+            <p class="subtitle">Message Verification (HMAC)</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#218</span>
+                <span class="badge badge-secondary">任務分流</span>
+                <span class="badge badge-warning">進階</span>
+            </div>
+        </header>
+
+        <!-- 金鑰設定區域 -->
+        <section class="card">
+            <h2 class="card-title">HMAC 設定</h2>
+
+            <!-- 雜湊演算法選擇 -->
+            <div class="form-group">
+                <label class="form-label">雜湊演算法</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="algorithm" value="SHA-256" checked>
+                        <span class="radio-custom"></span>
+                        SHA-256 (推薦)
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="algorithm" value="SHA-384">
+                        <span class="radio-custom"></span>
+                        SHA-384
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="algorithm" value="SHA-512">
+                        <span class="radio-custom"></span>
+                        SHA-512
+                    </label>
+                </div>
+            </div>
+
+            <!-- 金鑰操作 -->
+            <div class="btn-group">
+                <button id="generate-key-btn" class="btn btn-primary">
+                    產生 HMAC 金鑰
+                </button>
+                <button id="export-key-btn" class="btn btn-secondary" disabled>
+                    匯出金鑰
+                </button>
+            </div>
+
+            <!-- 金鑰狀態 -->
+            <div id="key-status" class="key-status">
+                <div class="key-status-icon">🔐</div>
+                <div class="key-status-content">
+                    <span class="key-status-label">金鑰狀態</span>
+                    <span id="key-status-text" class="key-status-text">尚未產生金鑰</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 簽名區域 -->
+        <section class="card">
+            <h2 class="card-title">訊息簽名</h2>
+
+            <div class="form-group">
+                <label class="form-label" for="message-input">訊息內容</label>
+                <textarea
+                    id="message-input"
+                    class="form-textarea"
+                    rows="4"
+                    placeholder="輸入要簽名的訊息..."
+                >這是一則需要驗證完整性的重要訊息。HMAC 可以確保訊息在傳輸過程中沒有被篡改。</textarea>
+            </div>
+
+            <div class="btn-group center">
+                <button id="sign-btn" class="btn btn-success" disabled>
+                    ✍️ 簽名訊息
+                </button>
+            </div>
+
+            <!-- 簽名結果 -->
+            <div id="signature-section" class="signature-section hidden">
+                <div class="form-group">
+                    <label class="form-label">HMAC 簽名 (Hex)</label>
+                    <div class="signature-display">
+                        <input type="text" id="signature-output" class="form-input mono" readonly>
+                        <button id="copy-signature-btn" class="btn btn-secondary btn-sm" title="複製簽名">
+                            📋
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 驗證區域 -->
+        <section class="card">
+            <h2 class="card-title">訊息驗證</h2>
+
+            <div class="form-group">
+                <label class="form-label" for="verify-message">待驗證訊息</label>
+                <textarea
+                    id="verify-message"
+                    class="form-textarea"
+                    rows="3"
+                    placeholder="輸入要驗證的訊息..."
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="verify-signature">提供的簽名 (Hex)</label>
+                <input
+                    type="text"
+                    id="verify-signature"
+                    class="form-input mono"
+                    placeholder="輸入要驗證的 HMAC 簽名..."
+                >
+            </div>
+
+            <div class="btn-group center">
+                <button id="verify-btn" class="btn btn-warning" disabled>
+                    🔍 驗證簽名
+                </button>
+            </div>
+
+            <!-- 驗證結果 -->
+            <div id="verify-result" class="verify-result hidden">
+                <div id="verify-result-icon" class="verify-result-icon"></div>
+                <div id="verify-result-text" class="verify-result-text"></div>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+        </section>
+
+        <!-- 簽名詳情 -->
+        <section id="details-section" class="card hidden">
+            <h2 class="card-title">簽名詳情</h2>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <span class="detail-label">演算法</span>
+                    <span id="detail-algorithm" class="detail-value">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">簽名長度</span>
+                    <span id="detail-signature-length" class="detail-value">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">訊息大小</span>
+                    <span id="detail-message-size" class="detail-value">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">處理時間</span>
+                    <span id="detail-time" class="detail-value">-</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 篡改測試 -->
+        <section class="card">
+            <h2 class="card-title">篡改測試</h2>
+            <p class="card-description">
+                嘗試修改已簽名的訊息，然後驗證簽名是否仍有效，以了解 HMAC 如何防止篡改。
+            </p>
+            <div class="btn-group">
+                <button id="test-tamper-btn" class="btn btn-danger" disabled>
+                    模擬篡改測試
+                </button>
+            </div>
+            <div id="tamper-result" class="tamper-result hidden"></div>
+        </section>
+
+        <!-- 操作日誌 -->
+        <section class="card">
+            <h2 class="card-title">操作日誌</h2>
+            <div id="log-container" class="log-container">
+                <div class="log-placeholder">等待操作...</div>
+            </div>
+            <button id="clear-log-btn" class="btn btn-secondary btn-sm">清除日誌</button>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>技術：</strong>使用 <code>Web Crypto API</code> 的 HMAC 功能</li>
+                <li><strong>支援演算法：</strong>SHA-256、SHA-384、SHA-512</li>
+                <li><strong>用途：</strong>確保訊息完整性，防止傳輸過程中被篡改</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>安全性：</strong>HMAC 金鑰需雙方共享才能驗證</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #218 - 訊息驗證
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>

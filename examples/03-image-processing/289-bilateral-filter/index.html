@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 雙邊濾波 (Bilateral Filter)</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首 -->
+        <header class="header">
+            <h1><i class="fas fa-filter"></i> 雙邊濾波效果</h1>
+            <div class="subtitle">使用 Web Workers 實現高品質保邊模糊</div>
+            <div class="badge-container">
+                <span class="badge badge-primary">Web Workers</span>
+                <span class="badge badge-secondary">高斯加權</span>
+                <span class="badge badge-warning">影像處理</span>
+            </div>
+        </header>
+
+        <!-- 主要內容 -->
+        <main>
+            <!-- 檔案上傳 -->
+            <section class="card">
+                <h3 class="card-title"><i class="fas fa-upload"></i> 圖片來源</h3>
+
+                <div class="upload-area" id="upload-area">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p class="upload-text">點擊或拖放圖片至此</p>
+                    <input type="file" id="file-input" accept="image/*" hidden>
+                    <p class="upload-hint">支援 JPG, PNG, WebP (建議 2000px 以下)</p>
+                </div>
+
+                <div class="demo-buttons">
+                    <button class="btn btn-secondary" id="load-demo-btn">
+                        <i class="fas fa-image"></i> 載入範例圖片
+                    </button>
+                </div>
+            </section>
+
+            <!-- 參數控制 -->
+            <section class="card">
+                <h3 class="card-title"><i class="fas fa-sliders-h"></i> 參數設定</h3>
+
+                <div class="form-group">
+                    <div class="input-row">
+                        <div>
+                            <label class="form-label">空間 Sigma (Space σ)：<span id="sigma-space-value">5</span></label>
+                            <input type="range" class="form-range" id="sigma-space-input" min="1" max="20" value="5" step="0.5">
+                            <p class="form-hint">控制空間上的模糊範圍 (類似高斯模糊半徑)</p>
+                        </div>
+                        <div>
+                            <label class="form-label">顏色 Sigma (Color σ)：<span id="sigma-color-value">30</span></label>
+                            <input type="range" class="form-range" id="sigma-color-input" min="1" max="100" value="30">
+                            <p class="form-hint">控制顏色差異的容忍度 (類似邊緣閾值)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="apply-btn" disabled>
+                        <i class="fas fa-play"></i> 套用濾波
+                    </button>
+                    <button class="btn btn-secondary" id="reset-btn" disabled>
+                        <i class="fas fa-undo"></i> 還原原圖
+                    </button>
+                    <button class="btn btn-info" id="download-btn" disabled>
+                        <i class="fas fa-download"></i> 下載結果
+                    </button>
+                </div>
+
+                <!-- 進度條 -->
+                <div class="progress-container">
+                    <div class="progress-bar-wrapper">
+                        <div class="progress-bar" id="progress-bar" style="width: 0%">0%</div>
+                    </div>
+                    <div class="progress-text" id="progress-text">準備就緒</div>
+                </div>
+            </section>
+
+            <!-- 預覽區域 -->
+            <section class="card" id="preview-section" style="display: none;">
+                <h3 class="card-title"><i class="fas fa-eye"></i> 結果預覽</h3>
+
+                <div class="preview-container">
+                    <div class="preview-box">
+                        <h4>原始圖片</h4>
+                        <canvas id="original-canvas"></canvas>
+                    </div>
+                    <div class="preview-box">
+                        <h4>處理結果</h4>
+                        <canvas id="result-canvas"></canvas>
+                    </div>
+                </div>
+
+                <div id="result-stats" class="result-stats">
+                    <!-- JS 動態生成統計 -->
+                </div>
+            </section>
+
+            <!-- 說明區域 -->
+            <section class="card info-section">
+                <h3><i class="fas fa-info-circle"></i> 關於雙邊濾波 (Bilateral Filter)</h3>
+                <p>雙邊濾波是一種非線性的、邊緣保持的和平滑噪聲濾波器。它結合了兩個高斯函數：</p>
+                <br>
+                <ul>
+                    <li><strong>空間域 (Space Domain)</strong>：根據像素的幾何距離計算權重，距離越近權重越大。</li>
+                    <li><strong>值域 (Range/Color Domain)</strong>：根據像素的顏色差異計算權重，顏色越接近權重越大。</li>
+                </ul>
+                <p>這使得雙邊濾波在平坦區域像高斯模糊一樣工作，但在邊緣處會停止模糊，從而產生清晰的邊緣和平滑的內部。</p>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Web Workers 1000 Examples Project - Example 289</p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

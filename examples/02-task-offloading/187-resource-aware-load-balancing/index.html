@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 資源感知負載均衡示例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Web Workers 資源感知 (Resource Aware)</h1>
+        <p>此示例演示基於模擬資源使用情況（CPU/記憶體）的負載均衡。Worker 會回報其資源負載，主執行緒根據剩餘容量分配任務。</p>
+
+        <div class="controls">
+            <div class="worker-config">
+                <h3>環境模擬</h3>
+                <p class="desc">模擬每個 Worker 的最大資源容量。</p>
+                <div id="worker-inputs">
+                    <!-- Worker inputs -->
+                </div>
+            </div>
+
+            <div class="task-controls">
+                <h3>任務控制</h3>
+                <div class="task-type-selector">
+                    <label>任務消耗資源:</label>
+                    <select id="task-size">
+                        <option value="small">小型 (CPU: 10%, MEM: 5%)</option>
+                        <option value="medium" selected>中型 (CPU: 30%, MEM: 20%)</option>
+                        <option value="large">大型 (CPU: 60%, MEM: 40%)</option>
+                        <option value="huge">巨型 (CPU: 90%, MEM: 80%)</option>
+                    </select>
+                </div>
+                <button id="add-task">提交任務</button>
+                <button id="auto-task">自動產生任務 (開/關)</button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div>總任務數: <span id="total-tasks">0</span></div>
+            <div>拒絕任務數: <span id="rejected-tasks" class="danger">0</span></div>
+        </div>
+
+        <div id="workers-container" class="workers-container">
+            <!-- Workers will be visualized here -->
+        </div>
+
+        <div class="log-container">
+            <h3>系統日誌</h3>
+            <div id="log" class="log"></div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

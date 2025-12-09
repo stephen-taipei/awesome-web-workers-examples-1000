@@ -1,0 +1,95 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a0a2e 0%, #4a1c2e 50%, #2e1a0a 100%);
+    min-height: 100vh;
+    color: #eee;
+    line-height: 1.6;
+}
+
+.container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+
+header { text-align: center; margin-bottom: 2rem; }
+
+h1 { color: #ff6b35; font-size: 2.4rem; margin-bottom: 0.5rem; }
+.subtitle { color: #d4a574; }
+
+section {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255,107,53,0.2);
+}
+
+h2 { color: #ff6b35; font-size: 1.3rem; margin-bottom: 1rem; }
+
+.description p { color: #d4a574; margin-bottom: 1rem; }
+
+.formula-box {
+    background: rgba(0,0,0,0.3);
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #ff6b35;
+    overflow-x: auto;
+}
+
+.formula { font-family: 'Courier New', monospace; color: #ffb088; font-size: 0.82rem; line-height: 1.6; white-space: pre; }
+
+.params-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+
+.input-group { margin-bottom: 0.5rem; }
+.input-group label { display: block; margin-bottom: 0.4rem; color: #ffb088; font-size: 0.9rem; font-weight: 500; }
+
+.input-group select, .input-group input[type="number"] {
+    width: 100%; padding: 0.7rem;
+    border: 1px solid rgba(255,107,53,0.3);
+    border-radius: 8px;
+    background: rgba(0,0,0,0.3);
+    color: #fff; font-size: 0.95rem;
+}
+
+.input-group select:focus, .input-group input:focus { outline: none; border-color: #ff6b35; box-shadow: 0 0 15px rgba(255,107,53,0.3); }
+
+.hint { display: block; font-size: 0.75rem; color: #8a6b5a; margin-top: 0.3rem; }
+
+.button-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.btn { flex: 1; min-width: 120px; padding: 0.8rem 1.5rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+.btn-primary { background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 25px rgba(255,107,53,0.4); }
+.btn-secondary { background: #ef4444; color: white; }
+.btn-outline { background: transparent; color: #ff6b35; border: 2px solid #ff6b35; }
+.btn-outline:hover { background: rgba(255,107,53,0.1); }
+
+.hidden { display: none !important; }
+
+.progress-section { padding: 1rem; }
+.progress-bar-container { background: rgba(0,0,0,0.3); border-radius: 10px; height: 20px; overflow: hidden; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, #ff6b35, #f7931e); width: 0%; transition: width 0.2s; }
+.progress-text { text-align: center; margin-top: 0.5rem; color: #d4a574; font-size: 0.9rem; }
+
+.visualization { text-align: center; }
+canvas { background: #0f0a14; border-radius: 8px; border: 1px solid rgba(255,107,53,0.2); }
+
+.results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.result-item { background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; text-align: center; }
+.result-label { display: block; color: #d4a574; font-size: 0.8rem; margin-bottom: 0.3rem; text-transform: uppercase; }
+.result-value { color: #ffb088; font-size: 1rem; font-weight: 600; font-family: 'Courier New', monospace; }
+
+.charts-row { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+.chart-container { flex: 1; min-width: 260px; }
+.chart-container h3 { color: #ff6b35; margin-bottom: 0.5rem; font-size: 1rem; text-align: center; }
+
+footer { text-align: center; padding: 1.5rem; color: #d4a574; }
+footer a { color: #ff6b35; text-decoration: none; }
+
+@media (max-width: 600px) {
+    .container { padding: 1rem; }
+    h1 { font-size: 1.8rem; }
+    .params-grid { grid-template-columns: 1fr; }
+    .button-group { flex-direction: column; }
+    .charts-row { flex-direction: column; }
+}

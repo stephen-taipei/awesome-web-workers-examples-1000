@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#076 Least Squares Solver - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#076 Least Squares Solver</h1>
+            <p class="description">Solve overdetermined systems min||Ax - b||² using normal equations and QR</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="normalEquations">Normal Equations (A'Ax = A'b)</option>
+                    <option value="qrMethod">QR Decomposition</option>
+                    <option value="svdMethod">SVD Method</option>
+                    <option value="gradientDescent">Gradient Descent</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="manual">Manual Input</option>
+                    <option value="random">Random System</option>
+                </select>
+            </div>
+
+            <div id="manualInput">
+                <div class="control-group">
+                    <label for="matrixInput">Matrix A (m×n where m ≥ n, rows by newlines):</label>
+                    <textarea id="matrixInput" rows="5" placeholder="1, 1&#10;1, 2&#10;1, 3&#10;1, 4"></textarea>
+                </div>
+                <div class="control-group">
+                    <label for="vectorInput">Vector b (comma separated):</label>
+                    <input type="text" id="vectorInput" placeholder="6, 5, 7, 10">
+                </div>
+            </div>
+
+            <div id="randomInput" style="display: none;">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="rows">Rows (m):</label>
+                        <input type="number" id="rows" value="10" min="2" max="500">
+                    </div>
+                    <div class="control-group third">
+                        <label for="cols">Columns (n):</label>
+                        <input type="number" id="cols" value="3" min="1" max="100">
+                    </div>
+                    <div class="control-group third">
+                        <label for="noise">Noise Level:</label>
+                        <input type="number" id="noise" value="0.1" min="0" max="10" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('linear')">Linear Regression</button>
+                <button class="btn-secondary" onclick="loadSample('polynomial')">Polynomial Fit</button>
+                <button class="btn-secondary" onclick="loadSample('overdetermined')">Overdetermined</button>
+                <button class="btn-secondary" onclick="loadSample('noisy')">Noisy Data</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Solve Least Squares</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Least Squares</h3>
+            <p>Find x that minimizes <strong>||Ax - b||²</strong> for overdetermined system (m > n equations, n unknowns).</p>
+
+            <h4>Algorithms</h4>
+            <table class="info-table">
+                <tr><th>Algorithm</th><th>Approach</th><th>Stability</th><th>Best For</th></tr>
+                <tr><td>Normal Equations</td><td>Solve A<sup>T</sup>Ax = A<sup>T</sup>b</td><td>Poor</td><td>Well-conditioned</td></tr>
+                <tr><td>QR Method</td><td>QR factorization</td><td>Good</td><td>General use</td></tr>
+                <tr><td>SVD Method</td><td>Singular values</td><td>Excellent</td><td>Rank-deficient</td></tr>
+                <tr><td>Gradient Descent</td><td>Iterative</td><td>Good</td><td>Large sparse</td></tr>
+            </table>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Linear regression and curve fitting</li>
+                <li>Data smoothing and filtering</li>
+                <li>Parameter estimation</li>
+                <li>Machine learning (linear models)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

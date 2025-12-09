@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#087 Matrix Norms - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#087 Matrix Norms</h1>
+            <p class="description">Compute various matrix norms: Frobenius, p-norms, induced norms, and more</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="normType">Norm Type:</label>
+                <select id="normType">
+                    <option value="all">Compute All Norms</option>
+                    <option value="frobenius">Frobenius Norm ||A||_F</option>
+                    <option value="one">1-Norm ||A||₁ (max col sum)</option>
+                    <option value="inf">∞-Norm ||A||_∞ (max row sum)</option>
+                    <option value="two">2-Norm ||A||₂ (spectral)</option>
+                    <option value="nuclear">Nuclear Norm ||A||_* (trace)</option>
+                    <option value="max">Max Norm ||A||_max</option>
+                    <option value="pNorm">Entry-wise p-norm</option>
+                </select>
+            </div>
+
+            <div id="pNormInput" class="control-group" style="display: none;">
+                <label for="pValue">p value (1 ≤ p ≤ ∞):</label>
+                <input type="number" id="pValue" value="2" min="1" step="0.5">
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="random">Random Matrix</option>
+                    <option value="manual">Manual Input</option>
+                </select>
+            </div>
+
+            <div id="randomInput">
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="rows">Rows (m):</label>
+                        <input type="number" id="rows" value="100" min="2" max="1000">
+                    </div>
+                    <div class="control-group half">
+                        <label for="cols">Columns (n):</label>
+                        <input type="number" id="cols" value="100" min="2" max="1000">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="matrixType">Matrix Type:</label>
+                    <select id="matrixType">
+                        <option value="random">Random [-1, 1]</option>
+                        <option value="sparse">Sparse (10% nonzero)</option>
+                        <option value="lowRank">Low Rank</option>
+                        <option value="orthogonal">Orthogonal (square)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="manualInput" style="display: none;">
+                <div class="control-group">
+                    <label for="matrixInput">Matrix A (rows separated by newlines):</label>
+                    <textarea id="matrixInput" rows="4" placeholder="1, 2, 3&#10;4, 5, 6&#10;7, 8, 9"></textarea>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('identity')">Identity 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('ones')">Ones 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('diagonal')">Diagonal 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('random')">Random Matrix</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute Norms</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Matrix Norms</h3>
+            <p>Matrix norms measure the "size" of a matrix and are essential for numerical analysis, optimization, and machine learning.</p>
+
+            <h4>Norm Definitions</h4>
+            <table class="info-table">
+                <tr><th>Norm</th><th>Formula</th><th>Properties</th></tr>
+                <tr><td>Frobenius</td><td>√(Σᵢⱼ |aᵢⱼ|²)</td><td>Entry-wise L2</td></tr>
+                <tr><td>1-Norm</td><td>max_j Σᵢ |aᵢⱼ|</td><td>Max column sum</td></tr>
+                <tr><td>∞-Norm</td><td>max_i Σⱼ |aᵢⱼ|</td><td>Max row sum</td></tr>
+                <tr><td>2-Norm</td><td>σ_max(A)</td><td>Largest singular value</td></tr>
+                <tr><td>Nuclear</td><td>Σᵢ σᵢ(A)</td><td>Sum of singular values</td></tr>
+                <tr><td>Max</td><td>max_ij |aᵢⱼ|</td><td>Largest entry</td></tr>
+            </table>
+
+            <h4>Relationships</h4>
+            <ul>
+                <li><strong>||A||₂ ≤ ||A||_F ≤ √r ||A||₂</strong> where r = rank(A)</li>
+                <li><strong>||A||_max ≤ ||A||₂ ≤ √(mn) ||A||_max</strong></li>
+                <li><strong>||A||₂ ≤ √(||A||₁ ||A||_∞)</strong></li>
+            </ul>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Error analysis and condition numbers</li>
+                <li>Regularization (nuclear norm for low-rank)</li>
+                <li>Convergence analysis of iterative methods</li>
+                <li>Matrix approximation bounds</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

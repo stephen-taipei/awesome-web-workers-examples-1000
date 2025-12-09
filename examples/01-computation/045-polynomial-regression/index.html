@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#045 Polynomial Regression - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#045 Polynomial Regression</h1>
+            <p class="description">Fit N-degree polynomial curves using matrix-based least squares with Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Calculation Mode:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="fit">Fit Polynomial</option>
+                    <option value="predict">Fit & Predict</option>
+                    <option value="compare">Compare Degrees</option>
+                    <option value="generate">Generate & Fit</option>
+                </select>
+            </div>
+
+            <div id="dataInputs">
+                <div class="control-group">
+                    <label for="dataX">X values:</label>
+                    <textarea id="dataX" rows="2" placeholder="-3, -2, -1, 0, 1, 2, 3, 4, 5"></textarea>
+                </div>
+
+                <div class="control-group">
+                    <label for="dataY">Y values:</label>
+                    <textarea id="dataY" rows="2" placeholder="9, 4, 1, 0, 1, 4, 9, 16, 25"></textarea>
+                </div>
+
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('quadratic')">Quadratic</button>
+                    <button class="btn-secondary" onclick="loadSample('cubic')">Cubic</button>
+                    <button class="btn-secondary" onclick="loadSample('noisy')">Noisy Quadratic</button>
+                </div>
+            </div>
+
+            <div id="degreeGroup" class="control-group">
+                <label for="degree">Polynomial Degree:</label>
+                <input type="number" id="degree" value="2" min="1" max="10">
+                <small>For "Compare", this is the maximum degree to test</small>
+            </div>
+
+            <div id="predictInputs" style="display: none;">
+                <div class="control-group">
+                    <label for="predictX">X values to predict:</label>
+                    <input type="text" id="predictX" placeholder="6, 7, 8, 9, 10">
+                </div>
+            </div>
+
+            <div id="generateOptions" style="display: none;">
+                <div class="control-group">
+                    <label for="generateCount">Data Points:</label>
+                    <input type="number" id="generateCount" value="1000" min="50" max="100000">
+                </div>
+
+                <div class="control-group">
+                    <label for="trueCoefficients">True Coefficients (β₀, β₁, β₂, ...):</label>
+                    <input type="text" id="trueCoefficients" value="1, -2, 0.5" placeholder="1, -2, 0.5">
+                    <small>Example: "1, -2, 0.5" means y = 1 - 2x + 0.5x²</small>
+                </div>
+
+                <div class="control-group">
+                    <label for="noiseLevel">Noise Level (±):</label>
+                    <input type="number" id="noiseLevel" value="5" min="0" step="1">
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Fit Polynomial</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Polynomial Regression</h3>
+            <p><strong>Polynomial Regression</strong> fits a polynomial curve to data points, allowing for non-linear relationships while still using linear algebra techniques.</p>
+
+            <h4>The Model</h4>
+            <div class="formula-display">
+                <code>y = β₀ + β₁x + β₂x² + ... + βₙxⁿ</code>
+            </div>
+
+            <h4>Degree Selection</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Degree</th>
+                    <th>Curve Type</th>
+                    <th>Parameters</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Linear (straight line)</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Quadratic (parabola)</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Cubic</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>n</td>
+                    <td>n-th degree polynomial</td>
+                    <td>n+1</td>
+                </tr>
+            </table>
+
+            <h4>Model Selection Criteria</h4>
+            <ul class="criteria-list">
+                <li><strong>AIC (Akaike):</strong> Balances fit vs complexity</li>
+                <li><strong>BIC (Bayesian):</strong> Stronger penalty for parameters</li>
+                <li><strong>Adjusted R²:</strong> R² adjusted for parameters</li>
+            </ul>
+
+            <div class="warning-box">
+                <strong>Warning:</strong> High-degree polynomials may overfit the data. Use cross-validation or information criteria to select the optimal degree.
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

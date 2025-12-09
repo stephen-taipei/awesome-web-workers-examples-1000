@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#042 Spearman Rank Correlation - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#042 Spearman Rank Correlation</h1>
+            <p class="description">Calculate Spearman's ρ for monotonic relationships using rank transformation</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Calculation Mode:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="calculate">Standard Calculation</option>
+                    <option value="detailed">Detailed with Rank Table</option>
+                    <option value="generate">Generate & Calculate</option>
+                </select>
+            </div>
+
+            <div id="dataInputs">
+                <div class="control-group">
+                    <label for="dataX">Variable X (comma or space separated):</label>
+                    <textarea id="dataX" rows="2" placeholder="86, 97, 99, 100, 101, 103, 106, 110, 112, 113"></textarea>
+                </div>
+
+                <div class="control-group">
+                    <label for="dataY">Variable Y (comma or space separated):</label>
+                    <textarea id="dataY" rows="2" placeholder="0, 20, 28, 27, 50, 29, 7, 17, 6, 12"></textarea>
+                </div>
+
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('perfect')">Perfect ρ=1</button>
+                    <button class="btn-secondary" onclick="loadSample('strong')">Strong</button>
+                    <button class="btn-secondary" onclick="loadSample('ties')">With Ties</button>
+                    <button class="btn-secondary" onclick="loadSample('monotonic')">Monotonic</button>
+                </div>
+            </div>
+
+            <div id="generateOptions" style="display: none;">
+                <div class="control-group">
+                    <label for="generateCount">Data Points:</label>
+                    <input type="number" id="generateCount" value="10000" min="100" max="1000000">
+                </div>
+
+                <div class="control-group">
+                    <label for="relationship">Relationship Type:</label>
+                    <select id="relationship">
+                        <option value="perfect">Perfect (ρ ≈ 1)</option>
+                        <option value="strong">Strong Positive</option>
+                        <option value="moderate">Moderate Positive</option>
+                        <option value="weak">Weak Positive</option>
+                        <option value="none">No Relationship</option>
+                        <option value="negative">Negative</option>
+                        <option value="monotonic">Non-linear Monotonic</option>
+                    </select>
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Spearman ρ</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Spearman Rank Correlation</h3>
+            <p><strong>Spearman's ρ (rho)</strong> measures the strength and direction of monotonic relationships between two variables using their ranks instead of raw values.</p>
+
+            <h4>Key Advantages</h4>
+            <ul class="feature-list">
+                <li>Works with ordinal data</li>
+                <li>Detects non-linear monotonic relationships</li>
+                <li>Robust to outliers</li>
+                <li>No assumption of normality</li>
+            </ul>
+
+            <h4>Formula</h4>
+            <div class="formula-display">
+                <p><strong>Without ties:</strong></p>
+                <code>ρ = 1 - (6 × Σdᵢ²) / (n × (n² - 1))</code>
+                <p style="margin-top: 15px;"><strong>With ties (Pearson on ranks):</strong></p>
+                <code>ρ = Σ(Rₓ - R̄ₓ)(Rᵧ - R̄ᵧ) / √(Σ(Rₓ - R̄ₓ)² × Σ(Rᵧ - R̄ᵧ)²)</code>
+            </div>
+
+            <h4>Interpretation</h4>
+            <table class="info-table">
+                <tr>
+                    <th>ρ Value</th>
+                    <th>Interpretation</th>
+                </tr>
+                <tr>
+                    <td>+1.0</td>
+                    <td>Perfect positive monotonic</td>
+                </tr>
+                <tr>
+                    <td>+0.7 to +0.9</td>
+                    <td>Strong positive</td>
+                </tr>
+                <tr>
+                    <td>+0.4 to +0.6</td>
+                    <td>Moderate positive</td>
+                </tr>
+                <tr>
+                    <td>0 to +0.3</td>
+                    <td>Weak/No relationship</td>
+                </tr>
+                <tr>
+                    <td>-0.7 to -0.9</td>
+                    <td>Strong negative</td>
+                </tr>
+                <tr>
+                    <td>-1.0</td>
+                    <td>Perfect negative monotonic</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

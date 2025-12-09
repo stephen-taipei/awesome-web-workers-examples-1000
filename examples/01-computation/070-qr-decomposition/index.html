@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#070 QR Decomposition - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#070 QR Decomposition</h1>
+            <p class="description">Gram-Schmidt, Householder, and Givens rotation using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="gramschmidt">Classical Gram-Schmidt</option>
+                    <option value="modifiedgs">Modified Gram-Schmidt</option>
+                    <option value="householder">Householder Reflections</option>
+                    <option value="givens">Givens Rotations</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="manual">Manual Input</option>
+                    <option value="random">Random Matrix</option>
+                </select>
+            </div>
+
+            <div id="manualInput">
+                <div class="control-group">
+                    <label for="matrixInput">Matrix (rows by newlines, values by commas):</label>
+                    <textarea id="matrixInput" rows="5" placeholder="1, 1, 0&#10;1, 0, 1&#10;0, 1, 1"></textarea>
+                </div>
+            </div>
+
+            <div id="randomInput" style="display: none;">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="rows">Rows:</label>
+                        <input type="number" id="rows" value="4" min="2" max="200">
+                    </div>
+                    <div class="control-group third">
+                        <label for="cols">Columns:</label>
+                        <input type="number" id="cols" value="3" min="2" max="200">
+                    </div>
+                    <div class="control-group third">
+                        <label for="range">Value Range:</label>
+                        <input type="number" id="range" value="10" min="1" max="100">
+                    </div>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('simple')">Simple 3x3</button>
+                <button class="btn-secondary" onclick="loadSample('rectangular')">Rectangular 4x3</button>
+                <button class="btn-secondary" onclick="loadSample('orthogonal')">Orthogonal</button>
+                <button class="btn-secondary" onclick="loadSample('illConditioned')">Ill-Conditioned</button>
+                <button class="btn-secondary" onclick="loadSample('identity')">Identity</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute QR Decomposition</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About QR Decomposition</h3>
+            <p>Factorizing <strong>A = QR</strong> where Q is orthogonal (Q<sup>T</sup>Q = I) and R is upper triangular.</p>
+
+            <h4>Algorithms</h4>
+            <table class="info-table">
+                <tr><th>Algorithm</th><th>Stability</th><th>Complexity</th><th>Best For</th></tr>
+                <tr><td>Classical Gram-Schmidt</td><td>Poor</td><td>O(mn²)</td><td>Educational</td></tr>
+                <tr><td>Modified Gram-Schmidt</td><td>Good</td><td>O(mn²)</td><td>General use</td></tr>
+                <tr><td>Householder</td><td>Excellent</td><td>O(mn²)</td><td>Least squares</td></tr>
+                <tr><td>Givens Rotations</td><td>Excellent</td><td>O(mn²)</td><td>Sparse matrices</td></tr>
+            </table>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Solving linear least squares problems</li>
+                <li>Computing eigenvalues (QR algorithm)</li>
+                <li>Orthonormal basis construction</li>
+                <li>Matrix rank determination</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

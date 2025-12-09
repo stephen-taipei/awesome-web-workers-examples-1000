@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#121 Gradient Descent - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#121 Gradient Descent</h1>
+            <p class="description">Fundamental optimization algorithm for finding function minima</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="functionType">Objective Function:</label>
+                <select id="functionType">
+                    <option value="quadratic" selected>Quadratic: f(x) = (x - a)² + b</option>
+                    <option value="rosenbrock">Rosenbrock: f(x,y) = (a-x)² + b(y-x²)²</option>
+                    <option value="himmelblau">Himmelblau: (x²+y-11)² + (x+y²-7)²</option>
+                    <option value="rastrigin">Rastrigin: 10n + Σ(xᵢ² - 10cos(2πxᵢ))</option>
+                    <option value="beale">Beale Function</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="learningRate">Learning Rate (α):</label>
+                <select id="learningRate">
+                    <option value="0.001">0.001 (Very Small)</option>
+                    <option value="0.01" selected>0.01 (Small)</option>
+                    <option value="0.1">0.1 (Medium)</option>
+                    <option value="0.5">0.5 (Large)</option>
+                    <option value="1.0">1.0 (Very Large)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="lrSchedule">Learning Rate Schedule:</label>
+                <select id="lrSchedule">
+                    <option value="constant" selected>Constant</option>
+                    <option value="decay">Time Decay (α / (1 + kt))</option>
+                    <option value="step">Step Decay (halve every N steps)</option>
+                    <option value="exponential">Exponential Decay (α × γᵗ)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Initial Point:</label>
+                <div class="param-row">
+                    <span>x₀:</span>
+                    <input type="number" id="initX" value="5" step="0.5">
+                    <span>y₀:</span>
+                    <input type="number" id="initY" value="5" step="0.5">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="maxIterations">Maximum Iterations:</label>
+                <select id="maxIterations">
+                    <option value="100">100</option>
+                    <option value="500">500</option>
+                    <option value="1000" selected>1000</option>
+                    <option value="5000">5000</option>
+                    <option value="10000">10000</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="tolerance">Convergence Tolerance:</label>
+                <select id="tolerance">
+                    <option value="1e-4">10⁻⁴</option>
+                    <option value="1e-6" selected>10⁻⁶</option>
+                    <option value="1e-8">10⁻⁸</option>
+                    <option value="1e-10">10⁻¹⁰</option>
+                </select>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadPreset('simple')">Simple Quadratic</button>
+                <button class="btn-secondary" onclick="loadPreset('rosenbrock')">Rosenbrock Valley</button>
+                <button class="btn-secondary" onclick="loadPreset('multimodal')">Multimodal</button>
+                <button class="btn-secondary" onclick="loadPreset('unstable')">Unstable (Large LR)</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Run Gradient Descent</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Gradient Descent</h3>
+            <p>Gradient descent is an iterative optimization algorithm that finds local minima of differentiable functions by following the negative gradient direction.</p>
+
+            <h4>Update Rule</h4>
+            <div class="formula-box">
+                <div class="formula">x_{t+1} = x_t - α ∇f(x_t)</div>
+                <div class="formula-note">α = learning rate, ∇f = gradient of objective function</div>
+            </div>
+
+            <h4>Learning Rate Schedules</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Constant</div>
+                    <div class="formula">α_t = α₀</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Time Decay</div>
+                    <div class="formula">α_t = α₀ / (1 + kt)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Step Decay</div>
+                    <div class="formula">α_t = α₀ × 0.5^⌊t/N⌋</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Exponential</div>
+                    <div class="formula">α_t = α₀ × γᵗ</div>
+                </div>
+            </div>
+
+            <h4>Convergence Conditions</h4>
+            <ul>
+                <li><strong>Gradient near zero:</strong> ||∇f(x)|| < ε</li>
+                <li><strong>Small step size:</strong> ||x_{t+1} - x_t|| < ε</li>
+                <li><strong>Function value stable:</strong> |f(x_{t+1}) - f(x_t)| < ε</li>
+            </ul>
+
+            <h4>Challenges</h4>
+            <ul>
+                <li><strong>Learning rate selection:</strong> Too small = slow, too large = diverge</li>
+                <li><strong>Local minima:</strong> May converge to non-global minimum</li>
+                <li><strong>Saddle points:</strong> Slow progress in flat regions</li>
+                <li><strong>Ill-conditioning:</strong> Different scales require different rates</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#110 B-Spline Curves - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#110 B-Spline Curves</h1>
+            <p class="description">Non-uniform rational B-splines using the Cox-de Boor algorithm</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="degree">Degree (k):</label>
+                <select id="degree">
+                    <option value="1">1 (Linear)</option>
+                    <option value="2">2 (Quadratic)</option>
+                    <option value="3" selected>3 (Cubic)</option>
+                    <option value="4">4 (Quartic)</option>
+                    <option value="5">5 (Quintic)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="knotType">Knot Vector Type:</label>
+                <select id="knotType" onchange="updateKnotInput()">
+                    <option value="uniform">Uniform</option>
+                    <option value="clamped" selected>Clamped (Open)</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </div>
+
+            <div id="customKnots" class="control-group" style="display: none;">
+                <label>Custom Knot Vector:</label>
+                <input type="text" id="knotVector" placeholder="e.g., 0,0,0,0,1,2,3,4,4,4,4">
+            </div>
+
+            <div class="control-group">
+                <label>Control Points (x, y):</label>
+                <div id="controlPoints" class="data-points">
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="0" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="0" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="1" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="2" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="2" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="3" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="3" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="1" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                    <div class="point-row">
+                        <input type="number" class="x-input" value="4" step="0.5">
+                        <span class="comma">,</span>
+                        <input type="number" class="y-input" value="2" step="0.5">
+                        <button class="btn-remove" onclick="removePoint(this)">×</button>
+                    </div>
+                </div>
+                <button class="btn-add" onclick="addPoint()">+ Add Control Point</button>
+            </div>
+
+            <div class="control-group">
+                <label for="evalParam">Evaluate at t =</label>
+                <input type="number" id="evalParam" value="0.5" step="0.05" min="0" max="1">
+            </div>
+
+            <div class="control-group">
+                <label>Evaluation Samples:</label>
+                <input type="number" id="numSamples" value="100" min="20" max="500">
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('line')">Line (2 pts)</button>
+                <button class="btn-secondary" onclick="loadSample('curve')">S-Curve (5 pts)</button>
+                <button class="btn-secondary" onclick="loadSample('circle')">Circle-ish (8 pts)</button>
+                <button class="btn-secondary" onclick="loadSample('wave')">Wave (7 pts)</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute B-Spline</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About B-Spline Curves</h3>
+            <p>B-splines (Basis splines) are piecewise polynomial curves defined by control points and a knot vector, widely used in computer graphics and CAD.</p>
+
+            <h4>B-Spline Formula</h4>
+            <div class="formula-box">
+                <div class="formula">C(t) = Σᵢ Pᵢ · Nᵢ,ₖ(t)</div>
+                <div class="formula-note">where Pᵢ are control points and Nᵢ,ₖ(t) are basis functions</div>
+            </div>
+
+            <h4>Cox-de Boor Recursion</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Base Case (k=0)</div>
+                    <div class="formula">Nᵢ,₀(t) = 1 if tᵢ ≤ t < tᵢ₊₁, else 0</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Recursive (k≥1)</div>
+                    <div class="formula">Nᵢ,ₖ(t) = αᵢ,ₖNᵢ,ₖ₋₁ + (1-αᵢ₊₁,ₖ)Nᵢ₊₁,ₖ₋₁</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Blend Coefficient</div>
+                    <div class="formula">αᵢ,ₖ = (t - tᵢ) / (tᵢ₊ₖ - tᵢ)</div>
+                </div>
+            </div>
+
+            <h4>Knot Vector Types</h4>
+            <ul>
+                <li><strong>Uniform:</strong> Evenly spaced knots [0, 1, 2, ..., n+k]</li>
+                <li><strong>Clamped (Open):</strong> First and last k+1 knots repeated for endpoint interpolation</li>
+                <li><strong>Custom:</strong> User-defined knot sequence</li>
+            </ul>
+
+            <h4>Properties</h4>
+            <ul>
+                <li>Local control: Moving one control point affects only nearby curve segments</li>
+                <li>Partition of unity: Basis functions sum to 1</li>
+                <li>Non-negativity: Nᵢ,ₖ(t) ≥ 0</li>
+                <li>C^(k-1) continuity for degree k with simple knots</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

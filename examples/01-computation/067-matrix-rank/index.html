@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#067 Matrix Rank - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#067 Matrix Rank</h1>
+            <p class="description">Row Echelon Form, SVD-based, and QR methods using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="rowEchelon">Row Echelon Form (Gaussian)</option>
+                    <option value="svd">SVD-based Rank</option>
+                    <option value="qr">QR Decomposition</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="manual">Manual Input</option>
+                    <option value="random">Random Matrix</option>
+                </select>
+            </div>
+
+            <div id="manualInput">
+                <div class="control-group">
+                    <label for="matrixInput">Matrix (rows by newlines, values by commas):</label>
+                    <textarea id="matrixInput" rows="5" placeholder="1, 2, 3&#10;4, 5, 6&#10;7, 8, 9"></textarea>
+                </div>
+            </div>
+
+            <div id="randomInput" style="display: none;">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="rows">Rows:</label>
+                        <input type="number" id="rows" value="5" min="1" max="500">
+                    </div>
+                    <div class="control-group third">
+                        <label for="cols">Columns:</label>
+                        <input type="number" id="cols" value="5" min="1" max="500">
+                    </div>
+                    <div class="control-group third">
+                        <label for="targetRank">Target Rank (0=random):</label>
+                        <input type="number" id="targetRank" value="0" min="0">
+                    </div>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('fullRank')">Full Rank 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('deficient')">Rank Deficient</button>
+                <button class="btn-secondary" onclick="loadSample('identity')">Identity</button>
+                <button class="btn-secondary" onclick="loadSample('zero')">Zero Matrix</button>
+                <button class="btn-secondary" onclick="loadSample('rectangular')">Rectangular</button>
+                <button class="btn-secondary" onclick="loadSample('nearSingular')">Near Singular</button>
+            </div>
+
+            <div class="control-group">
+                <label for="tolerance">Numerical Tolerance:</label>
+                <input type="number" id="tolerance" value="1e-10" step="1e-12">
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Rank</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Matrix Rank</h3>
+            <p>The <strong>rank</strong> is the dimension of the column space (or row space) of a matrix.</p>
+
+            <h4>Key Properties</h4>
+            <ul>
+                <li>rank(A) ≤ min(m, n) for m×n matrix</li>
+                <li>rank(A) = rank(A<sup>T</sup>)</li>
+                <li>rank(AB) ≤ min(rank(A), rank(B))</li>
+                <li>A is full rank if rank(A) = min(m, n)</li>
+            </ul>
+
+            <h4>Algorithms</h4>
+            <table class="info-table">
+                <tr><th>Algorithm</th><th>Complexity</th><th>Numerical Stability</th></tr>
+                <tr><td>Row Echelon</td><td>O(mn²)</td><td>Moderate</td></tr>
+                <tr><td>SVD</td><td>O(mn²)</td><td>Excellent</td></tr>
+                <tr><td>QR</td><td>O(mn²)</td><td>Good</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

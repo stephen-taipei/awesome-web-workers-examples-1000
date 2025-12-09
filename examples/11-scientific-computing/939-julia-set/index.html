@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Julia Set Explorer - Example 939</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Julia Set Explorer</h1>
+        <p>Renders the Julia Set fractal for a specific complex constant <code>c</code> using a Web Worker. Move mouse to change <code>c</code>.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="realC">Real(c):</label>
+                    <input type="range" id="realC" min="-2" max="2" step="0.01" value="-0.7">
+                    <span id="rDisplay">-0.7</span>
+                </div>
+                <div class="form-group">
+                    <label for="imagC">Imag(c):</label>
+                    <input type="range" id="imagC" min="-2" max="2" step="0.01" value="0.27015">
+                    <span id="iDisplay">0.27015</span>
+                </div>
+                <div class="form-group">
+                    <label for="maxIter">Iterations:</label>
+                    <input type="range" id="maxIter" min="50" max="500" value="100">
+                    <span id="iterDisplay">100</span>
+                </div>
+                <div class="form-group">
+                    <label for="colorScheme">Color Scheme:</label>
+                    <select id="colorScheme">
+                        <option value="electric">Electric</option>
+                        <option value="grayscale">Grayscale</option>
+                        <option value="heatmap">Heatmap</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="trackMouse" checked> Track Mouse for 'c'</label>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-item">Render Time: <span id="renderTime">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="fractalCanvas" width="500" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

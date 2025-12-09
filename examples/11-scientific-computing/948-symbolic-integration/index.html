@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Symbolic Integration - Example 948</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Symbolic Integration Engine</h1>
+        <p>Performs symbolic integration (antiderivative) of mathematical expressions using pattern matching in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="expression">Expression f(x):</label>
+                    <input type="text" id="expression" value="3*x^2 + sin(x) + e^x" placeholder="e.g. x^2 + 1/x">
+                </div>
+                <button id="integrateBtn">Integrate</button>
+                
+                <div class="separator">Definite Integral (Optional)</div>
+                
+                <div class="form-group row">
+                    <div>
+                        <label>From (a):</label>
+                        <input type="number" id="limitA" value="0">
+                    </div>
+                    <div>
+                        <label>To (b):</label>
+                        <input type="number" id="limitB" value="1">
+                    </div>
+                </div>
+                <button id="evalBtn" disabled>Evaluate Definite Integral</button>
+
+                <div class="stats">
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                    <div class="stat-item">Time: <span id="calcTime">-</span></div>
+                </div>
+            </div>
+
+            <div class="results">
+                <h3>Result:</h3>
+                <div id="resultOutput" class="math-result">
+                    ∫ f(x) dx = <span id="antiderivative">?</span>
+                </div>
+                <div id="evalOutput" class="math-result hidden">
+                    Result = <span id="definiteVal">?</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

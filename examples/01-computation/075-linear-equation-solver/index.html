@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#075 Linear Equation Solver - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#075 Linear Equation Solver</h1>
+            <p class="description">Solve Ax = b using Gaussian elimination and iterative methods</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="gaussianElimination">Gaussian Elimination with Pivoting</option>
+                    <option value="luSolve">LU Decomposition</option>
+                    <option value="jacobi">Jacobi Iteration</option>
+                    <option value="gaussSeidel">Gauss-Seidel Iteration</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="manual">Manual Input</option>
+                    <option value="random">Random System</option>
+                </select>
+            </div>
+
+            <div id="manualInput">
+                <div class="control-group">
+                    <label for="matrixInput">Matrix A (rows by newlines, values by commas):</label>
+                    <textarea id="matrixInput" rows="4" placeholder="3, 2, -1&#10;2, -2, 4&#10;-1, 0.5, -1"></textarea>
+                </div>
+                <div class="control-group">
+                    <label for="vectorInput">Vector b (comma separated):</label>
+                    <input type="text" id="vectorInput" placeholder="1, -2, 0">
+                </div>
+            </div>
+
+            <div id="randomInput" style="display: none;">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="size">System Size (n):</label>
+                        <input type="number" id="size" value="5" min="2" max="500">
+                    </div>
+                    <div class="control-group third">
+                        <label for="systemType">System Type:</label>
+                        <select id="systemType">
+                            <option value="random">Random</option>
+                            <option value="diagonal">Diagonally Dominant</option>
+                            <option value="spd">Symmetric Positive Definite</option>
+                        </select>
+                    </div>
+                    <div class="control-group third">
+                        <label for="range">Value Range:</label>
+                        <input type="number" id="range" value="10" min="1" max="100">
+                    </div>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('simple')">Simple 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('diagonal')">Diagonally Dominant</button>
+                <button class="btn-secondary" onclick="loadSample('spd')">SPD System</button>
+                <button class="btn-secondary" onclick="loadSample('illConditioned')">Ill-Conditioned</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Solve System</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Linear Systems</h3>
+            <p>Solve the system <strong>Ax = b</strong> where A is an n×n matrix and b is an n-vector.</p>
+
+            <h4>Algorithms</h4>
+            <table class="info-table">
+                <tr><th>Algorithm</th><th>Type</th><th>Complexity</th><th>Best For</th></tr>
+                <tr><td>Gaussian Elimination</td><td>Direct</td><td>O(n³)</td><td>General systems</td></tr>
+                <tr><td>LU Decomposition</td><td>Direct</td><td>O(n³)</td><td>Multiple right-hand sides</td></tr>
+                <tr><td>Jacobi</td><td>Iterative</td><td>O(n² per iter)</td><td>Diagonally dominant</td></tr>
+                <tr><td>Gauss-Seidel</td><td>Iterative</td><td>O(n² per iter)</td><td>Faster than Jacobi</td></tr>
+            </table>
+
+            <h4>Convergence</h4>
+            <ul>
+                <li>Direct methods: Always find solution (if exists)</li>
+                <li>Iterative methods: Require diagonally dominant or SPD matrices</li>
+                <li>Gauss-Seidel converges ~2× faster than Jacobi</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

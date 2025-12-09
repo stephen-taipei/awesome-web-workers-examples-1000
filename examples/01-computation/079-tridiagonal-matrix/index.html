@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#079 Tridiagonal Matrix Solver - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#079 Tridiagonal Matrix Solver</h1>
+            <p class="description">Efficient O(n) solution using Thomas Algorithm (TDMA)</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="thomas">Thomas Algorithm (TDMA)</option>
+                    <option value="cyclicReduction">Cyclic Reduction</option>
+                    <option value="recursiveDoubling">Recursive Doubling</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="random">Random Tridiagonal</option>
+                    <option value="manual">Manual Input</option>
+                </select>
+            </div>
+
+            <div id="randomInput">
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="size">System Size (n):</label>
+                        <input type="number" id="size" value="1000000" min="3" max="10000000">
+                    </div>
+                    <div class="control-group half">
+                        <label for="systemType">System Type:</label>
+                        <select id="systemType">
+                            <option value="diagonalDominant">Diagonally Dominant</option>
+                            <option value="symmetric">Symmetric Positive Definite</option>
+                            <option value="general">General</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="manualInput" style="display: none;">
+                <div class="control-group">
+                    <label for="subDiag">Sub-diagonal a (below main, n-1 elements):</label>
+                    <input type="text" id="subDiag" placeholder="1, 1, 1, 1">
+                </div>
+                <div class="control-group">
+                    <label for="mainDiag">Main diagonal d (n elements):</label>
+                    <input type="text" id="mainDiag" placeholder="4, 4, 4, 4, 4">
+                </div>
+                <div class="control-group">
+                    <label for="superDiag">Super-diagonal c (above main, n-1 elements):</label>
+                    <input type="text" id="superDiag" placeholder="1, 1, 1, 1">
+                </div>
+                <div class="control-group">
+                    <label for="vectorB">Right-hand side b (n elements):</label>
+                    <input type="text" id="vectorB" placeholder="6, 7, 7, 7, 6">
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('simple')">Simple 5×5</button>
+                <button class="btn-secondary" onclick="loadSample('heatEq')">1D Heat Equation</button>
+                <button class="btn-secondary" onclick="loadSample('waveEq')">1D Wave Equation</button>
+                <button class="btn-secondary" onclick="loadSample('spline')">Spline System</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Solve System</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Tridiagonal Systems</h3>
+            <p>A tridiagonal matrix has non-zero elements only on the main diagonal and the two adjacent diagonals.</p>
+
+            <h4>Thomas Algorithm (TDMA)</h4>
+            <ul>
+                <li><strong>Complexity</strong>: O(n) time, O(n) space</li>
+                <li><strong>Forward sweep</strong>: Eliminate sub-diagonal</li>
+                <li><strong>Back substitution</strong>: Solve from last to first</li>
+                <li><strong>Stability</strong>: Stable for diagonally dominant matrices</li>
+            </ul>
+
+            <h4>Algorithm Comparison</h4>
+            <table class="info-table">
+                <tr><th>Algorithm</th><th>Time</th><th>Parallelism</th><th>Best For</th></tr>
+                <tr><td>Thomas</td><td>O(n)</td><td>Sequential</td><td>CPU, small n</td></tr>
+                <tr><td>Cyclic Reduction</td><td>O(n log n)</td><td>High</td><td>GPU, large n</td></tr>
+                <tr><td>Recursive Doubling</td><td>O(n log n)</td><td>High</td><td>GPU, parallel</td></tr>
+            </table>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Heat and diffusion equations</li>
+                <li>Cubic spline interpolation</li>
+                <li>Implicit time-stepping methods</li>
+                <li>Finite difference schemes</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

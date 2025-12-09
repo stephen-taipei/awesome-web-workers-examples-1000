@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Dehazing - Example 274</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Image Dehazing (Dark Channel Prior)</h1>
+        <p>Remove atmospheric haze from images using the Dark Channel Prior algorithm in Web Workers.</p>
+
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="imageInput">Select Image:</label>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+
+                <div class="form-group">
+                    <label for="patchSize">Patch Size: <span id="patchSizeVal">15px</span></label>
+                    <input type="range" id="patchSize" min="5" max="31" step="2" value="15">
+                </div>
+
+                <div class="form-group">
+                    <label for="omega">Haze Removal: <span id="omegaVal">95%</span></label>
+                    <input type="range" id="omega" min="50" max="100" value="95">
+                </div>
+
+                <div class="form-group">
+                    <label for="t0">Minimum Transmission: <span id="t0Val">0.1</span></label>
+                    <input type="range" id="t0" min="1" max="30" value="10">
+                </div>
+
+                <button id="applyBtn" disabled>Remove Haze</button>
+                <button id="resetBtn" class="secondary" disabled>Reset Image</button>
+
+                <div class="stats">
+                    <div class="stat-item">Status: <span id="statusText">Ready</span></div>
+                    <div class="stat-item">Processing Time: <span id="timeVal">-</span></div>
+                    <div class="stat-item">Atmospheric Light: <span id="atmLight">-</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <div class="canvas-container">
+                    <h3>Hazy Image</h3>
+                    <canvas id="originalCanvas"></canvas>
+                </div>
+                <div class="canvas-container">
+                    <h3>Dehazed Result</h3>
+                    <canvas id="resultCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="debug-section">
+            <h3>Algorithm Visualization</h3>
+            <div class="debug-canvases">
+                <div class="debug-item">
+                    <span>Dark Channel</span>
+                    <canvas id="darkChannelCanvas"></canvas>
+                </div>
+                <div class="debug-item">
+                    <span>Transmission Map</span>
+                    <canvas id="transmissionCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

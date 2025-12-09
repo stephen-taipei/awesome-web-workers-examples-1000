@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#100 Adaptive Integration - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#100 Adaptive Integration</h1>
+            <p class="description">Automatic precision control through recursive interval subdivision</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="functionSelect">Function f(x):</label>
+                <select id="functionSelect" onchange="updateFunction()">
+                    <option value="smooth">sin(x) (smooth)</option>
+                    <option value="peak">1/(1+(x-0.5)²·100) (sharp peak)</option>
+                    <option value="oscillatory">sin(20x) (oscillatory)</option>
+                    <option value="discontinuous">sign(x-0.5) (discontinuous)</option>
+                    <option value="sqrt">√|x| (non-differentiable)</option>
+                    <option value="gaussian">e^(-100x²) (narrow Gaussian)</option>
+                    <option value="custom">Custom function</option>
+                </select>
+            </div>
+
+            <div id="customInput" class="control-group" style="display: none;">
+                <label for="customFunction">Custom f(x):</label>
+                <input type="text" id="customFunction" placeholder="Math.sin(x) / x">
+                <small>Use JavaScript math syntax</small>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="a">Lower Bound (a):</label>
+                    <input type="number" id="a" value="0" step="0.1">
+                </div>
+                <div class="control-group half">
+                    <label for="b">Upper Bound (b):</label>
+                    <input type="number" id="b" value="1" step="0.1">
+                </div>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="tolerance">Tolerance (ε):</label>
+                    <input type="number" id="tolerance" value="1e-8" step="1e-8">
+                </div>
+                <div class="control-group half">
+                    <label for="maxDepth">Max Recursion Depth:</label>
+                    <input type="number" id="maxDepth" value="20" min="5" max="50">
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('smooth')">Smooth sin(x)</button>
+                <button class="btn-secondary" onclick="loadSample('peak')">Sharp peak</button>
+                <button class="btn-secondary" onclick="loadSample('oscillatory')">Oscillatory</button>
+                <button class="btn-secondary" onclick="loadSample('gaussian')">Narrow Gaussian</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Integral</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Adaptive Integration</h3>
+            <p>Adaptive quadrature automatically adjusts the step size to achieve the requested accuracy, using more subdivisions where the function is difficult and fewer where it's smooth.</p>
+
+            <h4>Algorithm</h4>
+            <div class="algorithm-steps">
+                <div class="step">
+                    <span class="step-num">1</span>
+                    <span>Compute integral over [a,b] using Simpson's rule: I₁</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">2</span>
+                    <span>Split interval and compute: I₂ = I([a,m]) + I([m,b])</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">3</span>
+                    <span>If |I₁ - I₂| < ε, return I₂ (with Richardson correction)</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">4</span>
+                    <span>Otherwise, recursively subdivide each half</span>
+                </div>
+            </div>
+
+            <h4>Properties</h4>
+            <table class="info-table">
+                <tr><th>Property</th><th>Value</th></tr>
+                <tr><td>Error control</td><td>User-specified tolerance</td></tr>
+                <tr><td>Base rule</td><td>Simpson's rule (O(h⁴))</td></tr>
+                <tr><td>Adaptive</td><td>Concentrates effort where needed</td></tr>
+                <tr><td>Subdivisions</td><td>Automatic based on local error</td></tr>
+            </table>
+
+            <h4>When to Use</h4>
+            <ul>
+                <li><strong>Unknown function behavior:</strong> Handles peaks, oscillations</li>
+                <li><strong>Guaranteed accuracy:</strong> Meets specified tolerance</li>
+                <li><strong>Efficiency:</strong> Minimizes function evaluations</li>
+                <li><strong>Robust:</strong> Works for most well-behaved functions</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

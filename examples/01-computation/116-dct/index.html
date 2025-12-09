@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#116 Discrete Cosine Transform - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#116 Discrete Cosine Transform</h1>
+            <p class="description">Real-valued frequency transform used in JPEG, MP3, and video compression</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="dctType">DCT Type:</label>
+                <select id="dctType">
+                    <option value="DCT-II" selected>DCT-II (Most Common - JPEG/MPEG)</option>
+                    <option value="DCT-I">DCT-I</option>
+                    <option value="DCT-III">DCT-III (Inverse of DCT-II)</option>
+                    <option value="DCT-IV">DCT-IV</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="signalType">Signal Type:</label>
+                <select id="signalType" onchange="updateSignalOptions()">
+                    <option value="cosine">Cosine Wave</option>
+                    <option value="step">Step Function</option>
+                    <option value="ramp">Ramp</option>
+                    <option value="pulse">Pulse</option>
+                    <option value="image-row">Image Row (Grayscale)</option>
+                    <option value="custom">Custom Values</option>
+                </select>
+            </div>
+
+            <div id="waveOptions" class="control-group">
+                <label>Signal Parameters:</label>
+                <div class="param-row">
+                    <span>Frequency:</span>
+                    <input type="number" id="freq" value="3" min="1" max="50">
+                    <span>Amplitude:</span>
+                    <input type="number" id="amplitude" value="100" step="10">
+                </div>
+            </div>
+
+            <div id="customOptions" class="control-group" style="display: none;">
+                <label>Custom Values (comma-separated):</label>
+                <input type="text" id="customValues" placeholder="e.g., 100, 150, 200, 180, 120, 80, 50, 100">
+            </div>
+
+            <div class="control-group">
+                <label for="sampleSize">Sample Size (N):</label>
+                <select id="sampleSize">
+                    <option value="8" selected>8 (JPEG block size)</option>
+                    <option value="16">16</option>
+                    <option value="32">32</option>
+                    <option value="64">64</option>
+                    <option value="128">128</option>
+                    <option value="256">256</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="quantization">Quantization (for compression demo):</label>
+                <select id="quantization">
+                    <option value="0">None</option>
+                    <option value="1">Low (Q=1)</option>
+                    <option value="5">Medium (Q=5)</option>
+                    <option value="10" selected>Standard (Q=10)</option>
+                    <option value="20">High (Q=20)</option>
+                    <option value="50">Very High (Q=50)</option>
+                </select>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadPreset('smooth')">Smooth Signal</button>
+                <button class="btn-secondary" onclick="loadPreset('edge')">Edge (Step)</button>
+                <button class="btn-secondary" onclick="loadPreset('texture')">Texture</button>
+                <button class="btn-secondary" onclick="loadPreset('jpeg')">JPEG Block</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute DCT</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Discrete Cosine Transform</h3>
+            <p>The DCT transforms signals using only cosine functions, producing real coefficients. It's the foundation of JPEG, MP3, and many video codecs.</p>
+
+            <h4>DCT-II Formula (Most Common)</h4>
+            <div class="formula-box">
+                <div class="formula">X[k] = Σₙ₌₀^(N-1) x[n] · cos[π(n+½)k/N]</div>
+                <div class="formula-note">for k = 0, 1, ..., N-1</div>
+            </div>
+
+            <h4>DCT Types</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">DCT-I</div>
+                    <div class="formula">cos[πnk/(N-1)]</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">DCT-II (JPEG)</div>
+                    <div class="formula">cos[π(n+½)k/N]</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">DCT-III</div>
+                    <div class="formula">cos[πn(k+½)/N]</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">DCT-IV</div>
+                    <div class="formula">cos[π(n+½)(k+½)/N]</div>
+                </div>
+            </div>
+
+            <h4>Why DCT for Compression?</h4>
+            <ul>
+                <li><strong>Energy compaction:</strong> Most signal energy in few low-frequency coefficients</li>
+                <li><strong>Real coefficients:</strong> No complex numbers needed</li>
+                <li><strong>Better boundary behavior:</strong> Implicit even symmetry reduces artifacts</li>
+                <li><strong>Decorrelation:</strong> Coefficients are nearly independent</li>
+            </ul>
+
+            <h4>JPEG Compression Process</h4>
+            <ol>
+                <li>Split image into 8×8 blocks</li>
+                <li>Apply 2D DCT to each block</li>
+                <li>Quantize coefficients (lossy step)</li>
+                <li>Entropy encode (lossless)</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+h1 {
+    color: #333;
+}
+
+.controls {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.control-group {
+    margin-bottom: 15px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+button.high { background-color: #dc3545; }
+button.medium { background-color: #ffc107; color: #333; }
+button.low { background-color: #28a745; }
+
+button:hover { opacity: 0.9; }
+
+.status-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.pool-status, .queue-status {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.worker-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.worker-card {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    width: 100px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.worker-card.busy {
+    background-color: #e2e6ea;
+    border-color: #adb5bd;
+}
+
+.task-item {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+}
+
+.task-item.high { border-left: 5px solid #dc3545; }
+.task-item.medium { border-left: 5px solid #ffc107; }
+.task-item.low { border-left: 5px solid #28a745; }
+
+.log-panel {
+    margin-top: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    height: 200px;
+    overflow-y: auto;
+    font-family: monospace;
+}

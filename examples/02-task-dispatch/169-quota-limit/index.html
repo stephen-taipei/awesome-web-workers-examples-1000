@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quota Limit Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Resource Quota Limit with Web Worker</h1>
+    <div class="container">
+        <div class="controls">
+            <label for="quotaInput">Set Quota (Max Operations):</label>
+            <input type="number" id="quotaInput" value="50" min="1" max="1000">
+            <button id="setQuotaBtn">Set Quota</button>
+            <br><br>
+            <button id="performOpBtn">Perform Operation</button>
+            <button id="resetBtn">Reset</button>
+        </div>
+        <div class="status-container">
+            <p>Operations Performed: <span id="opCount">0</span></p>
+            <p>Quota Remaining: <span id="quotaRemaining">50</span></p>
+            <p>Status: <span id="status">Ready</span></p>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

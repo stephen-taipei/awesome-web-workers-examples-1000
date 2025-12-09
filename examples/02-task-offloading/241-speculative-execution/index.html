@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speculative Execution - Web Worker Example #241</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Speculative Execution</h1>
+            <p class="subtitle">Web Worker Example #241 - Redundant Execution with Racing</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Speculative Execution</h2>
+                <p>Speculative Execution runs multiple algorithms simultaneously to solve the same problem, using the first result that completes. This hedges against worst-case performance by racing different approaches and canceling the slower ones.</p>
+                <div class="formula-box">
+                    <p><strong>Speculative Execution Model:</strong></p>
+                    <pre class="formula">
+Strategy: Race multiple algorithms for the same result
+
+Traditional:     Try Algorithm A → if slow → Try Algorithm B
+                 Latency = T_A (possibly worst case)
+
+Speculative:     [Worker1: Algo A] ─┬─→ First wins!
+                 [Worker2: Algo B] ─┤   Others cancelled
+                 [Worker3: Algo C] ─┘
+
+Latency = min(T_A, T_B, T_C)
+
+Trade-offs:
++ Reduced tail latency
++ Hedge against worst-case
+- Higher resource usage
+- Wasted computation
+
+Best for:
+- Unpredictable algorithm performance
+- Latency-sensitive applications
+- When resources are available
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Problem Configuration</h2>
+
+                <div class="input-group">
+                    <label for="problemType">Problem Type:</label>
+                    <select id="problemType">
+                        <option value="sort">Array Sorting (100K elements)</option>
+                        <option value="search">Pattern Search</option>
+                        <option value="path">Pathfinding</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="dataSize">Problem Size:</label>
+                    <input type="range" id="dataSize" min="10000" max="200000" value="100000" step="10000">
+                    <span id="dataSizeValue">100,000</span>
+                </div>
+
+                <div class="strategy-section">
+                    <h3>Racing Strategies</h3>
+                    <div class="strategy-grid">
+                        <label class="strategy-option">
+                            <input type="checkbox" id="algo1" checked>
+                            <span class="algo-name" id="algoName1">Algorithm 1</span>
+                            <span class="algo-desc" id="algoDesc1">Description</span>
+                        </label>
+                        <label class="strategy-option">
+                            <input type="checkbox" id="algo2" checked>
+                            <span class="algo-name" id="algoName2">Algorithm 2</span>
+                            <span class="algo-desc" id="algoDesc2">Description</span>
+                        </label>
+                        <label class="strategy-option">
+                            <input type="checkbox" id="algo3" checked>
+                            <span class="algo-name" id="algoName3">Algorithm 3</span>
+                            <span class="algo-desc" id="algoDesc3">Description</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="runSpeculativeBtn" class="btn btn-primary">Run Speculative</button>
+                    <button id="runSingleBtn" class="btn btn-secondary">Run Single Best</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="raceContainer" class="race-section hidden">
+                <h2>Algorithm Race</h2>
+                <div class="race-track">
+                    <div class="racer" id="racer1">
+                        <span class="racer-name">Algo 1</span>
+                        <div class="racer-progress">
+                            <div class="racer-bar" id="racerBar1"></div>
+                        </div>
+                        <span class="racer-status" id="racerStatus1">Ready</span>
+                    </div>
+                    <div class="racer" id="racer2">
+                        <span class="racer-name">Algo 2</span>
+                        <div class="racer-progress">
+                            <div class="racer-bar" id="racerBar2"></div>
+                        </div>
+                        <span class="racer-status" id="racerStatus2">Ready</span>
+                    </div>
+                    <div class="racer" id="racer3">
+                        <span class="racer-name">Algo 3</span>
+                        <div class="racer-progress">
+                            <div class="racer-bar" id="racerBar3"></div>
+                        </div>
+                        <span class="racer-status" id="racerStatus3">Ready</span>
+                    </div>
+                </div>
+                <div id="winnerAnnouncement" class="winner-announcement hidden"></div>
+            </section>
+
+            <section class="visualization">
+                <h2>Performance Analysis</h2>
+                <canvas id="analysisCanvas" width="700" height="350"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item winner">
+                        <span class="result-label">Winner</span>
+                        <span id="winnerAlgo" class="result-value highlight">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Winning Time</span>
+                        <span id="winningTime" class="result-value highlight">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Latency Saved</span>
+                        <span id="latencySaved" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Resource Cost</span>
+                        <span id="resourceCost" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Algorithm Performance</h3>
+                <div id="algoResults" class="algo-results"></div>
+
+                <div class="history-section">
+                    <h3>Race History</h3>
+                    <div id="raceHistory" class="race-history"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #241</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

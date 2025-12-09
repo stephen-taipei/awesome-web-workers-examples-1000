@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#052 Convolution - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#052 Convolution</h1>
+            <p class="description">1D and 2D Convolution Operations using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Convolution Type:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="filter1d">1D Signal Filter</option>
+                    <option value="custom1d">1D Custom Kernel</option>
+                    <option value="filter2d">2D Image Filter</option>
+                    <option value="convolve2d">2D Custom Kernel</option>
+                </select>
+            </div>
+
+            <div id="signal1dGroup">
+                <div class="control-group">
+                    <label for="signalData">Signal Data:</label>
+                    <textarea id="signalData" rows="2" placeholder="0, 0, 1, 1, 1, 0, 0..."></textarea>
+                </div>
+
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('signal')">Step Signal</button>
+                    <button class="btn-secondary" onclick="loadSample('noisy')">Noisy Sine</button>
+                </div>
+            </div>
+
+            <div id="filter1dGroup" class="control-group">
+                <label for="filter1d">1D Filter:</label>
+                <select id="filter1d">
+                    <option value="smooth3">Smoothing (3-point)</option>
+                    <option value="smooth5">Smoothing (5-point)</option>
+                    <option value="gaussian">Gaussian</option>
+                    <option value="derivative">Derivative</option>
+                    <option value="laplacian">Laplacian</option>
+                    <option value="highpass">High-pass</option>
+                    <option value="lowpass">Low-pass</option>
+                </select>
+            </div>
+
+            <div id="kernel1dGroup" class="control-group" style="display: none;">
+                <label for="kernelData">Kernel:</label>
+                <input type="text" id="kernelData" value="0.25, 0.5, 0.25" placeholder="0.25, 0.5, 0.25">
+            </div>
+
+            <div id="matrix2dGroup" style="display: none;">
+                <div class="control-group">
+                    <label for="matrixData">Matrix Data (rows separated by ;):</label>
+                    <textarea id="matrixData" rows="3" placeholder="0, 0, 0; 0, 1, 0; 0, 0, 0"></textarea>
+                </div>
+
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('matrix')">Square</button>
+                    <button class="btn-secondary" onclick="loadSample('gradient')">Gradient</button>
+                </div>
+            </div>
+
+            <div id="filter2dGroup" class="control-group" style="display: none;">
+                <label for="filter2d">2D Filter:</label>
+                <select id="filter2d">
+                    <option value="blur">Box Blur</option>
+                    <option value="gaussian">Gaussian Blur</option>
+                    <option value="sharpen">Sharpen</option>
+                    <option value="edgeDetect">Edge Detection</option>
+                    <option value="sobelX">Sobel X</option>
+                    <option value="sobelY">Sobel Y</option>
+                    <option value="emboss">Emboss</option>
+                    <option value="laplacian">Laplacian</option>
+                </select>
+            </div>
+
+            <div id="kernel2dGroup" class="control-group" style="display: none;">
+                <label for="kernel2dData">2D Kernel (rows separated by ;):</label>
+                <textarea id="kernel2dData" rows="2" placeholder="0, -1, 0; -1, 5, -1; 0, -1, 0"></textarea>
+            </div>
+
+            <div id="modeGroup" class="control-group" style="display: none;">
+                <label for="mode">Convolution Mode:</label>
+                <select id="mode">
+                    <option value="same">Same (preserve size)</option>
+                    <option value="full">Full</option>
+                    <option value="valid">Valid</option>
+                </select>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Convolve</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Convolution</h3>
+            <p><strong>Convolution</strong> is a mathematical operation that combines two functions to produce a third. It's fundamental to signal processing, image filtering, and neural networks.</p>
+
+            <h4>1D Convolution</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Filter</th>
+                    <th>Effect</th>
+                </tr>
+                <tr>
+                    <td>Smoothing</td>
+                    <td>Reduces noise, averages</td>
+                </tr>
+                <tr>
+                    <td>Derivative</td>
+                    <td>Detects changes/edges</td>
+                </tr>
+                <tr>
+                    <td>Gaussian</td>
+                    <td>Weighted smoothing</td>
+                </tr>
+            </table>
+
+            <h4>2D Convolution</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Filter</th>
+                    <th>Effect</th>
+                </tr>
+                <tr>
+                    <td>Blur</td>
+                    <td>Smooths image</td>
+                </tr>
+                <tr>
+                    <td>Sharpen</td>
+                    <td>Enhances edges</td>
+                </tr>
+                <tr>
+                    <td>Sobel</td>
+                    <td>Gradient detection</td>
+                </tr>
+                <tr>
+                    <td>Edge Detection</td>
+                    <td>Finds boundaries</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

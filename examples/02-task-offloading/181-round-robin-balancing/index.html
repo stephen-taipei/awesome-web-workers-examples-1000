@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>輪詢分配負載均衡 - Web Workers 示例</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: #f0f2f5; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h1 { color: #1a1a1a; text-align: center; }
+        .controls { text-align: center; margin: 20px 0; }
+        button { padding: 10px 20px; font-size: 16px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #0056b3; }
+
+        .workers-container { display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 30px; gap: 20px; }
+        .worker-node {
+            width: 150px;
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .worker-node.active { border-color: #28a745; box-shadow: 0 0 10px rgba(40, 167, 69, 0.2); }
+        .worker-node.selected { transform: scale(1.05); border-color: #007bff; }
+
+        .worker-icon { font-size: 40px; margin-bottom: 10px; color: #6c757d; }
+        .worker-node.active .worker-icon { color: #28a745; }
+
+        .task-queue { display: flex; flex-direction: column; gap: 5px; margin-top: 10px; height: 100px; overflow-y: auto; border-top: 1px solid #eee; padding-top: 5px; }
+        .task-item { font-size: 12px; background: #e9ecef; padding: 4px; border-radius: 4px; animation: fadeIn 0.3s; }
+
+        .stats { margin-top: 10px; font-size: 14px; color: #666; }
+        .task-count { font-weight: bold; color: #333; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .log-area { margin-top: 30px; background: #212529; color: #f8f9fa; padding: 15px; border-radius: 6px; height: 150px; overflow-y: auto; font-family: monospace; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>輪詢分配 (Round-robin)</h1>
+        <p style="text-align: center; color: #666;">任務會依序分配給每一個 Worker，確保分配數量的絕對均衡。</p>
+
+        <div class="controls">
+            <button id="addTaskBtn">提交新任務</button>
+            <button id="autoTaskBtn">自動模擬流量</button>
+        </div>
+
+        <div class="workers-container" id="workersContainer">
+            <!-- Workers will be generated here -->
+        </div>
+
+        <div class="log-area" id="logArea"></div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

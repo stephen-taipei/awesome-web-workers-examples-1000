@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>兩階段選擇 (Power of Two Choices) 示例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>兩階段選擇 (Power of Two Choices)</h1>
+        <p>此示例比較「隨機選擇」與「兩階段選擇 (Power of Two Choices)」在負載均衡上的效果差異。</p>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">演算法:</label>
+                <select id="algorithm">
+                    <option value="random">隨機選擇 (Random)</option>
+                    <option value="powerOfTwo">兩階段選擇 (Power of Two)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="arrivalRate">任務到達率 (ms):</label>
+                <input type="range" id="arrivalRate" min="10" max="500" value="50" step="10">
+                <span id="arrivalRateVal">50</span> ms
+            </div>
+
+            <div class="control-group">
+                <label for="taskDuration">任務平均耗時 (ms):</label>
+                <input type="range" id="taskDuration" min="100" max="2000" value="500" step="50">
+                <span id="taskDurationVal">500</span> ms
+            </div>
+
+            <div class="control-group">
+                <button id="startBtn">開始模擬</button>
+                <button id="stopBtn" disabled>停止模擬</button>
+                <button id="resetBtn">重置</button>
+            </div>
+        </div>
+
+        <div class="stats-panel">
+            <div class="stat-box">
+                <h3>最大負載</h3>
+                <div id="maxLoad" class="stat-value">0</div>
+            </div>
+            <div class="stat-box">
+                <h3>平均負載</h3>
+                <div id="avgLoad" class="stat-value">0</div>
+            </div>
+             <div class="stat-box">
+                <h3>負載變異數</h3>
+                <div id="varLoad" class="stat-value">0</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="loadChart" width="800" height="400"></canvas>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

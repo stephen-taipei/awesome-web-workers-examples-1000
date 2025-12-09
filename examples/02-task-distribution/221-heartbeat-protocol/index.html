@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#221 心跳協議 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 實現心跳協議，監控 Worker 連線狀態並自動偵測異常">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>心跳協議</h1>
+            <p class="subtitle">Heartbeat Protocol</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#221</span>
+                <span class="badge badge-secondary">通訊協調</span>
+                <span class="badge badge-success">初級</span>
+            </div>
+        </header>
+
+        <!-- 輸入控制區域 -->
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+
+            <!-- 數值輸入 -->
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="heartbeat-interval">心跳間隔 (毫秒)</label>
+                    <input
+                        type="number"
+                        id="heartbeat-interval"
+                        class="form-input"
+                        value="1000"
+                        min="500"
+                        max="10000"
+                        placeholder="心跳發送間隔"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="timeout">超時時間 (毫秒)</label>
+                    <input
+                        type="number"
+                        id="timeout"
+                        class="form-input"
+                        value="3000"
+                        min="1000"
+                        max="30000"
+                        placeholder="無回應視為超時"
+                    >
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="max-retries">最大重試次數</label>
+                    <input
+                        type="number"
+                        id="max-retries"
+                        class="form-input"
+                        value="3"
+                        min="1"
+                        max="10"
+                        placeholder="超時後重試次數"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="simulate-delay">模擬回應延遲 (毫秒)</label>
+                    <input
+                        type="number"
+                        id="simulate-delay"
+                        class="form-input"
+                        value="100"
+                        min="0"
+                        max="5000"
+                        placeholder="Worker 回應延遲"
+                    >
+                </div>
+            </div>
+
+            <!-- 快速設定按鈕 -->
+            <div class="form-group">
+                <label class="form-label">快速設定</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-interval="1000" data-timeout="3000">標準模式</button>
+                    <button class="preset-btn" data-interval="500" data-timeout="1500">高頻模式</button>
+                    <button class="preset-btn" data-interval="2000" data-timeout="6000">低頻模式</button>
+                    <button class="preset-btn" data-interval="1000" data-timeout="2000">嚴格模式</button>
+                </div>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">
+                    啟動心跳
+                </button>
+                <button id="stop-btn" class="btn btn-danger" disabled>
+                    停止心跳
+                </button>
+                <button id="simulate-hang-btn" class="btn btn-warning" disabled>
+                    模擬卡死
+                </button>
+            </div>
+        </section>
+
+        <!-- 連線狀態區域 -->
+        <section class="card">
+            <h2 class="card-title">連線狀態</h2>
+            <div class="connection-status">
+                <div class="heartbeat-visual">
+                    <div id="heart-icon" class="heart-icon">❤</div>
+                    <span id="connection-text" class="connection-text">未連線</span>
+                </div>
+                <div class="status-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Worker 狀態</span>
+                        <span id="worker-status" class="detail-value status-offline">離線</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">最後心跳</span>
+                        <span id="last-heartbeat" class="detail-value">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">延遲時間</span>
+                        <span id="latency" class="detail-value">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">連續失敗</span>
+                        <span id="failed-count" class="detail-value">0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 統計資訊區域 -->
+        <section class="card">
+            <h2 class="card-title">統計資訊</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="stat-number" id="total-sent">0</span>
+                    <span class="stat-label">發送心跳</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="total-received">0</span>
+                    <span class="stat-label">收到回應</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="total-timeout">0</span>
+                    <span class="stat-label">超時次數</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="avg-latency">0</span>
+                    <span class="stat-label">平均延遲 (ms)</span>
+                </div>
+            </div>
+            <div class="uptime-info">
+                <span>運行時間：<strong id="uptime">00:00:00</strong></span>
+                <span>成功率：<strong id="success-rate">0%</strong></span>
+            </div>
+        </section>
+
+        <!-- 心跳歷史區域 -->
+        <section class="card">
+            <h2 class="card-title">心跳歷史</h2>
+            <div id="heartbeat-history" class="heartbeat-history">
+                <div class="history-placeholder">啟動心跳後將顯示歷史記錄...</div>
+            </div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>心跳機制：</strong>主執行緒定期發送 PING，Worker 回應 PONG，確認雙方連線正常</li>
+                <li><strong>超時偵測：</strong>設定時間內未收到回應則判定為超時，進行重試或標記離線</li>
+                <li><strong>延遲計算：</strong>測量從發送到收到回應的時間，評估通訊效能</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>應用場景：</strong>長連接監控、服務健康檢查、即時通訊心跳保活</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #221 - 心跳協議
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>

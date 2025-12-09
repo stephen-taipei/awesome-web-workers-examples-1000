@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Parametric Curve - Example 966</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Parametric Curve Generator</h1>
+        <p>Generates 2D curves from parametric equations <code>x(t)</code> and <code>y(t)</code> using a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="eqX">x(t) =</label>
+                    <input type="text" id="eqX" value="16 * pow(sin(t), 3)">
+                    <small>Available: sin, cos, tan, pow, abs, t</small>
+                </div>
+                <div class="form-group">
+                    <label for="eqY">y(t) =</label>
+                    <input type="text" id="eqY" value="13 * cos(t) - 5 * cos(2*t) - 2 * cos(3*t) - cos(4*t)">
+                </div>
+                <div class="form-group row">
+                    <div>
+                        <label>t Min:</label>
+                        <input type="number" id="tMin" value="0">
+                    </div>
+                    <div>
+                        <label>t Max:</label>
+                        <input type="number" id="tMax" value="6.28">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="steps">Steps:</label>
+                    <input type="range" id="steps" min="100" max="10000" value="1000">
+                    <span id="stepsDisplay">1000</span>
+                </div>
+                <button id="drawBtn">Draw Curve</button>
+
+                <div class="stats">
+                    <div class="stat-item">Points: <span id="pointCount">-</span></div>
+                    <div class="stat-item">Time: <span id="calcTime">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="curveCanvas" width="500" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

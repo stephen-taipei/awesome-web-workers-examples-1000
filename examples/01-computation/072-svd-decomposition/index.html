@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#072 SVD Decomposition - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#072 SVD Decomposition</h1>
+            <p class="description">Singular Value Decomposition using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="powerIteration">Power Iteration Method</option>
+                    <option value="golubKahan">Golub-Kahan Bidiagonalization</option>
+                    <option value="jacobi">One-Sided Jacobi</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="manual">Manual Input</option>
+                    <option value="random">Random Matrix</option>
+                </select>
+            </div>
+
+            <div id="manualInput">
+                <div class="control-group">
+                    <label for="matrixInput">Matrix (rows by newlines, values by commas):</label>
+                    <textarea id="matrixInput" rows="5" placeholder="1, 2&#10;3, 4&#10;5, 6"></textarea>
+                </div>
+            </div>
+
+            <div id="randomInput" style="display: none;">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="rows">Rows:</label>
+                        <input type="number" id="rows" value="4" min="2" max="100">
+                    </div>
+                    <div class="control-group third">
+                        <label for="cols">Columns:</label>
+                        <input type="number" id="cols" value="3" min="2" max="100">
+                    </div>
+                    <div class="control-group third">
+                        <label for="range">Value Range:</label>
+                        <input type="number" id="range" value="10" min="1" max="100">
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="numSingular">Number of Singular Values (0 = all):</label>
+                <input type="number" id="numSingular" value="0" min="0" max="100">
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('simple')">Simple 3x2</button>
+                <button class="btn-secondary" onclick="loadSample('square')">Square 3x3</button>
+                <button class="btn-secondary" onclick="loadSample('tall')">Tall 4x2</button>
+                <button class="btn-secondary" onclick="loadSample('wide')">Wide 2x4</button>
+                <button class="btn-secondary" onclick="loadSample('rankDeficient')">Rank Deficient</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute SVD</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About SVD</h3>
+            <p>Singular Value Decomposition factorizes any m×n matrix A into <strong>A = UΣV<sup>T</sup></strong></p>
+            <ul>
+                <li><strong>U</strong>: m×m orthogonal matrix (left singular vectors)</li>
+                <li><strong>Σ</strong>: m×n diagonal matrix (singular values σ₁ ≥ σ₂ ≥ ... ≥ 0)</li>
+                <li><strong>V</strong>: n×n orthogonal matrix (right singular vectors)</li>
+            </ul>
+
+            <h4>Algorithms</h4>
+            <table class="info-table">
+                <tr><th>Algorithm</th><th>Complexity</th><th>Best For</th></tr>
+                <tr><td>Power Iteration</td><td>O(mn·k·iter)</td><td>Top k singular values</td></tr>
+                <tr><td>Golub-Kahan</td><td>O(mn²)</td><td>Full decomposition</td></tr>
+                <tr><td>One-Sided Jacobi</td><td>O(mn²)</td><td>High accuracy</td></tr>
+            </table>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Principal Component Analysis (PCA)</li>
+                <li>Image compression</li>
+                <li>Recommendation systems</li>
+                <li>Solving linear least squares</li>
+                <li>Computing matrix rank and pseudoinverse</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

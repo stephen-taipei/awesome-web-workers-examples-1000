@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#044 Linear Regression - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#044 Linear Regression</h1>
+            <p class="description">Fit simple linear regression using Ordinary Least Squares (OLS) with Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Calculation Mode:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="fit">Fit Regression</option>
+                    <option value="predict">Fit & Predict</option>
+                    <option value="residuals">Residual Analysis</option>
+                    <option value="generate">Generate & Fit</option>
+                </select>
+            </div>
+
+            <div id="dataInputs">
+                <div class="control-group">
+                    <label for="dataX">X values (independent variable):</label>
+                    <textarea id="dataX" rows="2" placeholder="1, 2, 3, 4, 5, 6, 7, 8, 9, 10"></textarea>
+                </div>
+
+                <div class="control-group">
+                    <label for="dataY">Y values (dependent variable):</label>
+                    <textarea id="dataY" rows="2" placeholder="2.1, 4.3, 5.8, 8.2, 10.1, 11.8, 14.2, 15.9, 18.1, 20.3"></textarea>
+                </div>
+
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('perfect')">Perfect Fit</button>
+                    <button class="btn-secondary" onclick="loadSample('strong')">Strong</button>
+                    <button class="btn-secondary" onclick="loadSample('weak')">Weak</button>
+                    <button class="btn-secondary" onclick="loadSample('negative')">Negative</button>
+                </div>
+            </div>
+
+            <div id="predictInputs" style="display: none;">
+                <div class="control-group">
+                    <label for="predictX">X values to predict:</label>
+                    <input type="text" id="predictX" placeholder="11, 12, 15, 20">
+                </div>
+            </div>
+
+            <div id="generateOptions" style="display: none;">
+                <div class="control-group">
+                    <label for="generateCount">Data Points:</label>
+                    <input type="number" id="generateCount" value="10000" min="100" max="1000000">
+                </div>
+
+                <div class="param-row">
+                    <label>
+                        True Slope:
+                        <input type="number" id="trueSlope" value="2" step="0.5">
+                    </label>
+                    <label>
+                        True Intercept:
+                        <input type="number" id="trueIntercept" value="5" step="1">
+                    </label>
+                    <label>
+                        Noise (±):
+                        <input type="number" id="noiseLevel" value="10" min="0" step="5">
+                    </label>
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Fit Regression</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Linear Regression</h3>
+            <p><strong>Simple Linear Regression</strong> fits a straight line to data points to model the relationship between a dependent variable Y and an independent variable X.</p>
+
+            <h4>The Model</h4>
+            <div class="formula-display">
+                <code>y = β₀ + β₁x + ε</code>
+                <p>Where β₀ is the intercept, β₁ is the slope, and ε is the error term.</p>
+            </div>
+
+            <h4>OLS Formulas</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Parameter</th>
+                    <th>Formula</th>
+                </tr>
+                <tr>
+                    <td>Slope (β₁)</td>
+                    <td>Σ(xᵢ - x̄)(yᵢ - ȳ) / Σ(xᵢ - x̄)²</td>
+                </tr>
+                <tr>
+                    <td>Intercept (β₀)</td>
+                    <td>ȳ - β₁x̄</td>
+                </tr>
+                <tr>
+                    <td>R²</td>
+                    <td>1 - SSR/SST</td>
+                </tr>
+            </table>
+
+            <h4>R² Interpretation</h4>
+            <table class="info-table">
+                <tr>
+                    <th>R² Value</th>
+                    <th>Interpretation</th>
+                </tr>
+                <tr>
+                    <td>0.9 - 1.0</td>
+                    <td>Excellent fit</td>
+                </tr>
+                <tr>
+                    <td>0.7 - 0.9</td>
+                    <td>Good fit</td>
+                </tr>
+                <tr>
+                    <td>0.5 - 0.7</td>
+                    <td>Moderate fit</td>
+                </tr>
+                <tr>
+                    <td>0.3 - 0.5</td>
+                    <td>Weak fit</td>
+                </tr>
+                <tr>
+                    <td>0.0 - 0.3</td>
+                    <td>Poor fit</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

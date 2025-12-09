@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#195 熔斷機制 - Web Workers 範例</title>
+    <meta name="description" content="實作熔斷器模式 (Circuit Breaker)，在 Worker 連續失敗時暫停發送任務">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>熔斷機制</h1>
+            <p class="subtitle">Circuit Breaker Pattern</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#195</span>
+                <span class="badge badge-secondary">任務分流</span>
+                <span class="badge badge-danger">高級</span>
+            </div>
+        </header>
+
+        <!-- 狀態顯示 -->
+        <section class="card status-card">
+            <h2 class="card-title">熔斷器狀態</h2>
+            <div class="circuit-state">
+                <div id="state-indicator" class="state-indicator closed">CLOSED</div>
+                <div class="state-details">
+                    <p>當前狀態: <strong id="current-state-text">CLOSED (正常)</strong></p>
+                    <p>失敗計數: <span id="failure-count">0</span> / <span id="failure-threshold-display">5</span></p>
+                    <p>重試倒數: <span id="reset-timeout">0</span>s</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 控制面板 -->
+        <section class="card">
+            <h2 class="card-title">服務模擬</h2>
+
+            <div class="control-group">
+                <h3>1. 設定環境</h3>
+                <div class="input-row">
+                    <div class="form-group">
+                        <label class="form-label">服務穩定性</label>
+                        <select id="service-reliability" class="form-input">
+                            <option value="1.0">100% 成功 (穩定)</option>
+                            <option value="0.7">70% 成功 (偶爾失敗)</option>
+                            <option value="0.0">0% 成功 (完全故障)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>2. 發送請求</h3>
+                <div class="btn-group">
+                    <button id="send-request-btn" class="btn btn-primary">發送 1 個請求</button>
+                    <button id="auto-request-btn" class="btn btn-secondary">自動連續發送</button>
+                    <button id="stop-auto-btn" class="btn btn-danger" disabled>停止</button>
+                </div>
+            </div>
+
+            <button id="reset-cb-btn" class="btn btn-outline" style="margin-top: 15px;">重置熔斷器</button>
+        </section>
+
+        <!-- 請求日誌 -->
+        <section class="card">
+            <h2 class="card-title">請求日誌</h2>
+            <div id="request-log" class="request-log">
+                <!-- 日誌項目 -->
+            </div>
+        </section>
+
+        <!-- 說明 -->
+        <section class="card info-section">
+            <h3>熔斷器機制說明</h3>
+            <ul>
+                <li><strong>CLOSED (關閉/正常):</strong> 請求正常通過。若失敗次數達到閾值 (5次)，切換至 OPEN。</li>
+                <li><strong>OPEN (開啟/熔斷):</strong> 阻斷所有請求，直接返回錯誤，不消耗後端資源。經過冷卻時間 (5秒) 後，切換至 HALF-OPEN。</li>
+                <li><strong>HALF-OPEN (半開啟/探測):</strong> 允許少量請求通過 (試探)。若成功，切換回 CLOSED；若失敗，再次切換回 OPEN 並重新計時。</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #195 - 熔斷機制
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

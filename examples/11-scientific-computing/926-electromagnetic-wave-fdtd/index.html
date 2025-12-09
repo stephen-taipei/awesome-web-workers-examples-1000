@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker FDTD Electromagnetic Wave - Example 926</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Electromagnetic Wave Simulation (FDTD)</h1>
+        <p>Simulates 2D electromagnetic wave propagation using the Finite-Difference Time-Domain (FDTD) method in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="sourceFreq">Source Frequency:</label>
+                    <input type="range" id="sourceFreq" min="1" max="20" value="10">
+                    <span id="freqDisplay">10</span>
+                </div>
+                <div class="form-group">
+                    <label for="material">Obstacle Material:</label>
+                    <select id="material">
+                        <option value="conductor">Perfect Conductor (Reflection)</option>
+                        <option value="dielectric">Dielectric (Refraction)</option>
+                        <option value="none">Free Space</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="speed">Speed:</label>
+                    <input type="range" id="speed" min="1" max="10" value="2">
+                </div>
+                <button id="startBtn">Start / Pause</button>
+                <button id="resetBtn">Reset</button>
+
+                <div class="stats">
+                    <div class="stat-item">Time Step: <span id="timeStep">0</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="fdtdCanvas" width="500" height="500"></canvas>
+                <div class="legend">
+                    <span class="gradient-bar"></span>
+                    <div class="labels">
+                        <span>-E</span>
+                        <span>0</span>
+                        <span>+E</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

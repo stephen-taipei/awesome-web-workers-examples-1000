@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulated Annealing - Web Worker Example #129</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Simulated Annealing</h1>
+            <p class="subtitle">Web Worker Example #129 - Global Optimization</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Simulated Annealing</h2>
+                <p>Simulated Annealing is a probabilistic optimization algorithm inspired by the annealing process in metallurgy. It can escape local minima by occasionally accepting worse solutions, with the probability decreasing as the "temperature" cools down.</p>
+                <div class="formula-box">
+                    <p><strong>Algorithm:</strong></p>
+                    <pre class="formula">
+1. Initialize: x = random point, T = T_initial
+2. For each iteration:
+   a. Generate neighbor: x' = x + random perturbation
+   b. Calculate ΔE = f(x') - f(x)
+   c. If ΔE < 0: accept x' (better solution)
+   d. Else: accept with probability P = exp(-ΔE/T)
+   e. Cool down: T = cooling_rate × T
+3. Repeat until T < T_min or max iterations reached
+
+Cooling Schedules:
+  Exponential: T_k = T_0 × α^k           (α ≈ 0.95-0.99)
+  Linear:      T_k = T_0 - k × (T_0 - T_min) / k_max
+  Logarithmic: T_k = T_0 / (1 + log(1 + k))
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="functionSelect">Test Function:</label>
+                    <select id="functionSelect">
+                        <option value="rastrigin">Rastrigin (Many Local Minima)</option>
+                        <option value="ackley">Ackley Function</option>
+                        <option value="rosenbrock">Rosenbrock</option>
+                        <option value="schwefel">Schwefel Function</option>
+                    </select>
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="coolingSchedule">Cooling Schedule:</label>
+                        <select id="coolingSchedule">
+                            <option value="exponential">Exponential</option>
+                            <option value="linear">Linear</option>
+                            <option value="logarithmic">Logarithmic</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="initialTemp">Initial Temperature:</label>
+                        <input type="number" id="initialTemp" value="100" min="1" max="10000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="minTemp">Min Temperature:</label>
+                        <input type="number" id="minTemp" value="0.001" step="0.001" min="0.0001">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="coolingRate">Cooling Rate:</label>
+                        <input type="number" id="coolingRate" value="0.995" step="0.001" min="0.9" max="0.9999">
+                        <span class="hint">For exponential cooling</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="maxIter">Max Iterations:</label>
+                        <input type="number" id="maxIter" value="10000" min="100" max="100000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="stepSize">Step Size:</label>
+                        <input type="number" id="stepSize" value="0.5" step="0.1" min="0.01">
+                        <span class="hint">Perturbation magnitude</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="optimizeBtn" class="btn btn-primary">Start SA</button>
+                    <button id="stopBtn" class="btn btn-secondary hidden">Stop</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Initializing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Optimization Path</h2>
+                <canvas id="optimCanvas" width="550" height="450"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Iterations</span>
+                        <span id="iterCount" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Best Position</span>
+                        <span id="bestPos" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Best Value</span>
+                        <span id="bestValue" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Acceptance Rate</span>
+                        <span id="acceptRate" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="charts-row">
+                    <div class="chart-container">
+                        <h3>Energy History</h3>
+                        <canvas id="energyCanvas" width="260" height="180"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Temperature History</h3>
+                        <canvas id="tempCanvas" width="260" height="180"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #129</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

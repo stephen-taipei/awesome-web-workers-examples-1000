@@ -1,0 +1,849 @@
+/**
+ * #013 模冪運算 - 樣式表
+ *
+ * 主題色：深藍色 (Navy Blue) - 密碼學風格
+ */
+
+/* ============ CSS 變數 ============ */
+:root {
+    --primary: #1565c0;
+    --primary-dark: #0d47a1;
+    --primary-light: #42a5f5;
+    --primary-pale: #e3f2fd;
+
+    --secondary: #1976d2;
+    --accent: #2196f3;
+
+    --bg-dark: #0a1929;
+    --bg-card: #132f4c;
+    --bg-input: #0d2137;
+
+    --text-primary: #e3f2fd;
+    --text-secondary: #90caf9;
+    --text-muted: #5c7c9a;
+
+    --success: #4caf50;
+    --warning: #ff9800;
+    --danger: #f44336;
+    --info: #00bcd4;
+
+    --border-radius: 8px;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+    --transition: all 0.3s ease;
+}
+
+/* ============ 基礎樣式 ============ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--bg-dark) 0%, #001e3c 100%);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 950px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ============ 頁首 ============ */
+.header {
+    text-align: center;
+    padding: 40px 20px;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, var(--primary-light), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.badge-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.badge-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.badge-secondary {
+    background: var(--secondary);
+    color: white;
+}
+
+.badge-intermediate {
+    background: var(--warning);
+    color: #1a1a2e;
+}
+
+.formula-display {
+    background: var(--bg-card);
+    padding: 20px 30px;
+    border-radius: var(--border-radius);
+    display: inline-block;
+    font-size: 1.3rem;
+    border: 1px solid var(--primary);
+    margin-top: 10px;
+    font-family: 'Consolas', monospace;
+}
+
+.formula-display .highlight {
+    color: var(--primary-light);
+    font-weight: bold;
+}
+
+/* ============ 卡片 ============ */
+.card {
+    background: var(--bg-card);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(21, 101, 192, 0.3);
+}
+
+.card-title {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: var(--primary-light);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-title::before {
+    content: '🔐';
+    font-size: 1.2rem;
+}
+
+/* ============ 表單 ============ */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    background: var(--bg-input);
+    border: 2px solid rgba(21, 101, 192, 0.3);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.2);
+}
+
+textarea.form-input {
+    resize: vertical;
+    min-height: 100px;
+    font-family: 'Consolas', monospace;
+}
+
+.input-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.input-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+@media (max-width: 600px) {
+    .input-row,
+    .input-row-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============ 預設按鈕 ============ */
+.preset-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.preset-btn {
+    padding: 8px 16px;
+    background: var(--bg-input);
+    border: 1px solid var(--primary);
+    border-radius: 20px;
+    color: var(--primary-light);
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: var(--transition);
+}
+
+.preset-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* ============ 按鈕 ============ */
+.btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--primary-light), var(--primary));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(21, 101, 192, 0.4);
+}
+
+.btn-secondary {
+    background: var(--bg-input);
+    color: var(--text-primary);
+    border: 1px solid var(--primary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: var(--primary);
+}
+
+.btn-info {
+    background: linear-gradient(135deg, var(--info), #0097a7);
+    color: white;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--danger), #d32f2f);
+    color: white;
+}
+
+/* ============ 進度條 ============ */
+.progress-container {
+    margin-top: 10px;
+}
+
+.progress-bar-wrapper {
+    height: 24px;
+    background: var(--bg-input);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: white;
+    transition: width 0.3s ease;
+    min-width: 40px;
+}
+
+.progress-text {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* ============ 錯誤和訊息 ============ */
+.error-message {
+    background: rgba(244, 67, 54, 0.2);
+    border: 1px solid var(--danger);
+    color: #ff8a80;
+    padding: 12px 15px;
+    border-radius: var(--border-radius);
+    margin-bottom: 15px;
+}
+
+.note-box {
+    background: rgba(21, 101, 192, 0.2);
+    border: 1px solid var(--primary);
+    padding: 12px 15px;
+    border-radius: var(--border-radius);
+    margin-top: 15px;
+    color: var(--text-secondary);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ============ 結果區域 ============ */
+.result-section {
+    border: 1px solid var(--primary);
+    background: linear-gradient(135deg, var(--bg-card), rgba(21, 101, 192, 0.1));
+}
+
+.result-content {
+    margin-top: 15px;
+}
+
+.result-formula {
+    font-size: 1.4rem;
+    text-align: center;
+    padding: 20px;
+    background: var(--bg-input);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    font-family: 'Consolas', monospace;
+    word-break: break-all;
+}
+
+.result-formula sup {
+    font-size: 0.7em;
+    color: var(--accent);
+}
+
+.result-formula .highlight {
+    color: var(--success);
+    font-weight: bold;
+}
+
+.result-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.stat-item {
+    background: var(--bg-input);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--primary-light);
+}
+
+.result-detail h4 {
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+}
+
+.result-box {
+    background: var(--bg-input);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    font-family: 'Consolas', monospace;
+    word-break: break-all;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid rgba(21, 101, 192, 0.3);
+}
+
+.result-box.small {
+    font-size: 0.9rem;
+    max-height: 80px;
+}
+
+/* ============ 驗證狀態 ============ */
+.verification-status {
+    text-align: center;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.verification-status.success {
+    background: rgba(76, 175, 80, 0.2);
+    color: var(--success);
+    border: 1px solid var(--success);
+}
+
+.verification-status.error {
+    background: rgba(244, 67, 54, 0.2);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+}
+
+/* ============ 密碼學專用樣式 ============ */
+.crypto-section {
+    margin: 20px 0;
+    padding: 15px;
+    background: var(--bg-input);
+    border-radius: var(--border-radius);
+}
+
+.crypto-section h4 {
+    color: var(--primary-light);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(21, 101, 192, 0.3);
+}
+
+.crypto-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.crypto-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.crypto-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.crypto-item .label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.crypto-item .value {
+    font-family: 'Consolas', monospace;
+    word-break: break-all;
+}
+
+.crypto-item .value.mono {
+    font-size: 0.9rem;
+}
+
+/* ============ 金鑰對顯示 ============ */
+.key-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.key {
+    padding: 15px;
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+
+.key.public-key {
+    background: rgba(76, 175, 80, 0.2);
+    border: 1px solid var(--success);
+}
+
+.key.private-key {
+    background: rgba(244, 67, 54, 0.2);
+    border: 1px solid var(--danger);
+}
+
+.key-label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.key-value {
+    font-family: 'Consolas', monospace;
+    font-size: 0.85rem;
+    word-break: break-all;
+}
+
+/* ============ 加密流程 ============ */
+.encryption-flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.flow-step {
+    width: 100%;
+    padding: 15px;
+    background: var(--bg-input);
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+
+.step-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+}
+
+.step-value {
+    font-family: 'Consolas', monospace;
+    word-break: break-all;
+}
+
+.step-value.success {
+    color: var(--success);
+}
+
+.step-value.error {
+    color: var(--danger);
+}
+
+.flow-arrow {
+    color: var(--primary-light);
+    font-size: 0.9rem;
+}
+
+/* ============ Diffie-Hellman ============ */
+.dh-exchange {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.dh-party {
+    padding: 20px;
+    background: var(--bg-input);
+    border-radius: var(--border-radius);
+}
+
+.dh-party h4 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: var(--primary-light);
+}
+
+.dh-party.alice {
+    border: 1px solid #e91e63;
+}
+
+.dh-party.bob {
+    border: 1px solid #2196f3;
+}
+
+.dh-item {
+    margin-bottom: 12px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.dh-item.highlight {
+    background: rgba(76, 175, 80, 0.2);
+    border: 1px solid var(--success);
+}
+
+.dh-item .label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.dh-item .value {
+    font-family: 'Consolas', monospace;
+    font-size: 0.85rem;
+    word-break: break-all;
+}
+
+.dh-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+}
+
+.dh-arrow .arrows {
+    font-size: 2rem;
+}
+
+/* ============ 費馬測試 ============ */
+.witnesses-section {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(244, 67, 54, 0.1);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--danger);
+}
+
+.witnesses-section h4 {
+    color: var(--danger);
+    margin-bottom: 10px;
+}
+
+.witnesses-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.witness {
+    padding: 5px 12px;
+    background: var(--danger);
+    color: white;
+    border-radius: 15px;
+    font-family: 'Consolas', monospace;
+    font-size: 0.9rem;
+}
+
+.fermat-info {
+    margin-top: 20px;
+    padding: 15px;
+    background: var(--bg-input);
+    border-radius: var(--border-radius);
+}
+
+.fermat-info h4 {
+    color: var(--primary-light);
+    margin-bottom: 10px;
+}
+
+.fermat-info p {
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+}
+
+.fermat-info .formula {
+    text-align: center;
+    font-size: 1.2rem;
+    font-family: 'Consolas', monospace;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+/* ============ 批量表格 ============ */
+.batch-table-container {
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+.batch-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.batch-table th,
+.batch-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(21, 101, 192, 0.2);
+}
+
+.batch-table th {
+    background: var(--bg-input);
+    color: var(--primary-light);
+}
+
+.batch-table tr:hover {
+    background: rgba(21, 101, 192, 0.1);
+}
+
+.batch-table .error-row {
+    color: var(--danger);
+}
+
+/* ============ 方法比較 ============ */
+.compare-header {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    font-family: 'Consolas', monospace;
+}
+
+.methods-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.method-card {
+    background: var(--bg-input);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    border: 1px solid rgba(21, 101, 192, 0.3);
+}
+
+.method-card.fastest {
+    border-color: var(--success);
+    background: linear-gradient(135deg, var(--bg-input), rgba(76, 175, 80, 0.1));
+}
+
+.method-card.skipped {
+    opacity: 0.6;
+}
+
+.method-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.method-name {
+    font-weight: bold;
+    color: var(--primary-light);
+}
+
+.fastest-badge {
+    background: var(--success);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+}
+
+.method-stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.method-stat {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============ 說明區域 ============ */
+.info-section h3 {
+    color: var(--primary-light);
+    margin-bottom: 15px;
+}
+
+.info-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.info-section li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(21, 101, 192, 0.2);
+    color: var(--text-secondary);
+}
+
+.info-section li:last-child {
+    border-bottom: none;
+}
+
+.info-section strong {
+    color: var(--primary-light);
+}
+
+/* ============ 頁尾 ============ */
+.footer {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-muted);
+    border-top: 1px solid rgba(21, 101, 192, 0.2);
+    margin-top: 30px;
+}
+
+.footer a {
+    color: var(--primary-light);
+    text-decoration: none;
+}
+
+/* ============ 滾動條 ============ */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-input);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 4px;
+}
+
+/* ============ 響應式 ============ */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 1.8rem;
+    }
+
+    .dh-exchange {
+        grid-template-columns: 1fr;
+    }
+
+    .dh-arrow {
+        transform: rotate(90deg);
+        padding: 10px 0;
+    }
+
+    .key-pair {
+        grid-template-columns: 1fr;
+    }
+
+    .crypto-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#073 Eigenvalue Calculator - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#073 Eigenvalue Calculator</h1>
+            <p class="description">Compute eigenvalues using QR iteration and Power method</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="qrIteration">QR Iteration</option>
+                    <option value="powerMethod">Power Method (dominant)</option>
+                    <option value="inverseIteration">Inverse Iteration (smallest)</option>
+                    <option value="shiftedQR">Shifted QR with Wilkinson</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="manual">Manual Input</option>
+                    <option value="random">Random Matrix</option>
+                </select>
+            </div>
+
+            <div id="manualInput">
+                <div class="control-group">
+                    <label for="matrixInput">Square Matrix (rows by newlines, values by commas):</label>
+                    <textarea id="matrixInput" rows="5" placeholder="4, -1, 1&#10;-1, 3, -2&#10;1, -2, 3"></textarea>
+                </div>
+            </div>
+
+            <div id="randomInput" style="display: none;">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="size">Matrix Size (n×n):</label>
+                        <input type="number" id="size" value="4" min="2" max="100">
+                    </div>
+                    <div class="control-group third">
+                        <label for="matrixType">Matrix Type:</label>
+                        <select id="matrixType">
+                            <option value="random">Random</option>
+                            <option value="symmetric">Symmetric</option>
+                            <option value="diagonal">Diagonally Dominant</option>
+                        </select>
+                    </div>
+                    <div class="control-group third">
+                        <label for="range">Value Range:</label>
+                        <input type="number" id="range" value="10" min="1" max="100">
+                    </div>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('simple')">Simple 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('symmetric')">Symmetric</button>
+                <button class="btn-secondary" onclick="loadSample('diagonal')">Diagonal</button>
+                <button class="btn-secondary" onclick="loadSample('defective')">Defective</button>
+                <button class="btn-secondary" onclick="loadSample('complex')">Complex Eigenvalues</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute Eigenvalues</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Eigenvalues</h3>
+            <p>For a square matrix A, eigenvalue λ satisfies <strong>Av = λv</strong> for some non-zero vector v.</p>
+
+            <h4>Algorithms</h4>
+            <table class="info-table">
+                <tr><th>Algorithm</th><th>Finds</th><th>Best For</th></tr>
+                <tr><td>QR Iteration</td><td>All eigenvalues</td><td>General matrices</td></tr>
+                <tr><td>Power Method</td><td>Largest |λ|</td><td>Dominant eigenvalue</td></tr>
+                <tr><td>Inverse Iteration</td><td>Smallest |λ|</td><td>Near-singular matrices</td></tr>
+                <tr><td>Shifted QR</td><td>All eigenvalues</td><td>Faster convergence</td></tr>
+            </table>
+
+            <h4>Properties</h4>
+            <ul>
+                <li>n×n matrix has exactly n eigenvalues (counting multiplicity)</li>
+                <li>Symmetric matrices have real eigenvalues</li>
+                <li>det(A) = product of eigenvalues</li>
+                <li>trace(A) = sum of eigenvalues</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

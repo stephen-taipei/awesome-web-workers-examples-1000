@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Differential Evolution - Web Worker Example #132</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Differential Evolution</h1>
+            <p class="subtitle">Web Worker Example #132 - Evolutionary Optimization</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Differential Evolution</h2>
+                <p>Differential Evolution (DE) is a population-based optimization algorithm that uses vector differences for perturbing the population. It's particularly effective for continuous parameter optimization problems.</p>
+                <div class="formula-box">
+                    <p><strong>Algorithm:</strong></p>
+                    <pre class="formula">
+For each target vector x_i:
+  1. Mutation: v = x_r1 + F × (x_r2 - x_r3)
+     where r1, r2, r3 are distinct random indices ≠ i
+
+  2. Crossover: u_j = v_j if rand < CR or j = j_rand
+                u_j = x_i,j otherwise
+
+  3. Selection: x_i = u if f(u) ≤ f(x_i)
+                x_i = x_i otherwise
+
+Strategies:
+  DE/rand/1:   v = x_r1 + F(x_r2 - x_r3)
+  DE/best/1:   v = x_best + F(x_r1 - x_r2)
+  DE/rand/2:   v = x_r1 + F(x_r2 - x_r3) + F(x_r4 - x_r5)
+  DE/best/2:   v = x_best + F(x_r1 - x_r2) + F(x_r3 - x_r4)
+  DE/current-to-best/1: v = x_i + F(x_best - x_i) + F(x_r1 - x_r2)
+
+Parameters:
+  F  = Mutation factor (0.4 - 1.0)
+  CR = Crossover probability (0.1 - 0.9)
+  NP = Population size (5D - 10D)
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="functionSelect">Test Function:</label>
+                    <select id="functionSelect">
+                        <option value="rastrigin">Rastrigin (Many Local Minima)</option>
+                        <option value="ackley">Ackley Function</option>
+                        <option value="rosenbrock">Rosenbrock</option>
+                        <option value="griewank">Griewank Function</option>
+                    </select>
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="populationSize">Population Size:</label>
+                        <input type="number" id="populationSize" value="50" min="10" max="200">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="maxGenerations">Max Generations:</label>
+                        <input type="number" id="maxGenerations" value="200" min="10" max="1000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="mutationFactor">Mutation Factor (F):</label>
+                        <input type="number" id="mutationFactor" value="0.8" step="0.05" min="0" max="2">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="crossoverProb">Crossover (CR):</label>
+                        <input type="number" id="crossoverProb" value="0.9" step="0.05" min="0" max="1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="strategy">DE Strategy:</label>
+                        <select id="strategy">
+                            <option value="rand1">DE/rand/1</option>
+                            <option value="best1">DE/best/1</option>
+                            <option value="rand2">DE/rand/2</option>
+                            <option value="best2">DE/best/2</option>
+                            <option value="currentToBest1">DE/current-to-best/1</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="dither">Dithering:</label>
+                        <select id="dither">
+                            <option value="none">None</option>
+                            <option value="per-generation">Per Generation</option>
+                            <option value="per-vector">Per Vector</option>
+                        </select>
+                        <span class="hint">Random F variation</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="evolveBtn" class="btn btn-primary">Start DE</button>
+                    <button id="stopBtn" class="btn btn-secondary hidden">Stop</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Initializing population...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Population Distribution</h2>
+                <canvas id="populationCanvas" width="550" height="450"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Generations</span>
+                        <span id="genCount" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Best Position</span>
+                        <span id="bestPos" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Best Fitness</span>
+                        <span id="bestFitness" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Success Rate</span>
+                        <span id="successRate" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="charts-row">
+                    <div class="chart-container">
+                        <h3>Fitness History</h3>
+                        <canvas id="fitnessCanvas" width="260" height="180"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Population Diversity</h3>
+                        <canvas id="diversityCanvas" width="260" height="180"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #132</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

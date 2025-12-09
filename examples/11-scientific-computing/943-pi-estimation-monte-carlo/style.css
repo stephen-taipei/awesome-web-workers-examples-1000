@@ -1,0 +1,134 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fce4ec;
+    color: #880e4f;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-width: 800px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    color: #ad1457;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    text-align: center;
+    color: #ec407a;
+    margin-bottom: 2rem;
+}
+
+.layout {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.controls {
+    flex: 1;
+    min-width: 250px;
+    background: #f8bbd0;
+    padding: 1.5rem;
+    border: 1px solid #f48fb1;
+    border-radius: 6px;
+}
+
+.visualization {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    background-color: #fff;
+    border: 1px solid #f48fb1;
+    border-radius: 4px;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #880e4f;
+}
+
+select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ec407a;
+    border-radius: 4px;
+    background: #fff;
+    font-size: 1rem;
+}
+
+button {
+    width: 100%;
+    background-color: #ec407a;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    transition: background 0.2s;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #d81b60;
+}
+
+button:disabled {
+    background-color: #f48fb1;
+    cursor: not-allowed;
+}
+
+#stopBtn {
+    background-color: #880e4f;
+}
+
+#stopBtn:hover {
+    background-color: #ad1457;
+}
+
+.stats {
+    margin-top: 2rem;
+    border-top: 1px solid #f48fb1;
+    padding-top: 1rem;
+}
+
+.stat-item {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+}
+
+.stat-item.big {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+    justify-content: center;
+    color: #d81b60;
+}
+
+.stat-item span {
+    font-weight: bold;
+}

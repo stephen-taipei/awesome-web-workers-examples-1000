@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#215 訊息序列化 - Web Workers 範例</title>
+    <meta name="description" content="探索不同的訊息序列化格式和自訂序列化器">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>訊息序列化</h1>
+            <p class="subtitle">Message Serialization</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#215</span>
+                <span class="badge badge-secondary">通訊協調</span>
+                <span class="badge badge-warning">中級</span>
+            </div>
+        </header>
+
+        <!-- 功能說明區域 -->
+        <section class="card">
+            <h2 class="card-title">功能說明</h2>
+            <p>此範例展示不同的 <strong>訊息序列化格式</strong>，比較它們的效能和適用場景。</p>
+            <ul class="feature-list">
+                <li>JSON - 標準格式，易於閱讀和偵錯</li>
+                <li>Structured Clone - 瀏覽器原生，支援更多資料類型</li>
+                <li>MessagePack - 二進位格式，更小的資料大小</li>
+                <li>自訂序列化 - 針對特定需求優化</li>
+            </ul>
+        </section>
+
+        <!-- 序列化格式選擇 -->
+        <section class="card">
+            <h2 class="card-title">序列化格式</h2>
+
+            <div class="format-selector">
+                <label class="format-option">
+                    <input type="radio" name="format" value="json" checked>
+                    <span class="format-card">
+                        <span class="format-name">JSON</span>
+                        <span class="format-desc">標準格式，廣泛支援</span>
+                    </span>
+                </label>
+                <label class="format-option">
+                    <input type="radio" name="format" value="structured-clone">
+                    <span class="format-card">
+                        <span class="format-name">Structured Clone</span>
+                        <span class="format-desc">原生支援，無需序列化</span>
+                    </span>
+                </label>
+                <label class="format-option">
+                    <input type="radio" name="format" value="messagepack">
+                    <span class="format-card">
+                        <span class="format-name">MessagePack</span>
+                        <span class="format-desc">二進位格式，體積小</span>
+                    </span>
+                </label>
+                <label class="format-option">
+                    <input type="radio" name="format" value="custom">
+                    <span class="format-card">
+                        <span class="format-name">自訂格式</span>
+                        <span class="format-desc">針對特定資料優化</span>
+                    </span>
+                </label>
+            </div>
+        </section>
+
+        <!-- 測試資料區域 -->
+        <section class="card">
+            <h2 class="card-title">測試資料</h2>
+
+            <!-- 資料類型選擇 -->
+            <div class="form-group">
+                <label class="form-label">選擇測試資料類型</label>
+                <div class="data-type-buttons">
+                    <button class="data-type-btn active" data-type="simple">簡單物件</button>
+                    <button class="data-type-btn" data-type="nested">巢狀物件</button>
+                    <button class="data-type-btn" data-type="array">大型陣列</button>
+                    <button class="data-type-btn" data-type="binary">二進位資料</button>
+                    <button class="data-type-btn" data-type="mixed">混合資料</button>
+                </div>
+            </div>
+
+            <!-- 資料預覽 -->
+            <div class="form-group">
+                <label class="form-label">資料預覽</label>
+                <pre id="data-preview" class="data-preview">{
+  "name": "Test",
+  "value": 42
+}</pre>
+            </div>
+
+            <!-- 陣列大小設定 -->
+            <div class="form-group" id="array-size-group" style="display: none;">
+                <label class="form-label">陣列大小</label>
+                <input
+                    type="number"
+                    id="array-size"
+                    class="form-input"
+                    value="1000"
+                    min="100"
+                    max="100000"
+                >
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+        </section>
+
+        <!-- 測試控制區域 -->
+        <section class="card">
+            <h2 class="card-title">效能測試</h2>
+
+            <div class="form-group">
+                <label class="form-label">測試迭代次數</label>
+                <input
+                    type="number"
+                    id="iterations"
+                    class="form-input"
+                    value="100"
+                    min="10"
+                    max="10000"
+                >
+            </div>
+
+            <div class="btn-group">
+                <button id="run-test-btn" class="btn btn-primary">執行測試</button>
+                <button id="run-all-btn" class="btn btn-secondary">比較所有格式</button>
+                <button id="send-once-btn" class="btn btn-success">發送一次</button>
+            </div>
+
+            <!-- 進度顯示 -->
+            <div class="progress-container" id="progress-container" style="display: none;">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備中...</p>
+            </div>
+        </section>
+
+        <!-- 結果顯示區域 -->
+        <section class="card" id="result-section" style="display: none;">
+            <h2 class="card-title">測試結果</h2>
+
+            <!-- 單一測試結果 -->
+            <div id="single-result" class="result-container" style="display: none;">
+                <div class="result-grid">
+                    <div class="result-item">
+                        <span class="result-label">序列化時間</span>
+                        <span id="serialize-time" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">反序列化時間</span>
+                        <span id="deserialize-time" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">傳輸時間</span>
+                        <span id="transfer-time" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">資料大小</span>
+                        <span id="data-size" class="result-value">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 比較結果 -->
+            <div id="comparison-result" class="comparison-container" style="display: none;">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>格式</th>
+                            <th>序列化</th>
+                            <th>反序列化</th>
+                            <th>總時間</th>
+                            <th>資料大小</th>
+                        </tr>
+                    </thead>
+                    <tbody id="comparison-tbody">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 訊息記錄區域 -->
+        <section class="card">
+            <h2 class="card-title">通訊記錄</h2>
+            <div id="log-container" class="log-container">
+                <p class="empty-message">尚無通訊記錄</p>
+            </div>
+            <button id="clear-log-btn" class="btn btn-secondary btn-small">清除記錄</button>
+        </section>
+
+        <!-- 程式碼說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>JSON：</strong>使用 <code>JSON.stringify()</code> 和 <code>JSON.parse()</code></li>
+                <li><strong>Structured Clone：</strong>瀏覽器原生 <code>postMessage</code> 自動處理</li>
+                <li><strong>MessagePack：</strong>二進位格式，需要額外的編解碼庫</li>
+                <li><strong>自訂格式：</strong>針對特定資料結構的優化序列化</li>
+                <li><strong>Transferable Objects：</strong>使用 <code>ArrayBuffer</code> 實現零拷貝傳輸</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #215 - 訊息序列化
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>

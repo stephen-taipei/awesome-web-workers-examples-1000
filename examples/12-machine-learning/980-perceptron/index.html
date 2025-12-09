@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Perceptron - Example 980</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Single Layer Perceptron</h1>
+        <p>Visualizes the training of a simple linear classifier (Perceptron) on linearly separable data using a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="learningRate">Learning Rate:</label>
+                    <input type="range" id="learningRate" min="0.001" max="0.5" step="0.001" value="0.05">
+                    <span id="lrDisplay">0.05</span>
+                </div>
+                <div class="form-group">
+                    <label>Animation Speed:</label>
+                    <div class="speed-controls">
+                        <label><input type="radio" name="speed" value="200"> Slow</label>
+                        <label><input type="radio" name="speed" value="50" checked> Fast</label>
+                        <label><input type="radio" name="speed" value="0"> Instant</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button id="newDataBtn">New Random Data</button>
+                    <button id="trainBtn">Train Perceptron</button>
+                    <button id="stopBtn" disabled>Stop</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">Epoch: <span id="epochDisplay">0</span></div>
+                    <div class="stat-item">Accuracy: <span id="accDisplay">0%</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="pCanvas" width="500" height="500"></canvas>
+                <div class="legend">
+                    <span class="dot class1"></span> Class +1
+                    <span class="dot class0"></span> Class -1
+                    <span class="line decision"></span> Decision Boundary
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

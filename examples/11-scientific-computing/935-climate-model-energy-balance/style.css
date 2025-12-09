@@ -1,0 +1,128 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e0f2f1;
+    color: #00695c;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-width: 900px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    color: #00796b;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    text-align: center;
+    color: #4db6ac;
+    margin-bottom: 2rem;
+}
+
+.layout {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.controls {
+    flex: 1;
+    min-width: 250px;
+    background: #e0f2f1;
+    padding: 1.5rem;
+    border: 1px solid #b2dfdb;
+    border-radius: 6px;
+}
+
+.visualization {
+    flex: 2;
+    min-width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    background-color: #fff;
+    border: 1px solid #80cbc4;
+    border-radius: 4px;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #00695c;
+}
+
+input[type="number"], input[type="range"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #4db6ac;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="range"] {
+    accent-color: #009688;
+}
+
+small {
+    color: #00796b;
+    font-size: 0.8rem;
+}
+
+button {
+    width: 100%;
+    background-color: #009688;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    transition: background 0.2s;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #00796b;
+}
+
+button:disabled {
+    background-color: #b2dfdb;
+    cursor: not-allowed;
+}
+
+.stats {
+    margin-top: 2rem;
+    border-top: 1px solid #b2dfdb;
+    padding-top: 1rem;
+}
+
+.stat-item {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+}
+
+.stat-item span {
+    font-weight: bold;
+    color: #004d40;
+}

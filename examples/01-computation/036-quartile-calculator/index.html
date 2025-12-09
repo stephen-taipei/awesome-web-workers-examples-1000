@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#036 Quartile Calculator - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#036 Quartile Calculator</h1>
+            <p class="description">Calculate Q1, Q2, Q3, IQR and box plot statistics with Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Calculation Type:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="quartiles">Quartiles (Q1, Q2, Q3)</option>
+                    <option value="iqr">IQR & Outlier Detection</option>
+                    <option value="boxplot">Box Plot Statistics</option>
+                    <option value="fiveNumber">Five-Number Summary</option>
+                    <option value="deciles">Deciles & Quintiles</option>
+                    <option value="generate">Generate & Calculate</option>
+                </select>
+            </div>
+
+            <div class="control-group" id="dataInputGroup">
+                <label for="dataInput">Data (comma or space separated):</label>
+                <textarea id="dataInput" rows="4" placeholder="10, 15, 20, 25, 30, 35, 40, 45, 50"></textarea>
+                <button class="btn-secondary" onclick="loadSample()">Load Sample (with outlier)</button>
+            </div>
+
+            <div id="generateOptions" style="display: none;">
+                <div class="control-group">
+                    <label for="generateCount">Data Points to Generate:</label>
+                    <input type="number" id="generateCount" value="100000" min="1000" max="10000000">
+                </div>
+
+                <div class="control-group">
+                    <label for="distribution">Distribution:</label>
+                    <select id="distribution" onchange="updateDistributionParams()">
+                        <option value="uniform">Uniform</option>
+                        <option value="normal" selected>Normal</option>
+                        <option value="exponential">Exponential</option>
+                        <option value="skewedRight">Skewed Right (Log-Normal)</option>
+                        <option value="skewedLeft">Skewed Left</option>
+                        <option value="bimodal">Bimodal</option>
+                    </select>
+                </div>
+
+                <div id="uniformParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>Min: <input type="number" id="uniformMin" value="0"></label>
+                        <label>Max: <input type="number" id="uniformMax" value="100"></label>
+                    </div>
+                </div>
+
+                <div id="normalParams" class="dist-params">
+                    <div class="param-row">
+                        <label>Mean: <input type="number" id="normalMean" value="50"></label>
+                        <label>Std Dev: <input type="number" id="normalStdDev" value="15"></label>
+                    </div>
+                </div>
+
+                <div id="exponentialParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>Lambda (λ): <input type="number" id="expLambda" value="0.1" step="0.01"></label>
+                    </div>
+                </div>
+
+                <div id="skewedRightParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>μ: <input type="number" id="lognormalMu" value="3" step="0.1"></label>
+                        <label>σ: <input type="number" id="lognormalSigma" value="0.5" step="0.1"></label>
+                    </div>
+                </div>
+
+                <div id="skewedLeftParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>Lambda: <input type="number" id="skewedLeftLambda" value="0.05" step="0.01"></label>
+                    </div>
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Quartiles</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Quartiles</h3>
+            <p><strong>Quartiles</strong> divide data into four equal parts. They're fundamental to understanding data distribution.</p>
+
+            <h4>Definitions</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Quartile</th>
+                    <th>Percentile</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>Q1</td>
+                    <td>25th</td>
+                    <td>Lower quartile - 25% of data below</td>
+                </tr>
+                <tr>
+                    <td>Q2</td>
+                    <td>50th</td>
+                    <td>Median - middle value</td>
+                </tr>
+                <tr>
+                    <td>Q3</td>
+                    <td>75th</td>
+                    <td>Upper quartile - 75% of data below</td>
+                </tr>
+            </table>
+
+            <h4>IQR (Interquartile Range)</h4>
+            <p>IQR = Q3 - Q1. Measures the spread of the middle 50% of data. Used for outlier detection:</p>
+            <ul>
+                <li><strong>Mild outlier:</strong> Below Q1 - 1.5×IQR or above Q3 + 1.5×IQR</li>
+                <li><strong>Extreme outlier:</strong> Below Q1 - 3×IQR or above Q3 + 3×IQR</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

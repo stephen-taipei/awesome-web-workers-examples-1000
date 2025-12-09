@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#095 Polynomial Root Finding - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#095 Polynomial Root Finding</h1>
+            <p class="description">Find all roots (real and complex) of a polynomial using Durand-Kerner method</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="polynomialSelect">Polynomial:</label>
+                <select id="polynomialSelect" onchange="updatePolynomial()">
+                    <option value="cubic">x³ - 6x² + 11x - 6 (roots: 1, 2, 3)</option>
+                    <option value="quartic">x⁴ - 10x³ + 35x² - 50x + 24 (roots: 1, 2, 3, 4)</option>
+                    <option value="complex">x² + 1 (roots: ±i)</option>
+                    <option value="mixed">x³ - 1 (roots: 1, ω, ω²)</option>
+                    <option value="double">x³ - 3x + 2 (double root at 1)</option>
+                    <option value="quintic">x⁵ - 1 (5th roots of unity)</option>
+                    <option value="custom">Custom polynomial</option>
+                </select>
+            </div>
+
+            <div id="customInput" class="control-group" style="display: none;">
+                <label for="coefficients">Coefficients (highest to lowest degree):</label>
+                <input type="text" id="coefficients" placeholder="1, -6, 11, -6">
+                <small>Enter comma-separated values. Example: "1, -6, 11, -6" for x³ - 6x² + 11x - 6</small>
+            </div>
+
+            <div id="polynomialDisplay" class="polynomial-display">
+                <span id="polynomialText">P(x) = x³ - 6x² + 11x - 6</span>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="tolerance">Tolerance (ε):</label>
+                    <input type="number" id="tolerance" value="1e-10" step="1e-10">
+                </div>
+                <div class="control-group half">
+                    <label for="maxIterations">Max Iterations:</label>
+                    <input type="number" id="maxIterations" value="1000" min="10" max="10000">
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('cubic')">Cubic (1,2,3)</button>
+                <button class="btn-secondary" onclick="loadSample('complex')">x² + 1</button>
+                <button class="btn-secondary" onclick="loadSample('mixed')">x³ - 1</button>
+                <button class="btn-secondary" onclick="loadSample('quintic')">x⁵ - 1</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Find All Roots</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Polynomial Root Finding</h3>
+            <p>The Durand-Kerner method (also known as Weierstrass method) finds all roots of a polynomial simultaneously, including complex roots.</p>
+
+            <h4>Algorithm</h4>
+            <div class="formula">
+                z_k^{new} = z_k - P(z_k) / ∏_{j≠k}(z_k - z_j)
+            </div>
+            <p>Each root estimate is updated using the current polynomial value and the distances to all other root estimates.</p>
+
+            <h4>Properties</h4>
+            <table class="info-table">
+                <tr><th>Property</th><th>Value</th></tr>
+                <tr><td>Convergence</td><td>Quadratic (near simple roots)</td></tr>
+                <tr><td>Finds</td><td>All n roots simultaneously</td></tr>
+                <tr><td>Complex roots</td><td>Yes, automatically</td></tr>
+                <tr><td>Multiple roots</td><td>Slower convergence</td></tr>
+            </table>
+
+            <h4>Key Features</h4>
+            <ul>
+                <li><strong>Simultaneous:</strong> All roots converge at the same time</li>
+                <li><strong>Complex:</strong> Naturally handles complex roots</li>
+                <li><strong>Complete:</strong> Finds all n roots of degree-n polynomial</li>
+                <li><strong>Parallel:</strong> Each root can be updated independently</li>
+            </ul>
+
+            <h4>Comparison with Other Methods</h4>
+            <ul>
+                <li><strong>vs Newton:</strong> Finds all roots at once vs one at a time</li>
+                <li><strong>vs Companion Matrix:</strong> Iterative vs direct eigenvalue</li>
+                <li><strong>vs Laguerre:</strong> Simpler but may be slower</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

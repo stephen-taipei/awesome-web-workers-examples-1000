@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#098 Romberg Integration - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#098 Romberg Integration</h1>
+            <p class="description">High-precision numerical integration using Richardson extrapolation</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="functionSelect">Function f(x):</label>
+                <select id="functionSelect" onchange="updateFunction()">
+                    <option value="polynomial">x⁴ (integral: x⁵/5)</option>
+                    <option value="sin">sin(x) (integral: -cos(x))</option>
+                    <option value="exp">e^x (integral: e^x)</option>
+                    <option value="gaussian">e^(-x²) (Gaussian)</option>
+                    <option value="oscillatory">sin(10x) (oscillatory)</option>
+                    <option value="rational">1/(1+x²) (compute π/4)</option>
+                    <option value="custom">Custom function</option>
+                </select>
+            </div>
+
+            <div id="customInput" class="control-group" style="display: none;">
+                <label for="customFunction">Custom f(x):</label>
+                <input type="text" id="customFunction" placeholder="Math.sin(x) / x">
+                <small>Use JavaScript math syntax</small>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="a">Lower Bound (a):</label>
+                    <input type="number" id="a" value="0" step="0.1">
+                </div>
+                <div class="control-group half">
+                    <label for="b">Upper Bound (b):</label>
+                    <input type="number" id="b" value="1" step="0.1">
+                </div>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="maxLevel">Maximum Level (k):</label>
+                    <input type="number" id="maxLevel" value="10" min="2" max="20">
+                    <small>Higher = more accurate (2^k subintervals)</small>
+                </div>
+                <div class="control-group half">
+                    <label for="tolerance">Tolerance (ε):</label>
+                    <input type="number" id="tolerance" value="1e-12" step="1e-12">
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('polynomial')">∫x⁴ [0,1]</button>
+                <button class="btn-secondary" onclick="loadSample('sin')">∫sin(x) [0,π]</button>
+                <button class="btn-secondary" onclick="loadSample('pi')">Compute π/4</button>
+                <button class="btn-secondary" onclick="loadSample('oscillatory')">Oscillatory</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Integral</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Romberg Integration</h3>
+            <p>Romberg integration uses Richardson extrapolation to systematically improve trapezoidal rule estimates, achieving high accuracy with relatively few function evaluations.</p>
+
+            <h4>Algorithm</h4>
+            <div class="formula">
+                R(k,j) = R(k,j-1) + [R(k,j-1) - R(k-1,j-1)] / (4ʲ - 1)
+            </div>
+            <p>where R(k,0) is the trapezoidal rule with 2^k subintervals</p>
+
+            <h4>Romberg Table Structure</h4>
+            <div class="table-example">
+                <pre>
+R(0,0)
+R(1,0) → R(1,1)
+R(2,0) → R(2,1) → R(2,2)
+R(3,0) → R(3,1) → R(3,2) → R(3,3)
+   ↓        ↓        ↓        ↓
+ O(h²)    O(h⁴)    O(h⁶)    O(h⁸)
+                </pre>
+            </div>
+
+            <h4>Properties</h4>
+            <table class="info-table">
+                <tr><th>Property</th><th>Value</th></tr>
+                <tr><td>Column 0</td><td>Trapezoidal O(h²)</td></tr>
+                <tr><td>Column 1</td><td>Simpson-like O(h⁴)</td></tr>
+                <tr><td>Column 2</td><td>Boole-like O(h⁶)</td></tr>
+                <tr><td>Column j</td><td>O(h^(2j+2))</td></tr>
+            </table>
+
+            <h4>Advantages</h4>
+            <ul>
+                <li><strong>High accuracy:</strong> Rapidly increasing order of accuracy</li>
+                <li><strong>Efficiency:</strong> Reuses function evaluations</li>
+                <li><strong>Adaptive:</strong> Can stop when tolerance is reached</li>
+                <li><strong>Error estimate:</strong> Built-in error estimation</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

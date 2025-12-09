@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Number Detection - Web Worker Example #029</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Happy Number Detection</h1>
+            <p class="subtitle">Web Worker Example #029 - Numbers That Reach 1</p>
+        </header>
+        <main>
+            <section class="description">
+                <h2>About Happy Numbers</h2>
+                <p>A happy number reaches 1 when repeatedly replaced by the sum of squares of its digits.</p>
+                <p>Example: 19 → 1² + 9² = 82 → 64 + 4 = 68 → 100 → 1 (Happy!)</p>
+                <p>Unhappy (sad) numbers enter a cycle that never includes 1.</p>
+            </section>
+
+            <section class="controls">
+                <h2>Detection</h2>
+                <div class="input-group">
+                    <label for="calcType">Detection Type:</label>
+                    <select id="calcType">
+                        <option value="check">Check Single Number</option>
+                        <option value="sequence">Show Full Sequence</option>
+                        <option value="findInRange">Find in Range</option>
+                        <option value="statistics">Statistics</option>
+                        <option value="cycles">Find Cycles</option>
+                        <option value="happyBases">Happy in Different Bases</option>
+                    </select>
+                </div>
+                <div class="input-group" id="singleGroup">
+                    <label for="numberInput">Number:</label>
+                    <input type="text" id="numberInput" value="19" placeholder="Enter a number">
+                </div>
+                <div class="input-group" id="powerGroup">
+                    <label for="powerInput">Power (default 2):</label>
+                    <input type="number" id="powerInput" value="2" min="2" max="10">
+                </div>
+                <div class="input-group hidden" id="rangeGroup">
+                    <label>Range:</label>
+                    <div class="range-input">
+                        <input type="text" id="startInput" value="1" placeholder="Start">
+                        <span>to</span>
+                        <input type="text" id="endInput" value="1000" placeholder="End">
+                    </div>
+                </div>
+                <div class="input-group hidden" id="maxSearchGroup">
+                    <label for="maxSearchInput">Search Range:</label>
+                    <input type="number" id="maxSearchInput" value="1000" min="100" max="100000">
+                </div>
+                <div class="input-group hidden" id="maxBaseGroup">
+                    <label for="maxBaseInput">Max Base:</label>
+                    <input type="number" id="maxBaseInput" value="16" min="3" max="36">
+                </div>
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Detect</button>
+                    <button id="cancelBtn" class="btn btn-secondary hidden">Cancel</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <h2>Progress</h2>
+                <div class="progress-bar-container"><div id="progressBar" class="progress-bar"></div></div>
+                <p id="progressText" class="progress-text">Starting...</p>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div id="resultContent" class="result-content"></div>
+                <p class="execution-time">Execution time: <span id="executionTime">-</span></p>
+            </section>
+
+            <section id="errorContainer" class="error-section hidden">
+                <h2>Error</h2>
+                <p id="errorMessage" class="error-message"></p>
+            </section>
+        </main>
+        <footer><p><a href="../index.html">Back to Examples</a> | Web Workers Example #029</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

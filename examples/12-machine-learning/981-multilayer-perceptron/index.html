@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker MLP (XOR Problem) - Example 981</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>MLP vs The XOR Problem</h1>
+        <p>Visualizes how a Multi-Layer Perceptron (MLP) solves the non-linear XOR problem by transforming the input space.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="hiddenNodes">Hidden Neurons:</label>
+                    <input type="range" id="hiddenNodes" min="2" max="10" value="4">
+                    <span id="hiddenDisplay">4</span>
+                </div>
+                <div class="form-group">
+                    <label for="activation">Activation Function:</label>
+                    <select id="activation">
+                        <option value="sigmoid" selected>Sigmoid</option>
+                        <option value="tanh">Tanh</option>
+                        <option value="relu">ReLU</option>
+                    </select>
+                </div>
+                <button id="trainBtn">Train MLP</button>
+                <button id="resetBtn">Reset Weights</button>
+
+                <div class="stats">
+                    <div class="stat-item">Epoch: <span id="epochDisplay">0</span></div>
+                    <div class="stat-item">Loss: <span id="lossDisplay">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <h3>Decision Boundary</h3>
+                <canvas id="xorCanvas" width="400" height="400"></canvas>
+                <div class="legend">
+                    <span class="dot class0"></span> Output 0
+                    <span class="dot class1"></span> Output 1
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

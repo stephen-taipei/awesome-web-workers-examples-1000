@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newton's Method Optimization - Web Worker Example #125</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Newton's Method Optimization</h1>
+            <p class="subtitle">Web Worker Example #125 - Second-Order Optimization</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Newton's Method</h2>
+                <p>Newton's method uses second-order derivative information (Hessian matrix) to achieve faster convergence than first-order methods. It approximates the function locally as a quadratic and finds the optimum in one step for quadratic functions.</p>
+                <div class="formula-box">
+                    <p><strong>Update Rule:</strong></p>
+                    <pre class="formula">
+x_{k+1} = x_k - H(x_k)^{-1} * ∇f(x_k)
+
+Where:
+  H(x) = Hessian matrix (second derivatives)
+  ∇f(x) = Gradient vector (first derivatives)
+
+For 2D: H = | ∂²f/∂x²    ∂²f/∂x∂y |
+            | ∂²f/∂y∂x   ∂²f/∂y²  |
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="functionSelect">Test Function:</label>
+                    <select id="functionSelect">
+                        <option value="rosenbrock">Rosenbrock</option>
+                        <option value="quadratic">Quadratic Bowl</option>
+                        <option value="booth">Booth Function</option>
+                        <option value="beale">Beale Function</option>
+                    </select>
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="maxIter">Max Iterations:</label>
+                        <input type="number" id="maxIter" value="100" min="10" max="1000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="tolerance">Tolerance:</label>
+                        <input type="number" id="tolerance" value="1e-8" step="1e-9">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="stepSize">Step Size (damping):</label>
+                        <input type="number" id="stepSize" value="1.0" step="0.1" min="0.1" max="1.0">
+                    </div>
+
+                    <div class="input-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="useLineSearch" checked>
+                            Use Line Search
+                        </label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="optimizeBtn" class="btn btn-primary">Start Optimization</button>
+                    <button id="stopBtn" class="btn btn-secondary hidden">Stop</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Initializing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Optimization Trajectory</h2>
+                <div class="canvas-container">
+                    <canvas id="optimCanvas" width="550" height="450"></canvas>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Iterations</span>
+                        <span id="iterCount" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Final Position</span>
+                        <span id="finalPos" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Final Value</span>
+                        <span id="finalValue" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Gradient Norm</span>
+                        <span id="gradNorm" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <div class="convergence-info">
+                    <h3>Convergence History</h3>
+                    <canvas id="lossCanvas" width="550" height="200"></canvas>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>
+                <a href="../index.html">Back to Examples</a> |
+                Web Workers Example #125 - Newton's Method
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

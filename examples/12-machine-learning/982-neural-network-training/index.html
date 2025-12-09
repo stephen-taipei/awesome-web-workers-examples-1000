@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Neural Network Training - Example 982</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Neural Network Training Playground</h1>
+        <p>Trains a neural network to classify 2D data (Spiral Dataset) using SGD or Adam in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="optimizer">Optimizer:</label>
+                    <select id="optimizer">
+                        <option value="sgd">SGD</option>
+                        <option value="adam" selected>Adam</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="learningRate">Learning Rate:</label>
+                    <input type="range" id="learningRate" min="0.001" max="0.1" step="0.001" value="0.01">
+                    <span id="lrDisplay">0.01</span>
+                </div>
+                <div class="form-group">
+                    <label for="batchSize">Batch Size:</label>
+                    <select id="batchSize">
+                        <option value="10">10</option>
+                        <option value="32" selected>32</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <button id="trainBtn">Train Network</button>
+                <button id="stopBtn" disabled>Stop</button>
+
+                <div class="stats">
+                    <div class="stat-item">Epoch: <span id="epochDisplay">0</span></div>
+                    <div class="stat-item">Loss: <span id="lossDisplay">-</span></div>
+                    <div class="stat-item">Accuracy: <span id="accDisplay">-</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <h3>Decision Boundary</h3>
+                <canvas id="boundaryCanvas" width="400" height="400"></canvas>
+                <div class="legend">
+                    <span class="dot class0"></span> Class 0
+                    <span class="dot class1"></span> Class 1
+                    <span class="dot class2"></span> Class 2
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一致性雜湊 (Consistent Hashing) 示例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>一致性雜湊 (Consistent Hashing)</h1>
+        <p>此示例演示如何使用 Consistent Hashing 將鍵 (Key) 分配給節點 (Node)。</p>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="virtualNodes">虛擬節點數量 (Virtual Nodes per Node):</label>
+                <input type="number" id="virtualNodes" value="5" min="1" max="50">
+                <button id="updateSettings">更新設定</button>
+            </div>
+
+            <div class="control-group">
+                <input type="text" id="nodeName" placeholder="節點名稱 (例如: Server 1)">
+                <button id="addNode">新增節點</button>
+                <button id="removeNode">移除選中節點</button>
+            </div>
+
+            <div class="control-group">
+                <input type="text" id="keyName" placeholder="鍵名稱 (例如: user_123)">
+                <button id="addKey">新增鍵</button>
+                <button id="clearKeys">清除所有鍵</button>
+            </div>
+        </div>
+
+        <div class="main-view">
+            <div class="canvas-container">
+                <canvas id="ringCanvas" width="600" height="600"></canvas>
+            </div>
+            <div class="info-panel">
+                <h3>節點列表</h3>
+                <ul id="nodeList"></ul>
+                <h3>鍵分配統計</h3>
+                <div id="stats"></div>
+            </div>
+        </div>
+
+        <div class="log-panel">
+            <h3>日誌</h3>
+            <div id="log"></div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

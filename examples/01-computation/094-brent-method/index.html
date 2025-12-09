@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#094 Brent's Method - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#094 Brent's Method</h1>
+            <p class="description">Robust hybrid root-finding combining bisection, secant, and inverse quadratic interpolation</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="functionSelect">Function f(x):</label>
+                <select id="functionSelect" onchange="updateFunction()">
+                    <option value="polynomial">x³ - x - 2 (cubic)</option>
+                    <option value="trig">cos(x) - x (fixed point)</option>
+                    <option value="exp">e^x - 3x (exponential)</option>
+                    <option value="sqrt">x² - 2 (√2 computation)</option>
+                    <option value="log">ln(x) - 1 (find e)</option>
+                    <option value="difficult">(x-1)³ (triple root)</option>
+                    <option value="custom">Custom function</option>
+                </select>
+            </div>
+
+            <div id="customInput" class="control-group" style="display: none;">
+                <label for="customFunction">Custom f(x):</label>
+                <input type="text" id="customFunction" placeholder="Math.pow(x,3) - x - 2">
+                <small>Use JavaScript math syntax (Math.sin, Math.exp, Math.pow, etc.)</small>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="a">Left Bound (a):</label>
+                    <input type="number" id="a" value="1" step="0.1">
+                </div>
+                <div class="control-group half">
+                    <label for="b">Right Bound (b):</label>
+                    <input type="number" id="b" value="2" step="0.1">
+                </div>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="tolerance">Tolerance (ε):</label>
+                    <input type="number" id="tolerance" value="1e-12" step="1e-12">
+                </div>
+                <div class="control-group half">
+                    <label for="maxIterations">Max Iterations:</label>
+                    <input type="number" id="maxIterations" value="100" min="1" max="500">
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('polynomial')">x³-x-2, [1,2]</button>
+                <button class="btn-secondary" onclick="loadSample('sqrt')">√2, [1,2]</button>
+                <button class="btn-secondary" onclick="loadSample('trig')">cos(x)=x, [0,1]</button>
+                <button class="btn-secondary" onclick="loadSample('difficult')">Triple root</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Find Root</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Brent's Method</h3>
+            <p>Brent's method is a sophisticated root-finding algorithm that combines the reliability of bisection with the speed of interpolation methods, guaranteeing convergence while achieving superlinear performance.</p>
+
+            <h4>Hybrid Strategy</h4>
+            <div class="method-steps">
+                <div class="step">
+                    <span class="step-num">1</span>
+                    <span class="step-text"><strong>Inverse Quadratic Interpolation (IQI)</strong> - Uses three points to fit a quadratic in y, solving for x</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">2</span>
+                    <span class="step-text"><strong>Secant Method</strong> - Falls back when IQI step is unreliable</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">3</span>
+                    <span class="step-text"><strong>Bisection</strong> - Ultimate fallback guaranteeing progress</span>
+                </div>
+            </div>
+
+            <h4>Properties</h4>
+            <table class="info-table">
+                <tr><th>Property</th><th>Value</th></tr>
+                <tr><td>Convergence</td><td>Guaranteed (with bracket)</td></tr>
+                <tr><td>Order</td><td>Superlinear (≈1.618 to 2)</td></tr>
+                <tr><td>Requirements</td><td>Bracket [a,b] where f(a)·f(b) < 0</td></tr>
+                <tr><td>Derivative</td><td>Not required</td></tr>
+            </table>
+
+            <h4>Why Brent's Method?</h4>
+            <ul>
+                <li><strong>Robust:</strong> Never fails if initial bracket is valid</li>
+                <li><strong>Fast:</strong> Superlinear convergence for most functions</li>
+                <li><strong>Safe:</strong> Always falls back to bisection when needed</li>
+                <li><strong>Practical:</strong> De facto standard in numerical libraries</li>
+            </ul>
+
+            <h4>Used In</h4>
+            <ul>
+                <li>SciPy (scipy.optimize.brentq)</li>
+                <li>MATLAB (fzero function)</li>
+                <li>Boost C++ Libraries</li>
+                <li>GNU Scientific Library</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

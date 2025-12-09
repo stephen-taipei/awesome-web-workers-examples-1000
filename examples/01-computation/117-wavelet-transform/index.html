@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#117 Wavelet Transform - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#117 Wavelet Transform</h1>
+            <p class="description">Multi-resolution signal analysis using Haar and other wavelets</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="waveletType">Wavelet Type:</label>
+                <select id="waveletType">
+                    <option value="haar" selected>Haar (Simplest)</option>
+                    <option value="db2">Daubechies-2 (DB2)</option>
+                    <option value="db4">Daubechies-4 (DB4)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="signalType">Signal Type:</label>
+                <select id="signalType" onchange="updateSignalOptions()">
+                    <option value="sine">Sine Wave</option>
+                    <option value="step">Step Function</option>
+                    <option value="chirp">Chirp (Frequency Sweep)</option>
+                    <option value="noisy-sine">Noisy Sine</option>
+                    <option value="composite">Composite Signal</option>
+                    <option value="custom">Custom Values</option>
+                </select>
+            </div>
+
+            <div id="waveOptions" class="control-group">
+                <label>Signal Parameters:</label>
+                <div class="param-row">
+                    <span>Frequency:</span>
+                    <input type="number" id="freq" value="4" min="1" max="50">
+                    <span>Amplitude:</span>
+                    <input type="number" id="amplitude" value="100" step="10">
+                </div>
+            </div>
+
+            <div id="customOptions" class="control-group" style="display: none;">
+                <label>Custom Values (comma-separated, length must be power of 2):</label>
+                <input type="text" id="customValues" placeholder="e.g., 1, 2, 3, 4, 5, 6, 7, 8">
+            </div>
+
+            <div class="control-group">
+                <label for="sampleSize">Sample Size (N):</label>
+                <select id="sampleSize">
+                    <option value="16">16</option>
+                    <option value="32">32</option>
+                    <option value="64" selected>64</option>
+                    <option value="128">128</option>
+                    <option value="256">256</option>
+                    <option value="512">512</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="decompLevel">Decomposition Levels:</label>
+                <select id="decompLevel">
+                    <option value="1">1 Level</option>
+                    <option value="2">2 Levels</option>
+                    <option value="3" selected>3 Levels</option>
+                    <option value="4">4 Levels</option>
+                    <option value="max">Maximum</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="threshold">Denoising Threshold:</label>
+                <select id="threshold">
+                    <option value="0">None</option>
+                    <option value="5">Soft (5%)</option>
+                    <option value="10" selected>Medium (10%)</option>
+                    <option value="20">Strong (20%)</option>
+                    <option value="50">Very Strong (50%)</option>
+                </select>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadPreset('smooth')">Smooth Signal</button>
+                <button class="btn-secondary" onclick="loadPreset('edge')">Edge Detection</button>
+                <button class="btn-secondary" onclick="loadPreset('denoise')">Denoising Demo</button>
+                <button class="btn-secondary" onclick="loadPreset('compress')">Compression</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute Wavelet Transform</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Wavelet Transform</h3>
+            <p>Wavelet transforms provide time-frequency analysis of signals, capturing both frequency content and its location in time. Unlike Fourier transforms, wavelets can detect transient features.</p>
+
+            <h4>Haar Wavelet (Simplest)</h4>
+            <div class="formula-box">
+                <div class="formula">
+                    Low-pass: h = [1/√2, 1/√2]<br>
+                    High-pass: g = [1/√2, -1/√2]
+                </div>
+                <div class="formula-note">Averaging (approximation) and differencing (detail)</div>
+            </div>
+
+            <h4>Decomposition Process</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Approximation (cA)</div>
+                    <div class="formula">cA[k] = Σ x[n]·h[n-2k]</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Detail (cD)</div>
+                    <div class="formula">cD[k] = Σ x[n]·g[n-2k]</div>
+                </div>
+            </div>
+
+            <h4>Applications</h4>
+            <ul>
+                <li><strong>Signal denoising:</strong> Threshold small detail coefficients</li>
+                <li><strong>Data compression:</strong> Keep significant coefficients only</li>
+                <li><strong>Edge detection:</strong> Large detail coefficients indicate edges</li>
+                <li><strong>Feature extraction:</strong> Multi-resolution analysis</li>
+            </ul>
+
+            <h4>Daubechies Wavelets</h4>
+            <p>More complex wavelets with better frequency localization. DB2 uses 4 coefficients, DB4 uses 8 coefficients, providing smoother analysis.</p>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

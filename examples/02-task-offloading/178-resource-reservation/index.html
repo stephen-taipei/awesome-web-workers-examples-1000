@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#178 資源預留 - Web Workers 範例</title>
+    <meta name="description" content="展示如何為高優先級任務預留 Worker 資源，確保關鍵任務隨時有可用資源">
+    <link rel="stylesheet" href="../../01-computation/001-prime-generator/style.css">
+    <style>
+        .pool-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .pool-section {
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 15px;
+        }
+        .pool-section.reserved {
+            border-color: var(--warning-color);
+        }
+        .pool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .pool-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        .worker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+        }
+        .worker-box {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .worker-box.busy {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #fff;
+        }
+        .worker-box.reserved-busy {
+            background-color: var(--warning-color);
+            border-color: var(--warning-color);
+            color: #000;
+        }
+        .task-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .log-panel {
+            background-color: #000;
+            color: #0f0;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            height: 150px;
+            overflow-y: auto;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+        .queue-info {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>資源預留</h1>
+            <p class="subtitle">Resource Reservation</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#178</span>
+                <span class="badge badge-secondary">任務分流</span>
+                <span class="badge badge-warning">中級</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">資源配置</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label">總 Worker 數量</label>
+                    <input type="number" id="total-workers" class="form-input" value="10" min="4" max="20">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">預留數量 (高優先級專用)</label>
+                    <input type="number" id="reserved-count" class="form-input" value="3" min="1" max="10">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="apply-config" class="btn btn-primary">套用配置</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">任務模擬</h2>
+
+            <div class="task-buttons">
+                <button id="add-normal-task" class="btn btn-secondary">
+                    + 普通任務 (低優先)
+                </button>
+                <button id="add-critical-task" class="btn btn-danger">
+                    + 關鍵任務 (高優先)
+                </button>
+                <button id="flood-normal" class="btn btn-secondary">
+                    普通任務洪流 (大量)
+                </button>
+            </div>
+
+            <div class="pool-container">
+                <!-- 一般池 -->
+                <div class="pool-section">
+                    <div class="pool-header">
+                        <span class="pool-title">共用資源池 (Shared)</span>
+                        <span id="shared-count" class="badge badge-secondary">7 Workers</span>
+                    </div>
+                    <div id="shared-pool" class="worker-grid"></div>
+                    <div id="shared-queue" class="queue-info">等待佇列: 0</div>
+                </div>
+
+                <!-- 預留池 -->
+                <div class="pool-section reserved">
+                    <div class="pool-header">
+                        <span class="pool-title">預留資源池 (Reserved)</span>
+                        <span id="reserved-count-display" class="badge badge-warning">3 Workers</span>
+                    </div>
+                    <div id="reserved-pool" class="worker-grid"></div>
+                    <div id="reserved-queue" class="queue-info">等待佇列: 0</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">系統日誌</h2>
+            <div id="system-log" class="log-panel"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>關於資源預留</h3>
+            <ul>
+                <li><strong>資源隔離：</strong>將部分 Worker 劃分為「預留池」，專門處理高優先級任務。</li>
+                <li><strong>服務品質保證 (QoS)：</strong>即使普通任務大量湧入佔滿了共用池，預留池仍能保持空閒，確保關鍵任務（如 UI 互動、即時回應）能被立即處理。</li>
+                <li><strong>調度策略：</strong>
+                    <ul>
+                        <li><strong>普通任務：</strong>只能使用共用資源池。若共用池滿，則進入等待佇列。</li>
+                        <li><strong>關鍵任務：</strong>優先使用預留池，若預留池滿，也可借用共用池（如果共用池有空閒）。</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #178 - 資源預留
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

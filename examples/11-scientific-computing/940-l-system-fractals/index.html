@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker L-System Fractals - Example 940</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>L-System Fractal Generator</h1>
+        <p>Generates fractal plants and patterns using Lindenmayer Systems (L-Systems) in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="preset">Preset:</label>
+                    <select id="preset">
+                        <option value="plant">Fractal Plant</option>
+                        <option value="dragon">Dragon Curve</option>
+                        <option value="sierpinski">Sierpinski Triangle</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+                
+                <div id="customRules" class="hidden">
+                    <div class="form-group">
+                        <label>Axiom:</label>
+                        <input type="text" id="axiom" value="X">
+                    </div>
+                    <div class="form-group">
+                        <label>Rules (JSON):</label>
+                        <textarea id="rules">{"X": "F+[[X]-X]-F[-FX]+X", "F": "FF"}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Angle (deg):</label>
+                        <input type="number" id="angle" value="25">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="iterations">Iterations:</label>
+                    <input type="range" id="iterations" min="1" max="8" value="5">
+                    <span id="iterDisplay">5</span>
+                </div>
+                <button id="genBtn">Generate</button>
+
+                <div class="stats">
+                    <div class="stat-item">Length: <span id="strLength">-</span></div>
+                    <div class="stat-item">Generation Time: <span id="genTime">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="fractalCanvas" width="600" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

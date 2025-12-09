@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#055 Laplace Transform - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#055 Laplace Transform</h1>
+            <p class="description">System Analysis and Transfer Functions using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Analysis Type:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="transferfunction">Transfer Function (Bode)</option>
+                    <option value="impulse">Impulse Response</option>
+                    <option value="step">Step Response</option>
+                    <option value="poles">Pole-Zero Analysis</option>
+                    <option value="numerical">Numerical Transform</option>
+                </select>
+            </div>
+
+            <div id="signalGroup" style="display: none;">
+                <div class="control-group">
+                    <label for="signalData">Time Domain Signal:</label>
+                    <textarea id="signalData" rows="3" placeholder="1.0, 0.9, 0.8, 0.7..."></textarea>
+                </div>
+
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('exponential')">Exponential Decay</button>
+                    <button class="btn-secondary" onclick="loadSample('sine')">Sine Wave</button>
+                </div>
+            </div>
+
+            <div id="tfGroup">
+                <div class="control-group">
+                    <label for="numerator">Numerator Coefficients (a₀, a₁, a₂...):</label>
+                    <input type="text" id="numerator" value="1" placeholder="1, 0, 1">
+                </div>
+
+                <div class="control-group">
+                    <label for="denominator">Denominator Coefficients (b₀, b₁, b₂...):</label>
+                    <input type="text" id="denominator" value="1, 2, 1" placeholder="1, 2, 1">
+                </div>
+
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('firstorder')">1st Order</button>
+                    <button class="btn-secondary" onclick="loadSample('secondorder')">2nd Order</button>
+                    <button class="btn-secondary" onclick="loadSample('bandpass')">Bandpass</button>
+                </div>
+            </div>
+
+            <div id="freqRangeGroup" class="control-row">
+                <div class="control-group half">
+                    <label for="fMin">Min Frequency (Hz):</label>
+                    <input type="number" id="fMin" value="0.01" step="0.01" min="0.001">
+                </div>
+                <div class="control-group half">
+                    <label for="fMax">Max Frequency (Hz):</label>
+                    <input type="number" id="fMax" value="100" step="1" min="1">
+                </div>
+            </div>
+
+            <div id="sRangeGroup" class="control-row" style="display: none;">
+                <div class="control-group half">
+                    <label for="sigmaRange">σ Range:</label>
+                    <input type="number" id="sigmaRange" value="2" step="0.5" min="0.5">
+                </div>
+                <div class="control-group half">
+                    <label for="omegaRange">ω Range:</label>
+                    <input type="number" id="omegaRange" value="10" step="1" min="1">
+                </div>
+            </div>
+
+            <div id="durationGroup" class="control-row" style="display: none;">
+                <div class="control-group half">
+                    <label for="duration">Duration (s):</label>
+                    <input type="number" id="duration" value="5" step="1" min="1">
+                </div>
+                <div class="control-group half">
+                    <label for="dt">Time Step (s):</label>
+                    <input type="number" id="dt" value="0.01" step="0.01" min="0.001">
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Analyze System</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Laplace Transform</h3>
+            <p>The <strong>Laplace Transform</strong> converts time-domain signals into the complex frequency domain, enabling analysis of linear time-invariant (LTI) systems.</p>
+
+            <h4>Definition</h4>
+            <div class="formula-box">
+                <p>F(s) = L{f(t)} = ∫₀^∞ f(t)e^(-st) dt</p>
+                <p>where s = σ + jω is the complex frequency</p>
+            </div>
+
+            <h4>Common Transforms</h4>
+            <table class="info-table">
+                <tr>
+                    <th>f(t)</th>
+                    <th>F(s)</th>
+                </tr>
+                <tr>
+                    <td>δ(t) (impulse)</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>u(t) (step)</td>
+                    <td>1/s</td>
+                </tr>
+                <tr>
+                    <td>e^(-at)</td>
+                    <td>1/(s+a)</td>
+                </tr>
+                <tr>
+                    <td>sin(ωt)</td>
+                    <td>ω/(s²+ω²)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker K-Means Clustering - Example 986</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>K-Means Clustering</h1>
+        <p>Interactive visualization of the K-Means clustering algorithm running in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="pointCount">Data Points:</label>
+                    <select id="pointCount">
+                        <option value="500">500</option>
+                        <option value="1000" selected>1,000</option>
+                        <option value="5000">5,000</option>
+                        <option value="10000">10,000</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="kValue">Clusters (K):</label>
+                    <input type="range" id="kValue" min="2" max="10" value="4">
+                    <span id="kDisplay">4</span>
+                </div>
+                <div class="form-group">
+                    <label for="initMethod">Initialization:</label>
+                    <select id="initMethod">
+                        <option value="random">Random</option>
+                        <option value="kmeans++" selected>K-Means++</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Animation Speed:</label>
+                    <div class="speed-controls">
+                        <label><input type="radio" name="speed" value="500"> Slow</label>
+                        <label><input type="radio" name="speed" value="100" checked> Fast</label>
+                        <label><input type="radio" name="speed" value="0"> Max</label>
+                    </div>
+                </div>
+                <button id="startBtn">Generate & Cluster</button>
+                <button id="stopBtn" disabled>Stop</button>
+
+                <div class="stats">
+                    <div class="stat-item">Iteration: <span id="iterDisplay">0</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="kmeansCanvas" width="600" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

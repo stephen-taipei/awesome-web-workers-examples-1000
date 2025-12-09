@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#101 Numerical Differentiation - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#101 Numerical Differentiation</h1>
+            <p class="description">Compute derivatives using forward, backward, and central difference formulas</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="functionSelect">Function f(x):</label>
+                <select id="functionSelect" onchange="updateFunction()">
+                    <option value="sin">sin(x) → cos(x)</option>
+                    <option value="exp">e^x → e^x</option>
+                    <option value="polynomial">x³ → 3x²</option>
+                    <option value="log">ln(x) → 1/x</option>
+                    <option value="sqrt">√x → 1/(2√x)</option>
+                    <option value="trig">sin(x)·cos(x) → cos(2x)</option>
+                    <option value="custom">Custom function</option>
+                </select>
+            </div>
+
+            <div id="customInput" class="control-group" style="display: none;">
+                <label for="customFunction">Custom f(x):</label>
+                <input type="text" id="customFunction" placeholder="Math.sin(x) * Math.exp(x)">
+                <small>Use JavaScript math syntax</small>
+            </div>
+
+            <div class="control-row">
+                <div class="control-group half">
+                    <label for="x">Point x:</label>
+                    <input type="number" id="x" value="1" step="0.1">
+                </div>
+                <div class="control-group half">
+                    <label for="h">Step Size h:</label>
+                    <input type="number" id="h" value="0.01" step="0.001">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="method">Difference Method:</label>
+                <select id="method">
+                    <option value="all">Compare All Methods</option>
+                    <option value="forward">Forward Difference</option>
+                    <option value="backward">Backward Difference</option>
+                    <option value="central">Central Difference</option>
+                    <option value="five-point">Five-Point Formula</option>
+                </select>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('sin')">sin(x), x=π/4</button>
+                <button class="btn-secondary" onclick="loadSample('exp')">e^x, x=1</button>
+                <button class="btn-secondary" onclick="loadSample('polynomial')">x³, x=2</button>
+                <button class="btn-secondary" onclick="loadSample('convergence')">h-convergence</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Derivative</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Numerical Differentiation</h3>
+            <p>Numerical differentiation approximates the derivative of a function using finite differences.</p>
+
+            <h4>Difference Formulas</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Forward Difference</div>
+                    <div class="formula">f'(x) ≈ [f(x+h) - f(x)] / h</div>
+                    <div class="formula-order">O(h)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Backward Difference</div>
+                    <div class="formula">f'(x) ≈ [f(x) - f(x-h)] / h</div>
+                    <div class="formula-order">O(h)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Central Difference</div>
+                    <div class="formula">f'(x) ≈ [f(x+h) - f(x-h)] / 2h</div>
+                    <div class="formula-order">O(h²)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">Five-Point Formula</div>
+                    <div class="formula">f'(x) ≈ [-f(x+2h) + 8f(x+h) - 8f(x-h) + f(x-2h)] / 12h</div>
+                    <div class="formula-order">O(h⁴)</div>
+                </div>
+            </div>
+
+            <h4>Error Analysis</h4>
+            <ul>
+                <li><strong>Truncation error:</strong> From Taylor series approximation</li>
+                <li><strong>Round-off error:</strong> From finite precision arithmetic</li>
+                <li><strong>Optimal h:</strong> Balances both error sources (typically h ≈ √ε for central)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

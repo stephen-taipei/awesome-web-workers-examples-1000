@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Complex Domain Coloring - Example 961</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Complex Domain Coloring</h1>
+        <p>Visualizes complex functions <code>f(z)</code> by mapping the phase (argument) to hue and magnitude (modulus) to brightness using a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="functionSelect">Function f(z):</label>
+                    <select id="functionSelect">
+                        <option value="z">f(z) = z</option>
+                        <option value="z2">f(z) = z^2</option>
+                        <option value="poly">f(z) = z^3 - 1</option>
+                        <option value="rat">f(z) = (z^2-1)(z-2-i)^2 / (z^2+2+2i)</option>
+                        <option value="sin">f(z) = sin(z)</option>
+                        <option value="exp">f(z) = exp(1/z)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="zoom">Zoom:</label>
+                    <input type="range" id="zoom" min="1" max="10" step="0.1" value="2">
+                    <span id="zoomDisplay">2x</span>
+                </div>
+                <div class="form-group">
+                    <label for="resolution">Resolution:</label>
+                    <select id="resolution">
+                        <option value="200">200x200 (Fast)</option>
+                        <option value="400" selected>400x400</option>
+                        <option value="800">800x800 (Slow)</option>
+                    </select>
+                </div>
+                <button id="renderBtn">Render</button>
+
+                <div class="stats">
+                    <div class="stat-item">Time: <span id="renderTime">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="complexCanvas" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

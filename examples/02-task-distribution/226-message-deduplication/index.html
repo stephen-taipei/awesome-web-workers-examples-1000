@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#226 訊息去重機制 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 實作訊息去重機制，透過雜湊檢測自動過濾重複訊息">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>訊息去重機制</h1>
+            <p class="subtitle">Message Deduplication System</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#226</span>
+                <span class="badge badge-secondary">任務分發</span>
+                <span class="badge badge-warning">中級</span>
+            </div>
+        </header>
+
+        <!-- 控制區域 -->
+        <section class="card">
+            <h2 class="card-title">去重設定</h2>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="dedup-strategy">去重策略</label>
+                    <select id="dedup-strategy" class="form-input">
+                        <option value="content-hash">內容雜湊 (Content Hash)</option>
+                        <option value="message-id">訊息 ID</option>
+                        <option value="both">雙重檢測</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="cache-size">快取大小</label>
+                    <input
+                        type="number"
+                        id="cache-size"
+                        class="form-input"
+                        value="100"
+                        min="10"
+                        max="1000"
+                    >
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="duplicate-rate">模擬重複率 (%)</label>
+                    <input
+                        type="number"
+                        id="duplicate-rate"
+                        class="form-input"
+                        value="30"
+                        min="0"
+                        max="100"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="batch-size">批次大小</label>
+                    <input
+                        type="number"
+                        id="batch-size"
+                        class="form-input"
+                        value="20"
+                        min="5"
+                        max="100"
+                    >
+                </div>
+            </div>
+
+            <!-- 手動輸入 -->
+            <div class="form-group">
+                <label class="form-label" for="message-input">訊息內容 (可輸入重複訊息測試)</label>
+                <input
+                    type="text"
+                    id="message-input"
+                    class="form-input"
+                    placeholder="輸入訊息內容"
+                >
+            </div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group">
+                <button id="send-btn" class="btn btn-primary">
+                    發送訊息
+                </button>
+                <button id="batch-btn" class="btn btn-secondary">
+                    模擬批次訊息
+                </button>
+                <button id="clear-cache-btn" class="btn btn-warning">
+                    清除快取
+                </button>
+                <button id="clear-btn" class="btn btn-danger">
+                    重置全部
+                </button>
+            </div>
+        </section>
+
+        <!-- 統計區域 -->
+        <section class="card">
+            <h2 class="card-title">去重統計</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="stat-number" id="total-received">0</span>
+                    <span class="stat-label">總接收</span>
+                </div>
+                <div class="stat-box success">
+                    <span class="stat-number" id="total-unique">0</span>
+                    <span class="stat-label">唯一訊息</span>
+                </div>
+                <div class="stat-box warning">
+                    <span class="stat-number" id="total-duplicates">0</span>
+                    <span class="stat-label">重複過濾</span>
+                </div>
+                <div class="stat-box info">
+                    <span class="stat-number" id="dedup-rate">0%</span>
+                    <span class="stat-label">去重率</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 雜湊快取區域 -->
+        <section class="card">
+            <h2 class="card-title">雜湊快取</h2>
+            <div class="cache-info">
+                <span>快取使用: <strong id="cache-usage">0</strong> / <strong id="cache-max">100</strong></span>
+                <div class="cache-bar-wrapper">
+                    <div id="cache-bar" class="cache-bar" style="width: 0%"></div>
+                </div>
+            </div>
+            <div id="cache-container" class="cache-container">
+                <p class="empty-message">快取為空</p>
+            </div>
+        </section>
+
+        <!-- 訊息處理記錄 -->
+        <section class="card">
+            <h2 class="card-title">訊息處理記錄</h2>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">全部</button>
+                <button class="filter-btn" data-filter="unique">唯一</button>
+                <button class="filter-btn" data-filter="duplicate">重複</button>
+            </div>
+            <div id="log-container" class="log-container">
+                <p class="empty-message">尚無訊息記錄</p>
+            </div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>功能：</strong>自動檢測並過濾重複訊息，防止同一訊息被多次處理</li>
+                <li><strong>內容雜湊：</strong>使用 SHA-256 計算訊息內容的雜湊值進行比對</li>
+                <li><strong>訊息 ID：</strong>透過唯一訊息 ID 進行快速去重檢測</li>
+                <li><strong>LRU 快取：</strong>使用 LRU (最近最少使用) 策略管理雜湊快取</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>應用場景：</strong>訊息佇列、API 請求去重、事件處理等</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #226 - 訊息去重機制
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

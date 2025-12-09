@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#085 Matrix Square Root - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#085 Matrix Square Root</h1>
+            <p class="description">Compute A^(1/2) such that A^(1/2) × A^(1/2) = A using iterative methods</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="denmanBeavers">Denman-Beavers Iteration (recommended)</option>
+                    <option value="newtonSchulz">Newton-Schulz Iteration</option>
+                    <option value="eigenDecomp">Eigenvalue Decomposition</option>
+                    <option value="padeApprox">Padé Approximation</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="random">Random Positive Definite</option>
+                    <option value="manual">Manual Input</option>
+                </select>
+            </div>
+
+            <div id="randomInput">
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="size">Matrix Size (n×n):</label>
+                        <input type="number" id="size" value="50" min="2" max="150">
+                    </div>
+                    <div class="control-group half">
+                        <label for="matrixType">Matrix Type:</label>
+                        <select id="matrixType">
+                            <option value="spd">Symmetric Positive Definite</option>
+                            <option value="nearIdentity">Near Identity</option>
+                            <option value="diagonal">Diagonal (positive)</option>
+                            <option value="perfectSquare">Perfect Square (B × B)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="manualInput" style="display: none;">
+                <div class="control-group">
+                    <label for="matrixInput">Square Matrix A (must be positive semidefinite):</label>
+                    <textarea id="matrixInput" rows="4" placeholder="4, 0&#10;0, 9"></textarea>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('identity')">Identity 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('diagonal')">Diagonal 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('spd')">SPD 2×2</button>
+                <button class="btn-secondary" onclick="loadSample('random')">Random SPD</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute √A</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Matrix Square Root</h3>
+            <p>The matrix square root √A (or A^(1/2)) is a matrix B such that B² = A. For positive semidefinite matrices, the principal square root exists and is unique.</p>
+
+            <h4>Algorithms</h4>
+            <table class="info-table">
+                <tr><th>Algorithm</th><th>Approach</th><th>Best For</th></tr>
+                <tr><td>Denman-Beavers</td><td>Coupled iteration Y,Z</td><td>General PSD</td></tr>
+                <tr><td>Newton-Schulz</td><td>X_{k+1} = ½X_k(3I-X_k²)</td><td>||A-I|| < 1</td></tr>
+                <tr><td>Eigendecomp</td><td>√A = V√ΛV⁻¹</td><td>Symmetric</td></tr>
+                <tr><td>Padé</td><td>Rational approximation</td><td>Near I</td></tr>
+            </table>
+
+            <h4>Properties</h4>
+            <ul>
+                <li><strong>(√A)² = A</strong>: Defining property</li>
+                <li><strong>√I = I</strong>: Identity is its own root</li>
+                <li><strong>√(diag(a,b)) = diag(√a, √b)</strong>: Diagonal case</li>
+                <li><strong>det(√A) = √det(A)</strong>: Determinant relation</li>
+            </ul>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Whitening/decorrelation in signal processing</li>
+                <li>Matrix geometric mean: A#B = A^(1/2)(A^(-1/2)BA^(-1/2))^(1/2)A^(1/2)</li>
+                <li>Covariance matrix operations</li>
+                <li>Matrix interpolation and morphing</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

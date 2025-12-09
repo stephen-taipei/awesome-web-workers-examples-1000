@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Decision Tree - Example 974</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Decision Tree Visualizer</h1>
+        <p>Builds a Decision Tree Classification model in a Web Worker and visualizes the recursive binary splitting of the input space.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="maxDepth">Max Depth:</label>
+                    <input type="range" id="maxDepth" min="1" max="10" value="4">
+                    <span id="depthDisplay">4</span>
+                </div>
+                <div class="form-group">
+                    <label for="minSamples">Min Samples Split:</label>
+                    <input type="range" id="minSamples" min="2" max="20" value="5">
+                    <span id="sampleDisplay">5</span>
+                </div>
+                <div class="form-group">
+                    <label for="criterion">Criterion:</label>
+                    <select id="criterion">
+                        <option value="gini">Gini Impurity</option>
+                        <option value="entropy">Entropy (Info Gain)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button id="genDataBtn">New Data</button>
+                    <button id="trainBtn">Build Tree</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">Tree Depth: <span id="actualDepth">-</span></div>
+                    <div class="stat-item">Leaf Nodes: <span id="leafCount">-</span></div>
+                    <div class="stat-item">Accuracy: <span id="accDisplay">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="treeCanvas" width="500" height="500"></canvas>
+                <div class="legend">
+                    <span class="dot class0"></span> Class 0
+                    <span class="dot class1"></span> Class 1
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fair Scheduler Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Fair Scheduler (Round-Robin)</h1>
+    <p>This scheduler ensures fair execution among different users/groups. Even if User A floods the system, User B's tasks won't be blocked.</p>
+
+    <div class="user-controls">
+        <div class="user-panel user-a">
+            <h3>User A (Blue)</h3>
+            <button onclick="scheduler.addTask('A', 1000)">Add Task</button>
+            <button onclick="addMany('A', 5)" style="margin-top: 5px;">Flood (5)</button>
+        </div>
+        <div class="user-panel user-b">
+            <h3>User B (Green)</h3>
+            <button onclick="scheduler.addTask('B', 1000)">Add Task</button>
+            <button onclick="addMany('B', 5)" style="margin-top: 5px;">Flood (5)</button>
+        </div>
+        <div class="user-panel user-c">
+            <h3>User C (Red)</h3>
+            <button onclick="scheduler.addTask('C', 1000)">Add Task</button>
+            <button onclick="addMany('C', 5)" style="margin-top: 5px;">Flood (5)</button>
+        </div>
+    </div>
+
+    <div class="visualization">
+        <div class="worker-status">
+            <h3>Workers</h3>
+            <div id="workerList"></div>
+        </div>
+
+        <div class="scheduler-view">
+            <h3>Per-User Queues</h3>
+            <div class="queue-lanes">
+                <div class="queue-lane">
+                    <div class="lane-label">User A</div>
+                    <div id="queueA" class="lane-items"></div>
+                </div>
+                <div class="queue-lane">
+                    <div class="lane-label">User B</div>
+                    <div id="queueB" class="lane-items"></div>
+                </div>
+                <div class="queue-lane">
+                    <div class="lane-label">User C</div>
+                    <div id="queueC" class="lane-items"></div>
+                </div>
+            </div>
+
+            <div class="global-queue">
+                <h3>Fair Execution Order (Round Robin)</h3>
+                <div id="fairOrder" class="fair-order"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        function addMany(user, count) {
+            for(let i=0; i<count; i++) {
+                scheduler.addTask(user, 500 + Math.random() * 500);
+            }
+        }
+    </script>
+</body>
+</html>

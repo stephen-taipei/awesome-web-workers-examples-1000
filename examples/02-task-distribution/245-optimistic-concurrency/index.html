@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimistic Concurrency - Web Worker Example #245</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Optimistic Concurrency</h1>
+            <p class="subtitle">Web Worker Example #245 - Optimistic Concurrency Control</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Optimistic Concurrency</h2>
+                <p>Optimistic Concurrency Control (OCC) is a concurrency control method that assumes conflicts are rare. Transactions proceed without locking, and conflicts are detected at commit time. If a conflict is found, the transaction is rolled back and retried.</p>
+                <div class="formula-box">
+                    <p><strong>OCC Transaction Phases:</strong></p>
+                    <pre class="formula">
+1. Read Phase:
+   - Read data into private workspace
+   - Track read set and write set
+   - No locks acquired
+
+2. Validation Phase:
+   - Check for conflicts with committed transactions
+   - Verify read set hasn't changed
+   - Ensure serializability
+
+3. Write Phase:
+   - If validation succeeds, commit changes
+   - If validation fails, abort and retry
+
+Conflict Detection:
+   - Write-Write: Two transactions modify same data
+   - Read-Write: Data read was modified by another
+
+Advantages:
+   - High concurrency when conflicts are rare
+   - No deadlocks possible
+   - Better throughput for read-heavy workloads
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Simulation Setup</h2>
+
+                <div class="input-group">
+                    <label for="scenarioSelect">Scenario:</label>
+                    <select id="scenarioSelect">
+                        <option value="banking">Banking Transactions</option>
+                        <option value="inventory">Inventory Management</option>
+                        <option value="document">Document Editing</option>
+                        <option value="counter">Shared Counter</option>
+                    </select>
+                </div>
+
+                <div id="scenarioDescription" class="problem-desc"></div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="workerCount">Concurrent Workers:</label>
+                        <input type="number" id="workerCount" value="4" min="2" max="8">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="transactionCount">Transactions per Worker:</label>
+                        <input type="number" id="transactionCount" value="50" min="10" max="200">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="conflictProbability">Conflict Probability (%):</label>
+                        <input type="number" id="conflictProbability" value="30" min="0" max="100">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="maxRetries">Max Retries:</label>
+                        <input type="number" id="maxRetries" value="5" min="1" max="20">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="runBtn" class="btn btn-primary">Run OCC Simulation</button>
+                    <button id="compareBtn" class="btn btn-secondary">Compare with Locking</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Running transactions...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Transaction Flow</h2>
+                <canvas id="occCanvas" width="700" height="400"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Total Transactions</span>
+                        <span id="totalTransactions" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Committed</span>
+                        <span id="committed" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Conflicts</span>
+                        <span id="conflicts" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Retries</span>
+                        <span id="retries" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">OCC Time</span>
+                        <span id="occTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Locking Time</span>
+                        <span id="lockTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Commit Rate</span>
+                        <span id="commitRate" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Throughput</span>
+                        <span id="throughput" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Transaction Log</h3>
+                <div id="transactionLog" class="transaction-log"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #245</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

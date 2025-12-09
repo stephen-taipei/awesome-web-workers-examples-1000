@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker FFT Visualizer - Example 967</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>FFT Signal Analyzer</h1>
+        <p>Performs Fast Fourier Transform (FFT) in a Web Worker to analyze the frequency spectrum of a simulated signal.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <h3>Signal Generator</h3>
+                <div class="form-group">
+                    <label>Freq 1 (Hz): <span id="f1Display">5</span></label>
+                    <input type="range" id="f1" min="1" max="50" value="5">
+                </div>
+                <div class="form-group">
+                    <label>Freq 2 (Hz): <span id="f2Display">20</span></label>
+                    <input type="range" id="f2" min="1" max="50" value="20">
+                </div>
+                <div class="form-group">
+                    <label>Noise Level:</label>
+                    <input type="range" id="noise" min="0" max="1" step="0.1" value="0.2">
+                </div>
+                <div class="form-group">
+                    <label>Window Size (N):</label>
+                    <select id="windowSize">
+                        <option value="256">256</option>
+                        <option value="512" selected>512</option>
+                        <option value="1024">1024</option>
+                        <option value="2048">2048</option>
+                    </select>
+                </div>
+                <button id="analyzeBtn">Generate & Analyze</button>
+
+                <div class="stats">
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                    <div class="stat-item">Calculation Time: <span id="calcTime">-</span></div>
+                </div>
+            </div>
+
+            <div class="charts">
+                <div class="chart-container">
+                    <h4>Time Domain (Waveform)</h4>
+                    <canvas id="timeCanvas" width="500" height="150"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h4>Frequency Domain (Spectrum)</h4>
+                    <canvas id="freqCanvas" width="500" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #263238;
+    color: #eceff1;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    background: #37474f;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    max-width: 900px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    color: #4db6ac;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    text-align: center;
+    color: #b2dfdb;
+    margin-bottom: 2rem;
+}
+
+.layout {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.controls {
+    flex: 1;
+    min-width: 250px;
+    background: #263238;
+    padding: 1.5rem;
+    border: 1px solid #546e7a;
+    border-radius: 6px;
+}
+
+.visualization {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    background-color: #000;
+    border: 1px solid #546e7a;
+    border-radius: 50%; /* Make the canvas container round? No, canvas is square, drawing is round */
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #80cbc4;
+}
+
+select {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #546e7a;
+    border-radius: 4px;
+    background: #37474f;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.speed-controls {
+    display: flex;
+    gap: 1rem;
+}
+
+.speed-controls label {
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+}
+
+button {
+    width: 100%;
+    background-color: #009688;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    transition: background 0.2s;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #00796b;
+}
+
+button:disabled {
+    background-color: #546e7a;
+    cursor: not-allowed;
+}
+
+#stopBtn {
+    background-color: #ef5350;
+}
+
+#stopBtn:hover {
+    background-color: #c62828;
+}
+
+.stats {
+    margin-top: 2rem;
+    border-top: 1px solid #546e7a;
+    padding-top: 1rem;
+}
+
+.stat-item {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+}
+
+.stat-item span {
+    font-weight: bold;
+    color: #4db6ac;
+}
+
+.stat-item.big {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    color: #ffeb3b;
+}
+
+.stat-item.big span {
+    color: #ffeb3b;
+}
+
+.stat-item.small {
+    font-size: 0.8rem;
+    color: #78909c;
+    justify-content: flex-end;
+}

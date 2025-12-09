@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#086 Condition Number - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#086 Condition Number</h1>
+            <p class="description">Compute κ(A) = ||A|| × ||A⁻¹|| to measure matrix sensitivity to perturbations</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="normType">Norm Type:</label>
+                <select id="normType">
+                    <option value="2">2-norm (spectral)</option>
+                    <option value="1">1-norm (column sum)</option>
+                    <option value="inf">∞-norm (row sum)</option>
+                    <option value="fro">Frobenius norm</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="random">Random Matrix</option>
+                    <option value="manual">Manual Input</option>
+                </select>
+            </div>
+
+            <div id="randomInput">
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="size">Matrix Size (n×n):</label>
+                        <input type="number" id="size" value="50" min="2" max="200">
+                    </div>
+                    <div class="control-group half">
+                        <label for="matrixType">Matrix Type:</label>
+                        <select id="matrixType">
+                            <option value="random">Random</option>
+                            <option value="wellConditioned">Well-Conditioned</option>
+                            <option value="illConditioned">Ill-Conditioned</option>
+                            <option value="hilbert">Hilbert (very ill)</option>
+                            <option value="vandermonde">Vandermonde</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="manualInput" style="display: none;">
+                <div class="control-group">
+                    <label for="matrixInput">Square Matrix A:</label>
+                    <textarea id="matrixInput" rows="4" placeholder="1, 2&#10;3, 4"></textarea>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('identity')">Identity 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('orthogonal')">Orthogonal 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('singular')">Near-Singular</button>
+                <button class="btn-secondary" onclick="loadSample('hilbert')">Hilbert 4×4</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute κ(A)</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Condition Number</h3>
+            <p>The condition number κ(A) measures how sensitive the solution of Ax = b is to perturbations in A or b. A large condition number indicates an ill-conditioned matrix.</p>
+
+            <h4>Definitions</h4>
+            <table class="info-table">
+                <tr><th>Norm</th><th>Definition</th><th>κ(A)</th></tr>
+                <tr><td>2-norm</td><td>σ_max(A)</td><td>σ_max / σ_min</td></tr>
+                <tr><td>1-norm</td><td>max column sum</td><td>||A||₁ × ||A⁻¹||₁</td></tr>
+                <tr><td>∞-norm</td><td>max row sum</td><td>||A||_∞ × ||A⁻¹||_∞</td></tr>
+                <tr><td>Frobenius</td><td>√(Σa_ij²)</td><td>||A||_F × ||A⁻¹||_F</td></tr>
+            </table>
+
+            <h4>Interpretation</h4>
+            <ul>
+                <li><strong>κ(A) ≈ 1</strong>: Well-conditioned (orthogonal matrices)</li>
+                <li><strong>κ(A) ~ 10^k</strong>: May lose ~k digits of precision</li>
+                <li><strong>κ(A) ~ 10^16</strong>: Effectively singular (double precision)</li>
+                <li><strong>κ(I) = 1</strong>: Identity is perfectly conditioned</li>
+            </ul>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Numerical stability analysis</li>
+                <li>Error bound estimation for Ax = b</li>
+                <li>Preconditioning strategy selection</li>
+                <li>Matrix regularization decisions</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

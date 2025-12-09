@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers DAG Task Scheduling</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>DAG Task Scheduling</h1>
+        <p>This example demonstrates how to schedule tasks with dependencies using a Directed Acyclic Graph (DAG).</p>
+
+        <div class="controls">
+            <button id="startBtn">Start DAG Execution</button>
+            <button id="resetBtn">Reset</button>
+        </div>
+
+        <div id="graphContainer" class="graph-container">
+            <!-- Graph visualization will be here -->
+        </div>
+
+        <div id="status" class="status">Ready</div>
+        <div id="log" class="log"></div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

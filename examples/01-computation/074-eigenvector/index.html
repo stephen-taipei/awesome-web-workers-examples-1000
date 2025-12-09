@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#074 Eigenvector Calculator - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#074 Eigenvector Calculator</h1>
+            <p class="description">Compute eigenvectors using Power iteration and Inverse iteration</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="powerIteration">Power Iteration (all eigenvectors)</option>
+                    <option value="inverseIteration">Inverse Iteration (specific λ)</option>
+                    <option value="rayleighQuotient">Rayleigh Quotient Iteration</option>
+                    <option value="simultaneous">Simultaneous Iteration</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="manual">Manual Input</option>
+                    <option value="random">Random Matrix</option>
+                </select>
+            </div>
+
+            <div id="manualInput">
+                <div class="control-group">
+                    <label for="matrixInput">Square Matrix (rows by newlines, values by commas):</label>
+                    <textarea id="matrixInput" rows="5" placeholder="4, -1, 1&#10;-1, 3, -2&#10;1, -2, 3"></textarea>
+                </div>
+            </div>
+
+            <div id="randomInput" style="display: none;">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="size">Matrix Size (n×n):</label>
+                        <input type="number" id="size" value="4" min="2" max="50">
+                    </div>
+                    <div class="control-group third">
+                        <label for="matrixType">Matrix Type:</label>
+                        <select id="matrixType">
+                            <option value="symmetric">Symmetric</option>
+                            <option value="random">Random</option>
+                        </select>
+                    </div>
+                    <div class="control-group third">
+                        <label for="range">Value Range:</label>
+                        <input type="number" id="range" value="10" min="1" max="100">
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group" id="targetEigenvalueGroup" style="display: none;">
+                <label for="targetEigenvalue">Target Eigenvalue (for Inverse Iteration):</label>
+                <input type="number" id="targetEigenvalue" step="any" value="0">
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('simple')">Simple 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('symmetric')">Symmetric</button>
+                <button class="btn-secondary" onclick="loadSample('diagonal')">Diagonal</button>
+                <button class="btn-secondary" onclick="loadSample('orthogonal')">Orthogonal Eigenvectors</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute Eigenvectors</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Eigenvectors</h3>
+            <p>For eigenvalue λ, eigenvector v satisfies <strong>Av = λv</strong> where v ≠ 0.</p>
+
+            <h4>Algorithms</h4>
+            <table class="info-table">
+                <tr><th>Algorithm</th><th>Finds</th><th>Convergence</th></tr>
+                <tr><td>Power Iteration</td><td>Dominant eigenvector</td><td>Linear</td></tr>
+                <tr><td>Inverse Iteration</td><td>Eigenvector for target λ</td><td>Linear</td></tr>
+                <tr><td>Rayleigh Quotient</td><td>Eigenvector near estimate</td><td>Cubic</td></tr>
+                <tr><td>Simultaneous Iteration</td><td>Multiple eigenvectors</td><td>Linear</td></tr>
+            </table>
+
+            <h4>Properties</h4>
+            <ul>
+                <li>Eigenvectors for distinct eigenvalues are linearly independent</li>
+                <li>Symmetric matrices have orthogonal eigenvectors</li>
+                <li>Eigenvectors span the eigenspace for each eigenvalue</li>
+                <li>Normalization is arbitrary (any scalar multiple is valid)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

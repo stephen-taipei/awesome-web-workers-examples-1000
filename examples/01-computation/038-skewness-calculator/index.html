@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#038 Skewness Calculator - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#038 Skewness Calculator</h1>
+            <p class="description">Calculate distribution skewness using various methods with Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Calculation Type:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="all">All Skewness Measures</option>
+                    <option value="fisher">Fisher-Pearson (g1)</option>
+                    <option value="adjusted">Adjusted Fisher-Pearson (G1)</option>
+                    <option value="pearson">Pearson's Coefficients</option>
+                    <option value="bowley">Bowley's Quartile Skewness</option>
+                    <option value="generate">Generate & Calculate</option>
+                </select>
+            </div>
+
+            <div class="control-group" id="dataInputGroup">
+                <label for="dataInput">Data (comma or space separated):</label>
+                <textarea id="dataInput" rows="4" placeholder="1, 2, 3, 4, 5, 6, 7, 8, 9, 10"></textarea>
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('symmetric')">Symmetric</button>
+                    <button class="btn-secondary" onclick="loadSample('right')">Right-Skewed</button>
+                    <button class="btn-secondary" onclick="loadSample('left')">Left-Skewed</button>
+                </div>
+            </div>
+
+            <div id="generateOptions" style="display: none;">
+                <div class="control-group">
+                    <label for="generateCount">Data Points to Generate:</label>
+                    <input type="number" id="generateCount" value="100000" min="1000" max="10000000">
+                </div>
+
+                <div class="control-group">
+                    <label for="distribution">Distribution:</label>
+                    <select id="distribution" onchange="updateDistributionParams()">
+                        <option value="normal">Normal (Symmetric)</option>
+                        <option value="exponential">Exponential (Right-Skewed)</option>
+                        <option value="lognormal">Log-Normal (Right-Skewed)</option>
+                        <option value="gamma">Gamma</option>
+                        <option value="beta">Beta</option>
+                        <option value="weibull">Weibull</option>
+                        <option value="uniform">Uniform (Symmetric)</option>
+                    </select>
+                </div>
+
+                <div id="normalParams" class="dist-params">
+                    <div class="param-row">
+                        <label>Mean: <input type="number" id="normalMean" value="50"></label>
+                        <label>Std Dev: <input type="number" id="normalStdDev" value="15"></label>
+                    </div>
+                </div>
+
+                <div id="exponentialParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>Lambda (λ): <input type="number" id="expLambda" value="1" step="0.1"></label>
+                    </div>
+                </div>
+
+                <div id="lognormalParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>μ: <input type="number" id="lognormalMu" value="0" step="0.1"></label>
+                        <label>σ: <input type="number" id="lognormalSigma" value="1" step="0.1"></label>
+                    </div>
+                </div>
+
+                <div id="gammaParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>Shape (k): <input type="number" id="gammaShape" value="2" step="0.1"></label>
+                        <label>Scale (θ): <input type="number" id="gammaScale" value="1" step="0.1"></label>
+                    </div>
+                </div>
+
+                <div id="betaParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>α: <input type="number" id="betaA" value="2" step="0.1"></label>
+                        <label>β: <input type="number" id="betaB" value="5" step="0.1"></label>
+                    </div>
+                </div>
+
+                <div id="weibullParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>k (shape): <input type="number" id="weibullK" value="1.5" step="0.1"></label>
+                        <label>λ (scale): <input type="number" id="weibullLambda" value="1" step="0.1"></label>
+                    </div>
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Skewness</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Skewness</h3>
+            <p><strong>Skewness</strong> measures the asymmetry of a probability distribution about its mean.</p>
+
+            <h4>Interpretation</h4>
+            <div class="skew-visual">
+                <div class="skew-item left">
+                    <div class="skew-curve left-curve"></div>
+                    <div>Left-Skewed (< 0)</div>
+                    <div class="skew-desc">Tail extends left<br>Mean < Median < Mode</div>
+                </div>
+                <div class="skew-item center">
+                    <div class="skew-curve symmetric-curve"></div>
+                    <div>Symmetric (≈ 0)</div>
+                    <div class="skew-desc">Normal distribution<br>Mean = Median = Mode</div>
+                </div>
+                <div class="skew-item right">
+                    <div class="skew-curve right-curve"></div>
+                    <div>Right-Skewed (> 0)</div>
+                    <div class="skew-desc">Tail extends right<br>Mode < Median < Mean</div>
+                </div>
+            </div>
+
+            <h4>Skewness Methods</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Method</th>
+                    <th>Formula</th>
+                    <th>Use Case</th>
+                </tr>
+                <tr>
+                    <td>Fisher-Pearson (g1)</td>
+                    <td>m₃ / σ³</td>
+                    <td>Population skewness</td>
+                </tr>
+                <tr>
+                    <td>Adjusted (G1)</td>
+                    <td>g1 × √(n(n-1))/(n-2)</td>
+                    <td>Sample skewness (unbiased)</td>
+                </tr>
+                <tr>
+                    <td>Pearson's 2nd</td>
+                    <td>3(mean-median)/σ</td>
+                    <td>Quick estimation</td>
+                </tr>
+                <tr>
+                    <td>Bowley's</td>
+                    <td>(Q3+Q1-2Q2)/(Q3-Q1)</td>
+                    <td>Robust to outliers</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

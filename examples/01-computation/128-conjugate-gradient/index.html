@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conjugate Gradient Method - Web Worker Example #128</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Conjugate Gradient Method</h1>
+            <p class="subtitle">Web Worker Example #128 - Nonlinear CG Optimization</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Conjugate Gradient</h2>
+                <p>The Conjugate Gradient method generates conjugate search directions that avoid redundant exploration. For quadratic functions, it converges in at most n iterations. For general functions, nonlinear CG variants like Fletcher-Reeves and Polak-Ribière are used.</p>
+                <div class="formula-box">
+                    <p><strong>Nonlinear CG Update:</strong></p>
+                    <pre class="formula">
+d_0 = -∇f(x_0)                    (Initial direction = steepest descent)
+x_{k+1} = x_k + α_k d_k           (Line search)
+d_{k+1} = -∇f(x_{k+1}) + β_k d_k  (Conjugate direction)
+
+β formulas:
+  Fletcher-Reeves: β = ||∇f_{k+1}||² / ||∇f_k||²
+  Polak-Ribière:   β = ∇f_{k+1}^T (∇f_{k+1} - ∇f_k) / ||∇f_k||²
+  Hestenes-Stiefel: β = ∇f_{k+1}^T (∇f_{k+1} - ∇f_k) / d_k^T (∇f_{k+1} - ∇f_k)
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="functionSelect">Test Function:</label>
+                    <select id="functionSelect">
+                        <option value="rosenbrock">Rosenbrock</option>
+                        <option value="quadratic">Quadratic Bowl</option>
+                        <option value="beale">Beale Function</option>
+                        <option value="sphere">Sphere</option>
+                    </select>
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="betaMethod">Beta Formula:</label>
+                        <select id="betaMethod">
+                            <option value="fr">Fletcher-Reeves</option>
+                            <option value="pr">Polak-Ribière</option>
+                            <option value="hs">Hestenes-Stiefel</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="maxIter">Max Iterations:</label>
+                        <input type="number" id="maxIter" value="500" min="50" max="5000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="tolerance">Tolerance:</label>
+                        <input type="number" id="tolerance" value="1e-6" step="1e-7">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="restartFreq">Restart Frequency:</label>
+                        <input type="number" id="restartFreq" value="0" min="0">
+                        <span class="hint">0 = auto restart on bad β</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="optimizeBtn" class="btn btn-primary">Start CG</button>
+                    <button id="stopBtn" class="btn btn-secondary hidden">Stop</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Initializing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Optimization Path</h2>
+                <canvas id="optimCanvas" width="550" height="450"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Iterations</span>
+                        <span id="iterCount" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Final Position</span>
+                        <span id="finalPos" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Final Value</span>
+                        <span id="finalValue" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Restarts</span>
+                        <span id="restarts" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="convergence-info">
+                    <h3>Convergence History</h3>
+                    <canvas id="lossCanvas" width="550" height="200"></canvas>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #128</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

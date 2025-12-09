@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker DBSCAN - Example 988</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>DBSCAN Clustering</h1>
+        <p>Density-Based Spatial Clustering of Applications with Noise (DBSCAN) running in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="pointCount">Data Points:</label>
+                    <select id="pointCount">
+                        <option value="500">500</option>
+                        <option value="1000" selected>1,000</option>
+                        <option value="2000">2,000</option>
+                        <option value="5000">5,000</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="epsilon">Epsilon (Radius):</label>
+                    <input type="range" id="epsilon" min="5" max="50" value="20">
+                    <span id="epsDisplay">20</span>
+                </div>
+                <div class="form-group">
+                    <label for="minPts">Min Points:</label>
+                    <input type="range" id="minPts" min="2" max="20" value="4">
+                    <span id="minPtsDisplay">4</span>
+                </div>
+                <div class="form-group">
+                    <label for="datasetType">Dataset Shape:</label>
+                    <select id="datasetType">
+                        <option value="blobs">Blobs</option>
+                        <option value="moons">Moons</option>
+                        <option value="circles">Concentric Circles</option>
+                        <option value="random">Random Noise</option>
+                    </select>
+                </div>
+                <button id="runBtn">Generate & Cluster</button>
+
+                <div class="stats">
+                    <div class="stat-item">Clusters Found: <span id="clustersCount">-</span></div>
+                    <div class="stat-item">Noise Points: <span id="noiseCount">-</span></div>
+                    <div class="stat-item">Time: <span id="timeVal">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="dbscanCanvas" width="600" height="500"></canvas>
+                <div class="legend">
+                    <span class="dot cluster"></span> Clustered Point
+                    <span class="dot noise"></span> Noise Point
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

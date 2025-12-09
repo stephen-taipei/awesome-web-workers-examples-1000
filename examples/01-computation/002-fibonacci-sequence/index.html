@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#002 費波那契數列 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 計算費波那契數列，支援多種演算法比較">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>費波那契數列</h1>
+            <p class="subtitle">Fibonacci Sequence</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#002</span>
+                <span class="badge badge-secondary">計算密集型</span>
+                <span class="badge badge-success">初級</span>
+            </div>
+            <!-- 黃金比例視覺化 -->
+            <div class="golden-ratio-visual">
+                <span class="phi-symbol">&phi;</span>
+                <span class="phi-value">= 1.6180339887...</span>
+            </div>
+        </header>
+
+        <!-- 輸入控制區域 -->
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+
+            <!-- 計算單一值 -->
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="n-input">計算 F(N) - 第 N 個費波那契數</label>
+                    <input
+                        type="number"
+                        id="n-input"
+                        class="form-input"
+                        value="1000"
+                        min="0"
+                        max="100000"
+                        placeholder="輸入 N 值"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="algorithm-select">選擇演算法</label>
+                    <select id="algorithm-select" class="form-select">
+                        <option value="iterative">迭代法 (O(n))</option>
+                        <option value="matrix">矩陣快速冪 (O(log n))</option>
+                        <option value="memoization">記憶化 (O(n))</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 快速設定按鈕 -->
+            <div class="form-group">
+                <label class="form-label">快速設定 N 值</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-n="10">F(10)</button>
+                    <button class="preset-btn" data-n="100">F(100)</button>
+                    <button class="preset-btn" data-n="1000">F(1000)</button>
+                    <button class="preset-btn" data-n="10000">F(10000)</button>
+                    <button class="preset-btn" data-n="50000">F(50000)</button>
+                    <button class="preset-btn" data-n="100000">F(100000)</button>
+                </div>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group">
+                <button id="calculate-btn" class="btn btn-primary">
+                    計算 F(N)
+                </button>
+                <button id="compare-btn" class="btn btn-info">
+                    演算法效能比較
+                </button>
+                <button id="stop-btn" class="btn btn-danger" disabled>
+                    停止計算
+                </button>
+            </div>
+        </section>
+
+        <!-- 數列計算區域 -->
+        <section class="card">
+            <h2 class="card-title">計算數列</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="sequence-count">計算前 N 項數列</label>
+                    <input
+                        type="number"
+                        id="sequence-count"
+                        class="form-input"
+                        value="50"
+                        min="1"
+                        max="10000"
+                        placeholder="輸入項數"
+                    >
+                </div>
+                <div class="form-group" style="display: flex; align-items: flex-end;">
+                    <button id="sequence-btn" class="btn btn-secondary" style="width: 100%;">
+                        計算數列
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 進度顯示區域 -->
+        <section class="card">
+            <h2 class="card-title">計算進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 單一值結果顯示區域 -->
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">計算結果</h2>
+            <div id="result-value" class="result-value"></div>
+            <div id="result-stats" class="result-stats"></div>
+        </section>
+
+        <!-- 數列結果顯示區域 -->
+        <section id="sequence-section" class="card hidden">
+            <h2 class="card-title">數列結果</h2>
+            <div id="sequence-list" class="sequence-list"></div>
+        </section>
+
+        <!-- 效能比較區域 -->
+        <section id="comparison-section" class="card hidden">
+            <h2 class="card-title">演算法效能比較</h2>
+            <div id="comparison-results"></div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>費波那契數列：</strong><code>F(0)=0, F(1)=1, F(n)=F(n-1)+F(n-2)</code></li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>通訊模式：</strong>使用 <code>postMessage</code> 進行雙向通訊</li>
+                <li><strong>大數支援：</strong>使用 <code>BigInt</code> 處理超大整數，避免精度丟失</li>
+                <li><strong>演算法比較：</strong>
+                    <ul style="margin-top: 8px; margin-left: 20px;">
+                        <li><strong>迭代法</strong> - 簡單直接，時間 O(n)，空間 O(1)</li>
+                        <li><strong>矩陣快速冪</strong> - 利用矩陣乘法，時間 O(log n)</li>
+                        <li><strong>記憶化</strong> - 避免重複計算，時間 O(n)，空間 O(1)*</li>
+                    </ul>
+                </li>
+                <li><strong>黃金比例：</strong>相鄰兩數的比值趨近於 <code>&phi; = (1+&radic;5)/2 &approx; 1.618</code></li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #002 - 費波那契數列
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>

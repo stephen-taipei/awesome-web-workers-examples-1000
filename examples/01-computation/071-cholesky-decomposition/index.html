@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#071 Cholesky Decomposition - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#071 Cholesky Decomposition</h1>
+            <p class="description">Cholesky, LDL, and modified Cholesky for symmetric positive definite matrices</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="cholesky">Standard Cholesky (A = LL^T)</option>
+                    <option value="ldl">LDL^T Decomposition</option>
+                    <option value="choleskyBanachiewicz">Cholesky-Banachiewicz</option>
+                    <option value="choleskyCrout">Cholesky-Crout</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="manual">Manual Input</option>
+                    <option value="random">Random SPD Matrix</option>
+                </select>
+            </div>
+
+            <div id="manualInput">
+                <div class="control-group">
+                    <label for="matrixInput">Symmetric Positive Definite Matrix (rows by newlines, values by commas):</label>
+                    <textarea id="matrixInput" rows="5" placeholder="4, 12, -16&#10;12, 37, -43&#10;-16, -43, 98"></textarea>
+                </div>
+            </div>
+
+            <div id="randomInput" style="display: none;">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="size">Matrix Size (n×n):</label>
+                        <input type="number" id="size" value="4" min="2" max="200">
+                    </div>
+                    <div class="control-group third">
+                        <label for="condNumber">Condition Number:</label>
+                        <select id="condNumber">
+                            <option value="low">Low (well-conditioned)</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High (ill-conditioned)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('simple')">Simple 3x3</button>
+                <button class="btn-secondary" onclick="loadSample('identity')">Identity</button>
+                <button class="btn-secondary" onclick="loadSample('diagonal')">Diagonal</button>
+                <button class="btn-secondary" onclick="loadSample('hilbert')">Hilbert-like</button>
+                <button class="btn-secondary" onclick="loadSample('covariance')">Covariance</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute Cholesky Decomposition</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Cholesky Decomposition</h3>
+            <p>For symmetric positive definite matrix A, factorize <strong>A = LL<sup>T</sup></strong> where L is lower triangular with positive diagonal entries.</p>
+
+            <h4>Algorithms</h4>
+            <table class="info-table">
+                <tr><th>Algorithm</th><th>Form</th><th>Features</th></tr>
+                <tr><td>Standard Cholesky</td><td>A = LL<sup>T</sup></td><td>Row-by-row computation</td></tr>
+                <tr><td>LDL<sup>T</sup></td><td>A = LDL<sup>T</sup></td><td>Avoids square roots</td></tr>
+                <tr><td>Cholesky-Banachiewicz</td><td>A = LL<sup>T</sup></td><td>Row-oriented algorithm</td></tr>
+                <tr><td>Cholesky-Crout</td><td>A = LL<sup>T</sup></td><td>Column-oriented algorithm</td></tr>
+            </table>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Solving symmetric positive definite linear systems</li>
+                <li>Monte Carlo simulation (generating correlated random variables)</li>
+                <li>Kalman filters</li>
+                <li>Computing determinants: det(A) = det(L)<sup>2</sup></li>
+                <li>Matrix inversion for covariance matrices</li>
+            </ul>
+
+            <h4>Requirements</h4>
+            <p>Matrix must be <strong>symmetric</strong> (A = A<sup>T</sup>) and <strong>positive definite</strong> (all eigenvalues > 0).</p>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

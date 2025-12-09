@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#083 Matrix Exponential - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#083 Matrix Exponential</h1>
+            <p class="description">Compute e^A using Padé approximation with scaling and squaring</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm:</label>
+                <select id="algorithm">
+                    <option value="pade">Padé Approximation (recommended)</option>
+                    <option value="taylor">Taylor Series</option>
+                    <option value="eigenDecomp">Eigenvalue Decomposition</option>
+                    <option value="compare">Compare All</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="random">Random Matrix</option>
+                    <option value="manual">Manual Input</option>
+                </select>
+            </div>
+
+            <div id="randomInput">
+                <div class="control-row">
+                    <div class="control-group half">
+                        <label for="size">Matrix Size (n×n):</label>
+                        <input type="number" id="size" value="50" min="2" max="200">
+                    </div>
+                    <div class="control-group half">
+                        <label for="matrixType">Matrix Type:</label>
+                        <select id="matrixType">
+                            <option value="general">General</option>
+                            <option value="symmetric">Symmetric</option>
+                            <option value="skewSymmetric">Skew-Symmetric</option>
+                            <option value="nilpotent">Nilpotent</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="scale">Scale Factor (for A):</label>
+                    <input type="number" id="scale" value="1" min="0.01" max="10" step="0.1">
+                </div>
+            </div>
+
+            <div id="manualInput" style="display: none;">
+                <div class="control-group">
+                    <label for="matrixInput">Square Matrix A (rows by newlines):</label>
+                    <textarea id="matrixInput" rows="4" placeholder="0, 1&#10;0, 0"></textarea>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('nilpotent')">Nilpotent 2×2</button>
+                <button class="btn-secondary" onclick="loadSample('rotation')">Rotation 2×2</button>
+                <button class="btn-secondary" onclick="loadSample('diagonal')">Diagonal 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('random')">Random Large</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute e^A</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Matrix Exponential</h3>
+            <p>The matrix exponential e^A is defined as the infinite series: e^A = I + A + A²/2! + A³/3! + ...</p>
+
+            <h4>Algorithms</h4>
+            <table class="info-table">
+                <tr><th>Algorithm</th><th>Approach</th><th>Best For</th></tr>
+                <tr><td>Padé</td><td>Rational approximation + scaling</td><td>General matrices</td></tr>
+                <tr><td>Taylor</td><td>Series truncation</td><td>Small ||A||</td></tr>
+                <tr><td>Eigendecomp</td><td>e^A = Ve^ΛV⁻¹</td><td>Diagonalizable</td></tr>
+            </table>
+
+            <h4>Properties</h4>
+            <ul>
+                <li><strong>e^0 = I</strong>: Identity matrix</li>
+                <li><strong>det(e^A) = e^tr(A)</strong>: Determinant formula</li>
+                <li><strong>e^(A+B) = e^A e^B</strong>: Only if AB = BA</li>
+                <li><strong>(e^A)⁻¹ = e^(-A)</strong>: Inverse</li>
+            </ul>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Solving linear ODEs: dx/dt = Ax → x(t) = e^(At)x(0)</li>
+                <li>Quantum mechanics (unitary evolution)</li>
+                <li>Control theory</li>
+                <li>Lie groups and Lie algebras</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

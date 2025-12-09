@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palindrome Number Detection - Web Worker Example #027</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Palindrome Number Detection</h1>
+            <p class="subtitle">Web Worker Example #027 - Numbers That Read the Same Backwards</p>
+        </header>
+        <main>
+            <section class="description">
+                <h2>About Palindrome Numbers</h2>
+                <p>A palindrome number reads the same forwards and backwards.</p>
+                <p>Examples: 121, 1331, 12321 (base 10), 1001 (9 in binary)</p>
+            </section>
+
+            <section class="controls">
+                <h2>Detection</h2>
+                <div class="input-group">
+                    <label for="calcType">Detection Type:</label>
+                    <select id="calcType">
+                        <option value="single">Check Single Number</option>
+                        <option value="range">Find in Range</option>
+                        <option value="multiBase">Multi-Base Check</option>
+                        <option value="statistics">Statistics</option>
+                        <option value="special">Special Palindromes</option>
+                    </select>
+                </div>
+                <div class="input-group" id="singleGroup">
+                    <label for="numberInput">Number:</label>
+                    <input type="text" id="numberInput" value="12321" placeholder="Enter a number">
+                </div>
+                <div class="input-group" id="baseSelectGroup">
+                    <label for="baseSelect">Base:</label>
+                    <select id="baseSelect">
+                        <option value="2">Binary (2)</option>
+                        <option value="8">Octal (8)</option>
+                        <option value="10" selected>Decimal (10)</option>
+                        <option value="16">Hexadecimal (16)</option>
+                    </select>
+                </div>
+                <div class="input-group hidden" id="rangeGroup">
+                    <label>Range:</label>
+                    <div class="range-input">
+                        <input type="text" id="startInput" value="1" placeholder="Start">
+                        <span>to</span>
+                        <input type="text" id="endInput" value="10000" placeholder="End">
+                    </div>
+                </div>
+                <div class="input-group hidden" id="multiBaseGroup">
+                    <label for="basesInput">Bases (comma-separated):</label>
+                    <input type="text" id="basesInput" value="2, 8, 10, 16" placeholder="e.g., 2, 8, 10, 16">
+                </div>
+                <div class="input-group hidden" id="digitsGroup">
+                    <label for="maxDigitsInput">Max Digits:</label>
+                    <input type="number" id="maxDigitsInput" value="6" min="1" max="8">
+                </div>
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Detect</button>
+                    <button id="cancelBtn" class="btn btn-secondary hidden">Cancel</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <h2>Progress</h2>
+                <div class="progress-bar-container"><div id="progressBar" class="progress-bar"></div></div>
+                <p id="progressText" class="progress-text">Starting...</p>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div id="resultContent" class="result-content"></div>
+                <p class="execution-time">Execution time: <span id="executionTime">-</span></p>
+            </section>
+
+            <section id="errorContainer" class="error-section hidden">
+                <h2>Error</h2>
+                <p id="errorMessage" class="error-message"></p>
+            </section>
+        </main>
+        <footer><p><a href="../index.html">Back to Examples</a> | Web Workers Example #027</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

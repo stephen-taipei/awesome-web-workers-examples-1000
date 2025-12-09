@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#222 重連機制 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 實現自動重連機制，包含指數退避策略和狀態恢復">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>重連機制</h1>
+            <p class="subtitle">Reconnection Mechanism</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#222</span>
+                <span class="badge badge-secondary">通訊協調</span>
+                <span class="badge badge-warning">進階</span>
+            </div>
+        </header>
+
+        <!-- 輸入控制區域 -->
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+
+            <!-- 數值輸入 -->
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="initial-delay">初始延遲 (毫秒)</label>
+                    <input
+                        type="number"
+                        id="initial-delay"
+                        class="form-input"
+                        value="1000"
+                        min="100"
+                        max="10000"
+                        placeholder="首次重連延遲"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="max-delay">最大延遲 (毫秒)</label>
+                    <input
+                        type="number"
+                        id="max-delay"
+                        class="form-input"
+                        value="30000"
+                        min="1000"
+                        max="60000"
+                        placeholder="重連延遲上限"
+                    >
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="multiplier">退避倍數</label>
+                    <input
+                        type="number"
+                        id="multiplier"
+                        class="form-input"
+                        value="2"
+                        min="1.5"
+                        max="4"
+                        step="0.5"
+                        placeholder="延遲倍增係數"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="max-retries">最大重試次數</label>
+                    <input
+                        type="number"
+                        id="max-retries"
+                        class="form-input"
+                        value="10"
+                        min="1"
+                        max="20"
+                        placeholder="放棄前重試次數"
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <input type="checkbox" id="jitter-enabled" checked>
+                    啟用隨機抖動 (Jitter) 避免同時重連
+                </label>
+            </div>
+
+            <!-- 快速設定按鈕 -->
+            <div class="form-group">
+                <label class="form-label">快速設定</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-initial="1000" data-max="30000" data-multiplier="2">標準策略</button>
+                    <button class="preset-btn" data-initial="500" data-max="10000" data-multiplier="1.5">快速重連</button>
+                    <button class="preset-btn" data-initial="2000" data-max="60000" data-multiplier="2">保守策略</button>
+                    <button class="preset-btn" data-initial="100" data-max="5000" data-multiplier="2">積極重連</button>
+                </div>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-message" class="error-message hidden"></div>
+
+            <!-- 操作按鈕 -->
+            <div class="btn-group">
+                <button id="connect-btn" class="btn btn-primary">
+                    建立連線
+                </button>
+                <button id="disconnect-btn" class="btn btn-secondary" disabled>
+                    手動斷線
+                </button>
+                <button id="simulate-crash-btn" class="btn btn-warning" disabled>
+                    模擬崩潰
+                </button>
+                <button id="stop-btn" class="btn btn-danger" disabled>
+                    停止重連
+                </button>
+            </div>
+        </section>
+
+        <!-- 連線狀態區域 -->
+        <section class="card">
+            <h2 class="card-title">連線狀態</h2>
+            <div class="connection-panel">
+                <div class="status-indicator">
+                    <div id="status-light" class="status-light status-disconnected"></div>
+                    <span id="status-text" class="status-text">未連線</span>
+                </div>
+                <div class="reconnect-info" id="reconnect-info">
+                    <div class="info-row">
+                        <span class="info-label">下次重連</span>
+                        <span id="next-reconnect" class="info-value">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">當前延遲</span>
+                        <span id="current-delay" class="info-value">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">重試次數</span>
+                        <span id="retry-count" class="info-value">0 / 10</span>
+                    </div>
+                </div>
+            </div>
+            <div class="progress-section">
+                <div class="reconnect-progress-wrapper">
+                    <div id="reconnect-progress" class="reconnect-progress" style="width: 0%"></div>
+                </div>
+                <p id="progress-text" class="progress-text">等待開始...</p>
+            </div>
+        </section>
+
+        <!-- 統計資訊區域 -->
+        <section class="card">
+            <h2 class="card-title">統計資訊</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="stat-number" id="total-connections">0</span>
+                    <span class="stat-label">成功連線</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="total-disconnects">0</span>
+                    <span class="stat-label">斷線次數</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="total-reconnects">0</span>
+                    <span class="stat-label">重連嘗試</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="uptime-percent">0%</span>
+                    <span class="stat-label">連線率</span>
+                </div>
+            </div>
+            <div class="time-info">
+                <span>總連線時間：<strong id="total-uptime">00:00:00</strong></span>
+                <span>運行時間：<strong id="total-runtime">00:00:00</strong></span>
+            </div>
+        </section>
+
+        <!-- 連線歷史區域 -->
+        <section class="card">
+            <h2 class="card-title">連線歷史</h2>
+            <div id="connection-history" class="connection-history">
+                <div class="history-placeholder">開始連線後將顯示歷史記錄...</div>
+            </div>
+        </section>
+
+        <!-- 指數退避視覺化 -->
+        <section class="card">
+            <h2 class="card-title">指數退避視覺化</h2>
+            <div class="backoff-chart">
+                <div class="chart-container" id="backoff-chart">
+                    <!-- 動態生成的柱狀圖 -->
+                </div>
+                <div class="chart-legend">
+                    <span>延遲時間會隨重試次數指數增長，直到達到最大延遲</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 說明區域 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>指數退避：</strong>每次重連失敗後，等待時間按倍數增長（1s → 2s → 4s → 8s...）</li>
+                <li><strong>隨機抖動：</strong>在延遲時間加入隨機變化，避免多個客戶端同時重連造成伺服器壓力</li>
+                <li><strong>最大延遲：</strong>設定延遲上限，避免等待時間過長</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker (專屬 Worker)</li>
+                <li><strong>應用場景：</strong>WebSocket 重連、API 請求重試、服務連線恢復</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #222 - 重連機制
+            </p>
+        </footer>
+    </div>
+
+    <!-- 主執行緒腳本 -->
+    <script src="main.js"></script>
+</body>
+</html>

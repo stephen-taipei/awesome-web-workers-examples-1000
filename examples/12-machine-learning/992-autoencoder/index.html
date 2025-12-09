@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Autoencoder - Example 992</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Autoencoder Neural Network</h1>
+        <p>Trains a simple deep autoencoder in a Web Worker to learn and reconstruct numerical patterns (e.g., sine waves).</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="inputDim">Input Dimension:</label>
+                    <select id="inputDim">
+                        <option value="16">16</option>
+                        <option value="32" selected>32</option>
+                        <option value="64">64</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="hiddenDim">Bottleneck Dimension (Latent):</label>
+                    <select id="hiddenDim">
+                        <option value="2">2 (High Compression)</option>
+                        <option value="4" selected>4</option>
+                        <option value="8">8</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="learningRate">Learning Rate:</label>
+                    <input type="range" id="learningRate" min="0.001" max="0.1" step="0.001" value="0.01">
+                    <span id="lrDisplay">0.01</span>
+                </div>
+                <button id="trainBtn">Start Training</button>
+                <button id="stopBtn" disabled>Stop</button>
+
+                <div class="stats">
+                    <div class="stat-item">Epoch: <span id="epochDisplay">0</span></div>
+                    <div class="stat-item">Loss (MSE): <span id="lossDisplay">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <h3>Reconstruction Preview</h3>
+                <canvas id="visCanvas" width="600" height="300"></canvas>
+                <div class="legend">
+                    <span class="dot original"></span> Original Input
+                    <span class="dot reconstructed"></span> Reconstructed Output
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

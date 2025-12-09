@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bernoulli Number Calculator - Web Worker Example #020</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Bernoulli Number Calculator</h1>
+            <p class="subtitle">Web Worker Example #020 - Akiyama-Tanigawa Algorithm</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Bernoulli Numbers</h2>
+                <p>
+                    Bernoulli numbers are a sequence of rational numbers with deep connections
+                    to number theory, combinatorics, and analysis. They appear in:
+                </p>
+                <ul>
+                    <li>Taylor series expansion of tan(x) and tanh(x)</li>
+                    <li>Euler-Maclaurin summation formula</li>
+                    <li>Sum of powers formulas</li>
+                    <li>Riemann zeta function at even integers</li>
+                </ul>
+
+                <div class="formula-box">
+                    <p><strong>First Bernoulli numbers:</strong></p>
+                    <table class="small-table">
+                        <tr><td>B(0)</td><td>= 1</td></tr>
+                        <tr><td>B(1)</td><td>= -1/2</td></tr>
+                        <tr><td>B(2)</td><td>= 1/6</td></tr>
+                        <tr><td>B(4)</td><td>= -1/30</td></tr>
+                        <tr><td>B(6)</td><td>= 1/42</td></tr>
+                        <tr><td>B(8)</td><td>= -1/30</td></tr>
+                    </table>
+                    <p class="note">Note: B(n) = 0 for odd n &gt; 1</p>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="calculationType">Calculation Type:</label>
+                    <select id="calculationType">
+                        <option value="sequence">Full Sequence (B(0) to B(n))</option>
+                        <option value="nonzero">Non-Zero Values Only</option>
+                        <option value="single">Single Bernoulli Number</option>
+                        <option value="sumofpowers">Sum of Powers Coefficients</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="nInput">Value of n:</label>
+                    <input type="number" id="nInput" min="0" value="20" placeholder="e.g., 30">
+                </div>
+
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Calculate</button>
+                    <button id="cancelBtn" class="btn btn-secondary hidden">Cancel</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <h2>Progress</h2>
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Starting calculation...</p>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div id="resultContent" class="result-content"></div>
+                <p class="execution-time">Execution time: <span id="executionTime">-</span></p>
+            </section>
+
+            <section id="errorContainer" class="error-section hidden">
+                <h2>Error</h2>
+                <p id="errorMessage" class="error-message"></p>
+            </section>
+
+            <section class="info">
+                <h2>Algorithm: Akiyama-Tanigawa</h2>
+                <div class="info-content">
+                    <p>This calculator uses the Akiyama-Tanigawa algorithm, which efficiently computes Bernoulli numbers using a triangular scheme:</p>
+                    <ol>
+                        <li>Initialize: A[j] = 1/(j+1) for j = 0, 1, ..., n</li>
+                        <li>For m = 0 to n:
+                            <ul>
+                                <li>B(m) = A[0]</li>
+                                <li>Update: A[j] = (j+1) &times; (A[j] - A[j+1])</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <p>The algorithm uses exact rational arithmetic to preserve precision.</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>
+                <a href="../index.html">Back to Examples</a> |
+                Web Workers Example #020 - Bernoulli Number Calculator
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

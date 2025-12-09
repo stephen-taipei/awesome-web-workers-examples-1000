@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Narcissistic Number Search - Web Worker Example #030</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Narcissistic Number Search</h1>
+            <p class="subtitle">Web Worker Example #030 - Generalized Self-Power Numbers</p>
+        </header>
+        <main>
+            <section class="description">
+                <h2>About Narcissistic Numbers</h2>
+                <p>A narcissistic number equals the sum of its digits each raised to some power k.</p>
+                <p>When k equals the digit count, these are called Armstrong numbers.</p>
+                <p>Example: 153 = 1³ + 5³ + 3³ (k=3, 3 digits)</p>
+            </section>
+
+            <section class="controls">
+                <h2>Search</h2>
+                <div class="input-group">
+                    <label for="calcType">Search Type:</label>
+                    <select id="calcType">
+                        <option value="searchByPower">Search by Power</option>
+                        <option value="searchAllPowers">All Powers (Small Range)</option>
+                        <option value="verify">Verify Number</option>
+                        <option value="munchausen">Munchausen Numbers</option>
+                        <option value="perfectDigital">Perfect Digital Invariants</option>
+                    </select>
+                </div>
+                <div class="input-group" id="powerGroup">
+                    <label for="powerInput">Power (k):</label>
+                    <input type="number" id="powerInput" value="3" min="1" max="20">
+                </div>
+                <div class="input-group" id="maxDigitsGroup">
+                    <label for="maxDigitsInput">Max Digits:</label>
+                    <input type="number" id="maxDigitsInput" value="7" min="1" max="10">
+                </div>
+                <div class="input-group hidden" id="singleGroup">
+                    <label for="numberInput">Number:</label>
+                    <input type="text" id="numberInput" value="153" placeholder="Enter number to verify">
+                    <label for="verifyPowerInput">Power:</label>
+                    <input type="number" id="verifyPowerInput" value="3" min="1" max="20">
+                </div>
+                <div class="input-group hidden" id="maxNumberGroup">
+                    <label for="maxNumberInput">Max Number:</label>
+                    <input type="number" id="maxNumberInput" value="100000" min="100" max="1000000">
+                    <label for="maxPowerInput">Max Power:</label>
+                    <input type="number" id="maxPowerInput" value="10" min="2" max="20">
+                </div>
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Search</button>
+                    <button id="cancelBtn" class="btn btn-secondary hidden">Cancel</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <h2>Progress</h2>
+                <div class="progress-bar-container"><div id="progressBar" class="progress-bar"></div></div>
+                <p id="progressText" class="progress-text">Starting...</p>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div id="resultContent" class="result-content"></div>
+                <p class="execution-time">Execution time: <span id="executionTime">-</span></p>
+            </section>
+
+            <section id="errorContainer" class="error-section hidden">
+                <h2>Error</h2>
+                <p id="errorMessage" class="error-message"></p>
+            </section>
+        </main>
+        <footer><p><a href="../index.html">Back to Examples</a> | Web Workers Example #030</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

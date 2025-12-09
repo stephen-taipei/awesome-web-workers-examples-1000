@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Game of Life (Classic) - Example 930</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Conway's Game of Life</h1>
+        <p>The classic Cellular Automaton running in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="gridSize">Grid Size:</label>
+                    <select id="gridSize">
+                        <option value="100">100x100</option>
+                        <option value="200">200x200</option>
+                        <option value="500" selected>500x500</option>
+                        <option value="1000">1000x1000</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="density">Initial Density:</label>
+                    <input type="range" id="density" min="0.1" max="0.9" step="0.1" value="0.2">
+                </div>
+                <div class="form-group">
+                    <label for="speed">Speed:</label>
+                    <input type="range" id="speed" min="1" max="60" value="30">
+                </div>
+                <button id="startBtn">Start / Pause</button>
+                <button id="resetBtn">Reset</button>
+
+                <div class="stats">
+                    <div class="stat-item">Generation: <span id="genDisplay">0</span></div>
+                    <div class="stat-item">Population: <span id="popDisplay">0</span></div>
+                    <div class="stat-item">FPS: <span id="fpsDisplay">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="lifeCanvas" width="500" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

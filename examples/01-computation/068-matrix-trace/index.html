@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#068 Matrix Trace - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#068 Matrix Trace</h1>
+            <p class="description">Trace computation with related properties using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="operation">Operation:</label>
+                <select id="operation">
+                    <option value="trace">Simple Trace</option>
+                    <option value="properties">Trace with Properties</option>
+                    <option value="powers">Trace of Powers (tr(A), tr(A²), ...)</option>
+                    <option value="product">Trace of Product tr(AB)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="manual">Manual Input</option>
+                    <option value="random">Random Matrix</option>
+                </select>
+            </div>
+
+            <div id="manualInput">
+                <div class="control-group">
+                    <label for="matrixA">Matrix A (square, rows by newlines):</label>
+                    <textarea id="matrixA" rows="4" placeholder="1, 2, 3&#10;4, 5, 6&#10;7, 8, 9"></textarea>
+                </div>
+                <div id="matrixBInput" class="control-group" style="display: none;">
+                    <label for="matrixB">Matrix B (for product):</label>
+                    <textarea id="matrixB" rows="4" placeholder="9, 8, 7&#10;6, 5, 4&#10;3, 2, 1"></textarea>
+                </div>
+            </div>
+
+            <div id="randomInput" style="display: none;">
+                <div class="control-row">
+                    <div class="control-group third">
+                        <label for="size">Matrix Size (n×n):</label>
+                        <input type="number" id="size" value="100" min="2" max="2000">
+                    </div>
+                    <div class="control-group third">
+                        <label for="minVal">Min Value:</label>
+                        <input type="number" id="minVal" value="-100" step="1">
+                    </div>
+                    <div class="control-group third">
+                        <label for="maxVal">Max Value:</label>
+                        <input type="number" id="maxVal" value="100" step="1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('simple')">Simple 3×3</button>
+                <button class="btn-secondary" onclick="loadSample('identity')">Identity</button>
+                <button class="btn-secondary" onclick="loadSample('diagonal')">Diagonal</button>
+                <button class="btn-secondary" onclick="loadSample('symmetric')">Symmetric</button>
+                <button class="btn-secondary" onclick="loadSample('nilpotent')">Nilpotent</button>
+                <button class="btn-secondary" onclick="loadSample('projection')">Projection</button>
+            </div>
+
+            <div id="powersInput" class="control-group" style="display: none;">
+                <label for="maxPower">Max Power:</label>
+                <input type="number" id="maxPower" value="5" min="1" max="20">
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Trace</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Matrix Trace</h3>
+            <p>The <strong>trace</strong> tr(A) is the sum of diagonal elements: tr(A) = Σ a<sub>ii</sub></p>
+
+            <h4>Key Properties</h4>
+            <ul>
+                <li>tr(A + B) = tr(A) + tr(B)</li>
+                <li>tr(cA) = c · tr(A)</li>
+                <li>tr(AB) = tr(BA)</li>
+                <li>tr(A<sup>T</sup>) = tr(A)</li>
+                <li>tr(A) = sum of eigenvalues</li>
+            </ul>
+
+            <h4>Special Cases</h4>
+            <table class="info-table">
+                <tr><th>Matrix Type</th><th>Trace Property</th></tr>
+                <tr><td>Identity I<sub>n</sub></td><td>tr(I) = n</td></tr>
+                <tr><td>Projection P</td><td>tr(P) = rank(P)</td></tr>
+                <tr><td>Nilpotent N</td><td>tr(N) = 0</td></tr>
+                <tr><td>Idempotent E</td><td>tr(E) = rank(E)</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

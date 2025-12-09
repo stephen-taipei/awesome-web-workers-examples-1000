@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Parallelism - Web Worker Example #249</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dynamic Parallelism</h1>
+            <p class="subtitle">Web Worker Example #249 - Self-Adaptive Parallel Processing</p>
+            <div class="badges">
+                <span class="badge badge-advanced">Advanced</span>
+                <span class="badge badge-worker">Adaptive Workers</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Dynamic Parallelism</h2>
+                <p>Dynamic Parallelism automatically adjusts the number of workers and task distribution based on real-time system load, task complexity, and performance feedback. This approach maximizes throughput while preventing resource contention.</p>
+                <div class="formula-box">
+                    <p><strong>Adaptive Control Algorithms:</strong></p>
+                    <pre class="formula">
+1. Load-Based Scaling:
+   W_optimal = f(CPU_load, Memory_usage, Task_queue)
+   If load > threshold_high: reduce workers
+   If load < threshold_low: increase workers
+
+2. Throughput-Based Adjustment:
+   throughput_rate = completed_tasks / time
+   If throughput_decreasing: adjust parallelism
+   Target: maximize tasks/second
+
+3. Response Time Control:
+   latency = task_completion_time - task_arrival_time
+   Adjust workers to meet latency SLA
+
+4. Efficiency Function:
+   E = Throughput / (Workers × Power)
+   Optimize for maximum efficiency
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="scalingStrategy">Scaling Strategy:</label>
+                    <select id="scalingStrategy">
+                        <option value="throughput">Throughput Optimized</option>
+                        <option value="latency">Latency Optimized</option>
+                        <option value="efficiency" selected>Efficiency Balanced</option>
+                        <option value="aggressive">Aggressive Scaling</option>
+                    </select>
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="minWorkers">Min Workers:</label>
+                        <input type="number" id="minWorkers" value="1" min="1" max="4">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="maxWorkers">Max Workers:</label>
+                        <input type="number" id="maxWorkers" value="8" min="2" max="16">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="taskCount">Total Tasks:</label>
+                        <input type="number" id="taskCount" value="100" min="20" max="500">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="taskVariability">Task Variability:</label>
+                        <select id="taskVariability">
+                            <option value="uniform">Uniform (Same Size)</option>
+                            <option value="normal">Normal Distribution</option>
+                            <option value="bimodal" selected>Bimodal (Mixed)</option>
+                            <option value="heavy_tail">Heavy Tail (Outliers)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="scalingInterval">Scaling Interval (ms):</label>
+                        <input type="number" id="scalingInterval" value="200" min="50" max="1000" step="50">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="targetLatency">Target Latency (ms):</label>
+                        <input type="number" id="targetLatency" value="100" min="10" max="500">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="runBtn" class="btn btn-primary">Run Dynamic Scaling</button>
+                    <button id="runStaticBtn" class="btn btn-secondary">Run Static (Compare)</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Real-Time Metrics</h2>
+                <div class="metrics-display">
+                    <div class="metric-card">
+                        <span class="metric-label">Active Workers</span>
+                        <span id="activeWorkers" class="metric-value">0</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Queue Length</span>
+                        <span id="queueLength" class="metric-value">0</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Throughput</span>
+                        <span id="currentThroughput" class="metric-value">0/s</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Avg Latency</span>
+                        <span id="avgLatency" class="metric-value">0ms</span>
+                    </div>
+                </div>
+                <canvas id="scalingCanvas" width="700" height="250"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Total Time</span>
+                        <span id="totalTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Tasks Completed</span>
+                        <span id="tasksCompleted" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Avg Throughput</span>
+                        <span id="avgThroughput" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Peak Workers</span>
+                        <span id="peakWorkers" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Avg Workers</span>
+                        <span id="avgWorkers" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Scaling Events</span>
+                        <span id="scalingEvents" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Final Latency</span>
+                        <span id="finalLatency" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Efficiency Score</span>
+                        <span id="efficiencyScore" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Scaling History</h3>
+                <canvas id="historyCanvas" width="700" height="200"></canvas>
+            </section>
+
+            <section id="comparisonContainer" class="comparison-section hidden">
+                <h2>Dynamic vs Static Comparison</h2>
+                <div id="comparisonResults" class="comparison-results"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #249</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

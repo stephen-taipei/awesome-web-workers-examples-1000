@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker ODE Solver (RK4) - Example 949</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>ODE Solver (Runge-Kutta)</h1>
+        <p>Solves a system of Ordinary Differential Equations (e.g., Lotka-Volterra Predator-Prey) using RK4 in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label>System:</label>
+                    <select id="systemSelect">
+                        <option value="lotka">Lotka-Volterra (Predator-Prey)</option>
+                        <option value="harmonic">Damped Harmonic Oscillator</option>
+                        <option value="vanDerPol">Van der Pol Oscillator</option>
+                    </select>
+                </div>
+                <div id="paramControls">
+                    <!-- Dynamic params injected here -->
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration (Time):</label>
+                    <input type="number" id="duration" value="50" min="10">
+                </div>
+                <div class="form-group">
+                    <label for="stepSize">Step Size (dt):</label>
+                    <input type="number" id="stepSize" value="0.01" step="0.001">
+                </div>
+                <button id="solveBtn">Solve ODE</button>
+
+                <div class="stats">
+                    <div class="stat-item">Points: <span id="pointCount">-</span></div>
+                    <div class="stat-item">Time: <span id="calcTime">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <div class="chart-container">
+                    <canvas id="timeChart" width="500" height="250"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="phaseChart" width="500" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

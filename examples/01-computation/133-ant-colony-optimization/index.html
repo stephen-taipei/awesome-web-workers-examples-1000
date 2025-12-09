@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ant Colony Optimization - Web Worker Example #133</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ant Colony Optimization</h1>
+            <p class="subtitle">Web Worker Example #133 - Traveling Salesman Problem</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About ACO</h2>
+                <p>Ant Colony Optimization (ACO) is a probabilistic technique inspired by the foraging behavior of ants. It's particularly effective for combinatorial optimization problems like the Traveling Salesman Problem (TSP).</p>
+                <div class="formula-box">
+                    <p><strong>Algorithm:</strong></p>
+                    <pre class="formula">
+Probability of ant k moving from city i to city j:
+
+         [τᵢⱼ]^α × [ηᵢⱼ]^β
+p_ij = ─────────────────────────
+       Σ [τᵢₖ]^α × [ηᵢₖ]^β  (for all k in allowed)
+
+Where:
+  τᵢⱼ = Pheromone level on edge (i,j)
+  ηᵢⱼ = 1/dᵢⱼ = Heuristic visibility (inverse distance)
+  α   = Pheromone importance (typically 1)
+  β   = Heuristic importance (typically 2-5)
+
+Pheromone Update:
+  τᵢⱼ(t+1) = (1 - ρ) × τᵢⱼ(t) + Δτᵢⱼ
+
+  Δτᵢⱼ = Σ Q/Lₖ  (for all ants k that used edge i,j)
+
+Parameters:
+  ρ = Evaporation rate (0.1 - 0.5)
+  Q = Pheromone deposit constant
+  m = Number of ants (typically n cities)
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="numCities">Number of Cities:</label>
+                        <input type="number" id="numCities" value="25" min="5" max="50">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="numAnts">Number of Ants:</label>
+                        <input type="number" id="numAnts" value="25" min="5" max="100">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="maxIterations">Max Iterations:</label>
+                        <input type="number" id="maxIterations" value="100" min="10" max="500">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="alpha">Alpha (pheromone):</label>
+                        <input type="number" id="alpha" value="1" step="0.1" min="0" max="5">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="beta">Beta (heuristic):</label>
+                        <input type="number" id="beta" value="3" step="0.1" min="0" max="10">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="evaporationRate">Evaporation (ρ):</label>
+                        <input type="number" id="evaporationRate" value="0.1" step="0.05" min="0" max="1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="Q">Q (deposit constant):</label>
+                        <input type="number" id="Q" value="100" min="1" max="1000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="elitist">Elitist Ants:</label>
+                        <input type="number" id="elitist" value="5" min="0" max="20">
+                        <span class="hint">Extra pheromone on best tour</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="optimizeBtn" class="btn btn-primary">Start ACO</button>
+                    <button id="stopBtn" class="btn btn-secondary hidden">Stop</button>
+                    <button id="newCitiesBtn" class="btn btn-outline">New Cities</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Initializing colony...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Tour Visualization</h2>
+                <canvas id="tourCanvas" width="550" height="450"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Iterations</span>
+                        <span id="iterCount" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Best Tour Length</span>
+                        <span id="bestLength" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Improvement</span>
+                        <span id="improvement" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Stagnation</span>
+                        <span id="stagnation" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="charts-row">
+                    <div class="chart-container">
+                        <h3>Tour Length History</h3>
+                        <canvas id="lengthCanvas" width="260" height="180"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Avg Pheromone Level</h3>
+                        <canvas id="pheromoneCanvas" width="260" height="180"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #133</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

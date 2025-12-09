@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eager Evaluation - Web Worker Example #247</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Eager Evaluation</h1>
+            <p class="subtitle">Web Worker Example #247 - Immediate Computation</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Eager Evaluation</h2>
+                <p>Eager Evaluation computes values immediately when defined, rather than waiting until they are needed. This approach provides predictable performance, lower latency for first access, and simpler debugging at the cost of potentially computing unused values.</p>
+                <div class="formula-box">
+                    <p><strong>Eager Evaluation Concepts:</strong></p>
+                    <pre class="formula">
+Principles:
+  - Compute all values upfront
+  - Results immediately available
+  - Predictable execution time
+  - No deferred computation overhead
+
+Benefits:
+  - Zero latency on access
+  - Simpler control flow
+  - Easier debugging
+  - Predictable memory usage
+
+Trade-offs:
+  - May compute unused values
+  - Higher initial computation time
+  - More memory if values are large
+
+Use Cases:
+  - Real-time systems
+  - Pre-computed lookup tables
+  - Configuration loading
+  - Caching strategies
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="scenarioSelect">Scenario:</label>
+                    <select id="scenarioSelect">
+                        <option value="lookup">Lookup Table</option>
+                        <option value="precompute">Pre-computed Results</option>
+                        <option value="cache">Cache Warming</option>
+                        <option value="initialization">System Initialization</option>
+                    </select>
+                </div>
+
+                <div id="scenarioDescription" class="problem-desc"></div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="tableSize">Table Size:</label>
+                        <input type="number" id="tableSize" value="1000" min="100" max="10000" step="100">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="accessCount">Access Count:</label>
+                        <input type="number" id="accessCount" value="100" min="10" max="500">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="computeComplexity">Compute Complexity:</label>
+                        <select id="computeComplexity">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="parallelWorkers">Parallel Workers:</label>
+                        <input type="number" id="parallelWorkers" value="4" min="1" max="8">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="runEagerBtn" class="btn btn-primary">Run Eager Evaluation</button>
+                    <button id="compareLazyBtn" class="btn btn-secondary">Compare with Lazy</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Computing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Computation Timeline</h2>
+                <canvas id="eagerCanvas" width="700" height="350"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Values Computed</span>
+                        <span id="valuesComputed" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Values Accessed</span>
+                        <span id="valuesAccessed" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Init Time</span>
+                        <span id="initTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Access Time</span>
+                        <span id="accessTime" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Lazy Total Time</span>
+                        <span id="lazyTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Eager Total Time</span>
+                        <span id="eagerTotalTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Avg Access Latency</span>
+                        <span id="avgLatency" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Utilization</span>
+                        <span id="utilization" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Access Pattern</h3>
+                <div id="accessPattern" class="access-pattern"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #247</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

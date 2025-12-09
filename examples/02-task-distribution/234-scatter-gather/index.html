@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scatter-Gather Pattern - Web Worker Example #234</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Scatter-Gather Pattern</h1>
+            <p class="subtitle">Web Worker Example #234 - 散佈-收集模式</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Scatter-Gather Pattern</h2>
+                <p>Scatter-Gather 模式將資料分散（Scatter）到多個 Worker 並行處理，然後收集（Gather）所有結果進行彙整。這種模式適用於批量處理場景，如搜尋引擎查詢多個資料源、分散式計算等。</p>
+                <div class="formula-box">
+                    <p><strong>Scatter-Gather 執行流程：</strong></p>
+                    <pre class="formula">
+                    ┌─────────────┐
+                    │   Request   │
+                    └──────┬──────┘
+                           │ SCATTER (分散)
+           ┌───────────────┼───────────────┐
+           ▼               ▼               ▼
+    ┌────────────┐  ┌────────────┐  ┌────────────┐
+    │  Worker 1  │  │  Worker 2  │  │  Worker 3  │
+    │  (Shard A) │  │  (Shard B) │  │  (Shard C) │
+    └─────┬──────┘  └─────┬──────┘  └─────┬──────┘
+          │               │               │
+          ▼               ▼               ▼
+    ┌────────────┐  ┌────────────┐  ┌────────────┐
+    │  Result A  │  │  Result B  │  │  Result C  │
+    └─────┬──────┘  └─────┬──────┘  └─────┬──────┘
+          │               │               │
+          └───────────────┼───────────────┘
+                          │ GATHER (收集)
+                          ▼
+                 ┌─────────────────┐
+                 │  Merged Result  │
+                 └─────────────────┘
+
+應用場景：
+• 分散式搜尋 (Search across shards)
+• 並行資料庫查詢
+• Map-Reduce 的 Map 階段
+• 服務聚合 (Service Aggregation)
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="taskSelect">Task Type:</label>
+                    <select id="taskSelect">
+                        <option value="search">Distributed Search (分散式搜尋)</option>
+                        <option value="aggregate">Data Aggregation (資料彙整)</option>
+                        <option value="mapReduce">Map-Reduce Sum (映射化簡)</option>
+                        <option value="bestPrice">Best Price Finder (最佳價格)</option>
+                    </select>
+                </div>
+
+                <div id="taskDescription" class="problem-desc"></div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="workerCount">Worker Count:</label>
+                        <input type="number" id="workerCount" value="4" min="2" max="8">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="dataSize">Data Size per Worker:</label>
+                        <input type="number" id="dataSize" value="100000" min="1000" max="1000000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="timeout">Timeout (ms):</label>
+                        <input type="number" id="timeout" value="5000" min="1000" max="30000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="failureRate">Failure Rate (%):</label>
+                        <input type="number" id="failureRate" value="0" min="0" max="50">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="runBtn" class="btn btn-primary">Execute Scatter-Gather</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Scatter-Gather Visualization</h2>
+                <canvas id="sgCanvas" width="700" height="400"></canvas>
+            </section>
+
+            <section id="workerStatus" class="worker-status-section">
+                <h2>Worker Status</h2>
+                <div id="workerGrid" class="worker-grid"></div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Gathered Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Status</span>
+                        <span id="status" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Final Result</span>
+                        <span id="finalResult" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Time</span>
+                        <span id="totalTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Workers Responded</span>
+                        <span id="workersResponded" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Scatter Time</span>
+                        <span id="scatterTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Fastest Worker</span>
+                        <span id="fastestWorker" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Slowest Worker</span>
+                        <span id="slowestWorker" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Gather Time</span>
+                        <span id="gatherTime" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Individual Worker Results</h3>
+                <div id="workerResults" class="worker-results"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #234</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

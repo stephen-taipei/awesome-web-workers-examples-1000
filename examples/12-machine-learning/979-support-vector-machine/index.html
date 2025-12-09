@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker SVM (SMO) - Example 979</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Support Vector Machine (SMO)</h1>
+        <p>Trains a Support Vector Machine using the Sequential Minimal Optimization (SMO) algorithm in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="kernel">Kernel:</label>
+                    <select id="kernel">
+                        <option value="linear" selected>Linear</option>
+                        <option value="rbf">RBF (Gaussian)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="C">Regularization (C):</label>
+                    <input type="range" id="C" min="0.1" max="10" step="0.1" value="1.0">
+                    <span id="cDisplay">1.0</span>
+                </div>
+                <div class="form-group">
+                    <label for="sigma">RBF Sigma:</label>
+                    <input type="range" id="sigma" min="0.1" max="2.0" step="0.1" value="0.5">
+                    <span id="sigmaDisplay">0.5</span>
+                </div>
+                <div class="form-group">
+                    <button id="genDataBtn">New Data</button>
+                    <button id="trainBtn">Train SVM</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">Epochs: <span id="iterDisplay">0</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="svmCanvas" width="500" height="500"></canvas>
+                <div class="legend">
+                    <span class="dot class1"></span> +1
+                    <span class="dot class0"></span> -1
+                    <span class="line boundary"></span> Boundary
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#007 完美數檢測器 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 檢測完美數、盈數、虧數">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首 -->
+        <header class="header">
+            <h1>完美數檢測器</h1>
+            <p class="subtitle">Perfect Number Checker</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#007</span>
+                <span class="badge badge-secondary">計算密集型</span>
+                <span class="badge badge-success">初級</span>
+            </div>
+            <div class="formula-display">
+                完美數：<span class="highlight">n = σ(n) - n</span>
+                （真因數和等於自身）
+            </div>
+        </header>
+
+        <!-- 單數檢測 -->
+        <section class="card">
+            <h2 class="card-title">檢測數字</h2>
+
+            <div class="form-group">
+                <label class="form-label" for="single-input">輸入數字</label>
+                <input type="text" id="single-input" class="form-input" value="28" placeholder="輸入要檢測的數字">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">快速設定</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-value="6">6 (完美)</button>
+                    <button class="preset-btn" data-value="28">28 (完美)</button>
+                    <button class="preset-btn" data-value="496">496 (完美)</button>
+                    <button class="preset-btn" data-value="8128">8128 (完美)</button>
+                    <button class="preset-btn" data-value="12">12 (盈數)</button>
+                    <button class="preset-btn" data-value="15">15 (虧數)</button>
+                    <button class="preset-btn" data-value="220">220 (親和)</button>
+                </div>
+            </div>
+
+            <div id="error-message" class="error-message hidden"></div>
+
+            <div class="btn-group">
+                <button id="check-single-btn" class="btn btn-primary">檢測分類</button>
+                <button id="analyze-btn" class="btn btn-info">詳細分析</button>
+                <button id="stop-btn" class="btn btn-danger" disabled>停止</button>
+            </div>
+        </section>
+
+        <!-- 範圍搜尋 -->
+        <section class="card">
+            <h2 class="card-title">範圍搜尋與分類</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                搜尋範圍內的完美數，或分類所有數字
+            </p>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="range-start">起始值</label>
+                    <input type="number" id="range-start" class="form-input" value="1" min="1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="range-end">結束值</label>
+                    <input type="number" id="range-end" class="form-input" value="10000" min="1">
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button id="search-range-btn" class="btn btn-secondary">搜尋完美數</button>
+                <button id="classify-range-btn" class="btn btn-secondary">分類統計</button>
+            </div>
+        </section>
+
+        <!-- 梅森完美數 -->
+        <section class="card">
+            <h2 class="card-title">梅森完美數</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                探索偶完美數與梅森質數的關係：2<sup>p-1</sup> × (2<sup>p</sup> - 1)
+            </p>
+
+            <div class="form-group">
+                <label class="form-label" for="max-exponent">最大指數 p</label>
+                <input type="number" id="max-exponent" class="form-input" value="31" min="2" max="61" style="max-width: 200px;">
+            </div>
+
+            <button id="find-mersenne-btn" class="btn btn-info">列出梅森完美數</button>
+        </section>
+
+        <!-- 進度 -->
+        <section class="card">
+            <h2 class="card-title">計算進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 結果區域 -->
+        <section id="single-result" class="card result-section hidden">
+            <h2 class="card-title">檢測結果</h2>
+        </section>
+
+        <section id="analyze-result" class="card result-section hidden">
+            <h2 class="card-title">詳細分析</h2>
+        </section>
+
+        <section id="search-result" class="card result-section hidden">
+            <h2 class="card-title">搜尋結果</h2>
+        </section>
+
+        <section id="classify-result" class="card result-section hidden">
+            <h2 class="card-title">分類統計</h2>
+        </section>
+
+        <section id="mersenne-result" class="card result-section hidden">
+            <h2 class="card-title">梅森完美數列表</h2>
+        </section>
+
+        <!-- 說明 -->
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>完美數：</strong>真因數和等於自身的數，如 6 = 1+2+3</li>
+                <li><strong>虧數 (Deficient)：</strong>真因數和小於自身，如 8: 1+2+4 = 7 < 8</li>
+                <li><strong>盈數 (Abundant)：</strong>真因數和大於自身，如 12: 1+2+3+4+6 = 16 > 12</li>
+                <li><strong>梅森關係：</strong>若 2<sup>p</sup>-1 是質數，則 2<sup>p-1</sup>×(2<sup>p</sup>-1) 是完美數</li>
+                <li><strong>已知完美數：</strong>目前只發現 51 個完美數，全為偶數</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #007 - 完美數檢測器
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

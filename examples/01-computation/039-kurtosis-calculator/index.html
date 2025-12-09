@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#039 Kurtosis Calculator - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#039 Kurtosis Calculator</h1>
+            <p class="description">Calculate distribution kurtosis (tail heaviness) using fourth moment with Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Calculation Type:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="all">All Kurtosis Measures</option>
+                    <option value="excess">Excess Kurtosis (Fisher)</option>
+                    <option value="pearson">Pearson's Kurtosis (β₂)</option>
+                    <option value="generate">Generate & Calculate</option>
+                </select>
+            </div>
+
+            <div class="control-group" id="dataInputGroup">
+                <label for="dataInput">Data (comma or space separated):</label>
+                <textarea id="dataInput" rows="4" placeholder="1, 2, 3, 4, 5, 6, 7, 8, 9, 10"></textarea>
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('normal')">Normal-like</button>
+                    <button class="btn-secondary" onclick="loadSample('heavy')">Heavy Tails</button>
+                    <button class="btn-secondary" onclick="loadSample('light')">Light Tails</button>
+                </div>
+            </div>
+
+            <div id="generateOptions" style="display: none;">
+                <div class="control-group">
+                    <label for="generateCount">Data Points to Generate:</label>
+                    <input type="number" id="generateCount" value="100000" min="1000" max="10000000">
+                </div>
+
+                <div class="control-group">
+                    <label for="distribution">Distribution:</label>
+                    <select id="distribution" onchange="updateDistributionParams()">
+                        <option value="normal">Normal (Mesokurtic)</option>
+                        <option value="uniform">Uniform (Platykurtic)</option>
+                        <option value="laplace">Laplace (Leptokurtic)</option>
+                        <option value="t">Student's t (Variable)</option>
+                        <option value="exponential">Exponential (Leptokurtic)</option>
+                    </select>
+                </div>
+
+                <div id="normalParams" class="dist-params">
+                    <div class="param-row">
+                        <label>Mean: <input type="number" id="normalMean" value="50"></label>
+                        <label>Std Dev: <input type="number" id="normalStdDev" value="15"></label>
+                    </div>
+                </div>
+
+                <div id="uniformParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>Min: <input type="number" id="uniformMin" value="0"></label>
+                        <label>Max: <input type="number" id="uniformMax" value="100"></label>
+                    </div>
+                </div>
+
+                <div id="laplaceParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>μ (location): <input type="number" id="laplaceMu" value="0"></label>
+                        <label>b (scale): <input type="number" id="laplaceB" value="1" step="0.1"></label>
+                    </div>
+                </div>
+
+                <div id="tParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>Degrees of Freedom: <input type="number" id="tDf" value="5" min="3"></label>
+                    </div>
+                </div>
+
+                <div id="exponentialParams" class="dist-params" style="display: none;">
+                    <div class="param-row">
+                        <label>Lambda (λ): <input type="number" id="expLambda" value="1" step="0.1"></label>
+                    </div>
+                </div>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Calculate Kurtosis</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Kurtosis</h3>
+            <p><strong>Kurtosis</strong> measures the "tailedness" of a distribution - how heavy or light the tails are compared to a normal distribution.</p>
+
+            <h4>Kurtosis Types</h4>
+            <div class="kurt-visual">
+                <div class="kurt-item platykurtic">
+                    <div class="kurt-shape">🫓</div>
+                    <div class="kurt-name">Platykurtic</div>
+                    <div class="kurt-value">Excess < 0</div>
+                    <div class="kurt-desc">Light tails, flat peak<br>e.g., Uniform</div>
+                </div>
+                <div class="kurt-item mesokurtic">
+                    <div class="kurt-shape">🔔</div>
+                    <div class="kurt-name">Mesokurtic</div>
+                    <div class="kurt-value">Excess ≈ 0</div>
+                    <div class="kurt-desc">Normal tails<br>e.g., Normal dist.</div>
+                </div>
+                <div class="kurt-item leptokurtic">
+                    <div class="kurt-shape">📍</div>
+                    <div class="kurt-name">Leptokurtic</div>
+                    <div class="kurt-value">Excess > 0</div>
+                    <div class="kurt-desc">Heavy tails, sharp peak<br>e.g., Laplace</div>
+                </div>
+            </div>
+
+            <h4>Formulas</h4>
+            <table class="info-table">
+                <tr>
+                    <th>Measure</th>
+                    <th>Formula</th>
+                    <th>Normal Value</th>
+                </tr>
+                <tr>
+                    <td>Pearson's β₂</td>
+                    <td>m₄ / σ⁴</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>Excess (g₂)</td>
+                    <td>β₂ - 3</td>
+                    <td>0</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#056 Z-Transform - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#056 Z-Transform</h1>
+            <p class="description">Digital Signal Processing and Discrete-Time Systems using Web Workers</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="calcType">Analysis Type:</label>
+                <select id="calcType" onchange="updateOptions()">
+                    <option value="transferfunction">Frequency Response</option>
+                    <option value="impulse">Impulse Response</option>
+                    <option value="step">Step Response</option>
+                    <option value="poles">Pole-Zero Analysis</option>
+                    <option value="filter">Apply Filter</option>
+                    <option value="numerical">Numerical Z-Transform</option>
+                </select>
+            </div>
+
+            <div id="signalGroup" style="display: none;">
+                <div class="control-group">
+                    <label for="signalData">Discrete Signal x[n]:</label>
+                    <textarea id="signalData" rows="3" placeholder="1, 0.9, 0.81, 0.729..."></textarea>
+                </div>
+
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('exponential')">Exponential</button>
+                    <button class="btn-secondary" onclick="loadSample('sine')">Sine Wave</button>
+                    <button class="btn-secondary" onclick="loadSample('noisy')">Noisy Sine</button>
+                </div>
+            </div>
+
+            <div id="tfGroup">
+                <div class="control-group">
+                    <label for="numerator">Numerator B(z) [b₀, b₁, b₂...]:</label>
+                    <input type="text" id="numerator" value="0.2, 0.2, 0.2, 0.2, 0.2" placeholder="0.2, 0.2, 0.2, 0.2, 0.2">
+                </div>
+
+                <div class="control-group">
+                    <label for="denominator">Denominator A(z) [a₀, a₁, a₂...]:</label>
+                    <input type="text" id="denominator" value="1" placeholder="1, -0.5, 0.25">
+                </div>
+
+                <div class="sample-buttons">
+                    <button class="btn-secondary" onclick="loadSample('lowpass')">Lowpass FIR</button>
+                    <button class="btn-secondary" onclick="loadSample('highpass')">Highpass</button>
+                    <button class="btn-secondary" onclick="loadSample('iir')">IIR Filter</button>
+                    <button class="btn-secondary" onclick="loadSample('resonator')">Resonator</button>
+                </div>
+            </div>
+
+            <div id="samplesGroup" class="control-group" style="display: none;">
+                <label for="numSamples">Number of Samples:</label>
+                <input type="number" id="numSamples" value="100" min="10" max="500">
+            </div>
+
+            <div id="pointsGroup" class="control-group">
+                <label for="numPoints">Frequency Points:</label>
+                <input type="number" id="numPoints" value="256" min="64" max="1024">
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Analyze System</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Z-Transform</h3>
+            <p>The <strong>Z-Transform</strong> is the discrete-time equivalent of the Laplace transform. It converts discrete sequences into the z-domain for analysis of digital systems.</p>
+
+            <h4>Definition</h4>
+            <div class="formula-box">
+                <p>X(z) = Z{x[n]} = Σ x[n]z⁻ⁿ</p>
+                <p>where z = re^(jω) is a complex variable</p>
+            </div>
+
+            <h4>Common Z-Transforms</h4>
+            <table class="info-table">
+                <tr>
+                    <th>x[n]</th>
+                    <th>X(z)</th>
+                </tr>
+                <tr>
+                    <td>δ[n]</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>u[n]</td>
+                    <td>z/(z-1)</td>
+                </tr>
+                <tr>
+                    <td>aⁿu[n]</td>
+                    <td>z/(z-a)</td>
+                </tr>
+                <tr>
+                    <td>n×aⁿu[n]</td>
+                    <td>az/(z-a)²</td>
+                </tr>
+            </table>
+
+            <h4>Stability Criterion</h4>
+            <p>A discrete-time system is <strong>stable</strong> if all poles lie inside the unit circle (|z| < 1).</p>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Product Calculator - Web Worker Example #023</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Infinite Product Calculator</h1>
+            <p class="subtitle">Web Worker Example #023 - Mathematical Products</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Infinite Products</h2>
+                <p>Many mathematical constants can be expressed as infinite products. Explore famous products like Wallis's product for π.</p>
+                <div class="product-list">
+                    <span class="product-tag">Wallis (π/2)</span>
+                    <span class="product-tag">Vieta (2/π)</span>
+                    <span class="product-tag">Euler Sine</span>
+                    <span class="product-tag">Telescoping</span>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+                <div class="input-group">
+                    <label for="productType">Product Type:</label>
+                    <select id="productType">
+                        <option value="predefined">Predefined Product</option>
+                        <option value="custom">Custom Expression</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="productSelect">Select Product:</label>
+                    <select id="productSelect">
+                        <option value="wallis">Wallis: ∏(4k²/(4k²-1)) → π/2</option>
+                        <option value="vieta">Vieta: ∏cos(π/2^k) → 2/π</option>
+                        <option value="eulerSine">Euler Sine: ∏(1-x²/(k²π²)) → sin(x)/x</option>
+                        <option value="convergentSimple">Simple: ∏(1+1/k²) → sinh(π)/π</option>
+                        <option value="telescoping">Telescoping: ∏(1-1/k²) → 1/2</option>
+                        <option value="inverseE">Inverse e: ∏(k/(k+1))^k → 1/e</option>
+                        <option value="catalanLike">Catalan-like: ∏(1-1/(4k²)) → 2/π</option>
+                        <option value="pentagonal">Pentagonal: ∏(1-x^k)</option>
+                    </select>
+                </div>
+                <div class="input-group hidden" id="customExpressionGroup">
+                    <label for="customExpression">Expression (use k as variable):</label>
+                    <input type="text" id="customExpression" placeholder="e.g., (2*k)/(2*k+1)" value="(2*k)/(2*k+1)">
+                </div>
+                <div class="input-group hidden" id="paramsGroup">
+                    <div id="paramInputs"></div>
+                </div>
+                <div class="input-group">
+                    <label for="nInput">Number of terms (n):</label>
+                    <input type="number" id="nInput" min="1" value="10000" placeholder="e.g., 10000">
+                </div>
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Calculate</button>
+                    <button id="cancelBtn" class="btn btn-secondary hidden">Cancel</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <h2>Progress</h2>
+                <div class="progress-bar-container"><div id="progressBar" class="progress-bar"></div></div>
+                <p id="progressText" class="progress-text">Starting...</p>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div id="resultContent" class="result-content"></div>
+                <p class="execution-time">Execution time: <span id="executionTime">-</span></p>
+            </section>
+
+            <section id="errorContainer" class="error-section hidden">
+                <h2>Error</h2>
+                <p id="errorMessage" class="error-message"></p>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #023</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Polynomial Regression - Example 972</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Polynomial Regression Fitting</h1>
+        <p>Fits a polynomial curve to non-linear data using Gradient Descent in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="degree">Polynomial Degree:</label>
+                    <input type="range" id="degree" min="1" max="8" value="3">
+                    <span id="degreeDisplay">3</span>
+                </div>
+                <div class="form-group">
+                    <label for="learningRate">Learning Rate:</label>
+                    <input type="range" id="learningRate" min="0.001" max="0.1" step="0.001" value="0.05">
+                    <span id="lrDisplay">0.05</span>
+                </div>
+                <div class="form-group">
+                    <button id="genDataBtn">New Non-Linear Data</button>
+                    <button id="trainBtn">Fit Curve</button>
+                    <button id="stopBtn" disabled>Stop</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">Epoch: <span id="epochDisplay">0</span></div>
+                    <div class="stat-item">MSE Loss: <span id="lossDisplay">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="polyCanvas" width="500" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

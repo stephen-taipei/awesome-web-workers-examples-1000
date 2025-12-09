@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artificial Bee Colony - Web Worker Example #134</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Artificial Bee Colony</h1>
+            <p class="subtitle">Web Worker Example #134 - Swarm Intelligence</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About ABC Algorithm</h2>
+                <p>The Artificial Bee Colony (ABC) algorithm simulates the foraging behavior of honey bees. It uses three types of bees: employed bees, onlooker bees, and scout bees to explore and exploit the solution space.</p>
+                <div class="formula-box">
+                    <p><strong>Algorithm:</strong></p>
+                    <pre class="formula">
+Bee Types:
+  Employed Bees  - Exploit food sources (solutions)
+  Onlooker Bees  - Select sources based on quality
+  Scout Bees     - Explore new random sources
+
+1. Employed Bee Phase:
+   v_ij = x_ij + φ_ij × (x_ij - x_kj)
+   where φ ∈ [-1, 1], k is random neighbor, j is random dimension
+
+2. Onlooker Bee Phase:
+   Select source i with probability:
+   p_i = fitness_i / Σ fitness_k
+   Then apply same mutation as employed bee
+
+3. Scout Bee Phase:
+   If source not improved for 'limit' cycles:
+   Replace with random solution in search space
+
+Parameters:
+  Colony Size = Number of food sources × 2
+  limit = n × D (typically)
+  D = Problem dimension
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Configuration</h2>
+
+                <div class="input-group">
+                    <label for="functionSelect">Test Function:</label>
+                    <select id="functionSelect">
+                        <option value="rastrigin">Rastrigin (Many Local Minima)</option>
+                        <option value="ackley">Ackley Function</option>
+                        <option value="rosenbrock">Rosenbrock</option>
+                        <option value="sphere">Sphere Function</option>
+                        <option value="griewank">Griewank Function</option>
+                    </select>
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="colonySize">Colony Size:</label>
+                        <input type="number" id="colonySize" value="40" min="10" max="200">
+                        <span class="hint">Employed + Onlooker bees</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="maxCycles">Max Cycles:</label>
+                        <input type="number" id="maxCycles" value="200" min="10" max="1000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="limit">Abandonment Limit:</label>
+                        <input type="number" id="limit" value="50" min="10" max="200">
+                        <span class="hint">Trials before scout phase</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="modificationRate">Modification Rate:</label>
+                        <input type="number" id="modificationRate" value="0.8" step="0.05" min="0" max="1">
+                        <span class="hint">Probability to modify dimension</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="optimizeBtn" class="btn btn-primary">Start ABC</button>
+                    <button id="stopBtn" class="btn btn-secondary hidden">Stop</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Initializing colony...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Food Source Distribution</h2>
+                <canvas id="colonyCanvas" width="550" height="450"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Cycles</span>
+                        <span id="cycleCount" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Best Position</span>
+                        <span id="bestPos" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Best Fitness</span>
+                        <span id="bestFitness" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Scout Events</span>
+                        <span id="scoutEvents" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="charts-row">
+                    <div class="chart-container">
+                        <h3>Fitness History</h3>
+                        <canvas id="fitnessCanvas" width="260" height="180"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Population Diversity</h3>
+                        <canvas id="diversityCanvas" width="260" height="180"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #134</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

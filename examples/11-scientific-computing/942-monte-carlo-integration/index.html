@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Monte Carlo Integration - Example 942</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Monte Carlo Integration</h1>
+        <p>Estimates the definite integral of a function by random sampling (Rejection Method) in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="funcStr">Function f(x) =</label>
+                    <input type="text" id="funcStr" value="sin(x) * x">
+                </div>
+                <div class="form-group row">
+                    <div>
+                        <label>Min X (a):</label>
+                        <input type="number" id="minX" value="0">
+                    </div>
+                    <div>
+                        <label>Max X (b):</label>
+                        <input type="number" id="maxX" value="3.14">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div>
+                        <label>Y Bound (h):</label>
+                        <input type="number" id="maxY" value="2">
+                        <small>Must be > max(f(x))</small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Speed:</label>
+                    <div class="speed-controls">
+                        <label><input type="radio" name="speed" value="500"> Slow</label>
+                        <label><input type="radio" name="speed" value="16" checked> Fast</label>
+                    </div>
+                </div>
+                <button id="startBtn">Start Integration</button>
+                <button id="stopBtn" disabled>Stop</button>
+
+                <div class="stats">
+                    <div class="stat-item">Total Samples: <span id="totalCount">0</span></div>
+                    <div class="stat-item">Integral: <span id="integralVal">-</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <canvas id="mcCanvas" width="600" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

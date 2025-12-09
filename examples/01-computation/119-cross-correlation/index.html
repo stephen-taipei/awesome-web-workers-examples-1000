@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#119 Cross-Correlation - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#119 Cross-Correlation</h1>
+            <p class="description">Pattern matching and signal similarity using FFT-based correlation</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="correlationType">Correlation Type:</label>
+                <select id="correlationType">
+                    <option value="cross" selected>Cross-Correlation (x ⋆ y)</option>
+                    <option value="auto">Auto-Correlation (x ⋆ x)</option>
+                    <option value="normalized">Normalized Cross-Correlation</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="signal1Type">Signal 1 Type:</label>
+                <select id="signal1Type" onchange="updateSignalOptions()">
+                    <option value="sine">Sine Wave</option>
+                    <option value="cosine">Cosine Wave</option>
+                    <option value="pulse">Single Pulse</option>
+                    <option value="chirp">Chirp</option>
+                    <option value="noise">Random Noise</option>
+                    <option value="custom">Custom Values</option>
+                </select>
+            </div>
+
+            <div id="signal1Options" class="control-group">
+                <label>Signal 1 Parameters:</label>
+                <div class="param-row">
+                    <span>Frequency:</span>
+                    <input type="number" id="freq1" value="5" min="1" max="50">
+                    <span>Amplitude:</span>
+                    <input type="number" id="amplitude1" value="100" step="10">
+                </div>
+            </div>
+
+            <div id="custom1Options" class="control-group" style="display: none;">
+                <label>Custom Signal 1 (comma-separated):</label>
+                <input type="text" id="customValues1" placeholder="e.g., 0, 1, 2, 3, 2, 1, 0">
+            </div>
+
+            <div id="signal2Controls">
+                <div class="control-group">
+                    <label for="signal2Type">Signal 2 Type:</label>
+                    <select id="signal2Type" onchange="updateSignalOptions()">
+                        <option value="sine">Sine Wave</option>
+                        <option value="cosine">Cosine Wave</option>
+                        <option value="pulse">Single Pulse</option>
+                        <option value="shifted">Shifted Signal 1</option>
+                        <option value="noisy-copy">Noisy Copy of Signal 1</option>
+                        <option value="custom">Custom Values</option>
+                    </select>
+                </div>
+
+                <div id="signal2Options" class="control-group">
+                    <label>Signal 2 Parameters:</label>
+                    <div class="param-row">
+                        <span>Frequency:</span>
+                        <input type="number" id="freq2" value="5" min="1" max="50">
+                        <span>Amplitude:</span>
+                        <input type="number" id="amplitude2" value="100" step="10">
+                        <span>Shift:</span>
+                        <input type="number" id="shift" value="20" min="-100" max="100">
+                    </div>
+                </div>
+
+                <div id="custom2Options" class="control-group" style="display: none;">
+                    <label>Custom Signal 2 (comma-separated):</label>
+                    <input type="text" id="customValues2" placeholder="e.g., 0, 1, 2, 3, 2, 1, 0">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="signalSize">Signal Size:</label>
+                <select id="signalSize">
+                    <option value="64">64 samples</option>
+                    <option value="128" selected>128 samples</option>
+                    <option value="256">256 samples</option>
+                    <option value="512">512 samples</option>
+                    <option value="1024">1024 samples</option>
+                </select>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadPreset('delay')">Time Delay Detection</button>
+                <button class="btn-secondary" onclick="loadPreset('pattern')">Pattern Matching</button>
+                <button class="btn-secondary" onclick="loadPreset('periodic')">Periodicity Detection</button>
+                <button class="btn-secondary" onclick="loadPreset('similarity')">Similarity Measure</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute Correlation</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Cross-Correlation</h3>
+            <p>Cross-correlation measures the similarity between two signals as a function of time lag. It's used for pattern matching, time delay estimation, and signal detection.</p>
+
+            <h4>Cross-Correlation Formula</h4>
+            <div class="formula-box">
+                <div class="formula">(x ⋆ y)[n] = Σₖ x[k] · y[k + n]</div>
+                <div class="formula-note">Unlike convolution, no time reversal is applied</div>
+            </div>
+
+            <h4>FFT-Based Computation</h4>
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Correlation Theorem</div>
+                    <div class="formula">x ⋆ y = IFFT(X* · Y)</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-title">X* = conjugate</div>
+                    <div class="formula">X*[k] = Re(X[k]) - j·Im(X[k])</div>
+                </div>
+            </div>
+
+            <h4>Types of Correlation</h4>
+            <ul>
+                <li><strong>Cross-correlation:</strong> Similarity between two different signals</li>
+                <li><strong>Auto-correlation:</strong> Signal correlated with itself - reveals periodicity</li>
+                <li><strong>Normalized:</strong> Scaled to [-1, 1] range for comparison</li>
+            </ul>
+
+            <h4>Applications</h4>
+            <ul>
+                <li><strong>Time delay estimation:</strong> Find lag where correlation peaks</li>
+                <li><strong>Pattern matching:</strong> Locate template in larger signal</li>
+                <li><strong>Periodicity detection:</strong> Auto-correlation shows repeating patterns</li>
+                <li><strong>Signal detection:</strong> Find known signal in noise</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

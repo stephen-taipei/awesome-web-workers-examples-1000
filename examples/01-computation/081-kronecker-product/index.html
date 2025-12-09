@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#081 Kronecker Product - Web Worker Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>#081 Kronecker Product</h1>
+            <p class="description">Compute tensor product A ⊗ B using block-wise computation</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="operation">Operation:</label>
+                <select id="operation">
+                    <option value="kronecker">Kronecker Product (A ⊗ B)</option>
+                    <option value="kroneckerVec">Kronecker × Vector</option>
+                    <option value="kroneckerSum">Kronecker Sum (A ⊕ B)</option>
+                    <option value="benchmark">Benchmark</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputMode">Input Mode:</label>
+                <select id="inputMode" onchange="toggleInputMode()">
+                    <option value="random">Random Matrices</option>
+                    <option value="manual">Manual Input</option>
+                </select>
+            </div>
+
+            <div id="randomInput">
+                <div class="control-row">
+                    <div class="control-group quarter">
+                        <label for="rowsA">A Rows:</label>
+                        <input type="number" id="rowsA" value="50" min="1" max="200">
+                    </div>
+                    <div class="control-group quarter">
+                        <label for="colsA">A Cols:</label>
+                        <input type="number" id="colsA" value="50" min="1" max="200">
+                    </div>
+                    <div class="control-group quarter">
+                        <label for="rowsB">B Rows:</label>
+                        <input type="number" id="rowsB" value="20" min="1" max="200">
+                    </div>
+                    <div class="control-group quarter">
+                        <label for="colsB">B Cols:</label>
+                        <input type="number" id="colsB" value="20" min="1" max="200">
+                    </div>
+                </div>
+            </div>
+
+            <div id="manualInput" style="display: none;">
+                <div class="control-group">
+                    <label for="matrixA">Matrix A (rows by newlines, comma separated):</label>
+                    <textarea id="matrixA" rows="3" placeholder="1, 2&#10;3, 4"></textarea>
+                </div>
+                <div class="control-group">
+                    <label for="matrixB">Matrix B (rows by newlines, comma separated):</label>
+                    <textarea id="matrixB" rows="3" placeholder="0, 5&#10;6, 7"></textarea>
+                </div>
+            </div>
+
+            <div class="sample-buttons">
+                <button class="btn-secondary" onclick="loadSample('identity')">Identity ⊗ Identity</button>
+                <button class="btn-secondary" onclick="loadSample('pauli')">Pauli Matrices</button>
+                <button class="btn-secondary" onclick="loadSample('hadamard')">Hadamard Gates</button>
+                <button class="btn-secondary" onclick="loadSample('random')">Random Large</button>
+            </div>
+
+            <button id="calculateBtn" class="btn-primary" onclick="calculate()">Compute</button>
+        </div>
+
+        <div id="progress" class="progress-container" style="display: none;">
+            <div class="progress-bar">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-section">
+            <h3>About Kronecker Product</h3>
+            <p>The Kronecker product A ⊗ B creates a block matrix where each element a_ij is replaced by a_ij × B.</p>
+
+            <h4>Properties</h4>
+            <ul>
+                <li><strong>Dimensions</strong>: (m×n) ⊗ (p×q) = (mp × nq)</li>
+                <li><strong>Mixed-product</strong>: (A ⊗ B)(C ⊗ D) = (AC) ⊗ (BD)</li>
+                <li><strong>Transpose</strong>: (A ⊗ B)^T = A^T ⊗ B^T</li>
+                <li><strong>Trace</strong>: tr(A ⊗ B) = tr(A) × tr(B)</li>
+            </ul>
+
+            <h4>Kronecker Sum</h4>
+            <p>A ⊕ B = A ⊗ I_n + I_m ⊗ B (for square matrices)</p>
+
+            <h4>Applications</h4>
+            <ul>
+                <li>Quantum computing (tensor product of qubits)</li>
+                <li>Signal processing (2D filters)</li>
+                <li>Graph theory (Cartesian product)</li>
+                <li>Solving matrix equations (vec operator)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

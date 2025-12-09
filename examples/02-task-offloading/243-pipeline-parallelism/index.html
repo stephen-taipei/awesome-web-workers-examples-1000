@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pipeline Parallelism - Web Worker Example #243</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pipeline Parallelism</h1>
+            <p class="subtitle">Web Worker Example #243 - Stage-based Parallel Processing</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Pipeline Parallelism</h2>
+                <p>Pipeline Parallelism divides work into sequential stages, where each stage runs in parallel on different data items. Like an assembly line, once the pipeline fills up, it achieves continuous throughput with overlapping execution.</p>
+                <div class="formula-box">
+                    <p><strong>Pipeline Processing Model:</strong></p>
+                    <pre class="formula">
+Sequential Processing (N items, S stages):
+  Time = N × (T₁ + T₂ + T₃ + ... + Tₛ)
+
+Pipeline Processing:
+  Item 1:  [Stage1][Stage2][Stage3]
+  Item 2:         [Stage1][Stage2][Stage3]
+  Item 3:                [Stage1][Stage2][Stage3]
+  ...
+
+Time = (S-1) × T_stage + N × T_stage
+     = (N + S - 1) × T_stage
+
+Speedup ≈ S (when N >> S)
+
+Pipeline Properties:
+- Latency: Time for one item = S × T_stage
+- Throughput: 1 item per T_stage (steady state)
+- Fill time: (S-1) × T_stage before full throughput
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Pipeline Configuration</h2>
+
+                <div class="input-group">
+                    <label for="pipelineType">Pipeline Type:</label>
+                    <select id="pipelineType">
+                        <option value="imageProcess">Image Processing Pipeline</option>
+                        <option value="dataETL">Data ETL Pipeline</option>
+                        <option value="textProcess">Text Processing Pipeline</option>
+                    </select>
+                </div>
+
+                <div id="stageDescription" class="stage-description"></div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="itemCount">Items to Process:</label>
+                        <input type="number" id="itemCount" value="20" min="5" max="100">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="stageDelay">Stage Delay (ms):</label>
+                        <input type="number" id="stageDelay" value="200" min="50" max="1000">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="runPipelineBtn" class="btn btn-primary">Run Pipeline</button>
+                    <button id="runSequentialBtn" class="btn btn-secondary">Run Sequential</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="pipelineVisualization" class="pipeline-section hidden">
+                <h2>Pipeline Visualization</h2>
+                <div class="pipeline-container">
+                    <div class="pipeline-stages" id="pipelineStages">
+                        <!-- Stages generated dynamically -->
+                    </div>
+                    <div class="pipeline-items" id="pipelineItems">
+                        <!-- Item progress shown here -->
+                    </div>
+                </div>
+                <div class="pipeline-stats">
+                    <p>Items in pipeline: <span id="itemsInPipeline">0</span></p>
+                    <p>Items completed: <span id="itemsCompleted">0</span> / <span id="totalItems">20</span></p>
+                    <p>Current throughput: <span id="currentThroughput">0</span> items/sec</p>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Pipeline Timeline</h2>
+                <canvas id="timelineCanvas" width="700" height="400"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Mode</span>
+                        <span id="processingMode" class="result-value">-</span>
+                    </div>
+                    <div class="result-item highlight-box">
+                        <span class="result-label">Total Time</span>
+                        <span id="totalTime" class="result-value highlight">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Throughput</span>
+                        <span id="throughput" class="result-value highlight">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Avg Latency</span>
+                        <span id="avgLatency" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <div class="comparison-section">
+                    <h3>Performance Comparison</h3>
+                    <div class="comparison-bars">
+                        <div class="comparison-bar">
+                            <span class="bar-label">Pipeline</span>
+                            <div class="bar-container">
+                                <div class="bar pipeline-bar" id="pipelineBar"></div>
+                            </div>
+                            <span class="bar-value" id="pipelineTimeValue">-</span>
+                        </div>
+                        <div class="comparison-bar">
+                            <span class="bar-label">Sequential</span>
+                            <div class="bar-container">
+                                <div class="bar sequential-bar" id="sequentialBar"></div>
+                            </div>
+                            <span class="bar-value" id="sequentialTimeValue">-</span>
+                        </div>
+                    </div>
+                    <div class="speedup-display">
+                        <span>Pipeline Speedup: </span>
+                        <span id="speedupValue" class="speedup-value">-</span>
+                    </div>
+                </div>
+
+                <div class="stage-metrics">
+                    <h3>Stage Performance</h3>
+                    <div id="stageMetrics" class="metrics-grid">
+                        <!-- Stage metrics generated dynamically -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #243</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

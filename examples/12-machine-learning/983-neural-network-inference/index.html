@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker NN Inference Benchmark - Example 983</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Neural Network Inference Benchmark</h1>
+        <p>Measures the inference throughput (samples/second) of a Deep Neural Network running in a Web Worker.</p>
+        
+        <div class="layout">
+            <div class="controls">
+                <div class="form-group">
+                    <label for="layerConfig">Hidden Layers (comma sep):</label>
+                    <input type="text" id="layerConfig" value="256, 128, 64">
+                    <small>Input: 784 (MNIST size), Output: 10</small>
+                </div>
+                <div class="form-group">
+                    <label for="batchSize">Batch Size:</label>
+                    <select id="batchSize">
+                        <option value="1">1 (Real-time)</option>
+                        <option value="32">32</option>
+                        <option value="64" selected>64</option>
+                        <option value="128">128</option>
+                        <option value="512">512</option>
+                    </select>
+                </div>
+                <button id="startBtn">Start Benchmark</button>
+                <button id="stopBtn" disabled>Stop</button>
+
+                <div class="stats">
+                    <div class="stat-item">Throughput: <span id="throughput">-</span> samples/s</div>
+                    <div class="stat-item">Latency per Batch: <span id="latency">-</span> ms</div>
+                    <div class="stat-item">Total Samples: <span id="totalSamples">0</span></div>
+                    <div class="stat-item">Status: <span id="statusText">Idle</span></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <h3>Live Latency Graph</h3>
+                <canvas id="perfCanvas" width="500" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
