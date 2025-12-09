@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Parallelism - Web Worker Example #242</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Batch Parallelism</h1>
+            <p class="subtitle">Web Worker Example #242 - Efficient Batch Processing</p>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Batch Parallelism</h2>
+                <p>Batch Parallelism groups multiple small tasks into batches for efficient parallel processing. Instead of processing items one-by-one, batching reduces scheduling overhead, communication costs, and improves throughput for large numbers of small tasks.</p>
+                <div class="formula-box">
+                    <p><strong>Batch Processing Model:</strong></p>
+                    <pre class="formula">
+Individual Processing (N items, K workers):
+  Overhead per item: O_comm + O_schedule
+  Total overhead: N × (O_comm + O_schedule)
+
+Batch Processing (N items, B batches, K workers):
+  Items per batch: N / B
+  Total overhead: B × (O_comm + O_schedule)
+  Savings: (N - B) × overhead_per_item
+
+Optimal Batch Size:
+  Too small → High overhead (like individual)
+  Too large → Poor load balancing
+  Optimal ≈ N / (K × 2-4)
+
+Throughput = Items / Time
+Efficiency = Actual_throughput / Theoretical_max
+                    </pre>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Batch Configuration</h2>
+
+                <div class="input-group">
+                    <label for="taskType">Task Type:</label>
+                    <select id="taskType">
+                        <option value="imageProcess">Image Processing (blur filters)</option>
+                        <option value="dataTransform">Data Transformation</option>
+                        <option value="calculation">Mathematical Calculations</option>
+                    </select>
+                </div>
+
+                <div class="params-grid">
+                    <div class="input-group">
+                        <label for="totalItems">Total Items:</label>
+                        <input type="number" id="totalItems" value="1000" min="100" max="10000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="workerCount">Workers:</label>
+                        <input type="number" id="workerCount" value="4" min="1" max="8">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="batchSize">Batch Size:</label>
+                        <input type="number" id="batchSize" value="50" min="1" max="500">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="itemComplexity">Item Complexity:</label>
+                        <select id="itemComplexity">
+                            <option value="light">Light (fast)</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="heavy">Heavy (slow)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="batch-info">
+                    <p>Total batches: <span id="totalBatches">20</span> | Items per worker: <span id="itemsPerWorker">250</span></p>
+                </div>
+
+                <div class="button-group">
+                    <button id="runBatchBtn" class="btn btn-primary">Run Batch Processing</button>
+                    <button id="runIndividualBtn" class="btn btn-secondary">Run Individual Processing</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <h2>Processing Progress</h2>
+                <div class="overall-progress">
+                    <div class="progress-bar-container large">
+                        <div id="overallProgressBar" class="progress-bar"></div>
+                    </div>
+                    <p id="overallProgressText">0 / 1000 items processed</p>
+                </div>
+
+                <div class="worker-progress-grid" id="workerProgressGrid">
+                    <!-- Worker progress bars generated dynamically -->
+                </div>
+
+                <div class="batch-status">
+                    <p>Batches completed: <span id="batchesCompleted">0</span> / <span id="totalBatchCount">20</span></p>
+                    <p>Current throughput: <span id="currentThroughput">0</span> items/sec</p>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Performance Visualization</h2>
+                <canvas id="performanceCanvas" width="700" height="350"></canvas>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Mode</span>
+                        <span id="processingMode" class="result-value">-</span>
+                    </div>
+                    <div class="result-item highlight-box">
+                        <span class="result-label">Total Time</span>
+                        <span id="totalTime" class="result-value highlight">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Throughput</span>
+                        <span id="throughput" class="result-value highlight">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Overhead</span>
+                        <span id="overhead" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-item" id="batchResult">
+                        <h3>Batch Processing</h3>
+                        <p>Time: <span id="batchTime">-</span></p>
+                        <p>Throughput: <span id="batchThroughput">-</span></p>
+                        <p>Overhead: <span id="batchOverhead">-</span></p>
+                    </div>
+                    <div class="comparison-item" id="individualResult">
+                        <h3>Individual Processing</h3>
+                        <p>Time: <span id="individualTime">-</span></p>
+                        <p>Throughput: <span id="individualThroughput">-</span></p>
+                        <p>Overhead: <span id="individualOverhead">-</span></p>
+                    </div>
+                </div>
+
+                <div class="speedup-display" id="speedupDisplay">
+                    <h3>Batch Speedup</h3>
+                    <span id="speedupValue" class="speedup-value">-</span>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #242</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
