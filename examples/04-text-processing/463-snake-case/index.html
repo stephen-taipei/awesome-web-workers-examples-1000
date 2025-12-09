@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Case Conversion - Web Worker Example #463</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Snake Case Conversion</h1>
+            <p class="subtitle">Web Worker Example #463 - Naming Convention Converter</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Beginner</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Snake Case</h2>
+                <p>Converts text into various snake-like cases: <code>snake_case</code>, <code>kebab-case</code>, or <code>SCREAMING_SNAKE_CASE</code>.</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="format">Output Format:</label>
+                    <select id="format">
+                        <option value="snake">snake_case</option>
+                        <option value="kebab">kebab-case</option>
+                        <option value="screaming">SCREAMING_SNAKE</option>
+                        <option value="dot">dot.case</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="inputText">Input Text:</label>
+                    <textarea id="inputText" rows="6" placeholder="Enter text...">helloWorld UserID This is a test</textarea>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary">Convert</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div class="input-group">
+                    <textarea id="outputText" rows="6" readonly></textarea>
+                </div>
+
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

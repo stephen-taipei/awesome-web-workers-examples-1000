@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traditional/Simplified Conversion - Web Worker Example #458</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Traditional/Simplified Conversion</h1>
+            <p class="subtitle">Web Worker Example #458 - Chinese Character Conversion</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Beginner</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Conversion</h2>
+                <p>Converts Chinese text between Traditional (繁體) and Simplified (简体) characters using a mapping table.</p>
+                <p class="note">Note: This example uses a small demonstration dictionary.</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="conversionMode">Mode:</label>
+                    <select id="conversionMode">
+                        <option value="s2t">Simplified to Traditional (簡 -> 繁)</option>
+                        <option value="t2s">Traditional to Simplified (繁 -> 簡)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="inputText">Input Text:</label>
+                    <textarea id="inputText" rows="6" placeholder="输入中文... / 輸入中文...">忧郁的台湾乌龟 / 憂鬱的臺灣烏龜</textarea>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary">Convert</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div class="input-group">
+                    <textarea id="outputText" rows="6" readonly></textarea>
+                </div>
+
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Chars Converted</span>
+                        <span id="charCount" class="result-value">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
