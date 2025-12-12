@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker 基礎訊息傳遞 (Basic Message Passing)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Web Worker 基礎訊息傳遞 (Basic Message Passing)</h1>
+        <p>此示例演示了主執行緒與 Worker 之間最基礎的雙向通訊機制。透過計算訊息往返時間 (RTT) 來評估通訊開銷。</p>
+
+        <div class="controls">
+            <input type="text" id="messageInput" placeholder="輸入要發送的訊息..." value="Hello World!">
+            <button id="sendBtn">發送訊息 (Ping)</button>
+            <button id="stressTestBtn">壓力測試 (1000次)</button>
+        </div>
+
+        <div class="stats-panel">
+            <div class="stat-item">
+                <span class="label">最近 RTT:</span>
+                <span id="lastRtt" class="value">--</span> <span class="unit">ms</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">平均 RTT:</span>
+                <span id="avgRtt" class="value">--</span> <span class="unit">ms</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">訊息總數:</span>
+                <span id="msgCount" class="value">0</span>
+            </div>
+        </div>
+
+        <div class="log-panel">
+            <h3>通訊日誌</h3>
+            <ul id="logList"></ul>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

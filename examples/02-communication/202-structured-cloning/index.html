@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker 結構化克隆 (Structured Cloning)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Web Worker 結構化克隆 (Structured Cloning)</h1>
+        <p>此示例展示了 Web Worker 通訊時使用的「結構化克隆演算法」。與 JSON.stringify 不同，它可以處理更複雜的資料類型（如 Date, RegExp, Map, Set, Blob 等）以及循環引用。</p>
+
+        <div class="demo-section">
+            <div class="control-group">
+                <button id="btnBasic">基礎物件 (Object/Array)</button>
+                <button id="btnDateRegExp">特殊類型 (Date/RegExp)</button>
+                <button id="btnMapSet">集合類型 (Map/Set)</button>
+                <button id="btnTypedArray">二進制 (TypedArray)</button>
+                <button id="btnCircular">循環引用 (Circular Ref)</button>
+                <button id="btnError" class="error-btn">不可克隆 (Function/DOM)</button>
+            </div>
+        </div>
+
+        <div class="comparison-panel">
+            <div class="panel source">
+                <h3>原始資料 (主執行緒)</h3>
+                <pre id="sourceDisplay"></pre>
+            </div>
+            <div class="panel result">
+                <h3>Worker 回傳資料</h3>
+                <pre id="resultDisplay"></pre>
+                <div id="checkResult" class="check-result"></div>
+            </div>
+        </div>
+
+        <div class="log-panel">
+            <h3>執行日誌</h3>
+            <ul id="logList"></ul>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
