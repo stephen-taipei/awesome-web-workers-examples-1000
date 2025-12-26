@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 膚色檢測 (Skin Color Detection)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>膚色檢測 (Skin Color Detection)</h1>
+            <p class="subtitle">利用 Web Worker 與 YCbCr 顏色空間進行膚色區域分割</p>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">YCbCr</span>
+                <span class="badge badge-beginner">Intermediate</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能描述</h2>
+            <p>本示例演示如何在 Web Worker 中進行膚色檢測。膚色檢測常作為人臉檢測或手勢識別的預處理步驟。本示例使用 YCbCr 顏色空間，因為在該空間中膚色聚集在一個較緊湊的區域，不受亮度 (Y) 影響太大。</p>
+            <div class="formula-box">
+                <div class="formula">
+Skin Region Condition (YCbCr):
+Cb in [77, 127]
+Cr in [133, 173]
+                </div>
+            </div>
+        </section>
+
+        <section class="upload-section">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">🖐️</div>
+                <p>點擊或拖圖至此處上傳圖片 (建議包含皮膚區域)</p>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+            </div>
+        </section>
+
+        <section class="controls hidden" id="controls">
+            <div class="input-group">
+                <label for="thresholdType">顯示模式:</label>
+                <select id="thresholdType">
+                    <option value="mask">顯示二值遮罩 (Binary Mask)</option>
+                    <option value="overlay">疊加原圖 (Overlay)</option>
+                    <option value="extract">僅顯示膚色 (Extract)</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary">開始檢測</button>
+            </div>
+        </section>
+
+        <section class="results hidden" id="results">
+            <div class="image-comparison">
+                <div class="image-panel">
+                    <h3>原始圖片</h3>
+                    <canvas id="sourceCanvas"></canvas>
+                    <div class="image-info" id="sourceInfo"></div>
+                </div>
+                <div class="image-panel">
+                    <h3>檢測結果</h3>
+                    <canvas id="targetCanvas"></canvas>
+                    <div class="image-info" id="targetInfo"></div>
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">處理耗時</span>
+                    <span class="result-value" id="processTime">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">膚色佔比</span>
+                    <span class="result-value" id="skinRatio">-</span>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - 0389 Skin Color Detection</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

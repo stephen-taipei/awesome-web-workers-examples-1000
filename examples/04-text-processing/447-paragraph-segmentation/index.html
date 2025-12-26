@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 段落分割 (Paragraph Segmentation)</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .paragraph-box {
+            background: rgba(0,0,0,0.3);
+            border-left: 4px solid #10b981;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+        .paragraph-meta {
+            font-size: 0.8rem;
+            color: #6ee7b7;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 段落分割</h1>
+            <div class="subtitle">Paragraph Segmentation</div>
+            <div class="badges">
+                <span class="badge badge-beginner">文本處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+            </div>
+        </header>
+
+        <section class="input-section">
+            <textarea id="inputText" placeholder="請在此輸入包含多個段落的文本..."></textarea>
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary">分割段落</button>
+            </div>
+        </section>
+
+        <section class="output-section">
+            <h2>分割結果 <span id="timeTaken" style="font-size: 0.9rem; color: #6ee7b7; font-weight: normal; margin-left: 1rem;"></span></h2>
+            <div class="results-area" id="outputArea">
+                <!-- Paragraphs go here -->
+            </div>
+        </section>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

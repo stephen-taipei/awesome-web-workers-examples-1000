@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Stitching - Web Worker Example #334</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Image Stitching</h1>
+            <p class="subtitle">Web Worker Example #334 - Panoramic Stitching</p>
+            <div class="badges">
+                <span class="badge badge-advanced">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Image Stitching</h2>
+                <p>Combines multiple overlapping images into a single panoramic image. This demo implements a simplified horizontal stitcher that finds the optimal overlap alignment.</p>
+            </section>
+
+            <section class="controls">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop 2 overlapping images here (Left then Right)</p>
+                    <input type="file" id="fileInput" accept="image/*" multiple hidden>
+                </div>
+                <div id="fileList" style="text-align:center; color: #aaa; margin-bottom: 1rem;"></div>
+
+                <div class="button-group">
+                    <button id="stitchBtn" class="btn btn-primary" disabled>Stitch Images</button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <div class="image-comparison" id="previewContainer">
+                    <!-- Loaded images will appear here -->
+                </div>
+
+                <div class="image-panel hidden" id="resultPanel">
+                    <h3>Stitched Result</h3>
+                    <canvas id="resultCanvas"></canvas>
+                    <div id="status">Ready</div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

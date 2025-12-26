@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 模板匹配 (Template Matching)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>模板匹配 (Template Matching)</h1>
+            <div class="subtitle">NCC (Normalized Cross Correlation) 圖案搜尋</div>
+            <div class="badges">
+                <span class="badge badge-beginner">影像處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">NCC</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能說明</h2>
+            <p>此範例使用標準化互相關 (NCC) 在主圖片中搜尋與模板圖片最相似的區域。</p>
+            <ul>
+                <li>上傳主圖片與模板圖片</li>
+                <li>或在主圖片上框選區域作為模板</li>
+                <li>計算 NCC 並標記最佳匹配位置</li>
+            </ul>
+        </section>
+
+        <section class="controls">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="upload-area" id="sourceUpload">
+                    <p>上傳主圖片</p>
+                    <input type="file" id="sourceInput" accept="image/*" hidden>
+                </div>
+                <div class="upload-area" id="templateUpload">
+                    <p>上傳模板圖片 (或從左側框選)</p>
+                    <input type="file" id="templateInput" accept="image/*" hidden>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>匹配參數</label>
+                <div>
+                    <label for="threshold">匹配閾值 (0.0 - 1.0)</label>
+                    <input type="range" id="threshold" min="0" max="100" value="80" oninput="document.getElementById('thresholdVal').textContent = (this.value/100).toFixed(2)">
+                    <span id="thresholdVal">0.80</span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary" disabled>開始匹配</button>
+                <button id="cropBtn" class="btn btn-secondary" disabled>使用框選區域為模板</button>
+            </div>
+        </section>
+
+        <section class="results">
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">處理時間</span>
+                    <span class="result-value" id="processTime">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">最佳匹配度</span>
+                    <span class="result-value" id="matchScore">-</span>
+                </div>
+            </div>
+
+            <div class="progress-section hidden" id="progressSection">
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-text" id="progressText">準備中...</div>
+            </div>
+
+            <div class="image-comparison">
+                <div class="image-panel">
+                    <h3>主圖片 (可拖曳框選)</h3>
+                    <div style="position: relative; display: inline-block;">
+                        <canvas id="sourceCanvas"></canvas>
+                        <div id="selectionBox" style="position: absolute; border: 2px dashed #f00; background: rgba(255,0,0,0.2); display: none; pointer-events: none;"></div>
+                    </div>
+                </div>
+                <div class="image-panel">
+                    <h3>模板 & 結果</h3>
+                    <div>
+                        <h4>模板</h4>
+                        <canvas id="templateCanvas" style="max-height: 150px; margin-bottom: 10px;"></canvas>
+                    </div>
+                    <div>
+                        <h4>匹配結果 (熱力圖)</h4>
+                        <canvas id="resultCanvas"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - 381 Template Matching</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N-gram Extraction - Web Worker Example #439</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>N-gram Extraction</h1>
+            <p class="subtitle">Web Worker Example #439 - Text Analysis</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Beginner</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="controls">
+                <h2>Input Text</h2>
+                <div class="input-group">
+                    <label>Text to Analyze:</label>
+                    <textarea id="inputText" rows="8" style="width: 100%; background: rgba(0,0,0,0.3); color: #fff; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 10px;">
+To be, or not to be, that is the question:
+Whether 'tis nobler in the mind to suffer
+The slings and arrows of outrageous fortune,
+Or to take arms against a sea of troubles
+And by opposing end them. To die—to sleep,
+No more; and by a sleep to say we end
+The heart-ache and the thousand natural shocks
+That flesh is heir to: 'tis a consummation
+Devoutly to be wish'd. To die, to sleep;
+To sleep, perchance to dream—ay, there's the rub:
+For in that sleep of death what dreams may come,
+When we have shuffled off this mortal coil,
+Must give us pause.
+                    </textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="nValue">N (Gram Size): <span id="nVal">2</span></label>
+                    <input type="range" id="nValue" min="1" max="5" value="2">
+                </div>
+
+                <div class="input-group">
+                    <label>Type:</label>
+                    <select id="gramType" style="padding: 5px; background: #333; color: #fff; border: 1px solid #555; border-radius: 4px;">
+                        <option value="word">Word N-grams</option>
+                        <option value="char">Character N-grams</option>
+                    </select>
+                </div>
+
+                <div class="button-group">
+                    <button id="extractBtn" class="btn btn-primary">Extract N-grams</button>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Frequency Table (Top 20)</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Unique N-grams</span>
+                        <span id="uniqueCount" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <table style="width: 100%; margin-top: 15px; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid rgba(16,185,129,0.5); text-align: left;">
+                            <th style="padding: 10px; color: #10b981;">N-gram</th>
+                            <th style="padding: 10px; color: #10b981;">Frequency</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultTableBody">
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

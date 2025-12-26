@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 故障藝術 (Glitch Art)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 故障藝術</h1>
+            <div class="subtitle">Glitch Art</div>
+            <div class="badges">
+                <span class="badge badge-beginner">影像處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <p>模擬數位訊號故障效果，包含隨機區塊位移、顏色偏移和像素排序。</p>
+        </section>
+
+        <div class="upload-area" id="dropZone">
+            <div class="upload-icon">📁</div>
+            <p>拖放圖片至此，或點擊上傳</p>
+            <input type="file" id="fileInput" accept="image/*" hidden>
+        </div>
+
+        <section class="controls">
+            <div class="input-group">
+                <label>強度 (Intensity)</label>
+                <input type="range" id="intensity" min="0" max="100" value="50">
+                <span id="intensityVal">50</span>
+            </div>
+            <div class="input-group">
+                <label>種子 (Seed)</label>
+                <input type="range" id="seed" min="0" max="1000" value="0">
+                <span id="seedVal">0</span>
+            </div>
+            <div class="input-group">
+                <button id="randomizeBtn" class="btn btn-secondary">隨機種子</button>
+            </div>
+        </section>
+
+        <section class="image-comparison">
+            <div class="image-panel">
+                <h3>原始圖片</h3>
+                <div class="canvas-container">
+                    <canvas id="sourceCanvas"></canvas>
+                </div>
+                <div class="image-info" id="sourceInfo">請上傳圖片</div>
+            </div>
+            <div class="image-panel">
+                <h3>處理結果</h3>
+                <canvas id="targetCanvas"></canvas>
+                <div class="image-info" id="targetInfo">等待處理...</div>
+            </div>
+        </section>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

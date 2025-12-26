@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 暈影效果 (Vignette) - 362</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 暈影效果</h1>
+            <div class="subtitle">Vignette Effect</div>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-beginner">Filter</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>暈影效果 (Vignette)</h2>
+                <p>此範例展示如何創建暈影效果，即圖像邊緣逐漸變暗。Web Worker 負責計算每個像素到中心的距離並應用徑向漸變遮罩。</p>
+            </section>
+
+            <section class="controls">
+                <div class="upload-area" id="dropZone">
+                    <div class="upload-icon">📁</div>
+                    <p>拖放圖片至此處或點擊上傳</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label for="strength">強度 (Strength): <span id="strengthVal">50</span>%</label>
+                    <input type="range" id="strength" min="0" max="100" value="50">
+                </div>
+
+                <div class="input-group">
+                    <label for="radius">範圍半徑 (Radius): <span id="radiusVal">80</span>%</label>
+                    <input type="range" id="radius" min="10" max="150" value="80">
+                </div>
+
+                <div class="input-group">
+                    <label for="color">暈影顏色 (Color):</label>
+                    <input type="color" id="color" value="#000000">
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>應用效果</button>
+                    <button id="resetBtn" class="btn btn-secondary" disabled>重置</button>
+                </div>
+            </section>
+
+            <section class="progress-section hidden" id="progressSection">
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-text" id="progressText">處理中... 0%</div>
+            </section>
+
+            <section class="results">
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">處理時間</span>
+                        <span class="result-value" id="processTime">-</span>
+                    </div>
+                </div>
+
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>原始圖片</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <div class="image-info" id="originalInfo"></div>
+                    </div>
+                    <div class="image-panel">
+                        <h3>處理結果</h3>
+                        <canvas id="resultCanvas"></canvas>
+                        <div class="image-info" id="resultInfo"></div>
+                        <div class="download-section">
+                            <a id="downloadLink" class="btn btn-outline hidden" download="vignette.png">下載結果</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perspective Transform - Web Worker Example #317</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #transformContainer {
+            position: relative;
+            display: inline-block;
+        }
+        #sourceCanvas {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid rgba(16,185,129,0.2);
+        }
+        .handle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(16, 185, 129, 0.6);
+            border: 2px solid #fff;
+            border-radius: 50%;
+            cursor: move;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        .handle:hover {
+            background: #10b981;
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Perspective Transform</h1>
+            <p class="subtitle">Web Worker Example #317 - Homography & Inverse Mapping</p>
+            <div class="badges">
+                <span class="badge badge-worker">Single Worker</span>
+                <span class="badge" style="background: #ef4444; color: white;">Advanced</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Perspective Transform</h2>
+                <p>Correct perspective distortion by defining four corner points. This performs a homography transformation using inverse mapping with bilinear interpolation.</p>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="button-group">
+                    <button id="transformBtn" class="btn btn-primary" disabled>Apply Transform</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Interactive Workspace</h2>
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Source (Drag corners)</h3>
+                        <div id="transformContainer">
+                            <canvas id="sourceCanvas"></canvas>
+                            <div class="handle" id="tl" data-corner="tl"></div>
+                            <div class="handle" id="tr" data-corner="tr"></div>
+                            <div class="handle" id="br" data-corner="br"></div>
+                            <div class="handle" id="bl" data-corner="bl"></div>
+                        </div>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Transformed Result</h3>
+                        <canvas id="resultCanvas"></canvas>
+                        <p id="processingTime"></p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #317</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

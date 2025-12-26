@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAST Corner Detection - Web Worker Example #378</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>FAST Corner Detection</h1>
+            <p class="subtitle">Web Worker Example #378 - Features from Accelerated Segment Test</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Intermediate</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About FAST</h2>
+                <p>FAST (Features from Accelerated Segment Test) is a high-speed corner detection method. It works by testing a circle of 16 pixels around a candidate corner pixel to see if a continuous set of pixels are all brighter or darker than the nucleus.</p>
+            </section>
+
+            <section class="controls">
+                <h2>Settings</h2>
+                <div class="input-group">
+                    <label for="threshold">Threshold (Intensity Diff): <span id="thresholdVal">20</span></label>
+                    <input type="range" id="threshold" min="5" max="100" value="20">
+                </div>
+                 <div class="input-group">
+                    <label>
+                        <input type="checkbox" id="nmsInput" checked> Non-Maximal Suppression
+                    </label>
+                </div>
+                 <div class="input-group">
+                    <label>
+                        <input type="checkbox" id="overlayInput" checked> Overlay on Original
+                    </label>
+                </div>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Detect Corners</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <p id="originalInfo" class="image-info">No image loaded</p>
+                    </div>
+                    <div class="image-panel">
+                        <h3>FAST Keypoints</h3>
+                        <canvas id="processedCanvas"></canvas>
+                        <p id="processedInfo" class="image-info">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Keypoints Found</span>
+                        <span id="keypointCount" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="download-section">
+                    <button id="downloadBtn" class="btn btn-primary">Download Image</button>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

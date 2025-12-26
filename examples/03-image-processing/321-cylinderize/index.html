@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cylinderize Effect - Web Worker Example #321</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cylinderize Effect</h1>
+            <p class="subtitle">Web Worker Example #321 - Cylindrical Projection</p>
+            <div class="badges">
+                <span class="badge badge-worker">Single Worker</span>
+                <span class="badge" style="background: #f59e0b; color: white;">Intermediate</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Cylinderize</h2>
+                <p>Wrap the image around a vertical or horizontal cylinder.</p>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label>Strength: <span id="valStrength">0.5</span></label>
+                    <input type="range" id="strength" min="0.1" max="2" step="0.1" value="0.5">
+
+                    <label>Axis:
+                        <select id="axis">
+                            <option value="vertical">Vertical (Y-axis)</option>
+                            <option value="horizontal">Horizontal (X-axis)</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="button-group">
+                    <button id="applyBtn" class="btn btn-primary" disabled>Apply Effect</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original</h3>
+                        <canvas id="sourceCanvas"></canvas>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Result</h3>
+                        <canvas id="resultCanvas"></canvas>
+                        <p id="processingTime"></p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #321</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

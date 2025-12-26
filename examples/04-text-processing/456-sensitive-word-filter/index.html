@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensitive Word Filter - Web Worker Example #456</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sensitive Word Filter</h1>
+            <p class="subtitle">Web Worker Example #456 - Aho-Corasick Algorithm</p>
+            <div class="badges">
+                <span class="badge badge-advanced">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Sensitive Word Filtering</h2>
+                <p>Detects and censors sensitive words in a text using the Aho-Corasick algorithm for efficient multi-pattern matching.</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="sensitiveWords">Sensitive Words (comma separated):</label>
+                    <textarea id="sensitiveWords" rows="3" placeholder="bad, fail, error, taboo">bad, fail, error, taboo, secret</textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="inputText">Input Text:</label>
+                    <textarea id="inputText" rows="6" placeholder="Enter text to filter...">This is a secret message. Do not make an error or it will be bad. This is a secure communication.</textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="replacement">Replacement Character:</label>
+                    <input type="text" id="replacement" value="*" maxlength="1" style="width: 50px;">
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary">Filter Text</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div class="input-group">
+                    <textarea id="outputText" rows="6" readonly></textarea>
+                </div>
+
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Words Found</span>
+                        <span id="matchCount" class="result-value">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

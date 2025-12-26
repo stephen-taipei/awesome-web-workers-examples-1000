@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圖片縮放 (Image Scaling) - Web Workers 示例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>圖片縮放 (Image Scaling)</h1>
+            <p class="subtitle">Bilinear Interpolation Scaling</p>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-beginner">Image Processing</span>
+                <span class="badge badge-beginner">Geometric</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能描述</h2>
+            <p>使用雙線性插值 (Bilinear Interpolation) 算法調整圖片大小。此方法比最近鄰插值平滑，但比雙三次插值快。</p>
+            <div class="formula-box">
+                <div class="formula">
+P(x,y) = (1-u)(1-v)P(x1,y1) + u(1-v)P(x2,y1) + (1-u)vP(x1,y2) + uvP(x2,y2)
+Where u, v are fractional parts of coordinates.
+                </div>
+            </div>
+        </section>
+
+        <section class="controls">
+            <h2>參數設定</h2>
+            <div class="input-group">
+                <label for="scaleFactor">縮放比例 (0.1 - 4.0)</label>
+                <input type="range" id="scaleFactor" min="0.1" max="4.0" step="0.1" value="0.5">
+                <span id="scaleFactorVal">0.5x</span>
+            </div>
+
+            <div class="input-group">
+                <label>目標尺寸預覽</label>
+                <div id="targetDimensions" class="formula">- x -</div>
+            </div>
+
+            <div class="upload-area" id="dropZone">
+                <div class="upload-icon">📁</div>
+                <p>拖放圖片至此，或點擊上傳</p>
+                <input type="file" id="fileInput" accept="image/*" class="hidden">
+            </div>
+
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary" disabled>開始縮放</button>
+            </div>
+        </section>
+
+        <section id="progressSection" class="progress-section hidden">
+            <div class="progress-bar-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <p id="progressText" class="progress-text">處理中...</p>
+        </section>
+
+        <section class="results">
+            <h2>處理結果</h2>
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">處理時間</span>
+                    <span id="processTime" class="result-value">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">原始尺寸</span>
+                    <span id="originalSize" class="result-value">-</span>
+                </div>
+                 <div class="result-item">
+                    <span class="result-label">結果尺寸</span>
+                    <span id="resultSize" class="result-value">-</span>
+                </div>
+            </div>
+
+            <div class="image-comparison">
+                <div class="image-panel">
+                    <h3>原始圖片</h3>
+                    <canvas id="originalCanvas"></canvas>
+                </div>
+                <div class="image-panel">
+                    <h3>縮放後圖片</h3>
+                    <canvas id="resultCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h7y/WebWorkers1000" target="_blank">GitHub</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuzzy Search - Web Worker Example #433</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Fuzzy Search</h1>
+            <p class="subtitle">Web Worker Example #433 - Levenshtein Distance</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Intermediate</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="controls">
+                <h2>Data Source</h2>
+                <div class="input-group">
+                    <label for="dataList">Items (one per line):</label>
+                    <textarea id="dataList" rows="10" style="width: 100%; background: rgba(0,0,0,0.3); color: #fff; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 10px;">
+apple
+banana
+cherry
+date
+elderberry
+fig
+grape
+honeydew
+kiwi
+lemon
+mango
+nectarine
+orange
+papaya
+quince
+raspberry
+strawberry
+tangerine
+ugli fruit
+vanilla
+watermelon
+xigua
+yuzu
+zucchini
+application
+bananarama
+cherry pie
+dating
+figure
+grapefruit
+                    </textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="searchQuery">Search Query:</label>
+                    <input type="text" id="searchQuery" placeholder="e.g. apl" value="apl">
+                </div>
+
+                <div class="input-group">
+                    <label for="maxDistance">Max Distance: <span id="maxDistVal">3</span></label>
+                    <input type="range" id="maxDistance" min="1" max="10" value="3">
+                </div>
+
+                <div class="button-group">
+                    <button id="searchBtn" class="btn btn-primary">Fuzzy Search</button>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Matches</span>
+                        <span id="matchCount" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <h3>Top Matches</h3>
+                <div id="matchList" style="max-height: 300px; overflow-y: auto; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px;">
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

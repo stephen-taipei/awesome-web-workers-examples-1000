@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黑帽變換 (Black-hat) - Web Workers 示例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>黑帽變換 (Black-hat)</h1>
+            <p class="subtitle">Image Morphological Black-hat Transform</p>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-beginner">Image Processing</span>
+                <span class="badge badge-beginner">Morphology</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能描述</h2>
+            <p>黑帽變換是形態學閉運算 (Closing) 與原圖的差。它用於提取比周圍環境暗的圖像區域，或者用於校正不均勻的背景。</p>
+            <div class="formula-box">
+                <div class="formula">
+BlackHat(f) = Closing(f) - f
+Closing(f) = Erosion(Dilation(f))
+                </div>
+            </div>
+        </section>
+
+        <section class="controls">
+            <h2>參數設定</h2>
+            <div class="input-group">
+                <label for="structShape">結構元素形狀</label>
+                <select id="structShape">
+                    <option value="square">正方形 (Square)</option>
+                    <option value="disk">圓形 (Disk)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="structSize">結構元素大小 (半徑/半寬)</label>
+                <input type="number" id="structSize" value="3" min="1" max="20">
+                <p class="weight-note">值越大，提取的區域越大，運算越慢。</p>
+            </div>
+
+            <div class="upload-area" id="dropZone">
+                <div class="upload-icon">📁</div>
+                <p>拖放圖片至此，或點擊上傳</p>
+                <input type="file" id="fileInput" accept="image/*" class="hidden">
+            </div>
+
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary" disabled>應用黑帽變換</button>
+            </div>
+        </section>
+
+        <section id="progressSection" class="progress-section hidden">
+            <div class="progress-bar-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <p id="progressText" class="progress-text">處理中...</p>
+        </section>
+
+        <section class="results">
+            <h2>處理結果</h2>
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">處理時間</span>
+                    <span id="processTime" class="result-value">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">原始尺寸</span>
+                    <span id="originalSize" class="result-value">-</span>
+                </div>
+            </div>
+
+            <div class="image-comparison">
+                <div class="image-panel">
+                    <h3>原始圖片</h3>
+                    <canvas id="originalCanvas"></canvas>
+                </div>
+                <div class="image-panel">
+                    <h3>處理後圖片</h3>
+                    <canvas id="resultCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h7y/WebWorkers1000" target="_blank">GitHub</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

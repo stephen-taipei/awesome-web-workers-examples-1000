@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oil Painting Effect - Web Worker Example #344</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Oil Painting Effect</h1>
+            <p class="subtitle">Web Worker Example #344 - Kuwahara Filter</p>
+            <div class="badges">
+                <span class="badge badge-advanced">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Oil Painting Effect</h2>
+                <p>Simulate an oil painting using the Kuwahara filter. This non-linear smoothing filter reduces noise while preserving edges, creating a blocky, brush-stroke-like appearance.</p>
+                <div class="formula-box">
+                    <p><strong>Kuwahara Filter Algorithm:</strong></p>
+                    <ol>
+                        <li>Divide a window around each pixel into 4 quadrants.</li>
+                        <li>Calculate the mean and variance of brightness for each quadrant.</li>
+                        <li>Choose the quadrant with the lowest variance (most uniform).</li>
+                        <li>Set the central pixel to the mean color of that chosen quadrant.</li>
+                    </ol>
+                </div>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label for="radius">Brush Size (Filter Radius): <span id="radiusValue">3</span></label>
+                    <input type="range" id="radius" min="1" max="10" value="3">
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Apply Effect</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="progressContainer" class="progress-section hidden">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText" class="progress-text">Processing...</p>
+            </section>
+
+            <section class="visualization">
+                <h2>Preview</h2>
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Original</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <p id="originalInfo" class="image-info">No image loaded</p>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Oil Painting</h3>
+                        <canvas id="resultCanvas"></canvas>
+                        <p id="resultInfo" class="image-info">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                </div>
+                <div class="download-section">
+                    <button id="downloadBtn" class="btn btn-primary">Download Result</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../index.html">Back to Examples</a> | Web Workers Example #344</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

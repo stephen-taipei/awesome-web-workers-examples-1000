@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BM25 Search - Web Worker Example #438</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>BM25 Search</h1>
+            <p class="subtitle">Web Worker Example #438 - Probabilistic Information Retrieval</p>
+            <div class="badges">
+                <span class="badge badge-advanced">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="controls">
+                <h2>Corpus</h2>
+                <div class="input-group">
+                    <label>Documents (JSON array of strings):</label>
+                    <textarea id="documentsInput" rows="10" style="width: 100%; background: rgba(0,0,0,0.3); color: #fff; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 10px;">
+[
+    "The quick brown fox jumps over the lazy dog",
+    "A quick movement of the enemy will jeopardize six gunboats",
+    "Now is the time for all good men to come to the aid of their country",
+    "The fox is an animal that belongs to the Canidae family",
+    "A lazy dog is not a good guard dog",
+    "Brown foxes are quick and jumpy",
+    "Lazy dogs sleep all day"
+]
+                    </textarea>
+                </div>
+
+                <div class="button-group">
+                    <button id="indexBtn" class="btn btn-primary">Index Documents</button>
+                </div>
+                <p id="indexStatus" style="color: #34d399; margin-top: 5px; font-size: 0.9em;"></p>
+            </section>
+
+            <section class="controls" style="margin-top: 20px;">
+                <h2>Search</h2>
+                <div class="input-group">
+                    <label for="searchQuery">Query:</label>
+                    <input type="text" id="searchQuery" placeholder="e.g. quick fox" disabled>
+                </div>
+                <div class="button-group">
+                    <button id="searchBtn" class="btn btn-secondary" disabled>Search</button>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Ranked Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Search Time</span>
+                        <span id="searchTime" class="result-value">-</span>
+                    </div>
+                </div>
+
+                <div id="resultList" style="margin-top: 15px;"></div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

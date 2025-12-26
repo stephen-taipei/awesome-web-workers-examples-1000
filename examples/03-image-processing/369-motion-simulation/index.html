@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 動態模擬 (Motion Simulation)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 動態模擬</h1>
+            <div class="subtitle">Motion Simulation</div>
+            <div class="badges">
+                <span class="badge badge-beginner">影像處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <p>透過方向性模糊（Motion Blur）模擬物體快速移動或相機晃動的視覺效果。</p>
+        </section>
+
+        <div class="upload-area" id="dropZone">
+            <div class="upload-icon">📁</div>
+            <p>拖放圖片至此，或點擊上傳</p>
+            <input type="file" id="fileInput" accept="image/*" hidden>
+        </div>
+
+        <section class="controls">
+            <div class="input-group">
+                <label>角度 (Angle)</label>
+                <input type="range" id="angle" min="0" max="360" value="45">
+                <span id="angleVal">45°</span>
+            </div>
+            <div class="input-group">
+                <label>距離/強度 (Distance)</label>
+                <input type="range" id="distance" min="0" max="100" value="30">
+                <span id="distanceVal">30px</span>
+            </div>
+        </section>
+
+        <section class="image-comparison">
+            <div class="image-panel">
+                <h3>原始圖片</h3>
+                <div class="canvas-container">
+                    <canvas id="sourceCanvas"></canvas>
+                </div>
+                <div class="image-info" id="sourceInfo">請上傳圖片</div>
+            </div>
+            <div class="image-panel">
+                <h3>處理結果</h3>
+                <canvas id="targetCanvas"></canvas>
+                <div class="image-info" id="targetInfo">等待處理...</div>
+            </div>
+        </section>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

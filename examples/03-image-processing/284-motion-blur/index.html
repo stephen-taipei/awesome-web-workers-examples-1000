@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <title>#284 運動模糊 - Web Workers 範例</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -49,6 +50,138 @@
 
         <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #284</footer>
     </div>
+=======
+    <title>Web Workers 運動模糊 (Motion Blur)</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首 -->
+        <header class="header">
+            <h1><i class="fas fa-wind"></i> 運動模糊效果</h1>
+            <div class="subtitle">使用 Web Workers 實現方向性模糊處理</div>
+            <div class="badge-container">
+                <span class="badge badge-primary">Web Workers</span>
+                <span class="badge badge-secondary">卷積運算</span>
+                <span class="badge badge-warning">影像處理</span>
+            </div>
+        </header>
+
+        <!-- 主要內容 -->
+        <main>
+            <!-- 檔案上傳 -->
+            <section class="card">
+                <h3 class="card-title"><i class="fas fa-upload"></i> 圖片來源</h3>
+
+                <div class="upload-area" id="upload-area">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p class="upload-text">點擊或拖放圖片至此</p>
+                    <input type="file" id="file-input" accept="image/*" hidden>
+                    <p class="upload-hint">支援 JPG, PNG, WebP (建議 2000px 以下)</p>
+                </div>
+
+                <div class="demo-buttons">
+                    <button class="btn btn-secondary" id="load-demo-btn">
+                        <i class="fas fa-image"></i> 載入範例圖片
+                    </button>
+                </div>
+            </section>
+
+            <!-- 參數控制 -->
+            <section class="card">
+                <h3 class="card-title"><i class="fas fa-sliders-h"></i> 參數設定</h3>
+
+                <div class="form-group">
+                    <div class="input-row">
+                        <div>
+                            <label class="form-label">模糊角度 (Angle)：<span id="angle-value">45</span>°</label>
+                            <input type="range" class="form-range" id="angle-input" min="0" max="360" value="45">
+                        </div>
+                        <div>
+                            <label class="form-label">模糊距離 (Distance)：<span id="distance-value">20</span>px</label>
+                            <input type="range" class="form-range" id="distance-input" min="1" max="100" value="20">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">核心預覽：<span id="kernel-size">0×0</span></label>
+                    <div id="kernel-preview" class="kernel-preview">
+                        <!-- JS 動態生成 -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">快速設定：</label>
+                    <div class="preset-buttons">
+                        <button class="preset-btn" data-angle="0" data-distance="20">水平移動</button>
+                        <button class="preset-btn" data-angle="90" data-distance="20">垂直移動</button>
+                        <button class="preset-btn" data-angle="45" data-distance="30">對角移動</button>
+                        <button class="preset-btn" data-angle="135" data-distance="50">強烈模糊</button>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="apply-btn" disabled>
+                        <i class="fas fa-play"></i> 套用模糊
+                    </button>
+                    <button class="btn btn-secondary" id="reset-btn" disabled>
+                        <i class="fas fa-undo"></i> 還原原圖
+                    </button>
+                    <button class="btn btn-info" id="download-btn" disabled>
+                        <i class="fas fa-download"></i> 下載結果
+                    </button>
+                </div>
+
+                <!-- 進度條 -->
+                <div class="progress-container">
+                    <div class="progress-bar-wrapper">
+                        <div class="progress-bar" id="progress-bar" style="width: 0%">0%</div>
+                    </div>
+                    <div class="progress-text" id="progress-text">準備就緒</div>
+                </div>
+            </section>
+
+            <!-- 預覽區域 -->
+            <section class="card" id="preview-section" style="display: none;">
+                <h3 class="card-title"><i class="fas fa-eye"></i> 結果預覽</h3>
+
+                <div class="preview-container">
+                    <div class="preview-box">
+                        <h4>原始圖片</h4>
+                        <canvas id="original-canvas"></canvas>
+                    </div>
+                    <div class="preview-box">
+                        <h4>處理結果</h4>
+                        <canvas id="result-canvas"></canvas>
+                    </div>
+                </div>
+
+                <div id="result-stats" class="result-stats">
+                    <!-- JS 動態生成統計 -->
+                </div>
+            </section>
+
+            <!-- 說明區域 -->
+            <section class="card info-section">
+                <h3><i class="fas fa-info-circle"></i> 關於運動模糊 (Motion Blur)</h3>
+                <p>運動模糊用於模擬相機曝光期間物體或相機移動產生的效果。此範例展示了如何使用 Web Workers 並行處理卷積運算。</p>
+                <br>
+                <ul>
+                    <li><strong>角度 (Angle)</strong>：控制模糊的方向，0° 為水平，90° 為垂直。</li>
+                    <li><strong>距離 (Distance)</strong>：控制模糊的強度，即像素移動的軌跡長度。</li>
+                    <li><strong>技術重點</strong>：使用線性的卷積核，核心中的權重分佈在特定角度的直線上。</li>
+                </ul>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Web Workers 1000 Examples Project - Example 284</p>
+        </footer>
+    </div>
+
+>>>>>>> origin/main
     <script src="main.js"></script>
 </body>
 </html>

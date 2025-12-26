@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 超像素分割 (SLIC)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>超像素分割 (SLIC)</h1>
+            <div class="subtitle">簡單線性迭代聚類</div>
+            <div class="badges">
+                <span class="badge badge-beginner">影像處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">SLIC</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能說明</h2>
+            <p>此範例展示 SLIC (Simple Linear Iterative Clustering) 超像素分割算法。它將圖片分割成若干個色彩相似、位置相近的區域（超像素）。</p>
+            <ul>
+                <li>上傳圖片</li>
+                <li>設定目標超像素數量</li>
+                <li>執行 SLIC 算法</li>
+            </ul>
+        </section>
+
+        <section class="controls">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <p>點擊上傳圖片或將圖片拖曳至此</p>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+            </div>
+
+            <div class="input-group">
+                <label>算法參數</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label for="numSuperpixels">超像素數量 (~50-2000)</label>
+                        <input type="range" id="numSuperpixels" min="50" max="2000" step="50" value="500" oninput="document.getElementById('spVal').textContent = this.value">
+                        <span id="spVal">500</span>
+                    </div>
+                    <div>
+                        <label for="compactness">緊密度 (Compactness 1-40)</label>
+                        <input type="range" id="compactness" min="1" max="40" value="10" oninput="document.getElementById('cpVal').textContent = this.value">
+                        <span id="cpVal">10</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary" disabled>執行分割</button>
+            </div>
+        </section>
+
+        <section class="results">
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">處理時間</span>
+                    <span class="result-value" id="processTime">-</span>
+                </div>
+            </div>
+
+            <div class="progress-section hidden" id="progressSection">
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-text" id="progressText">準備中...</div>
+            </div>
+
+            <div class="image-comparison">
+                <div class="image-panel">
+                    <h3>原始圖片</h3>
+                    <canvas id="sourceCanvas"></canvas>
+                </div>
+                <div class="image-panel">
+                    <h3>分割結果 (邊界)</h3>
+                    <canvas id="resultCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - 387 SLIC Superpixels</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

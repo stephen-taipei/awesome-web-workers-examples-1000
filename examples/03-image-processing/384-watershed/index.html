@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 分水嶺算法 (Watershed)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>分水嶺算法 (Watershed)</h1>
+            <div class="subtitle">基於標記的影像分割</div>
+            <div class="badges">
+                <span class="badge badge-beginner">影像處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-worker">Watershed</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <h2>功能說明</h2>
+            <p>此範例展示分水嶺分割算法。您可以在圖片上繪製標記（種子），算法將根據梯度信息將圖片分割成不同區域，就像水充滿山谷一樣。</p>
+            <ul>
+                <li>上傳圖片</li>
+                <li>使用筆刷繪製不同顏色的標記 (代表不同區域)</li>
+                <li>執行分水嶺算法</li>
+            </ul>
+        </section>
+
+        <section class="controls">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <p>點擊上傳圖片或將圖片拖曳至此</p>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+            </div>
+
+            <div class="input-group">
+                <label>繪圖工具</label>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="color-btn selected" data-color="1" style="background-color: red;"></button>
+                        <button class="color-btn" data-color="2" style="background-color: blue;"></button>
+                        <button class="color-btn" data-color="3" style="background-color: green;"></button>
+                        <button class="color-btn" data-color="4" style="background-color: yellow;"></button>
+                    </div>
+                    <div>
+                        <label for="brushSize" style="display:inline;">筆刷大小: </label>
+                        <input type="range" id="brushSize" min="1" max="20" value="5">
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="processBtn" class="btn btn-primary" disabled>執行分割</button>
+                <button id="clearBtn" class="btn btn-secondary" disabled>清除標記</button>
+            </div>
+        </section>
+
+        <section class="results">
+            <div class="stats-row">
+                <div class="result-item">
+                    <span class="result-label">處理時間</span>
+                    <span class="result-value" id="processTime">-</span>
+                </div>
+            </div>
+
+            <div class="progress-section hidden" id="progressSection">
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-text" id="progressText">準備中...</div>
+            </div>
+
+            <div class="image-comparison">
+                <div class="image-panel">
+                    <h3>標記區域</h3>
+                    <div style="position: relative; display: inline-block;">
+                        <canvas id="sourceCanvas" style="cursor: crosshair;"></canvas>
+                        <canvas id="markerCanvas" style="position: absolute; top: 0; left: 0; pointer-events: none; opacity: 0.6;"></canvas>
+                    </div>
+                </div>
+                <div class="image-panel">
+                    <h3>分割結果</h3>
+                    <canvas id="resultCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Web Workers 1000 示例 - 384 Watershed</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

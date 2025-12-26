@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 詞性標註 (POS Tagging) - 449</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 詞性標註</h1>
+            <div class="subtitle">Part-of-Speech Tagging (Rule-based)</div>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-advanced">NLP</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>詞性標註 (POS Tagging)</h2>
+                <p>此範例展示基於規則的簡易英文詞性標註。Web Worker 根據詞綴（後綴）規則和簡易字典來推斷單詞的詞性。</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="inputText">輸入英文文本 (Input English Text):</label>
+                    <textarea id="inputText" rows="6" placeholder="Please enter text to tag...">The quick brown fox jumps over the lazy dog effectively.</textarea>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary">開始標註</button>
+                </div>
+            </section>
+
+            <section class="results">
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">處理時間</span>
+                        <span class="result-value" id="processTime">-</span>
+                    </div>
+                </div>
+
+                <div class="result-box">
+                    <h3>標註結果</h3>
+                    <div id="outputArea" class="output-content"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+    <style>
+        .output-content {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            min-height: 100px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #e5e7eb;
+        }
+        .tagged-word {
+            display: inline-block;
+            margin: 0 4px;
+            text-align: center;
+        }
+        .word-text {
+            display: block;
+            font-weight: 500;
+        }
+        .pos-tag {
+            display: block;
+            font-size: 0.75em;
+            color: #10b981;
+            font-family: monospace;
+        }
+        textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #fff;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+    </style>
+</body>
+</html>

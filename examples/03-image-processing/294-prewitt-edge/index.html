@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#294 Prewitt 邊緣檢測 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 實現 Prewitt 邊緣檢測算子">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首區域 -->
+        <header class="header">
+            <h1>Prewitt 邊緣檢測</h1>
+            <p class="subtitle">Prewitt Edge Detection</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#294</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-success">入門</span>
+            </div>
+        </header>
+
+        <!-- 圖片上傳區域 -->
+        <section class="card">
+            <h2 class="card-title">圖片選擇</h2>
+            <div class="upload-area" id="upload-area">
+                <input type="file" id="file-input" accept="image/*" hidden>
+                <div class="upload-placeholder">
+                    <div class="upload-icon">🖼️</div>
+                    <p>點擊或拖放圖片至此處</p>
+                    <p class="upload-hint">支援 JPG, PNG, GIF, WebP 格式</p>
+                </div>
+            </div>
+            <div class="demo-buttons">
+                <button id="load-demo-btn" class="btn btn-secondary">載入範例圖片</button>
+            </div>
+        </section>
+
+        <!-- 參數設定區域 -->
+        <section class="card">
+            <h2 class="card-title">檢測參數</h2>
+
+            <div class="form-group">
+                <label class="form-label">顯示模式</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn active" data-mode="magnitude">梯度強度 (Magnitude)</button>
+                    <button class="preset-btn" data-mode="binary">二值化 (Binary)</button>
+                </div>
+            </div>
+
+            <div class="form-group" id="threshold-group" style="display: none;">
+                <label class="form-label" for="threshold-input">二值化閾值：<span id="threshold-value">100</span></label>
+                <input
+                    type="range"
+                    id="threshold-input"
+                    class="form-range"
+                    value="100"
+                    min="0"
+                    max="255"
+                    step="1"
+                >
+            </div>
+
+            <div class="btn-group">
+                <button id="apply-btn" class="btn btn-primary" disabled>偵測邊緣</button>
+                <button id="reset-btn" class="btn btn-secondary" disabled>還原原圖</button>
+                <button id="download-btn" class="btn btn-info" disabled>下載結果</button>
+            </div>
+        </section>
+
+        <!-- 進度顯示區域 -->
+        <section class="card">
+            <h2 class="card-title">處理進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">準備就緒</p>
+            </div>
+        </section>
+
+        <!-- 圖片顯示區域 -->
+        <section class="card" id="preview-section" style="display: none;">
+            <h2 class="card-title">圖片預覽</h2>
+            <div class="preview-container">
+                <div class="preview-box">
+                    <h4>原圖</h4>
+                    <canvas id="original-canvas"></canvas>
+                </div>
+                <div class="preview-box">
+                    <h4>檢測結果</h4>
+                    <canvas id="result-canvas"></canvas>
+                </div>
+            </div>
+            <div id="result-stats" class="result-stats"></div>
+        </section>
+
+        <!-- 演算法說明區域 -->
+        <section class="card info-section">
+            <h3>關於 Prewitt 算子</h3>
+            <ul>
+                <li><strong>原理：</strong>類似於 Sobel 算子，也是計算梯度的近似值，但它的權重全為 1，因此對噪聲比較敏感，但計算稍微簡單一點。</li>
+                <li><strong>Gx 卷積核：</strong>
+                    <div class="kernel-grid" style="margin: 10px 0; max-width: 120px;">
+                        <span>-1</span><span>0</span><span>1</span>
+                        <span>-1</span><span>0</span><span>1</span>
+                        <span>-1</span><span>0</span><span>1</span>
+                    </div>
+                </li>
+                <li><strong>Gy 卷積核：</strong>
+                    <div class="kernel-grid" style="margin: 10px 0; max-width: 120px;">
+                        <span>-1</span><span>-1</span><span>-1</span>
+                        <span>0</span><span>0</span><span>0</span>
+                        <span>1</span><span>1</span><span>1</span>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #294 - Prewitt 邊緣檢測
+            </p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+@import url('../251-grayscale-conversion/style.css');
+
+#selectionBox {
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Alignment - Web Worker Example #339</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Image Alignment</h1>
+            <p class="subtitle">Web Worker Example #339 - Auto Alignment</p>
+            <div class="badges">
+                <span class="badge badge-advanced">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Image Alignment</h2>
+                <p>Aligns a target image to a reference image by finding the optimal translation offset. Useful for stabilizing image sequences or preparing for HDR/Stacking.</p>
+            </section>
+
+            <section class="controls">
+                <div style="display: flex; gap: 1rem;">
+                     <div class="upload-area" id="refUpload" style="flex:1;">
+                        <p>1. Reference Image</p>
+                        <input type="file" id="refInput" accept="image/*" hidden>
+                    </div>
+                    <div class="upload-area" id="targetUpload" style="flex:1;">
+                        <p>2. Target Image (to align)</p>
+                        <input type="file" id="targetInput" accept="image/*" hidden>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="alignBtn" class="btn btn-primary" disabled>Align Images</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <div class="image-comparison">
+                     <div class="image-panel">
+                        <h3>Aligned Target (Overlay)</h3>
+                        <canvas id="resultCanvas"></canvas>
+                        <div id="info"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

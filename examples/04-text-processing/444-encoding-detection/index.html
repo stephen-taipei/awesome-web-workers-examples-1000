@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 編碼檢測 (Encoding Detection)</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 編碼檢測</h1>
+            <div class="subtitle">Character Encoding Recognition</div>
+            <div class="badges">
+                <span class="badge badge-beginner">文本處理</span>
+                <span class="badge badge-worker">Web Worker</span>
+            </div>
+        </header>
+
+        <section class="description">
+            <p>嘗試檢測上傳文件的字元編碼 (如 UTF-8, UTF-16, ISO-8859-1, Big5 等)。</p>
+        </section>
+
+        <div class="upload-area" id="dropZone">
+            <div class="upload-icon">📄</div>
+            <p>拖放文件至此，或點擊上傳</p>
+            <input type="file" id="fileInput" hidden>
+        </div>
+
+        <section class="output-section">
+            <h2>檢測結果 <span id="timeTaken" style="font-size: 0.9rem; color: #6ee7b7; font-weight: normal; margin-left: 1rem;"></span></h2>
+            <div class="results-area" style="text-align: center; padding: 2rem;">
+                <div id="resultEncoding" style="font-size: 3rem; color: #10b981; font-weight: bold;">-</div>
+                <div id="confidence" style="font-size: 1.2rem; color: #6ee7b7; margin-top: 0.5rem;"></div>
+                <div id="preview" style="margin-top: 1.5rem; white-space: pre-wrap; text-align: left; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; font-family: monospace; color: #aaa; max-height: 200px; overflow: auto;"></div>
+            </div>
+        </section>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

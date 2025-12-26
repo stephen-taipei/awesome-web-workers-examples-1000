@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 文本相似度 (Text Similarity) - 451</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 文本相似度</h1>
+            <div class="subtitle">Jaccard & Cosine Similarity</div>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-advanced">Math</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>相似度計算 (Text Similarity)</h2>
+                <p>此範例展示如何計算兩段文本的相似度。包含兩種常見算法：Jaccard 係數（基於集合交集）和餘弦相似度（基於詞向量）。</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="text1">文本 1 (Text 1):</label>
+                    <textarea id="text1" rows="4" placeholder="Text 1">The quick brown fox jumps over the lazy dog.</textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="text2">文本 2 (Text 2):</label>
+                    <textarea id="text2" rows="4" placeholder="Text 2">The lazy dog is jumped over by a quick brown fox.</textarea>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary">計算相似度</button>
+                </div>
+            </section>
+
+            <section class="results">
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">Jaccard 相似度</span>
+                        <span class="result-value" id="jaccardVal">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">餘弦相似度 (Cosine)</span>
+                        <span class="result-value" id="cosineVal">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">計算時間</span>
+                        <span class="result-value" id="processTime">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+    <style>
+        textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #fff;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+    </style>
+</body>
+</html>

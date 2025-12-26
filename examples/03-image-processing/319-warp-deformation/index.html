@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warp Deformation - Web Worker Example #319</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #warpContainer {
+            position: relative;
+            display: inline-block;
+            margin: 0 auto;
+        }
+        #sourceCanvas {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border: 1px solid rgba(16,185,129,0.2);
+        }
+        #gridCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Warp Deformation</h1>
+            <p class="subtitle">Web Worker Example #319 - Grid-based Mesh Deformation</p>
+            <div class="badges">
+                <span class="badge badge-worker">Single Worker</span>
+                <span class="badge" style="background: #ef4444; color: white;">Advanced</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Warp Deformation</h2>
+                <p>Distort an image by dragging control points on a mesh grid. The image is mapped onto the deformed grid using bilinear interpolation.</p>
+            </section>
+
+            <section class="controls">
+                <h2>Image Input</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label>Grid Size: <span id="gridSizeVal">4x4</span></label>
+                    <input type="range" id="gridSize" min="2" max="10" value="4">
+                </div>
+
+                <div class="button-group">
+                    <button id="applyBtn" class="btn btn-primary" disabled>Render Warp</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Interactive Mesh (Drag points)</h3>
+                        <div id="warpContainer">
+                            <canvas id="sourceCanvas"></canvas>
+                            <canvas id="gridCanvas"></canvas>
+                        </div>
+                    </div>
+                    <div class="image-panel">
+                        <h3>Result</h3>
+                        <canvas id="resultCanvas"></canvas>
+                        <p id="processingTime"></p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #319</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

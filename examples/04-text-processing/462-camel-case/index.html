@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camel Case Conversion - Web Worker Example #462</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Camel Case Conversion</h1>
+            <p class="subtitle">Web Worker Example #462 - Naming Convention Converter</p>
+            <div class="badges">
+                <span class="badge badge-beginner">Beginner</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Camel Case</h2>
+                <p>Converts text (sentences or other naming conventions) into <code>camelCase</code> or <code>PascalCase</code>.</p>
+            </section>
+
+            <section class="controls">
+                <div class="input-group">
+                    <label for="format">Output Format:</label>
+                    <select id="format">
+                        <option value="camel">camelCase</option>
+                        <option value="pascal">PascalCase</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="inputText">Input Text:</label>
+                    <textarea id="inputText" rows="6" placeholder="Enter text...">hello_world user-id Get element by id</textarea>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary">Convert</button>
+                    <button id="resetBtn" class="btn btn-outline">Reset</button>
+                </div>
+            </section>
+
+            <section id="resultContainer" class="result-section hidden">
+                <h2>Result</h2>
+                <div class="input-group">
+                    <textarea id="outputText" rows="6" readonly></textarea>
+                </div>
+
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Processing Time</span>
+                        <span id="processingTime" class="result-value">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

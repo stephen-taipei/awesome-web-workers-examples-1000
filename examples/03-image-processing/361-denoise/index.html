@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Workers 去噪處理 (Denoise) - 361</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Web Workers 去噪處理</h1>
+            <div class="subtitle">Image Denoising using Non-Local Means (Simplified)</div>
+            <div class="badges">
+                <span class="badge badge-worker">Web Worker</span>
+                <span class="badge badge-advanced">Filtering</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>去噪處理 (Denoise)</h2>
+                <p>此範例展示如何移除圖像中的噪聲。這裏實現了一個簡化的非局部均值（Non-Local Means）濾波器，通過比較像素鄰域的相似度來進行加權平均，從而保留邊緣細節並去除噪聲。這是一個計算密集型算法。</p>
+            </section>
+
+            <section class="controls">
+                <div class="upload-area" id="dropZone">
+                    <div class="upload-icon">📁</div>
+                    <p>拖放圖片至此處或點擊上傳</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label for="strength">過濾強度 (Strength/h): <span id="strengthVal">10</span></label>
+                    <input type="range" id="strength" min="1" max="50" value="10">
+                </div>
+                <div class="input-group">
+                    <label for="windowSize">搜索窗口大小 (Window Size): <span id="windowSizeVal">7</span></label>
+                    <select id="windowSize">
+                        <option value="3">3x3 (Fast)</option>
+                        <option value="5">5x5</option>
+                        <option value="7" selected>7x7</option>
+                        <option value="9">9x9 (Slow)</option>
+                    </select>
+                </div>
+
+                 <div class="input-group">
+                    <label for="patchSize">補丁大小 (Patch Size): <span id="patchSizeVal">3</span></label>
+                    <select id="patchSize">
+                        <option value="1">1x1</option>
+                        <option value="3" selected>3x3</option>
+                        <option value="5">5x5</option>
+                    </select>
+                </div>
+
+                <div class="button-group">
+                    <button id="addNoiseBtn" class="btn btn-secondary" disabled>添加測試噪聲</button>
+                    <button id="processBtn" class="btn btn-primary" disabled>開始去噪</button>
+                    <button id="resetBtn" class="btn btn-outline" disabled>重置</button>
+                </div>
+            </section>
+
+            <section class="progress-section hidden" id="progressSection">
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-text" id="progressText">處理中... 0%</div>
+            </section>
+
+            <section class="results">
+                <div class="stats-row">
+                    <div class="result-item">
+                        <span class="result-label">處理時間</span>
+                        <span class="result-value" id="processTime">-</span>
+                    </div>
+                </div>
+
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>原始/噪聲圖片</h3>
+                        <canvas id="originalCanvas"></canvas>
+                        <div class="image-info" id="originalInfo"></div>
+                    </div>
+                    <div class="image-panel">
+                        <h3>去噪結果</h3>
+                        <canvas id="resultCanvas"></canvas>
+                        <div class="image-info" id="resultInfo"></div>
+                        <div class="download-section">
+                            <a id="downloadLink" class="btn btn-outline hidden" download="denoised.png">下載結果</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

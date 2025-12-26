@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seam Carving - Web Worker Example #333</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Seam Carving</h1>
+            <p class="subtitle">Web Worker Example #333 - Content-Aware Resizing</p>
+            <div class="badges">
+                <span class="badge badge-advanced">Advanced</span>
+                <span class="badge badge-worker">Single Worker</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="description">
+                <h2>About Seam Carving</h2>
+                <p>Resizes images by removing "seams" (connected paths of pixels) with the least energy (importance). This allows reducing image width while preserving important content like objects or people.</p>
+            </section>
+
+            <section class="controls">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p>Drop an image here or click to select</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <label for="widthRange">Target Width: <span id="widthVal">100</span>%</label>
+                    <input type="range" id="widthRange" min="50" max="100" value="100" disabled>
+                </div>
+
+                <div class="button-group">
+                    <button id="processBtn" class="btn btn-primary" disabled>Start Carving</button>
+                    <button id="resetBtn" class="btn btn-secondary" disabled>Reset</button>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <div class="image-comparison">
+                    <div class="image-panel">
+                        <h3>Result</h3>
+                        <canvas id="canvas"></canvas>
+                        <div id="status">Ready</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
