@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#201 基礎訊息傳遞 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 展示 postMessage API 基礎通訊機制">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>基礎訊息傳遞</h1>
+            <p class="subtitle">Basic Message Passing</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#201</span>
+                <span class="badge badge-secondary">通訊協調</span>
+                <span class="badge badge-success">初級</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">發送訊息</h2>
+            <div class="message-input">
+                <input type="text" id="messageInput" placeholder="輸入要發送的訊息..." value="Hello, Worker!">
+                <button id="sendBtn" class="btn btn-primary">發送到 Worker</button>
+            </div>
+            <div class="quick-messages">
+                <span>快速訊息：</span>
+                <button class="quick-btn" data-msg="ping">Ping</button>
+                <button class="quick-btn" data-msg="calculate">Calculate</button>
+                <button class="quick-btn" data-msg="getTime">Get Time</button>
+                <button class="quick-btn" data-msg="random">Random</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">通訊流程視覺化</h2>
+            <div class="communication-flow">
+                <div class="endpoint main-thread">
+                    <div class="endpoint-icon">🖥️</div>
+                    <div class="endpoint-label">主執行緒</div>
+                    <div id="mainStatus" class="endpoint-status">就緒</div>
+                </div>
+                <div class="message-channel">
+                    <div id="messageArrow" class="message-arrow hidden">
+                        <div class="arrow-body"></div>
+                        <div class="arrow-text"></div>
+                    </div>
+                </div>
+                <div class="endpoint worker-thread">
+                    <div class="endpoint-icon">⚙️</div>
+                    <div class="endpoint-label">Web Worker</div>
+                    <div id="workerStatus" class="endpoint-status">就緒</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">訊息記錄</h2>
+            <div class="log-controls">
+                <button id="clearLogBtn" class="btn btn-secondary">清除記錄</button>
+            </div>
+            <div class="message-log">
+                <ul id="logList"></ul>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">統計資訊</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">發送訊息</span>
+                    <span id="sentCount" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">接收訊息</span>
+                    <span id="receivedCount" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">平均延遲</span>
+                    <span id="avgLatency" class="stat-value">0 ms</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>API：</strong>使用 <code>postMessage()</code> 和 <code>onmessage</code> 事件</li>
+                <li><strong>資料傳輸：</strong>訊息會被結構化克隆複製到 Worker</li>
+                <li><strong>非同步：</strong>訊息傳遞是完全非同步的</li>
+                <li><strong>雙向通訊：</strong>主執行緒與 Worker 可互相發送訊息</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #201 - 基礎訊息傳遞
+            </p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

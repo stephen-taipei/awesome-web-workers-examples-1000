@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#338 色彩和諧 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>色彩和諧</h1>
+            <p class="subtitle">Color Harmonization</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#338</span>
+                <span class="badge badge-secondary">影像處理</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>點擊或拖放圖片到此處</p>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>和諧類型</label>
+                <select id="harmonyType">
+                    <option value="complementary">互補色</option>
+                    <option value="analogous">類似色</option>
+                    <option value="triadic">三等分色</option>
+                    <option value="split">分裂互補</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>強度: <span id="intensityValue">50</span>%</label>
+                <input type="range" id="intensity" min="0" max="100" value="50">
+            </div>
+            <button id="processBtn" class="btn btn-primary" disabled>套用效果</button>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>原始</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>和諧化</h3><canvas id="resultCanvas"></canvas></div>
+            </div>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #338</footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

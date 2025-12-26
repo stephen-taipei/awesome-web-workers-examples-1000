@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#345 曝光混合 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>曝光混合</h1>
+            <p class="subtitle">Exposure Blend</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#345</span>
+                <span class="badge badge-secondary">影像處理</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>點擊或拖放圖片到此處</p>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>亮部曝光: <span id="highlightValue">-1</span> EV</label>
+                <input type="range" id="highlight" min="-3" max="0" value="-1" step="0.5">
+            </div>
+            <div class="control-group">
+                <label>暗部曝光: <span id="shadowValue">1</span> EV</label>
+                <input type="range" id="shadow" min="0" max="3" value="1" step="0.5">
+            </div>
+            <button id="processBtn" class="btn btn-primary" disabled>混合曝光</button>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>原始</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>混合後</h3><canvas id="resultCanvas"></canvas></div>
+            </div>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #345</footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

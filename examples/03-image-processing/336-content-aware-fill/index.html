@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#336 內容感知填充 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>內容感知填充</h1>
+            <p class="subtitle">Content Aware Fill</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#336</span>
+                <span class="badge badge-secondary">影像處理</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>點擊或拖放圖片到此處</p>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">繪製選區</h2>
+            <p>標記要填充的區域</p>
+            <div class="control-group">
+                <label>筆刷大小: <span id="brushValue">15</span>px</label>
+                <input type="range" id="brush" min="5" max="40" value="15">
+            </div>
+            <canvas id="maskCanvas"></canvas>
+            <button id="clearBtn" class="btn btn-secondary">清除選區</button>
+            <button id="processBtn" class="btn btn-primary" disabled>內容填充</button>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>原始</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>填充後</h3><canvas id="resultCanvas"></canvas></div>
+            </div>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #336</footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
