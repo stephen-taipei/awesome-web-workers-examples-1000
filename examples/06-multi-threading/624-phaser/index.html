@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#624 Phaser - Web Workers Multi-Threading</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Phaser Pattern</h1>
+            <p class="subtitle">Flexible Phased Synchronization</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#624</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-danger">Advanced</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Phaser Demo</h2>
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">Start Phaser</button>
+                <button id="add-btn" class="btn btn-secondary">Add Worker</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Status</h2>
+            <div id="status" class="result-stats"></div>
+            <div id="workers"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About Phaser</h3>
+            <ul>
+                <li><strong>Dynamic:</strong> Workers can register/deregister</li>
+                <li><strong>Flexible:</strong> Each worker can advance independently</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples</a> | #624 Phaser</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

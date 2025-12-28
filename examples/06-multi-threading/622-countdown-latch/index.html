@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#622 Countdown Latch - Web Workers Multi-Threading</title>
+    <meta name="description" content="Implement countdown latch for one-time synchronization">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Countdown Latch</h1>
+            <p class="subtitle">One-Time Synchronization Gate</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#622</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Countdown Latch Demo</h2>
+            <div class="form-group">
+                <label class="form-label" for="count">Initial Count:</label>
+                <input type="number" id="count" class="form-input" value="5" min="1" max="10">
+            </div>
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">Start</button>
+                <button id="reset-btn" class="btn btn-secondary">Reset</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Latch Counter</h2>
+            <div style="text-align:center;padding:30px;">
+                <span id="counter" style="font-size:5rem;font-weight:bold;color:var(--primary-color);">-</span>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Workers</h2>
+            <div id="workers-status"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About Countdown Latch</h3>
+            <ul>
+                <li><strong>Purpose:</strong> Wait until count reaches zero</li>
+                <li><strong>One-time:</strong> Cannot be reset once opened</li>
+                <li><strong>Use Case:</strong> Wait for N tasks to complete</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #622 Countdown Latch</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

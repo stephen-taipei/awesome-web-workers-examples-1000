@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#639 Data Parallelism - Web Workers Multi-Threading</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Data Parallelism</h1>
+            <p class="subtitle">Same Operation on Different Data</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#639</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Data Parallelism Demo</h2>
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">Process Data in Parallel</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Data Chunks</h2>
+            <div id="chunks"></div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Results</h2>
+            <div id="results" class="result-stats"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About Data Parallelism</h3>
+            <ul>
+                <li><strong>Concept:</strong> Same operation applied to partitioned data</li>
+                <li><strong>Benefit:</strong> Linear speedup for data-intensive tasks</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples</a> | #639 Data Parallelism</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

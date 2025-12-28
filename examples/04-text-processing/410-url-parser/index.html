@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#410 URL Parser - Web Workers Example</title>
+    <meta name="description" content="Parse URLs in batch using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>URL Parser</h1>
+            <p class="subtitle">URL Batch Parsing</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#410</span>
+                <span class="badge badge-secondary">Text Processing</span>
+                <span class="badge badge-success">Beginner</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="input-text">URLs (one per line)</label>
+                <textarea id="input-text" class="form-input" rows="10" placeholder="Enter URLs...">
+https://www.example.com/path/to/page?query=value&foo=bar#section
+http://user:pass@localhost:8080/api/v1/users
+https://api.github.com/repos/facebook/react/issues?state=open&per_page=100
+ftp://files.example.com/downloads/file.zip
+mailto:contact@example.com
+https://www.google.com/search?q=web+workers&hl=en
+https://example.com/products/123?color=red&size=large#reviews
+                </textarea>
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Parse URLs</button>
+                <button id="clear-btn" class="btn btn-secondary">Clear</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div id="result-output" class="result-output"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> URL component extraction</li>
+                <li><strong>Worker Type:</strong> Dedicated Worker</li>
+                <li><strong>Use Case:</strong> Batch URL analysis without blocking UI</li>
+                <li><strong>Features:</strong> Protocol, host, path, query, hash extraction</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #410</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

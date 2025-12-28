@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#405 CSV Parser - Web Workers Example</title>
+    <meta name="description" content="Parse CSV data to array using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>CSV Parser</h1>
+            <p class="subtitle">CSV to Array Conversion</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#405</span>
+                <span class="badge badge-secondary">Text Processing</span>
+                <span class="badge badge-success">Beginner</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="input-text">CSV Data</label>
+                <textarea id="input-text" class="form-input" rows="10" placeholder="Enter CSV data...">
+name,age,city,email,salary
+John Doe,30,New York,john@example.com,75000
+Jane Smith,28,Los Angeles,jane@example.com,82000
+Bob Johnson,35,Chicago,bob@example.com,68000
+Alice Brown,32,Houston,alice@example.com,91000
+Charlie Wilson,27,Phoenix,charlie@example.com,64000
+                </textarea>
+            </div>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="delimiter">Delimiter</label>
+                    <select id="delimiter" class="form-input">
+                        <option value=",">Comma (,)</option>
+                        <option value=";">Semicolon (;)</option>
+                        <option value="\t">Tab</option>
+                        <option value="|">Pipe (|)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="has-header">First Row is Header</label>
+                    <select id="has-header" class="form-input">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Parse CSV</button>
+                <button id="clear-btn" class="btn btn-secondary">Clear</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div id="table-output" class="table-container"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Line-by-line parsing with quote handling</li>
+                <li><strong>Worker Type:</strong> Dedicated Worker</li>
+                <li><strong>Use Case:</strong> Processing large CSV files without blocking UI</li>
+                <li><strong>Features:</strong> Custom delimiters, header detection, data preview</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #405</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

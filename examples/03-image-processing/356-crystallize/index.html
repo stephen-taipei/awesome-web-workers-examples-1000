@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#356 晶格化 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>晶格化</h1>
+            <p class="subtitle">Crystallize (Voronoi)</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#356</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-success">進階</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>點擊或拖放圖片到此處</p>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>晶格大小：<span id="cellSizeValue">20</span>px</label>
+                <input type="range" id="cellSize" min="10" max="50" value="20">
+            </div>
+            <div class="control-group">
+                <label>種子點數量：<span id="seedCountValue">500</span></label>
+                <input type="range" id="seedCount" min="100" max="2000" value="500">
+            </div>
+            <button id="processBtn" class="btn btn-primary" disabled>套用晶格化效果</button>
+        </section>
+        <section class="card" id="progressSection" style="display: none;">
+            <h2 class="card-title">處理進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div class="progress-bar" id="progressBar" style="width: 0%;">0%</div>
+                </div>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>原始圖片</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>晶格化效果</h3><canvas id="resultCanvas"></canvas></div>
+            </div>
+        </section>
+        <section class="card info-section">
+            <h3>技術說明</h3>
+            <ul>
+                <li>使用 <code>Voronoi</code> 圖來分割圖片區域</li>
+                <li>每個晶格填充該區域的平均顏色</li>
+                <li>Web Worker 背景處理避免 UI 阻塞</li>
+                <li>支援調整晶格大小和種子點數量</li>
+            </ul>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #356</footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

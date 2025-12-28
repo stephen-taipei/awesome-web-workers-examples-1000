@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#613 Atomics Add - Web Workers Multi-Threading</title>
+    <meta name="description" content="Demonstrate Atomics.add and Atomics.sub operations">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Atomics Add/Sub</h1>
+            <p class="subtitle">Atomic Arithmetic Operations</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#613</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Counter Demo</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="worker-count">Workers:</label>
+                    <input type="number" id="worker-count" class="form-input" value="4" min="1" max="8">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="increment-count">Increments per worker:</label>
+                    <input type="number" id="increment-count" class="form-input" value="10000" min="100">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">Start Counter Test</button>
+                <button id="reset-btn" class="btn btn-secondary">Reset</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Counter Value</h2>
+            <div id="counter-display" style="text-align:center;padding:30px;">
+                <span id="counter-value" style="font-size:4rem;font-weight:bold;color:var(--primary-color);">0</span>
+            </div>
+            <div id="result-info" class="result-stats"></div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Worker Progress</h2>
+            <div id="worker-progress"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About Atomics Add/Sub</h3>
+            <ul>
+                <li><strong>Atomics.add:</strong> Atomically adds value and returns old value</li>
+                <li><strong>Atomics.sub:</strong> Atomically subtracts value and returns old value</li>
+                <li><strong>Thread-safe:</strong> No race conditions with concurrent access</li>
+                <li><strong>Use Case:</strong> Shared counters, statistics gathering</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #613 Atomics Add</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

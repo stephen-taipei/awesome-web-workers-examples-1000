@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#614 Atomics AND/OR - Web Workers Multi-Threading</title>
+    <meta name="description" content="Demonstrate Atomics.and, Atomics.or, and Atomics.xor operations">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Atomics AND/OR/XOR</h1>
+            <p class="subtitle">Atomic Bitwise Operations</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#614</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Bitwise Operations Demo</h2>
+            <div class="btn-group">
+                <button id="init-btn" class="btn btn-primary">Initialize</button>
+                <button id="and-btn" class="btn btn-secondary" disabled>Atomics.and</button>
+                <button id="or-btn" class="btn btn-secondary" disabled>Atomics.or</button>
+                <button id="xor-btn" class="btn btn-secondary" disabled>Atomics.xor</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Current Value</h2>
+            <div id="value-display" style="text-align:center;padding:20px;">
+                <div style="font-size:2rem;font-family:monospace;color:var(--primary-color);">
+                    <span id="decimal-value">0</span>
+                </div>
+                <div style="margin-top:10px;font-family:monospace;color:var(--text-secondary);">
+                    Binary: <span id="binary-value">00000000</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Bit Flags Visualization</h2>
+            <div id="bit-flags" style="display:flex;gap:5px;justify-content:center;flex-wrap:wrap;"></div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Operations Log</h2>
+            <div id="log" style="max-height:200px;overflow-y:auto;font-family:monospace;font-size:0.85rem;"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About Atomic Bitwise Operations</h3>
+            <ul>
+                <li><strong>Atomics.and:</strong> Atomic bitwise AND, returns old value</li>
+                <li><strong>Atomics.or:</strong> Atomic bitwise OR, returns old value</li>
+                <li><strong>Atomics.xor:</strong> Atomic bitwise XOR, returns old value</li>
+                <li><strong>Use Case:</strong> Thread-safe flag manipulation</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #614 Atomics AND/OR</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

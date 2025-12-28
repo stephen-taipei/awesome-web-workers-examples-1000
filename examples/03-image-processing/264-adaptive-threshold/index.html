@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#264 自適應閾值 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 實現自適應閾值二值化，根據區域平均值動態調整閾值">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>自適應閾值</h1>
+            <p class="subtitle">Adaptive Threshold</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#264</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-warning">進階</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>點擊或拖放圖片到此處</p>
+                <p class="upload-hint">支援 JPG, PNG, WebP 格式</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="blockSize">區塊大小：<span id="blockSizeValue">11</span></label>
+                    <input type="range" id="blockSize" min="3" max="51" step="2" value="11">
+                </div>
+                <div class="control-group">
+                    <label for="constant">常數 C：<span id="constantValue">2</span></label>
+                    <input type="range" id="constant" min="-20" max="20" value="2">
+                </div>
+                <div class="control-group">
+                    <label for="method">方法：</label>
+                    <select id="method">
+                        <option value="mean">平均值法 (Mean)</option>
+                        <option value="gaussian">高斯加權法 (Gaussian)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="processBtn" class="btn btn-primary" disabled>處理圖片</button>
+                <button id="compareBtn" class="btn btn-secondary" disabled>對比全域閾值</button>
+                <button id="resetBtn" class="btn btn-danger" disabled>重置</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">處理進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+                </div>
+                <p id="progressText">等待圖片...</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item">
+                    <h3>原始圖片</h3>
+                    <canvas id="originalCanvas"></canvas>
+                </div>
+                <div class="preview-item">
+                    <h3>自適應閾值</h3>
+                    <canvas id="resultCanvas"></canvas>
+                </div>
+            </div>
+            <div id="comparisonResult" class="comparison-result hidden">
+                <div class="preview-item">
+                    <h3>全域閾值對比</h3>
+                    <canvas id="globalCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">效能資訊</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">圖片尺寸</span>
+                    <span id="imageSize" class="stat-value">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">處理時間</span>
+                    <span id="processTime" class="stat-value">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">像素處理速度</span>
+                    <span id="pixelRate" class="stat-value">-</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>自適應閾值：</strong>根據像素鄰域計算局部閾值，適合光照不均的圖片</li>
+                <li><strong>平均值法：</strong>使用區塊內像素的算術平均作為閾值</li>
+                <li><strong>高斯加權法：</strong>使用高斯加權平均，中心像素權重較高</li>
+                <li><strong>常數 C：</strong>從計算的閾值中減去的常數，用於微調</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #264 - 自適應閾值
+            </p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

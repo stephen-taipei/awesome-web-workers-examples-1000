@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#403 JSON Parser - Web Workers Example</title>
+    <meta name="description" content="Parse large JSON files using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>JSON Parser</h1>
+            <p class="subtitle">Large JSON Parsing</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#403</span>
+                <span class="badge badge-secondary">Text Processing</span>
+                <span class="badge badge-success">Beginner</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="input-text">JSON Text</label>
+                <textarea id="input-text" class="form-input" rows="10" placeholder="Enter JSON...">
+{
+    "name": "John Doe",
+    "age": 30,
+    "isActive": true,
+    "email": "john@example.com",
+    "address": {
+        "street": "123 Main St",
+        "city": "New York",
+        "zipCode": "10001"
+    },
+    "hobbies": ["reading", "gaming", "coding"],
+    "friends": [
+        {"name": "Jane", "age": 28},
+        {"name": "Bob", "age": 32}
+    ]
+}
+                </textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Quick Generate</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-size="100">100 items</button>
+                    <button class="preset-btn" data-size="1000">1K items</button>
+                    <button class="preset-btn" data-size="10000">10K items</button>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Parse JSON</button>
+                <button id="clear-btn" class="btn btn-secondary">Clear</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div class="form-group">
+                <label class="form-label">Parsed Structure</label>
+                <pre id="parsed-output" class="code-output"></pre>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Native JSON.parse with structure analysis</li>
+                <li><strong>Worker Type:</strong> Dedicated Worker</li>
+                <li><strong>Use Case:</strong> Parsing large JSON files without blocking UI</li>
+                <li><strong>Features:</strong> Deep structure analysis, type detection, statistics</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #403</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#203 Transferable 對象 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 展示 Transferable 對象零拷貝傳輸機制">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Transferable 對象</h1>
+            <p class="subtitle">Zero-Copy Transfer</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#203</span>
+                <span class="badge badge-secondary">通訊協調</span>
+                <span class="badge badge-warning">進階</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">效能比較測試</h2>
+            <div class="test-controls">
+                <div class="control-group">
+                    <label for="bufferSize">緩衝區大小：</label>
+                    <select id="bufferSize">
+                        <option value="1">1 MB</option>
+                        <option value="10">10 MB</option>
+                        <option value="50" selected>50 MB</option>
+                        <option value="100">100 MB</option>
+                    </select>
+                </div>
+                <button id="runTestBtn" class="btn btn-primary">執行比較測試</button>
+            </div>
+            <div id="testProgress" class="test-progress hidden">
+                <div class="progress-bar-wrapper">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <p id="progressText">準備中...</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">測試結果</h2>
+            <div class="results-comparison">
+                <div class="result-card copy-result">
+                    <h3>📋 結構化克隆 (複製)</h3>
+                    <div class="result-value">
+                        <span id="copyTime">-</span>
+                        <span class="unit">ms</span>
+                    </div>
+                    <p class="result-desc">資料被完整複製到 Worker</p>
+                </div>
+                <div class="vs-divider">VS</div>
+                <div class="result-card transfer-result">
+                    <h3>⚡ Transferable (轉移)</h3>
+                    <div class="result-value">
+                        <span id="transferTime">-</span>
+                        <span class="unit">ms</span>
+                    </div>
+                    <p class="result-desc">所有權直接轉移，零拷貝</p>
+                </div>
+            </div>
+            <div id="speedupInfo" class="speedup-info hidden">
+                <p>Transferable 比克隆快 <strong id="speedupFactor">-</strong> 倍！</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">所有權演示</h2>
+            <div class="ownership-demo">
+                <button id="createBufferBtn" class="btn btn-secondary">建立 ArrayBuffer</button>
+                <button id="transferBufferBtn" class="btn btn-warning" disabled>轉移到 Worker</button>
+                <button id="checkBufferBtn" class="btn btn-info" disabled>檢查緩衝區</button>
+            </div>
+            <div id="ownershipStatus" class="ownership-status">
+                <div class="status-item">
+                    <span class="label">主執行緒緩衝區：</span>
+                    <span id="mainBufferStatus" class="value">未建立</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">緩衝區大小：</span>
+                    <span id="bufferSizeDisplay" class="value">-</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">所有權：</span>
+                    <span id="ownershipDisplay" class="value">-</span>
+                </div>
+            </div>
+            <div id="ownershipLog" class="ownership-log"></div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">支援的 Transferable 類型</h2>
+            <div class="type-list">
+                <div class="type-item">
+                    <span class="type-icon">📦</span>
+                    <div class="type-info">
+                        <strong>ArrayBuffer</strong>
+                        <p>原始二進位資料緩衝區</p>
+                    </div>
+                </div>
+                <div class="type-item">
+                    <span class="type-icon">🖼️</span>
+                    <div class="type-info">
+                        <strong>ImageBitmap</strong>
+                        <p>點陣圖影像，適合 Canvas 繪圖</p>
+                    </div>
+                </div>
+                <div class="type-item">
+                    <span class="type-icon">📡</span>
+                    <div class="type-info">
+                        <strong>MessagePort</strong>
+                        <p>雙向通訊埠</p>
+                    </div>
+                </div>
+                <div class="type-item">
+                    <span class="type-icon">🎬</span>
+                    <div class="type-info">
+                        <strong>OffscreenCanvas</strong>
+                        <p>離屏畫布，可在 Worker 中繪圖</p>
+                    </div>
+                </div>
+                <div class="type-item">
+                    <span class="type-icon">📊</span>
+                    <div class="type-info">
+                        <strong>ReadableStream</strong>
+                        <p>可讀取的串流</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>零拷貝：</strong>Transferable 對象不複製資料，而是轉移所有權</li>
+                <li><strong>效能提升：</strong>大型資料傳輸可獲得數量級的速度提升</li>
+                <li><strong>所有權轉移：</strong>轉移後原始引用變為不可用（detached）</li>
+                <li><strong>使用場景：</strong>影像處理、音訊處理、大型資料集操作</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #203 - Transferable 對象
+            </p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

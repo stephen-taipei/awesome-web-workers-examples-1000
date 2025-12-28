@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#627 Map-Reduce - Web Workers Multi-Threading</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Map-Reduce Pattern</h1>
+            <p class="subtitle">Parallel Data Processing</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#627</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Word Count Demo</h2>
+            <div class="form-group">
+                <label class="form-label">Text (or use sample):</label>
+                <textarea id="text" class="form-input" rows="4" placeholder="Enter text..."></textarea>
+            </div>
+            <div class="btn-group">
+                <button id="sample-btn" class="btn btn-secondary">Load Sample</button>
+                <button id="start-btn" class="btn btn-primary">Run Map-Reduce</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Results</h2>
+            <div id="results"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About Map-Reduce</h3>
+            <ul>
+                <li><strong>Map:</strong> Transform data in parallel</li>
+                <li><strong>Reduce:</strong> Aggregate results</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples</a> | #627 Map-Reduce</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

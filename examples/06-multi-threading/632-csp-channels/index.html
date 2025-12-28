@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#632 CSP Channels - Web Workers Multi-Threading</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>CSP Channels</h1>
+            <p class="subtitle">Communicating Sequential Processes</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#632</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-danger">Advanced</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">CSP Demo</h2>
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">Start Producers/Consumers</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Channel</h2>
+            <div id="channel" style="display:flex;align-items:center;justify-content:space-around;padding:20px;"></div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Messages</h2>
+            <div id="messages" style="max-height:200px;overflow-y:auto;"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About CSP</h3>
+            <ul>
+                <li><strong>Channels:</strong> Typed conduits for data</li>
+                <li><strong>Synchronous:</strong> Send blocks until receive</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples</a> | #632 CSP Channels</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

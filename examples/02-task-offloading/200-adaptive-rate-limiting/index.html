@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#200 自適應限流 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 實現自適應限流演算法，根據系統負載動態調整限流參數">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>自適應限流</h1>
+            <p class="subtitle">Adaptive Rate Limiting</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#200</span>
+                <span class="badge badge-secondary">任務分流</span>
+                <span class="badge badge-danger">高級</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="baseRate">基礎速率 (req/s):</label>
+                    <input type="number" id="baseRate" value="10" min="1" max="100">
+                </div>
+                <div class="control-group">
+                    <label for="targetLatency">目標延遲 (ms):</label>
+                    <input type="number" id="targetLatency" value="100" min="10" max="1000">
+                </div>
+                <div class="control-group">
+                    <label for="adjustInterval">調整間隔 (ms):</label>
+                    <input type="number" id="adjustInterval" value="1000" min="100" max="5000">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="startBtn" class="btn btn-primary">啟動系統</button>
+                <button id="stopBtn" class="btn btn-danger" disabled>停止系統</button>
+                <button id="simulateLoadBtn" class="btn btn-warning">模擬高負載</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">即時監控</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">當前限流速率</div>
+                    <div id="currentRate" class="metric-value">0</div>
+                    <div class="metric-unit">req/s</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">平均延遲</div>
+                    <div id="avgLatency" class="metric-value">0</div>
+                    <div class="metric-unit">ms</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">通過請求</div>
+                    <div id="passedCount" class="metric-value">0</div>
+                    <div class="metric-unit">total</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">拒絕請求</div>
+                    <div id="rejectedCount" class="metric-value">0</div>
+                    <div class="metric-unit">total</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">速率變化圖表</h2>
+            <div class="chart-container">
+                <canvas id="rateChart"></canvas>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">自適應狀態</h2>
+            <div class="status-panel">
+                <div class="status-item">
+                    <span class="label">系統狀態:</span>
+                    <span id="systemStatus" class="value status-idle">閒置</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">調整方向:</span>
+                    <span id="adjustDirection" class="value">-</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">負載等級:</span>
+                    <span id="loadLevel" class="value">正常</span>
+                </div>
+            </div>
+            <div class="progress-container">
+                <label>速率調整進度:</label>
+                <div class="progress-bar-wrapper">
+                    <div id="rateProgress" class="progress-bar" style="width: 50%">50%</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">活動日誌</h2>
+            <div class="log-panel">
+                <ul id="logList"></ul>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>演算法：</strong>AIMD (Additive Increase Multiplicative Decrease) 自適應控制</li>
+                <li><strong>反饋機制：</strong>根據延遲指標動態調整限流速率</li>
+                <li><strong>Worker 類型：</strong>Dedicated Worker</li>
+                <li><strong>核心功能：</strong>自動感知負載變化，平衡吞吐量與延遲</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #200 - 自適應限流
+            </p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

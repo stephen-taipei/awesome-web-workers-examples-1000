@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#202 結構化克隆 - Web Workers 範例</title>
+    <meta name="description" content="使用 Web Worker 展示結構化克隆演算法，傳遞複雜對象">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>結構化克隆</h1>
+            <p class="subtitle">Structured Clone Algorithm</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#202</span>
+                <span class="badge badge-secondary">通訊協調</span>
+                <span class="badge badge-success">初級</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">測試不同資料類型</h2>
+            <div class="data-types-grid">
+                <button class="type-btn" data-type="object">物件 Object</button>
+                <button class="type-btn" data-type="array">陣列 Array</button>
+                <button class="type-btn" data-type="nested">巢狀結構</button>
+                <button class="type-btn" data-type="date">日期 Date</button>
+                <button class="type-btn" data-type="regexp">正則 RegExp</button>
+                <button class="type-btn" data-type="map">Map</button>
+                <button class="type-btn" data-type="set">Set</button>
+                <button class="type-btn" data-type="arraybuffer">ArrayBuffer</button>
+                <button class="type-btn" data-type="blob">Blob</button>
+                <button class="type-btn error" data-type="function">函數 (不支援)</button>
+                <button class="type-btn error" data-type="symbol">Symbol (不支援)</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">傳輸詳情</h2>
+            <div class="transfer-details">
+                <div class="detail-panel sent-panel">
+                    <h3>📤 發送的資料</h3>
+                    <pre id="sentData">點擊上方按鈕測試...</pre>
+                </div>
+                <div class="detail-panel received-panel">
+                    <h3>📥 接收的資料</h3>
+                    <pre id="receivedData">等待接收...</pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">克隆驗證</h2>
+            <div id="validationResult" class="validation-result">
+                <p>測試資料類型以驗證結構化克隆...</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">效能測試</h2>
+            <div class="perf-controls">
+                <div class="control-group">
+                    <label for="dataSize">資料大小：</label>
+                    <select id="dataSize">
+                        <option value="small">小 (1KB)</option>
+                        <option value="medium">中 (100KB)</option>
+                        <option value="large">大 (1MB)</option>
+                    </select>
+                </div>
+                <button id="perfTestBtn" class="btn btn-primary">執行效能測試</button>
+            </div>
+            <div id="perfResults" class="perf-results">
+                <p>選擇資料大小並執行測試...</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">支援類型一覽</h2>
+            <div class="type-support">
+                <div class="support-category">
+                    <h4>✅ 支援的類型</h4>
+                    <ul>
+                        <li>原始值 (string, number, boolean, null, undefined)</li>
+                        <li>Date, RegExp</li>
+                        <li>Array, Object (含巢狀)</li>
+                        <li>Map, Set</li>
+                        <li>ArrayBuffer, TypedArray</li>
+                        <li>Blob, File, FileList</li>
+                        <li>ImageData, ImageBitmap</li>
+                    </ul>
+                </div>
+                <div class="support-category">
+                    <h4>❌ 不支援的類型</h4>
+                    <ul>
+                        <li>Function</li>
+                        <li>Symbol</li>
+                        <li>DOM 節點</li>
+                        <li>Error 物件 (部分瀏覽器)</li>
+                        <li>WeakMap, WeakSet</li>
+                        <li>原型鏈 (prototype)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>關於此範例</h3>
+            <ul>
+                <li><strong>結構化克隆：</strong>HTML 規範定義的深層複製演算法</li>
+                <li><strong>自動處理：</strong>postMessage 自動使用結構化克隆</li>
+                <li><strong>循環引用：</strong>可正確處理對象間的循環引用</li>
+                <li><strong>限制：</strong>函數、Symbol 等無法被克隆</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p>
+                <a href="../../../">Awesome Web Workers Examples 1000</a>
+                &nbsp;|&nbsp;
+                範例 #202 - 結構化克隆
+            </p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

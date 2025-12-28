@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#402 HTML Parser - Web Workers Example</title>
+    <meta name="description" content="Parse HTML to DOM tree using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>HTML Parser</h1>
+            <p class="subtitle">HTML to DOM Tree</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#402</span>
+                <span class="badge badge-secondary">Text Processing</span>
+                <span class="badge badge-success">Beginner</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="input-text">HTML Code</label>
+                <textarea id="input-text" class="form-input" rows="10" placeholder="Enter HTML code...">
+<div class="container">
+    <header>
+        <h1>Hello World</h1>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+        </nav>
+    </header>
+    <main>
+        <article>
+            <p>This is a paragraph.</p>
+            <img src="image.jpg" alt="Image">
+        </article>
+    </main>
+</div>
+                </textarea>
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Parse HTML</button>
+                <button id="clear-btn" class="btn btn-secondary">Clear</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result - DOM Tree</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div id="tree-output" class="tree-output"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Recursive HTML tokenization and tree building</li>
+                <li><strong>Worker Type:</strong> Dedicated Worker</li>
+                <li><strong>Use Case:</strong> Analyzing HTML structure without blocking UI</li>
+                <li><strong>Features:</strong> Tag detection, attribute parsing, hierarchy display</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #402</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

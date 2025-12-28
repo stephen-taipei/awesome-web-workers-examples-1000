@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#424 Text Diff - Web Workers Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Text Diff</h1>
+            <p class="subtitle">Text Comparison</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#424</span>
+                <span class="badge badge-secondary">Text Processing</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label">Original Text</label>
+                    <textarea id="text1" class="form-input" rows="8">Hello World
+This is a test
+Line three here
+The end</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Modified Text</label>
+                    <textarea id="text2" class="form-input" rows="8">Hello World
+This is a modified test
+Line three is changed
+New line added
+The end</textarea>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Compare</button>
+                <button id="clear-btn" class="btn btn-secondary">Clear</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Diff Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <pre id="result-output" class="code-output" style="line-height: 1.8;"></pre>
+        </section>
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #424</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

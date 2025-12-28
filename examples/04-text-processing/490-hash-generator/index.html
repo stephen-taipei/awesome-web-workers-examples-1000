@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hash Generator - Web Worker Example #490</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .text-area-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) {
+            .text-area-container { grid-template-columns: 1fr; }
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+        }
+        .hash-result {
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+        }
+        .hash-label {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .hash-value {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            word-break: break-all;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .hash-value:hover {
+            background: var(--bg-card);
+        }
+        .algorithm-select {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .algo-btn {
+            padding: 8px 16px;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .algo-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        .algo-btn:hover:not(.active) {
+            border-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Hash Generator</h1>
+            <p class="subtitle">Web Worker Example #490 - Text Hashing (SHA-256, etc.)</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">Text Processing</span>
+                <span class="badge badge-success">Web Worker</span>
+                <span class="badge badge-secondary">Cryptography</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="card">
+                <div class="card-title">Hash Generator</div>
+
+                <div class="controls">
+                    <label class="form-label">Select Algorithms</label>
+                    <div class="algorithm-select">
+                        <button class="algo-btn active" data-algo="SHA-256">SHA-256</button>
+                        <button class="algo-btn active" data-algo="SHA-384">SHA-384</button>
+                        <button class="algo-btn active" data-algo="SHA-512">SHA-512</button>
+                        <button class="algo-btn" data-algo="SHA-1">SHA-1</button>
+                        <button class="algo-btn" data-algo="MD5">MD5</button>
+                    </div>
+                    <div class="btn-group">
+                        <button id="hashBtn" class="btn btn-primary">Generate Hashes</button>
+                        <button id="clearBtn" class="btn btn-danger">Clear</button>
+                    </div>
+                </div>
+
+                <div class="text-area-container">
+                    <div>
+                        <label class="form-label">Input Text</label>
+                        <textarea id="inputArea" placeholder="Enter text to hash..."></textarea>
+                    </div>
+                    <div>
+                        <label class="form-label">Batch Input (one per line)</label>
+                        <textarea id="batchArea" placeholder="Enter multiple strings, one per line..."></textarea>
+                    </div>
+                </div>
+
+                <div id="resultsContainer"></div>
+
+                <div id="progressContainer" class="progress-container hidden">
+                    <div class="progress-bar-wrapper">
+                        <div id="progressBar" class="progress-bar" style="width: 0%">0%</div>
+                    </div>
+                </div>
+
+                <div id="statsContainer" class="result-section hidden">
+                    <div class="result-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Hashes Generated</span>
+                            <span id="hashCount" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Time Taken</span>
+                            <span id="timeTaken" class="stat-value">0 ms</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>How it works</h3>
+                <ul>
+                    <li>Uses the Web Crypto API (SubtleCrypto) for SHA family hashes.</li>
+                    <li>MD5 is implemented in pure JavaScript (for legacy compatibility).</li>
+                    <li>Click on any hash value to copy it to clipboard.</li>
+                    <li>Batch processing: enter multiple strings (one per line) for bulk hashing.</li>
+                </ul>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #490</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

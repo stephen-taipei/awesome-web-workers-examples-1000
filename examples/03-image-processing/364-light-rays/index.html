@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#364 光線效果 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>光線效果</h1>
+            <p class="subtitle">Light Rays</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#364</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-success">進階</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>點擊或拖放圖片到此處</p>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>光源X：<span id="lightXValue">0.5</span></label>
+                <input type="range" id="lightX" min="0" max="1" step="0.1" value="0.5">
+            </div>
+            <div class="control-group">
+                <label>光源Y：<span id="lightYValue">0.3</span></label>
+                <input type="range" id="lightY" min="0" max="1" step="0.1" value="0.3">
+            </div>
+            <div class="control-group">
+                <label>光線強度：<span id="intensityValue">0.5</span></label>
+                <input type="range" id="intensity" min="0.1" max="1" step="0.1" value="0.5">
+            </div>
+            <button id="processBtn" class="btn btn-primary" disabled>套用光線</button>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>原始圖片</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>光線效果</h3><canvas id="resultCanvas"></canvas></div>
+            </div>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #364</footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

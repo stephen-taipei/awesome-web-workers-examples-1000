@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#380 特徵點萃取 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>特徵點萃取</h1>
+            <p class="subtitle">Feature Point Extraction</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#380</span>
+                <span class="badge badge-secondary">影像處理</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>點擊或拖放圖片到此處</p>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>特徵點數量上限: <span id="maxPointsValue">100</span></label>
+                <input type="range" id="maxPoints" min="10" max="500" value="100">
+            </div>
+            <button id="processBtn" class="btn btn-primary" disabled>萃取特徵</button>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>原始圖片</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>特徵點</h3><canvas id="resultCanvas"></canvas></div>
+            </div>
+            <p class="info">萃取特徵點數: <span id="featureCount">0</span></p>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #380</footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

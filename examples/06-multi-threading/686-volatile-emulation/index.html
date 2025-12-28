@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#686 Volatile Emulation - Web Workers Multi-Threading</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Volatile Emulation</h1>
+            <p class="subtitle">Force memory reads/writes</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#686</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Demo</h2>
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">Start</button>
+                <button id="reset-btn" class="btn btn-secondary">Reset</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Status</h2>
+            <div id="status" class="result-stats"></div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Output</h2>
+            <div id="output" style="max-height:200px;overflow-y:auto;"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About Volatile Emulation</h3>
+            <ul>
+                <li><strong>Pattern:</strong> Volatile Emulation</li>
+                <li><strong>Description:</strong> Force memory reads/writes</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples</a> | #686 Volatile Emulation</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

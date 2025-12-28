@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#620 Spinlock - Web Workers Multi-Threading</title>
+    <meta name="description" content="Implement spinlock using Atomics for busy-waiting lock">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Spinlock Pattern</h1>
+            <p class="subtitle">Busy-Waiting Lock</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#620</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Spinlock Demo</h2>
+            <p style="color:var(--text-secondary);margin-bottom:15px;">Workers spin (busy-wait) while trying to acquire lock.</p>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="worker-count">Workers:</label>
+                    <input type="number" id="worker-count" class="form-input" value="4" min="2" max="8">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="iterations">Iterations:</label>
+                    <input type="number" id="iterations" class="form-input" value="1000" min="100">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">Start Test</button>
+                <button id="reset-btn" class="btn btn-secondary">Reset</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Spinlock Status</h2>
+            <div style="text-align:center;padding:20px;">
+                <div id="lock-visual" style="width:120px;height:120px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.9rem;background:var(--success-color);color:white;transition:all 0.2s;">
+                    UNLOCKED
+                </div>
+                <div id="spin-count" style="margin-top:15px;color:var(--text-muted);">Total spins: 0</div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Worker Statistics</h2>
+            <div id="worker-stats"></div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Results</h2>
+            <div id="results" class="result-stats"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About Spinlock</h3>
+            <ul>
+                <li><strong>Mechanism:</strong> Loop (spin) until lock becomes available</li>
+                <li><strong>Pros:</strong> No thread context switch overhead</li>
+                <li><strong>Cons:</strong> Wastes CPU cycles while spinning</li>
+                <li><strong>Best For:</strong> Short critical sections, low contention</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #620 Spinlock</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

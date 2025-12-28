@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#411 Query String Parser - Web Workers Example</title>
+    <meta name="description" content="Parse query strings using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Query String Parser</h1>
+            <p class="subtitle">Query String Parsing</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#411</span>
+                <span class="badge badge-secondary">Text Processing</span>
+                <span class="badge badge-success">Beginner</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="input-text">Query Strings (one per line)</label>
+                <textarea id="input-text" class="form-input" rows="8" placeholder="Enter query strings...">
+name=John+Doe&age=30&city=New+York
+search=web%20workers&lang=en&page=1&limit=20
+user[name]=Alice&user[email]=alice%40example.com&tags[]=red&tags[]=blue
+action=submit&data=%7B%22key%22%3A%22value%22%7D
+empty=&flag&multiple=a&multiple=b&multiple=c
+                </textarea>
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Parse Query Strings</button>
+                <button id="clear-btn" class="btn btn-secondary">Clear</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <pre id="result-output" class="code-output"></pre>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> URL-encoded string parsing</li>
+                <li><strong>Worker Type:</strong> Dedicated Worker</li>
+                <li><strong>Use Case:</strong> Parsing URL parameters without blocking UI</li>
+                <li><strong>Features:</strong> Decoding, arrays, nested objects</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #411</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#423 Syntax Highlighter - Web Workers Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Syntax Highlighter</h1>
+            <p class="subtitle">Code Syntax Highlighting</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#423</span>
+                <span class="badge badge-secondary">Text Processing</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label">Language</label>
+                <select id="language" class="form-input">
+                    <option value="javascript">JavaScript</option>
+                    <option value="python">Python</option>
+                    <option value="html">HTML</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="input-text">Code</label>
+                <textarea id="input-text" class="form-input" rows="8">function greet(name) {
+    // Say hello
+    const message = `Hello, ${name}!`;
+    console.log(message);
+    return true;
+}</textarea>
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Highlight</button>
+                <button id="clear-btn" class="btn btn-secondary">Clear</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <pre id="result-output" class="code-output" style="background: #1e1e1e; padding: 15px; border-radius: 8px;"></pre>
+        </section>
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #423</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

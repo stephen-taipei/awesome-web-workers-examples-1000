@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#621 Barrier - Web Workers Multi-Threading</title>
+    <meta name="description" content="Implement barrier synchronization for coordinating workers">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Barrier Synchronization</h1>
+            <p class="subtitle">Coordinate Workers at Synchronization Points</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#621</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-danger">Advanced</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Barrier Demo</h2>
+            <div class="form-group">
+                <label class="form-label" for="worker-count">Workers:</label>
+                <input type="number" id="worker-count" class="form-input" value="4" min="2" max="8">
+            </div>
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">Start Phases</button>
+                <button id="reset-btn" class="btn btn-secondary">Reset</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Barrier Status</h2>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Current Phase:</span>
+                    <span class="stat-value" id="current-phase">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Workers at Barrier:</span>
+                    <span class="stat-value" id="workers-waiting">0</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Worker Progress</h2>
+            <div id="worker-progress"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About Barrier</h3>
+            <ul>
+                <li><strong>Purpose:</strong> All workers wait until everyone reaches the barrier</li>
+                <li><strong>Use Case:</strong> Phased parallel algorithms</li>
+                <li><strong>Behavior:</strong> Workers proceed together after all arrive</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #621 Barrier</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

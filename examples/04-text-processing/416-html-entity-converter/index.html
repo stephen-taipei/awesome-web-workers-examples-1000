@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#416 HTML Entity Converter - Web Workers Example</title>
+    <meta name="description" content="HTML entity encode/decode using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>HTML Entity Converter</h1>
+            <p class="subtitle">HTML Entity Encode/Decode</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#416</span>
+                <span class="badge badge-secondary">Text Processing</span>
+                <span class="badge badge-success">Beginner</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="input-text">Text or HTML Entities</label>
+                <textarea id="input-text" class="form-input" rows="4" placeholder="Enter text..."><div class="example">Hello & "World" © 2024</div></textarea>
+            </div>
+            <div class="btn-group">
+                <button id="encode-btn" class="btn btn-primary">Encode Entities</button>
+                <button id="decode-btn" class="btn btn-secondary">Decode Entities</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div class="form-group">
+                <label class="form-label">Output</label>
+                <textarea id="result-output" class="form-input" rows="4" readonly></textarea>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> HTML entity mapping and conversion</li>
+                <li><strong>Worker Type:</strong> Dedicated Worker</li>
+                <li><strong>Use Case:</strong> Safe HTML content handling</li>
+                <li><strong>Features:</strong> Named entities, numeric entities, full coverage</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #416</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#443 Text Summarization - Web Workers Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Text Summarization</h1>
+            <p class="subtitle">Extractive Summarization</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#443</span>
+                <span class="badge badge-secondary">Text Processing</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label">Text</label>
+                <textarea id="input-text" class="form-input" rows="8">Machine learning is a method of data analysis that automates analytical model building. It is a branch of artificial intelligence based on the idea that systems can learn from data. They can identify patterns and make decisions with minimal human intervention. Because of new computing technologies, machine learning today is not like machine learning of the past. While many machine learning algorithms have been around for a long time, the ability to automatically apply complex mathematical calculations to big data is a recent development.</textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Number of Sentences</label>
+                <input id="num-sentences" class="form-input" type="number" value="2" min="1" max="10">
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Summarize</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Summary</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div id="result-output" class="result-output" style="line-height:1.8"></div>
+        </section>
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #443</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

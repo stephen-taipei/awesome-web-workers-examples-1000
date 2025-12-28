@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#607 Message Channel - Web Workers Multi-Threading</title>
+    <meta name="description" content="Demonstrate MessageChannel for direct worker-to-worker communication">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Message Channel Pattern</h1>
+            <p class="subtitle">Direct Worker-to-Worker Communication</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#607</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Message Channel Demo</h2>
+            <p style="color:var(--text-secondary);margin-bottom:15px;">Two workers communicate directly via MessageChannel.</p>
+            <div class="btn-group">
+                <button id="create-channel-btn" class="btn btn-primary">Create Channel</button>
+                <button id="send-a-to-b-btn" class="btn btn-secondary" disabled>A -> B</button>
+                <button id="send-b-to-a-btn" class="btn btn-secondary" disabled>B -> A</button>
+                <button id="ping-pong-btn" class="btn btn-secondary" disabled>Start Ping-Pong</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Worker A</h2>
+            <div id="worker-a-log" style="max-height:150px;overflow-y:auto;background:var(--bg-secondary);padding:10px;border-radius:8px;font-family:monospace;font-size:0.85rem;"></div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Worker B</h2>
+            <div id="worker-b-log" style="max-height:150px;overflow-y:auto;background:var(--bg-secondary);padding:10px;border-radius:8px;font-family:monospace;font-size:0.85rem;"></div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Statistics</h2>
+            <div id="stats" class="result-stats"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Pattern</h3>
+            <ul>
+                <li><strong>Pattern:</strong> MessageChannel for direct communication</li>
+                <li><strong>Use Case:</strong> Workers need to communicate without main thread</li>
+                <li><strong>Setup:</strong> Main creates channel, transfers ports to workers</li>
+                <li><strong>Efficiency:</strong> Bypasses main thread for inter-worker messages</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #607 Message Channel</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

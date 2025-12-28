@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#368 雙重曝光 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>雙重曝光</h1>
+            <p class="subtitle">Double Exposure</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#368</span>
+                <span class="badge badge-secondary">影像處理</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-area" id="uploadArea1"><input type="file" id="fileInput1" accept="image/*" hidden><p>圖片 1</p></div>
+            <div class="upload-area" id="uploadArea2"><input type="file" id="fileInput2" accept="image/*" hidden><p>圖片 2</p></div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>混合模式：
+                    <select id="blendMode">
+                        <option value="screen">濾色 (Screen)</option>
+                        <option value="multiply">正片疊底 (Multiply)</option>
+                        <option value="overlay">疊加 (Overlay)</option>
+                        <option value="lighten">變亮 (Lighten)</option>
+                    </select>
+                </label>
+            </div>
+            <div class="control-group">
+                <label>混合比例：<span id="ratioValue">0.5</span></label>
+                <input type="range" id="ratio" min="0" max="1" step="0.1" value="0.5">
+            </div>
+            <button id="processBtn" class="btn btn-primary" disabled>套用雙重曝光</button>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <canvas id="resultCanvas"></canvas>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #368</footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

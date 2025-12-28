@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#409 Log Parser - Web Workers Example</title>
+    <meta name="description" content="Parse log files using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Log Parser</h1>
+            <p class="subtitle">Log File Parsing</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#409</span>
+                <span class="badge badge-secondary">Text Processing</span>
+                <span class="badge badge-success">Beginner</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="input-text">Log Data</label>
+                <textarea id="input-text" class="form-input" rows="12" placeholder="Enter log data...">
+2024-01-15 10:23:45 INFO  [main] Application started successfully
+2024-01-15 10:23:46 DEBUG [db] Database connection established
+2024-01-15 10:23:47 INFO  [auth] User john@example.com logged in
+2024-01-15 10:24:01 WARN  [cache] Cache miss for key: user_123
+2024-01-15 10:24:15 ERROR [api] Failed to fetch data: Connection timeout
+2024-01-15 10:24:16 INFO  [api] Retrying request...
+2024-01-15 10:24:18 INFO  [api] Request successful on retry
+2024-01-15 10:25:00 DEBUG [scheduler] Running scheduled task: cleanup
+2024-01-15 10:25:30 WARN  [memory] Memory usage above 80%
+2024-01-15 10:26:00 INFO  [auth] User jane@example.com logged in
+                </textarea>
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Parse Logs</button>
+                <button id="clear-btn" class="btn btn-secondary">Clear</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div id="table-output" class="table-container"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Regex-based log line parsing</li>
+                <li><strong>Worker Type:</strong> Dedicated Worker</li>
+                <li><strong>Use Case:</strong> Log analysis without blocking UI</li>
+                <li><strong>Features:</strong> Timestamp, level, source, message extraction</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #409</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

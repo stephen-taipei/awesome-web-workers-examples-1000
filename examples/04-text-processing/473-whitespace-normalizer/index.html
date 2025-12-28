@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#473 Whitespace Normalizer - Web Workers Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Whitespace Normalizer</h1>
+            <p class="subtitle">Clean up and normalize whitespace</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#473</span>
+                <span class="badge badge-secondary">Text Processing</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label">Text</label>
+                <textarea id="input-text" class="form-input" rows="4">  This   has    extra   spaces.
+
+And multiple    blank lines...
+
+
+	Some tabs too.	</textarea>
+            </div>
+            <div class="form-group">
+                <label style="display:flex;align-items:center;gap:8px">
+                    <input type="checkbox" id="trim-lines" checked>
+                    Trim each line
+                </label>
+                <label style="display:flex;align-items:center;gap:8px">
+                    <input type="checkbox" id="collapse-spaces" checked>
+                    Collapse multiple spaces
+                </label>
+                <label style="display:flex;align-items:center;gap:8px">
+                    <input type="checkbox" id="collapse-lines" checked>
+                    Collapse multiple blank lines
+                </label>
+                <label style="display:flex;align-items:center;gap:8px">
+                    <input type="checkbox" id="tabs-to-spaces" checked>
+                    Convert tabs to spaces
+                </label>
+                <label style="display:flex;align-items:center;gap:8px">
+                    <input type="checkbox" id="remove-trailing">
+                    Remove trailing whitespace
+                </label>
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Normalize</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div id="result-output" class="result-output"></div>
+        </section>
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #473</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

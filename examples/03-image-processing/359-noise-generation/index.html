@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#359 噪點生成 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>噪點生成</h1>
+            <p class="subtitle">Perlin/Simplex Noise</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#359</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-success">進階</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>寬度：<input type="number" id="width" value="400" min="100" max="800"></label>
+            </div>
+            <div class="control-group">
+                <label>高度：<input type="number" id="height" value="400" min="100" max="800"></label>
+            </div>
+            <div class="control-group">
+                <label>縮放：<span id="scaleValue">50</span></label>
+                <input type="range" id="scale" min="10" max="200" value="50">
+            </div>
+            <div class="control-group">
+                <label>噪點類型：
+                    <select id="noiseType">
+                        <option value="perlin">Perlin Noise</option>
+                        <option value="simplex">Simplex Noise</option>
+                    </select>
+                </label>
+            </div>
+            <button id="generateBtn" class="btn btn-primary">生成噪點圖</button>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <canvas id="resultCanvas"></canvas>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #359</footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

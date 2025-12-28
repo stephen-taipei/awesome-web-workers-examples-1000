@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#396 影像品質評估 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>影像品質評估</h1>
+            <p class="subtitle">Image Quality Assessment</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#396</span>
+                <span class="badge badge-secondary">影像處理</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>點擊或拖放圖片到此處</p>
+            </div>
+        </section>
+        <section class="card">
+            <button id="processBtn" class="btn btn-primary" disabled>分析品質</button>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>原始圖片</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>邊緣分析</h3><canvas id="resultCanvas"></canvas></div>
+            </div>
+            <div class="metrics">
+                <div class="metric">
+                    <div class="metric-value" id="sharpness">-</div>
+                    <div class="metric-label">銳利度</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="contrast">-</div>
+                    <div class="metric-label">對比度</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="brightness">-</div>
+                    <div class="metric-label">亮度</div>
+                </div>
+            </div>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #396</footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

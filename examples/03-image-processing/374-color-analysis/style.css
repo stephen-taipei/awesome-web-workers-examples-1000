@@ -1,0 +1,26 @@
+* { box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; background: #f0f2f5; }
+.container { max-width: 900px; margin: 0 auto; }
+.header { text-align: center; margin-bottom: 30px; }
+.header h1 { color: #2c3e50; margin-bottom: 5px; }
+.subtitle { color: #7f8c8d; font-style: italic; }
+.badge-container { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+.badge { padding: 4px 12px; border-radius: 20px; font-size: 0.85em; }
+.badge-primary { background: #007bff; color: white; }
+.badge-secondary { background: #6c757d; color: white; }
+.card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.card-title { margin: 0 0 20px; color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+.upload-area { border: 3px dashed #dee2e6; border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; }
+.upload-area:hover { border-color: #007bff; }
+.control-group { margin-bottom: 15px; }
+.control-group input[type="range"] { width: 100%; }
+.btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 1em; }
+.btn:disabled { opacity: 0.5; }
+.btn-primary { background: #007bff; color: white; }
+.preview-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.preview-item { text-align: center; }
+.preview-item canvas { max-width: 100%; border: 1px solid #e9ecef; border-radius: 8px; }
+.footer { text-align: center; padding: 20px; color: #6c757d; }
+.footer a { color: #007bff; }
+.color-palette { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+.color-swatch { width: 60px; height: 60px; border-radius: 8px; display: flex; align-items: flex-end; justify-content: center; padding: 4px; font-size: 10px; color: white; text-shadow: 0 0 2px black; }

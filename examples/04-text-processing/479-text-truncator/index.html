@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#479 Text Truncator - Web Workers Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Text Truncator</h1>
+            <p class="subtitle">Truncate text with ellipsis</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#479</span>
+                <span class="badge badge-secondary">Text Processing</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label">Text</label>
+                <textarea id="input-text" class="form-input" rows="4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Max Length</label>
+                <input type="number" id="max-length" class="form-input" value="100" min="10" max="1000">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Truncate By</label>
+                <select id="truncate-mode" class="form-input">
+                    <option value="chars">Characters</option>
+                    <option value="words">Words</option>
+                    <option value="sentences">Sentences</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Ellipsis</label>
+                <input type="text" id="ellipsis" class="form-input" value="...">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Position</label>
+                <select id="position" class="form-input">
+                    <option value="end">End</option>
+                    <option value="middle">Middle</option>
+                    <option value="start">Start</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Truncate</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div id="result-output" class="result-output"></div>
+        </section>
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #479</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
