@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>#894 Timer System - Web Workers</title><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<header class="header"><h1>Timer System</h1><p class="subtitle">Game Timer Management</p><div class="badge-container"><span class="badge badge-primary">#894</span><span class="badge badge-secondary">Games</span></div></header>
+<section class="card"><h2 class="card-title">Time: <span id="time">0:00</span></h2><div class="btn-group"><button class="btn" onclick="cmd('start')">Start</button><button class="btn" onclick="cmd('pause')">Pause</button><button class="btn btn-secondary" onclick="cmd('reset')">Reset</button></div></section>
+<section class="card"><h2 class="card-title">Laps</h2><button class="btn" onclick="cmd('lap')">Lap</button><div id="laps" class="result-display"></div></section>
+<footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #894</p></footer>
+</div><script src="main.js"></script></body></html>

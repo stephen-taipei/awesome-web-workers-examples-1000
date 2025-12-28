@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>#891 Score System - Web Workers</title><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<header class="header"><h1>Score System</h1><p class="subtitle">Points and Multiplier</p><div class="badge-container"><span class="badge badge-primary">#891</span><span class="badge badge-secondary">Games</span></div></header>
+<section class="card"><h2 class="card-title">Score: <span id="score">0</span></h2><p>Multiplier: <span id="mult">1.0</span>x | Combo: <span id="combo">0</span></p></section>
+<section class="card"><h2 class="card-title">Actions</h2><div class="btn-group"><button class="btn" onclick="action('kill')">Kill (+100)</button><button class="btn" onclick="action('collect')">Collect (+50)</button><button class="btn btn-secondary" onclick="action('reset')">Reset</button></div></section>
+<footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #891</p></footer>
+</div><script src="main.js"></script></body></html>
