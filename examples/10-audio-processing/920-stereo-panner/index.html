@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>#920 Stereo Panner - Web Workers</title><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<header class="header"><h1>Stereo Panner</h1><p class="subtitle">Left/Right Balance</p><div class="badge-container"><span class="badge badge-primary">#920</span><span class="badge badge-secondary">Audio</span></div></header>
+<section class="card"><h2 class="card-title">Pan Position</h2><div style="display:flex;justify-content:space-between"><span>L</span><input type="range" min="-100" max="100" value="0" oninput="update()" style="flex:1;margin:0 1rem"><span>R</span></div><div id="meters" class="result-display" style="margin-top:1rem"></div></section>
+<footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #920</p></footer>
+</div><script src="main.js"></script></body></html>

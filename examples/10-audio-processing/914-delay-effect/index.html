@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>#914 Delay Effect - Web Workers</title><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<header class="header"><h1>Delay Effect</h1><p class="subtitle">Echo and Delay</p><div class="badge-container"><span class="badge badge-primary">#914</span><span class="badge badge-secondary">Audio</span></div></header>
+<section class="card"><h2 class="card-title">Delay Settings</h2><div>Time: <input type="range" min="50" max="1000" value="300" oninput="update()"> <span id="time">300</span>ms</div><div>Feedback: <input type="range" min="0" max="90" value="50" oninput="update()"> <span id="fb">50</span>%</div><div id="echoes" class="result-display" style="margin-top:1rem"></div></section>
+<footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #914</p></footer>
+</div><script src="main.js"></script></body></html>
