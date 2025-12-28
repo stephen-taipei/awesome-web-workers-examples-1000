@@ -1,0 +1,4 @@
+const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+self.onmessage=e=>{const board=[...e.data.board];let bestMove=-1,bestScore=-Infinity;for(let i=0;i<9;i++){if(!board[i]){board[i]='O';const score=minimax(board,0,false);board[i]='';if(score>bestScore){bestScore=score;bestMove=i;}}}self.postMessage({move:bestMove});};
+function minimax(board,depth,isMax){if(checkWin(board,'O'))return 10-depth;if(checkWin(board,'X'))return depth-10;if(board.every(c=>c))return 0;if(isMax){let best=-Infinity;for(let i=0;i<9;i++){if(!board[i]){board[i]='O';best=Math.max(best,minimax(board,depth+1,false));board[i]='';}}return best;}else{let best=Infinity;for(let i=0;i<9;i++){if(!board[i]){board[i]='X';best=Math.min(best,minimax(board,depth+1,true));board[i]='';}}return best;}}
+function checkWin(b,p){return wins.some(w=>w.every(i=>b[i]===p));}

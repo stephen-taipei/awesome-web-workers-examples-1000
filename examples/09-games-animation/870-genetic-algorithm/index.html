@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>#870 Genetic Algorithm - Web Workers</title><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<header class="header"><h1>Genetic Algorithm</h1><p class="subtitle">Evolutionary Optimization</p><div class="badge-container"><span class="badge badge-primary">#870</span><span class="badge badge-secondary">AI</span></div></header>
+<section class="card"><div class="input-row"><div class="form-group"><label class="form-label">Target Text</label><input type="text" id="target" class="form-input" value="Hello World"></div><div class="form-group"><label class="form-label">Population</label><input type="number" id="pop" class="form-input" value="200" min="50" max="1000"></div></div><div class="btn-group"><button id="startBtn" class="btn btn-primary">Start Evolution</button><button id="stopBtn" class="btn btn-danger" disabled>Stop</button></div></section>
+<section class="card"><div class="result-stats"><div class="stat-item"><span class="stat-label">Generation:</span><span class="stat-value" id="gen">0</span></div><div class="stat-item"><span class="stat-label">Best:</span><span class="stat-value" id="best">-</span></div><div class="stat-item"><span class="stat-label">Fitness:</span><span class="stat-value" id="fitness">0%</span></div></div></section>
+<footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #870</p></footer>
+</div><script src="main.js"></script></body></html>

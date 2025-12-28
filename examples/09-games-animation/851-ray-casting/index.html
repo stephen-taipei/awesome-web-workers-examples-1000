@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#851 Ray Casting - Web Workers Example</title>
+    <meta name="description" content="2D ray casting for visibility">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Ray Casting</h1>
+            <p class="subtitle">2D Visibility and Line of Sight</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#851</span>
+                <span class="badge badge-secondary">Rendering</span>
+                <span class="badge badge-success">Rays</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Controls</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="rayCount">Ray Count</label>
+                    <input type="range" id="rayCount" class="form-input" value="360" min="36" max="720">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="wallCount">Wall Count</label>
+                    <input type="number" id="wallCount" class="form-input" value="10" min="1" max="30">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="startBtn" class="btn btn-primary">Start</button>
+                <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+                <button id="regenerateBtn" class="btn btn-secondary">Regenerate Walls</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Move Mouse to Cast Rays</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="500"></canvas>
+            </div>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Rays Cast:</span>
+                    <span class="stat-value" id="raysCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Calc Time:</span>
+                    <span class="stat-value" id="calcTime">0 ms</span>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #851</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

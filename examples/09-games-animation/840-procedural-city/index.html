@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#840 Procedural City - Web Workers Example</title>
+    <meta name="description" content="Procedural city generation with buildings and roads">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Procedural City</h1>
+            <p class="subtitle">City Generation with Buildings and Roads</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#840</span>
+                <span class="badge badge-secondary">Procedural</span>
+                <span class="badge badge-success">City</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Controls</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="gridSize">City Size</label>
+                    <input type="number" id="gridSize" class="form-input" value="20" min="5" max="50">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="density">Building Density</label>
+                    <input type="range" id="density" class="form-input" value="0.7" min="0.3" max="0.9" step="0.1">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="generateBtn" class="btn btn-primary">Generate City</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Generated City (Top-Down View)</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="800"></canvas>
+            </div>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Buildings:</span>
+                    <span class="stat-value" id="buildingCount">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Roads:</span>
+                    <span class="stat-value" id="roadCount">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Time:</span>
+                    <span class="stat-value" id="genTime">-</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Generation:</strong> Grid-based city layout with random buildings</li>
+                <li><strong>Roads:</strong> Automatically placed between building blocks</li>
+                <li><strong>Colors:</strong> Building heights indicated by color intensity</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #840</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

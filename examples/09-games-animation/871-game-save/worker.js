@@ -1,0 +1,2 @@
+let saveData=null;
+self.onmessage=e=>{const{type,payload}=e.data;if(type==='SAVE'){try{const json=JSON.stringify(payload);const compressed=btoa(json);saveData=compressed;self.postMessage({type:'SAVED',size:compressed.length});}catch(err){self.postMessage({type:'ERROR',message:err.message});}}else if(type==='LOAD'){try{if(!saveData){self.postMessage({type:'LOADED',state:null});return;}const json=atob(saveData);const state=JSON.parse(json);self.postMessage({type:'LOADED',state});}catch(err){self.postMessage({type:'ERROR',message:err.message});}}};

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#850 Wave Simulation - Web Workers Example</title>
+    <meta name="description" content="2D wave propagation simulation">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Wave Simulation</h1>
+            <p class="subtitle">2D Wave Propagation</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#850</span>
+                <span class="badge badge-secondary">Physics</span>
+                <span class="badge badge-success">Waves</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Controls</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="waveSpeed">Wave Speed</label>
+                    <input type="range" id="waveSpeed" class="form-input" value="0.5" min="0.1" max="1" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="damping">Damping</label>
+                    <input type="range" id="damping" class="form-input" value="0.99" min="0.9" max="1" step="0.01">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="startBtn" class="btn btn-primary">Start</button>
+                <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+                <button id="clearBtn" class="btn btn-secondary">Clear</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Click to Create Waves</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="400" height="300"></canvas>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #850</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

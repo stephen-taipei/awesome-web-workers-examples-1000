@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#858 Sprite Animator - Web Workers Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Sprite Animator</h1>
+            <p class="subtitle">Frame-Based Animation System</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#858</span>
+                <span class="badge badge-secondary">Animation</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Animation Controls</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label">Animation</label>
+                    <select id="animation" class="form-input">
+                        <option value="idle">Idle</option>
+                        <option value="walk">Walk</option>
+                        <option value="run">Run</option>
+                        <option value="jump">Jump</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Speed</label>
+                    <input type="range" id="speed" class="form-input" value="10" min="1" max="30">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="startBtn" class="btn btn-primary">Start</button>
+                <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+            </div>
+        </section>
+        <section class="card">
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="400"></canvas>
+            </div>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Frame:</span>
+                    <span class="stat-value" id="frame">0</span>
+                </div>
+            </div>
+        </section>
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #858</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

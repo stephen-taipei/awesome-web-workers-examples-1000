@@ -1,0 +1,4 @@
+let worker=null,isRunning=false;
+document.addEventListener('DOMContentLoaded',()=>{document.getElementById('startBtn').addEventListener('click',start);document.getElementById('stopBtn').addEventListener('click',stop);});
+function start(){if(worker)worker.terminate();worker=new Worker('worker.js');worker.onmessage=e=>{document.getElementById('gen').textContent=e.data.generation;document.getElementById('best').textContent=e.data.best;document.getElementById('fitness').textContent=(e.data.fitness*100).toFixed(1)+'%';if(e.data.fitness>=1)stop();};worker.postMessage({target:document.getElementById('target').value,population:parseInt(document.getElementById('pop').value)});isRunning=true;document.getElementById('startBtn').disabled=true;document.getElementById('stopBtn').disabled=false;}
+function stop(){if(worker){worker.terminate();worker=null;}isRunning=false;document.getElementById('startBtn').disabled=false;document.getElementById('stopBtn').disabled=true;}

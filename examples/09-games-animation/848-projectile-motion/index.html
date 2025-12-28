@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#848 Projectile Motion - Web Workers Example</title>
+    <meta name="description" content="Projectile motion with air resistance">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Projectile Motion</h1>
+            <p class="subtitle">Physics with Air Resistance</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#848</span>
+                <span class="badge badge-secondary">Physics</span>
+                <span class="badge badge-success">Motion</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Launch Parameters</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="angle">Launch Angle (degrees)</label>
+                    <input type="range" id="angle" class="form-input" value="45" min="5" max="85">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="velocity">Initial Velocity</label>
+                    <input type="range" id="velocity" class="form-input" value="50" min="10" max="100">
+                </div>
+            </div>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="airResistance">Air Resistance</label>
+                    <input type="range" id="airResistance" class="form-input" value="0.01" min="0" max="0.05" step="0.005">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="gravity">Gravity</label>
+                    <input type="range" id="gravity" class="form-input" value="9.8" min="1" max="20" step="0.5">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="fireBtn" class="btn btn-primary">Fire!</button>
+                <button id="clearBtn" class="btn btn-secondary">Clear</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Trajectory</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="400"></canvas>
+            </div>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Max Height:</span>
+                    <span class="stat-value" id="maxHeight">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Range:</span>
+                    <span class="stat-value" id="range">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Flight Time:</span>
+                    <span class="stat-value" id="flightTime">-</span>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #848</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

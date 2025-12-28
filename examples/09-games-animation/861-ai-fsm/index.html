@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#861 AI FSM - Web Workers Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>AI Finite State Machine</h1>
+            <p class="subtitle">State-Based AI Behavior</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#861</span>
+                <span class="badge badge-secondary">AI</span>
+            </div>
+        </header>
+        <section class="card">
+            <div class="btn-group">
+                <button id="startBtn" class="btn btn-primary">Start AI</button>
+                <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+            </div>
+        </section>
+        <section class="card">
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="500"></canvas>
+            </div>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Current State:</span>
+                    <span class="stat-value" id="state">-</span>
+                </div>
+            </div>
+        </section>
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #861</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

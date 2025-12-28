@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#839 Perlin Noise Terrain - Web Workers Example</title>
+    <meta name="description" content="Perlin noise based terrain generation">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Noise Terrain</h1>
+            <p class="subtitle">Perlin Noise Terrain Generation</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#839</span>
+                <span class="badge badge-secondary">Procedural</span>
+                <span class="badge badge-success">Noise</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Controls</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="scale">Scale</label>
+                    <input type="range" id="scale" class="form-input" value="50" min="10" max="200">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="octaves">Octaves</label>
+                    <input type="range" id="octaves" class="form-input" value="6" min="1" max="8">
+                </div>
+            </div>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="persistence">Persistence</label>
+                    <input type="range" id="persistence" class="form-input" value="0.5" min="0.1" max="1" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="seed">Seed</label>
+                    <input type="number" id="seed" class="form-input" value="12345" min="0">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="generateBtn" class="btn btn-primary">Generate</button>
+                <button id="randomSeedBtn" class="btn btn-secondary">Random Seed</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Generated Terrain</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
+            </div>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Seed:</span>
+                    <span class="stat-value" id="currentSeed">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Time:</span>
+                    <span class="stat-value" id="genTime">-</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Simplex noise with fractal octaves</li>
+                <li><strong>Octaves:</strong> Layers of noise at different frequencies</li>
+                <li><strong>Persistence:</strong> How much each octave contributes</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #839</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

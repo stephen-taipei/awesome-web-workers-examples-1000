@@ -1,0 +1,3 @@
+let nodesEvaluated=0,pruned=0;
+self.onmessage=e=>{nodesEvaluated=0;pruned=0;const start=performance.now();alphaBeta(e.data.depth,-Infinity,Infinity,true);const time=performance.now()-start;self.postMessage({nodesEvaluated,pruned,time});};
+function alphaBeta(depth,alpha,beta,maximizing){nodesEvaluated++;if(depth===0)return Math.random()*200-100;const children=Math.floor(Math.random()*5)+3;if(maximizing){let value=-Infinity;for(let i=0;i<children;i++){value=Math.max(value,alphaBeta(depth-1,alpha,beta,false));alpha=Math.max(alpha,value);if(beta<=alpha){pruned++;break;}}return value;}else{let value=Infinity;for(let i=0;i<children;i++){value=Math.min(value,alphaBeta(depth-1,alpha,beta,true));beta=Math.min(beta,value);if(beta<=alpha){pruned++;break;}}return value;}}

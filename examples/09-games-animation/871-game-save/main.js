@@ -1,0 +1,7 @@
+let worker=null;
+document.addEventListener('DOMContentLoaded',()=>{worker=new Worker('worker.js');worker.onmessage=handleMessage;document.getElementById('saveBtn').addEventListener('click',save);document.getElementById('loadBtn').addEventListener('click',load);});
+function getGameState(){return{playerName:document.getElementById('playerName').value,level:parseInt(document.getElementById('level').value),gold:parseInt(document.getElementById('gold').value),exp:parseInt(document.getElementById('exp').value),inventory:['Sword','Shield','Potion'],timestamp:Date.now()};}
+function setGameState(state){document.getElementById('playerName').value=state.playerName;document.getElementById('level').value=state.level;document.getElementById('gold').value=state.gold;document.getElementById('exp').value=state.exp;}
+function save(){document.getElementById('status').textContent='Saving...';worker.postMessage({type:'SAVE',payload:getGameState()});}
+function load(){document.getElementById('status').textContent='Loading...';worker.postMessage({type:'LOAD'});}
+function handleMessage(e){if(e.data.type==='SAVED'){document.getElementById('status').textContent='Saved!';document.getElementById('size').textContent=e.data.size+' bytes';}else if(e.data.type==='LOADED'){if(e.data.state){setGameState(e.data.state);document.getElementById('status').textContent='Loaded!';}else document.getElementById('status').textContent='No save found';}else if(e.data.type==='ERROR')document.getElementById('status').textContent='Error: '+e.data.message;}

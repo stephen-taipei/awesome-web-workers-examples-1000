@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#832 Physics Engine - Web Workers Example</title>
+    <meta name="description" content="2D physics simulation with Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Physics Engine</h1>
+            <p class="subtitle">2D Physics Simulation in Web Worker</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#832</span>
+                <span class="badge badge-secondary">Games</span>
+                <span class="badge badge-success">Physics</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Controls</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="gravity">Gravity</label>
+                    <input type="range" id="gravity" class="form-input" value="9.8" min="0" max="20" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="restitution">Bounciness</label>
+                    <input type="range" id="restitution" class="form-input" value="0.8" min="0" max="1" step="0.1">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="startBtn" class="btn btn-primary">Start Simulation</button>
+                <button id="addBallBtn" class="btn btn-secondary">Add Ball</button>
+                <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Physics World</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="400"></canvas>
+            </div>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Bodies:</span>
+                    <span class="stat-value" id="bodyCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Physics Time:</span>
+                    <span class="stat-value" id="physicsTime">0 ms</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Physics:</strong> Verlet integration for position updates</li>
+                <li><strong>Collision:</strong> Circle-circle and circle-boundary detection</li>
+                <li><strong>Worker:</strong> All physics calculations run off main thread</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #832</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

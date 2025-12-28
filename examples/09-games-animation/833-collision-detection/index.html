@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#833 Collision Detection - Web Workers Example</title>
+    <meta name="description" content="Spatial hash grid collision detection in Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Collision Detection</h1>
+            <p class="subtitle">Spatial Hash Grid Collision Detection</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#833</span>
+                <span class="badge badge-secondary">Games</span>
+                <span class="badge badge-success">Optimization</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Controls</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="objectCount">Object Count</label>
+                    <input type="number" id="objectCount" class="form-input" value="200" min="10" max="2000">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="cellSize">Grid Cell Size</label>
+                    <input type="number" id="cellSize" class="form-input" value="50" min="10" max="100">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="startBtn" class="btn btn-primary">Start Detection</button>
+                <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Collision World</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="400"></canvas>
+            </div>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Collisions:</span>
+                    <span class="stat-value" id="collisionCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Checks Saved:</span>
+                    <span class="stat-value" id="checksSaved">0%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Detection Time:</span>
+                    <span class="stat-value" id="detectionTime">0 ms</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Spatial hash grid for broad phase collision</li>
+                <li><strong>Optimization:</strong> Only checks nearby objects in same grid cells</li>
+                <li><strong>Visualization:</strong> Colliding objects turn red</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #833</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#843 Particle Physics - Web Workers Example</title>
+    <meta name="description" content="Particle physics with collisions and forces">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Particle Physics</h1>
+            <p class="subtitle">Inter-Particle Collisions and Forces</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#843</span>
+                <span class="badge badge-secondary">Physics</span>
+                <span class="badge badge-success">Particles</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Controls</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="particleCount">Particles</label>
+                    <input type="number" id="particleCount" class="form-input" value="100" min="10" max="500">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="attraction">Attraction Force</label>
+                    <input type="range" id="attraction" class="form-input" value="0" min="-1" max="1" step="0.1">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="startBtn" class="btn btn-primary">Start</button>
+                <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Simulation</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="500"></canvas>
+            </div>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Collisions/s:</span>
+                    <span class="stat-value" id="collisions">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Physics Time:</span>
+                    <span class="stat-value" id="physicsTime">0 ms</span>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #843</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

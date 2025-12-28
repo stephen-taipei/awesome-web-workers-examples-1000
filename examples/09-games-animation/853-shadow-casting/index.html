@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#853 Shadow Casting - Web Workers Example</title>
+    <meta name="description" content="2D shadow casting algorithm">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Shadow Casting</h1>
+            <p class="subtitle">2D Hard Shadow Projection</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#853</span>
+                <span class="badge badge-secondary">Rendering</span>
+                <span class="badge badge-success">Shadows</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Controls</h2>
+            <div class="btn-group">
+                <button id="startBtn" class="btn btn-primary">Start</button>
+                <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+                <button id="addBoxBtn" class="btn btn-secondary">Add Box</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Move Mouse to Control Light</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="500"></canvas>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #853</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
