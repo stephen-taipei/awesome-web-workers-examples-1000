@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#824 PEM Parser - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>PEM Parser</h1>
+            <p class="subtitle">Parse PEM-encoded Data</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#824</span>
+                <span class="badge badge-secondary">Cryptography</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">PEM Data</h2>
+            <div class="form-group">
+                <textarea id="pem-input" class="form-input" rows="8" placeholder="Paste PEM data...">-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
+-----END PUBLIC KEY-----</textarea>
+            </div>
+            <div class="btn-group">
+                <button id="parse-btn" class="btn btn-primary">Parse PEM</button>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">PEM Info</h2>
+            <div id="pem-info"></div>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #824</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

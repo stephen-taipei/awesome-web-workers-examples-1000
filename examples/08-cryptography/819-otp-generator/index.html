@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#819 OTP Generator - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>OTP Generator</h1>
+            <p class="subtitle">One-Time Password Generator</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#819</span>
+                <span class="badge badge-secondary">Cryptography</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Generate OTP</h2>
+            <div class="form-group">
+                <label class="form-label" for="digits-input">Number of Digits</label>
+                <select id="digits-input" class="form-input">
+                    <option value="4">4 digits</option>
+                    <option value="6" selected>6 digits</option>
+                    <option value="8">8 digits</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button id="generate-btn" class="btn btn-primary">Generate OTP</button>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">One-Time Password</h2>
+            <div style="text-align: center; padding: 20px;">
+                <span id="otp-result" style="font-size: 3rem; font-family: monospace; letter-spacing: 10px; color: var(--primary-color);"></span>
+            </div>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #819</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

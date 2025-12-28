@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#818 Password Generator - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Secure Password Generator</h1>
+            <p class="subtitle">Generate Cryptographically Strong Passwords</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#818</span>
+                <span class="badge badge-secondary">Cryptography</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Options</h2>
+            <div class="form-group">
+                <label class="form-label" for="length-input">Password Length</label>
+                <input type="number" id="length-input" class="form-input" value="16" min="8" max="128">
+            </div>
+            <div class="form-group">
+                <label><input type="checkbox" id="uppercase" checked> Uppercase (A-Z)</label><br>
+                <label><input type="checkbox" id="lowercase" checked> Lowercase (a-z)</label><br>
+                <label><input type="checkbox" id="numbers" checked> Numbers (0-9)</label><br>
+                <label><input type="checkbox" id="symbols" checked> Symbols (!@#$%...)</label>
+            </div>
+            <div class="btn-group">
+                <button id="generate-btn" class="btn btn-primary">Generate Password</button>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Generated Password</h2>
+            <div class="result-stats">
+                <div class="stat-item"><span class="stat-label">Password:</span>
+                    <span id="password-result" class="stat-value" style="font-size: 1.2rem; letter-spacing: 2px;"></span></div>
+                <div class="stat-item"><span class="stat-label">Entropy:</span>
+                    <span id="entropy-result" class="stat-value"></span></div>
+            </div>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #818</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

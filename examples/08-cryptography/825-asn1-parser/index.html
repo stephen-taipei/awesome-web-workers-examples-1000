@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#825 ASN.1 Parser - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>ASN.1 Parser</h1>
+            <p class="subtitle">Parse ASN.1 DER Data</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#825</span>
+                <span class="badge badge-secondary">Cryptography</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">ASN.1 Data (hex)</h2>
+            <div class="form-group">
+                <textarea id="asn1-input" class="form-input" rows="4" placeholder="Enter hex-encoded ASN.1 DER...">30 82 01 22 30 0d 06 09 2a 86 48 86 f7 0d 01 01 01</textarea>
+            </div>
+            <div class="btn-group">
+                <button id="parse-btn" class="btn btn-primary">Parse ASN.1</button>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">ASN.1 Structure</h2>
+            <div id="asn1-tree" style="font-family: monospace; white-space: pre;"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About ASN.1</h3>
+            <ul>
+                <li><strong>Standard:</strong> ITU-T X.680</li>
+                <li><strong>Encoding:</strong> DER (Distinguished Encoding Rules)</li>
+                <li><strong>Use Case:</strong> X.509 certs, PKCS standards</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #825</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

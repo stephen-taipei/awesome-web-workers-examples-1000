@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#798 Blowfish - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Blowfish Encryption</h1>
+            <p class="subtitle">Fast Block Cipher</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#798</span>
+                <span class="badge badge-secondary">Cryptography</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="plaintext-input">Plaintext</label>
+                <textarea id="plaintext-input" class="form-input" rows="3">Hello, Blowfish!</textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="key-input">Key (4-56 bytes)</label>
+                <input type="text" id="key-input" class="form-input" value="myBlowfishKey">
+            </div>
+            <div id="error-message" class="error-message hidden"></div>
+            <div class="btn-group">
+                <button id="encrypt-btn" class="btn btn-primary">Encrypt</button>
+                <button id="decrypt-btn" class="btn btn-secondary">Decrypt</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Output:</span>
+                    <span id="output-result" class="stat-value" style="word-break: break-all;"></span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Time:</span>
+                    <span id="time-result" class="stat-value"></span>
+                </div>
+            </div>
+        </section>
+        <section class="card info-section">
+            <h3>About Blowfish</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Blowfish block cipher</li>
+                <li><strong>Block Size:</strong> 64-bit</li>
+                <li><strong>Key Size:</strong> 32-448 bits</li>
+                <li><strong>Rounds:</strong> 16 Feistel rounds</li>
+            </ul>
+        </section>
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #798</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

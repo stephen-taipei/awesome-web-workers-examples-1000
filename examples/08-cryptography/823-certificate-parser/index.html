@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#823 Certificate Parser - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Certificate Parser</h1>
+            <p class="subtitle">Parse X.509 Certificate Information</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#823</span>
+                <span class="badge badge-secondary">Cryptography</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Certificate (PEM)</h2>
+            <div class="form-group">
+                <textarea id="cert-input" class="form-input" rows="8" placeholder="Paste PEM certificate...">-----BEGIN CERTIFICATE-----
+MIIBkTCB+wIJAKHBfL1...
+-----END CERTIFICATE-----</textarea>
+            </div>
+            <div class="btn-group">
+                <button id="parse-btn" class="btn btn-primary">Parse Certificate</button>
+                <button id="sample-btn" class="btn btn-secondary">Load Sample</button>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Certificate Info</h2>
+            <div id="cert-info"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About X.509</h3>
+            <ul>
+                <li><strong>Format:</strong> X.509 v3 certificates</li>
+                <li><strong>Encoding:</strong> PEM (Base64 DER)</li>
+                <li><strong>Use Case:</strong> TLS/SSL, code signing</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #823</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

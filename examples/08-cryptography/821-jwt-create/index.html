@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#821 JWT Create - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>JWT Creator</h1>
+            <p class="subtitle">Create JSON Web Tokens</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#821</span>
+                <span class="badge badge-secondary">Cryptography</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">JWT Payload</h2>
+            <div class="form-group">
+                <label class="form-label" for="payload-input">Payload (JSON)</label>
+                <textarea id="payload-input" class="form-input" rows="4">{"sub": "1234567890", "name": "John Doe", "admin": true}</textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="secret-input">Secret Key</label>
+                <input type="text" id="secret-input" class="form-input" value="your-256-bit-secret">
+            </div>
+            <div class="btn-group">
+                <button id="create-btn" class="btn btn-primary">Create JWT</button>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Generated JWT</h2>
+            <div class="result-stats">
+                <div class="stat-item"><span class="stat-label">Token:</span>
+                    <span id="jwt-result" class="stat-value" style="word-break: break-all; font-size: 0.7rem;"></span></div>
+            </div>
+        </section>
+        <section class="card info-section">
+            <h3>About JWT</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> HS256 (HMAC-SHA256)</li>
+                <li><strong>Format:</strong> Header.Payload.Signature</li>
+                <li><strong>Use Case:</strong> API authentication, session tokens</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #821</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

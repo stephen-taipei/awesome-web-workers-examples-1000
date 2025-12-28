@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#809 ECDH Key Generation - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>ECDH Key Generation</h1>
+            <p class="subtitle">Elliptic Curve Diffie-Hellman</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#809</span>
+                <span class="badge badge-secondary">Cryptography</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Generate ECDH Keys</h2>
+            <div class="form-group">
+                <label class="form-label" for="curve-select">Curve</label>
+                <select id="curve-select" class="form-input">
+                    <option value="P-256" selected>P-256</option>
+                    <option value="P-384">P-384</option>
+                    <option value="P-521">P-521</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button id="generate-btn" class="btn btn-primary">Generate Key Pair</button>
+            </div>
+        </section>
+        <section class="card"><h2 class="card-title">Progress</h2>
+            <div class="progress-container"><div class="progress-bar-wrapper">
+                <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+            </div><p id="progress-text" class="progress-text">Ready</p></div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Keys</h2>
+            <div class="result-stats">
+                <div class="stat-item"><span class="stat-label">Public Key (x,y):</span>
+                    <span id="public-key" class="stat-value" style="word-break: break-all; font-size: 0.7rem;"></span></div>
+                <div class="stat-item"><span class="stat-label">Time:</span>
+                    <span id="time-result" class="stat-value"></span></div>
+            </div>
+        </section>
+        <section class="card info-section">
+            <h3>About ECDH</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Elliptic Curve Diffie-Hellman</li>
+                <li><strong>Purpose:</strong> Key agreement protocol</li>
+                <li><strong>Use Case:</strong> TLS key exchange</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #809</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

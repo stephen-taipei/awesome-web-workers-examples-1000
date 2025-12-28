@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#828 Hex Encode - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Hex Encoder</h1>
+            <p class="subtitle">Encode Text to Hexadecimal</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#828</span>
+                <span class="badge badge-secondary">Encoding</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="text-input">Text to Encode</label>
+                <textarea id="text-input" class="form-input" rows="4">Hello, World!</textarea>
+            </div>
+            <div class="form-group">
+                <label><input type="checkbox" id="uppercase"> Uppercase</label>
+                <label style="margin-left: 15px;"><input type="checkbox" id="separator"> Add separators</label>
+            </div>
+            <div class="btn-group">
+                <button id="encode-btn" class="btn btn-primary">Encode to Hex</button>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div class="result-stats">
+                <div class="stat-item"><span class="stat-label">Hex:</span>
+                    <span id="result" class="stat-value" style="word-break: break-all; font-family: monospace;"></span></div>
+                <div class="stat-item"><span class="stat-label">Input Size:</span>
+                    <span id="input-size" class="stat-value"></span></div>
+            </div>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #828</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

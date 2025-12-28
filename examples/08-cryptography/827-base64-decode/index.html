@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#827 Base64 Decode - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Base64 Decoder</h1>
+            <p class="subtitle">Decode Base64 to Text</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#827</span>
+                <span class="badge badge-secondary">Encoding</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="base64-input">Base64 String</label>
+                <textarea id="base64-input" class="form-input" rows="4">SGVsbG8sIFdvcmxkISBUaGlzIGlzIGEgdGVzdCBtZXNzYWdlLg==</textarea>
+            </div>
+            <div class="btn-group">
+                <button id="decode-btn" class="btn btn-primary">Decode Base64</button>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div class="result-stats">
+                <div class="stat-item"><span class="stat-label">Decoded Text:</span>
+                    <span id="result" class="stat-value"></span></div>
+                <div class="stat-item"><span class="stat-label">Decoded Size:</span>
+                    <span id="size" class="stat-value"></span></div>
+            </div>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #827</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

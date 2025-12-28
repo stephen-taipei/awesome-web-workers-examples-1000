@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#817 UUID Generator - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>UUID Generator</h1>
+            <p class="subtitle">Generate Unique Identifiers</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#817</span>
+                <span class="badge badge-secondary">Cryptography</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Generate UUIDs</h2>
+            <div class="form-group">
+                <label class="form-label" for="count-input">Number of UUIDs</label>
+                <input type="number" id="count-input" class="form-input" value="10" min="1" max="100">
+            </div>
+            <div class="btn-group">
+                <button id="generate-btn" class="btn btn-primary">Generate UUIDs</button>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Generated UUIDs</h2>
+            <div id="uuid-list" style="max-height: 300px; overflow-y: auto;"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About UUID</h3>
+            <ul>
+                <li><strong>Version:</strong> UUID v4 (random)</li>
+                <li><strong>Format:</strong> 8-4-4-4-12 hexadecimal</li>
+                <li><strong>Use Case:</strong> Database IDs, session tokens</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #817</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

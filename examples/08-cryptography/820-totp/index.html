@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#820 TOTP - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>TOTP Generator</h1>
+            <p class="subtitle">Time-based One-Time Password</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#820</span>
+                <span class="badge badge-secondary">Cryptography</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">TOTP Settings</h2>
+            <div class="form-group">
+                <label class="form-label" for="secret-input">Secret Key (Base32)</label>
+                <input type="text" id="secret-input" class="form-input" value="JBSWY3DPEHPK3PXP">
+            </div>
+            <div class="btn-group">
+                <button id="generate-btn" class="btn btn-primary">Generate TOTP</button>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Current TOTP</h2>
+            <div style="text-align: center; padding: 20px;">
+                <span id="totp-result" style="font-size: 3rem; font-family: monospace; letter-spacing: 8px; color: var(--primary-color);"></span>
+                <p id="time-remaining" style="color: var(--text-secondary); margin-top: 10px;"></p>
+            </div>
+        </section>
+        <section class="card info-section">
+            <h3>About TOTP</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> RFC 6238 TOTP</li>
+                <li><strong>Time Step:</strong> 30 seconds</li>
+                <li><strong>Use Case:</strong> 2FA authentication</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #820</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

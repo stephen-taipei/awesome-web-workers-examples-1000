@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#711 Data Validator - Web Workers Example</title>
+    <meta name="description" content="Validate data against rules using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Data Validator</h1>
+            <p class="subtitle">Validate Data Against Rules in Background</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#711</span>
+                <span class="badge badge-secondary">Data Processing</span>
+                <span class="badge badge-success">Intermediate</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Data & Rules</h2>
+            <div class="form-group">
+                <label class="form-label" for="data-input">Data (JSON array)</label>
+                <textarea id="data-input" class="form-textarea" rows="6">[
+  {"email": "alice@example.com", "age": 28, "score": 95},
+  {"email": "invalid-email", "age": -5, "score": 150},
+  {"email": "bob@test.com", "age": 34, "score": 87}
+]</textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="rules-input">Validation Rules (JSON)</label>
+                <textarea id="rules-input" class="form-textarea" rows="6">{
+  "email": {"type": "email", "required": true},
+  "age": {"type": "number", "min": 0, "max": 120},
+  "score": {"type": "number", "min": 0, "max": 100}
+}</textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Quick Presets</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-size="100">100 Records</button>
+                    <button class="preset-btn" data-size="1000">1K Records</button>
+                    <button class="preset-btn" data-size="10000">10K Records</button>
+                </div>
+            </div>
+            <div id="error-message" class="error-message hidden"></div>
+            <div class="btn-group">
+                <button id="validate-btn" class="btn btn-primary">Validate with Worker</button>
+                <button id="main-btn" class="btn btn-secondary">Validate on Main Thread</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Validation Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div class="output-container">
+                <pre id="result-output" class="output-pre"></pre>
+            </div>
+        </section>
+
+        <section id="comparison-section" class="card hidden">
+            <h2 class="card-title">Performance Comparison</h2>
+            <div class="comparison-grid">
+                <div class="comparison-item worker">
+                    <p class="comparison-label">Web Worker</p>
+                    <p id="worker-time" class="comparison-value">-</p>
+                </div>
+                <div class="comparison-item main-thread">
+                    <p class="comparison-label">Main Thread</p>
+                    <p id="main-thread-time" class="comparison-value">-</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Rule-based validation engine</li>
+                <li><strong>Features:</strong> Type checking, range validation, pattern matching</li>
+                <li><strong>Use Case:</strong> Form validation, data import validation</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | Example #711</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#703 XML Parser - Web Workers Example</title>
+    <meta name="description" content="Parse XML data using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>XML Parser</h1>
+            <p class="subtitle">Parse XML Data in Background</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#703</span>
+                <span class="badge badge-secondary">Data Processing</span>
+                <span class="badge badge-success">Beginner</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Input XML</h2>
+            <div class="form-group">
+                <label class="form-label" for="xml-input">XML Data</label>
+                <textarea id="xml-input" class="form-textarea" rows="10"><?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+  <book id="1">
+    <title>Web Workers Guide</title>
+    <author>John Doe</author>
+    <price>29.99</price>
+    <category>Programming</category>
+  </book>
+  <book id="2">
+    <title>JavaScript Mastery</title>
+    <author>Jane Smith</author>
+    <price>39.99</price>
+    <category>Programming</category>
+  </book>
+</catalog></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Quick Presets</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-size="100">100 Elements</button>
+                    <button class="preset-btn" data-size="1000">1K Elements</button>
+                    <button class="preset-btn" data-size="5000">5K Elements</button>
+                </div>
+            </div>
+            <div id="error-message" class="error-message hidden"></div>
+            <div class="btn-group">
+                <button id="parse-btn" class="btn btn-primary">Parse with Worker</button>
+                <button id="main-btn" class="btn btn-secondary">Parse on Main Thread</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Parse Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div class="output-container">
+                <pre id="result-output" class="output-pre"></pre>
+            </div>
+        </section>
+
+        <section id="comparison-section" class="card hidden">
+            <h2 class="card-title">Performance Comparison</h2>
+            <div class="comparison-grid">
+                <div class="comparison-item worker">
+                    <p class="comparison-label">Web Worker</p>
+                    <p id="worker-time" class="comparison-value">-</p>
+                </div>
+                <div class="comparison-item main-thread">
+                    <p class="comparison-label">Main Thread</p>
+                    <p id="main-thread-time" class="comparison-value">-</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Custom XML parser with tag matching</li>
+                <li><strong>Features:</strong> Attribute parsing, nested elements, text content extraction</li>
+                <li><strong>Use Case:</strong> Processing XML configuration files and data feeds</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | Example #703</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

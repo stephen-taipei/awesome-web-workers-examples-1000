@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#704 YAML Parser - Web Workers Example</title>
+    <meta name="description" content="Parse YAML data using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>YAML Parser</h1>
+            <p class="subtitle">Parse YAML Data in Background</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#704</span>
+                <span class="badge badge-secondary">Data Processing</span>
+                <span class="badge badge-success">Beginner</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Input YAML</h2>
+            <div class="form-group">
+                <label class="form-label" for="yaml-input">YAML Data</label>
+                <textarea id="yaml-input" class="form-textarea" rows="12">server:
+  host: localhost
+  port: 8080
+  ssl: true
+
+database:
+  type: postgresql
+  host: db.example.com
+  port: 5432
+  credentials:
+    username: admin
+    password: secret
+
+features:
+  - authentication
+  - logging
+  - caching</textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Quick Presets</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-preset="simple">Simple Config</button>
+                    <button class="preset-btn" data-preset="complex">Complex Config</button>
+                    <button class="preset-btn" data-preset="large">Large Dataset</button>
+                </div>
+            </div>
+            <div id="error-message" class="error-message hidden"></div>
+            <div class="btn-group">
+                <button id="parse-btn" class="btn btn-primary">Parse with Worker</button>
+                <button id="main-btn" class="btn btn-secondary">Parse on Main Thread</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Parse Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div class="output-container">
+                <pre id="result-output" class="output-pre"></pre>
+            </div>
+        </section>
+
+        <section id="comparison-section" class="card hidden">
+            <h2 class="card-title">Performance Comparison</h2>
+            <div class="comparison-grid">
+                <div class="comparison-item worker">
+                    <p class="comparison-label">Web Worker</p>
+                    <p id="worker-time" class="comparison-value">-</p>
+                </div>
+                <div class="comparison-item main-thread">
+                    <p class="comparison-label">Main Thread</p>
+                    <p id="main-thread-time" class="comparison-value">-</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Indentation-based YAML parsing</li>
+                <li><strong>Features:</strong> Nested objects, arrays, scalars, comments</li>
+                <li><strong>Use Case:</strong> Processing YAML configuration files</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | Example #704</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

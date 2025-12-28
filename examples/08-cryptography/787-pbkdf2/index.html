@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#787 PBKDF2 - Web Workers Cryptography</title>
+    <meta name="description" content="Password-Based Key Derivation Function 2 using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>PBKDF2 Key Derivation</h1>
+            <p class="subtitle">Password-Based Key Derivation Function 2</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#787</span>
+                <span class="badge badge-secondary">Cryptography</span>
+                <span class="badge badge-success">Intermediate</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="password-input">Password</label>
+                <input type="password" id="password-input" class="form-input" placeholder="Enter password..." value="mySecurePassword123">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="salt-input">Salt (hex or text)</label>
+                <input type="text" id="salt-input" class="form-input" placeholder="Enter salt..." value="randomSaltValue">
+            </div>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="iterations-input">Iterations</label>
+                    <input type="number" id="iterations-input" class="form-input" value="100000" min="1000" max="1000000">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="keylength-input">Key Length (bits)</label>
+                    <input type="number" id="keylength-input" class="form-input" value="256" min="128" max="512">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="algo-select">Hash Algorithm</label>
+                <select id="algo-select" class="form-input">
+                    <option value="SHA-256" selected>SHA-256</option>
+                    <option value="SHA-384">SHA-384</option>
+                    <option value="SHA-512">SHA-512</option>
+                </select>
+            </div>
+            <div id="error-message" class="error-message hidden"></div>
+            <div class="btn-group">
+                <button id="derive-btn" class="btn btn-primary">Derive Key</button>
+                <button id="clear-btn" class="btn btn-secondary">Clear</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Derived Key (hex):</span>
+                    <span id="key-result" class="stat-value" style="word-break: break-all;"></span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Iterations:</span>
+                    <span id="iterations-result" class="stat-value"></span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Time:</span>
+                    <span id="time-result" class="stat-value"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About PBKDF2</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> PBKDF2 (Password-Based Key Derivation Function 2)</li>
+                <li><strong>Purpose:</strong> Derive cryptographic keys from passwords</li>
+                <li><strong>Security:</strong> Uses salt and iterations to resist attacks</li>
+                <li><strong>Use Case:</strong> Password storage, key generation</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #787 - PBKDF2</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

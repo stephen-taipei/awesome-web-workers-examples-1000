@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#816 Random Bytes - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Cryptographic Random Bytes</h1>
+            <p class="subtitle">Generate Secure Random Data</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#816</span>
+                <span class="badge badge-secondary">Cryptography</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Parameters</h2>
+            <div class="form-group">
+                <label class="form-label" for="size-input">Number of Bytes</label>
+                <input type="number" id="size-input" class="form-input" value="32" min="1" max="1024">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="format-select">Output Format</label>
+                <select id="format-select" class="form-input">
+                    <option value="hex" selected>Hexadecimal</option>
+                    <option value="base64">Base64</option>
+                    <option value="decimal">Decimal Array</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button id="generate-btn" class="btn btn-primary">Generate Random Bytes</button>
+            </div>
+        </section>
+        <section class="card"><h2 class="card-title">Progress</h2>
+            <div class="progress-container"><div class="progress-bar-wrapper">
+                <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+            </div><p id="progress-text" class="progress-text">Ready</p></div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Random Data</h2>
+            <div class="result-stats">
+                <div class="stat-item"><span class="stat-label">Output:</span>
+                    <span id="output-result" class="stat-value" style="word-break: break-all;"></span></div>
+                <div class="stat-item"><span class="stat-label">Size:</span>
+                    <span id="size-result" class="stat-value"></span></div>
+            </div>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #816</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
