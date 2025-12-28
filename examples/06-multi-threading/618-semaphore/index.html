@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#618 Semaphore - Web Workers Multi-Threading</title>
+    <meta name="description" content="Implement counting semaphore using Atomics">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Semaphore Pattern</h1>
+            <p class="subtitle">Counting Semaphore for Resource Limiting</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#618</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-danger">Advanced</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Semaphore Demo</h2>
+            <p style="color:var(--text-secondary);margin-bottom:15px;">Limit concurrent access to a resource pool.</p>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="permits">Permits (max concurrent):</label>
+                    <input type="number" id="permits" class="form-input" value="3" min="1" max="10">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="workers">Workers:</label>
+                    <input type="number" id="workers" class="form-input" value="8" min="2" max="16">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">Start Simulation</button>
+                <button id="stop-btn" class="btn btn-danger" disabled>Stop</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Semaphore Status</h2>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Available Permits:</span>
+                    <span class="stat-value" id="available-permits">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Workers in Resource:</span>
+                    <span class="stat-value" id="workers-in-resource">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Workers Waiting:</span>
+                    <span class="stat-value" id="workers-waiting">0</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Resource Pool Visualization</h2>
+            <div id="resource-slots" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Worker States</h2>
+            <div id="worker-states" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About Semaphore</h3>
+            <ul>
+                <li><strong>Purpose:</strong> Limit concurrent access to N resources</li>
+                <li><strong>Acquire:</strong> Decrement count (wait if zero)</li>
+                <li><strong>Release:</strong> Increment count (wake waiters)</li>
+                <li><strong>Use Case:</strong> Connection pools, rate limiting</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #618 Semaphore</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

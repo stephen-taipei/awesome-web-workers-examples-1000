@@ -3,83 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Workers 噪點生成 (Noise Generation) - 359</title>
+    <title>#359 噪點生成 - Web Workers 範例</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Web Workers 噪點生成</h1>
-            <div class="subtitle">Procedural Noise Generation</div>
-            <div class="badges">
-                <span class="badge badge-worker">Web Worker</span>
-                <span class="badge badge-advanced">Perlin/Simplex</span>
+        <header class="header">
+            <h1>噪點生成</h1>
+            <p class="subtitle">Perlin/Simplex Noise</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#359</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-success">進階</span>
             </div>
         </header>
-
-        <main>
-            <section class="description">
-                <h2>噪點生成 (Noise Generation)</h2>
-                <p>此範例展示如何生成程序化噪聲圖（如 Perlin Noise 或 Simplex Noise）。這些噪聲通常用於生成紋理、地形高度圖等。Web Worker 負責密集的噪聲計算。</p>
-            </section>
-
-            <section class="controls">
-                <div class="input-group">
-                    <label for="width">寬度 (Width): <span id="widthVal">512</span></label>
-                    <input type="range" id="width" min="128" max="2048" step="128" value="512">
-                </div>
-                <div class="input-group">
-                    <label for="height">高度 (Height): <span id="heightVal">512</span></label>
-                    <input type="range" id="height" min="128" max="2048" step="128" value="512">
-                </div>
-
-                <div class="input-group">
-                    <label for="scale">縮放 (Scale): <span id="scaleVal">50</span></label>
-                    <input type="range" id="scale" min="10" max="200" value="50">
-                </div>
-
-                <div class="input-group">
-                    <label for="noiseType">噪聲類型 (Type):</label>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>寬度：<input type="number" id="width" value="400" min="100" max="800"></label>
+            </div>
+            <div class="control-group">
+                <label>高度：<input type="number" id="height" value="400" min="100" max="800"></label>
+            </div>
+            <div class="control-group">
+                <label>縮放：<span id="scaleValue">50</span></label>
+                <input type="range" id="scale" min="10" max="200" value="50">
+            </div>
+            <div class="control-group">
+                <label>噪點類型：
                     <select id="noiseType">
                         <option value="perlin">Perlin Noise</option>
-                        <option value="simplex">Simplex Noise (Simplified)</option>
-                        <option value="value">Value Noise</option>
+                        <option value="simplex">Simplex Noise</option>
                     </select>
-                </div>
-
-                <div class="button-group">
-                    <button id="generateBtn" class="btn btn-primary">生成噪聲</button>
-                </div>
-            </section>
-
-            <section class="progress-section hidden" id="progressSection">
-                <div class="progress-bar-container">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-                <div class="progress-text" id="progressText">生成中... 0%</div>
-            </section>
-
-            <section class="results">
-                <div class="stats-row">
-                    <div class="result-item">
-                        <span class="result-label">生成時間</span>
-                        <span class="result-value" id="processTime">-</span>
-                    </div>
-                </div>
-
-                <div class="image-panel">
-                    <h3>生成結果</h3>
-                    <canvas id="resultCanvas"></canvas>
-                    <div class="download-section">
-                        <a id="downloadLink" class="btn btn-outline hidden" download="noise.png">下載結果</a>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <footer>
-            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
-        </footer>
+                </label>
+            </div>
+            <button id="generateBtn" class="btn btn-primary">生成噪點圖</button>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <canvas id="resultCanvas"></canvas>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #359</footer>
     </div>
     <script src="main.js"></script>
 </body>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#605 Shared Worker - Web Workers Multi-Threading</title>
+    <meta name="description" content="Demonstrate SharedWorker pattern for cross-tab communication">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Shared Worker Pattern</h1>
+            <p class="subtitle">Cross-Tab Communication via SharedWorker</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#605</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Shared Worker Demo</h2>
+            <p style="color:var(--text-secondary);margin-bottom:15px;">Open this page in multiple tabs to see shared state.</p>
+            <div class="form-group">
+                <label class="form-label" for="message-input">Message to broadcast:</label>
+                <input type="text" id="message-input" class="form-input" placeholder="Enter a message...">
+            </div>
+            <div class="btn-group">
+                <button id="send-btn" class="btn btn-primary">Send to All Tabs</button>
+                <button id="increment-btn" class="btn btn-secondary">Increment Counter</button>
+                <button id="get-state-btn" class="btn btn-secondary">Get State</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Shared State</h2>
+            <div id="state-display" class="result-stats"></div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Messages</h2>
+            <div id="messages" style="max-height:200px;overflow-y:auto;"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Pattern</h3>
+            <ul>
+                <li><strong>Pattern:</strong> SharedWorker for multiple tabs/windows</li>
+                <li><strong>Use Case:</strong> Shared state across browser contexts</li>
+                <li><strong>Communication:</strong> MessagePort for each connection</li>
+                <li><strong>Note:</strong> Same origin policy applies</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #605 Shared Worker</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

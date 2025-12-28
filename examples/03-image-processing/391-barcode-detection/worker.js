@@ -1,244 +1,197 @@
 self.onmessage = function(e) {
     const { imageData } = e.data;
-    const startTime = performance.now();
+    const { width, height, data } = imageData;
 
-    try {
-        const { width, height, data } = imageData;
-
-        // 1. Grayscale
-        const gray = new Uint8Array(width * height);
-        for (let i = 0; i < width * height; i++) {
-            const r = data[i * 4];
-            const g = data[i * 4 + 1];
-            const b = data[i * 4 + 2];
-            gray[i] = 0.299 * r + 0.587 * g + 0.114 * b;
-        }
-
-        // 2. Compute Sobel X and Sobel Y
-        // We want to detect regions with high vertical gradients (bars) and low horizontal gradients.
-        // Actually for 1D barcode, vertical edges are strong.
-        // Standard method: abs(SobelX) - abs(SobelY)
-
-        const grad = new Int16Array(width * height); // can be negative intermediate
-        const output = new Uint8Array(width * height);
-
-        // Sobel Kernels
-        // Gx: -1 0 1, -2 0 2, -1 0 1
-        // Gy: -1 -2 -1, 0 0 0, 1 2 1
-
-        for (let y = 1; y < height - 1; y++) {
-            for (let x = 1; x < width - 1; x++) {
-                const idx = y * width + x;
-
-                const p00 = gray[(y-1)*width + (x-1)];
-                const p01 = gray[(y-1)*width + x];
-                const p02 = gray[(y-1)*width + (x+1)];
-                const p10 = gray[y*width + (x-1)];
-                const p12 = gray[y*width + (x+1)];
-                const p20 = gray[(y+1)*width + (x-1)];
-                const p21 = gray[(y+1)*width + x];
-                const p22 = gray[(y+1)*width + (x+1)];
-
-                const gx = (p02 + 2*p12 + p22) - (p00 + 2*p10 + p20);
-                const gy = (p20 + 2*p21 + p22) - (p00 + 2*p01 + p02);
-
-                // We focus on vertical edges (Gx) and suppress horizontal edges (Gy) for barcodes
-                // Simple difference
-                let d = Math.abs(gx) - Math.abs(gy);
-                if (d < 0) d = 0;
-                if (d > 255) d = 255;
-
-                output[idx] = d;
-            }
-        }
-
-        // 3. Blur (Low pass filter) to connect gaps
-        // Use a simple Box Blur
-        const blurred = boxBlur(output, width, height, 9); // Radius 9 roughly
-
-        // 4. Threshold (Otsu or simple high threshold)
-        // Let's use a simple high threshold for now
-        const thresholded = new Uint8Array(width * height);
-        const thresh = 100; // Empirical
-        for (let i = 0; i < width * height; i++) {
-            thresholded[i] = blurred[i] > thresh ? 255 : 0;
-        }
-
-        // 5. Morphological Closing (Dilate -> Erode)
-        // Specifically, horizontal closing to connect bars
-        // Kernel: rectangular [21, 7]
-        const closed = morphClose(thresholded, width, height, 21, 7);
-
-        // 6. Find Connected Components (Bounding Boxes)
-        const boxes = findComponents(closed, width, height);
-
-        const endTime = performance.now();
-
-        self.postMessage({
-            type: 'result',
-            data: {
-                boxes: boxes,
-                time: Math.round(endTime - startTime)
-            }
-        });
-
-    } catch (error) {
-        self.postMessage({ type: 'error', data: error.message });
+    // Convert to grayscale
+    const gray = new Uint8Array(width * height);
+    for (let i = 0; i < data.length; i += 4) {
+        gray[i / 4] = Math.round(0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]);
     }
+
+    // Calculate horizontal gradient (Scharr operator)
+    const gradX = new Float32Array(width * height);
+    for (let y = 1; y < height - 1; y++) {
+        for (let x = 1; x < width - 1; x++) {
+            const idx = y * width + x;
+            const gx = -3 * gray[idx - width - 1] - 10 * gray[idx - 1] - 3 * gray[idx + width - 1] +
+                        3 * gray[idx - width + 1] + 10 * gray[idx + 1] + 3 * gray[idx + width + 1];
+            gradX[idx] = Math.abs(gx);
+        }
+    }
+
+    // Calculate vertical gradient
+    const gradY = new Float32Array(width * height);
+    for (let y = 1; y < height - 1; y++) {
+        for (let x = 1; x < width - 1; x++) {
+            const idx = y * width + x;
+            const gy = -3 * gray[idx - width - 1] - 10 * gray[idx - width] - 3 * gray[idx - width + 1] +
+                        3 * gray[idx + width - 1] + 10 * gray[idx + width] + 3 * gray[idx + width + 1];
+            gradY[idx] = Math.abs(gy);
+        }
+    }
+
+    // Barcode has high horizontal gradient, low vertical gradient
+    const barcodeScore = new Float32Array(width * height);
+    for (let i = 0; i < width * height; i++) {
+        const score = gradX[i] - gradY[i];
+        barcodeScore[i] = score > 0 ? score : 0;
+    }
+
+    // Apply blur to consolidate regions
+    const blurred = blur(barcodeScore, width, height, 5);
+
+    // Threshold
+    const threshold = 50;
+    const binary = new Uint8Array(width * height);
+    for (let i = 0; i < blurred.length; i++) {
+        binary[i] = blurred[i] > threshold ? 255 : 0;
+    }
+
+    // Morphological closing
+    const closed = morphClose(binary, width, height, 15);
+
+    // Find connected regions
+    const labels = new Int32Array(width * height);
+    const regions = [];
+    let nextLabel = 1;
+
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const idx = y * width + x;
+            if (closed[idx] > 0 && labels[idx] === 0) {
+                const stats = floodFill(closed, labels, width, height, x, y, nextLabel);
+                if (stats.count > 100 && stats.width > stats.height * 1.5) {
+                    regions.push(stats);
+                }
+                nextLabel++;
+            }
+        }
+    }
+
+    // Create output image
+    const output = new Uint8ClampedArray(data);
+
+    // Draw barcode regions
+    for (const region of regions) {
+        const x0 = Math.max(0, region.minX - 5);
+        const y0 = Math.max(0, region.minY - 5);
+        const x1 = Math.min(width - 1, region.maxX + 5);
+        const y1 = Math.min(height - 1, region.maxY + 5);
+
+        // Draw rectangle
+        for (let x = x0; x <= x1; x++) {
+            setPixel(output, width, x, y0, 255, 0, 0);
+            setPixel(output, width, x, y0 + 1, 255, 0, 0);
+            setPixel(output, width, x, y1, 255, 0, 0);
+            setPixel(output, width, x, y1 - 1, 255, 0, 0);
+        }
+        for (let y = y0; y <= y1; y++) {
+            setPixel(output, width, x0, y, 255, 0, 0);
+            setPixel(output, width, x0 + 1, y, 255, 0, 0);
+            setPixel(output, width, x1, y, 255, 0, 0);
+            setPixel(output, width, x1 - 1, y, 255, 0, 0);
+        }
+    }
+
+    self.postMessage({
+        imageData: new ImageData(output, width, height),
+        barcodes: regions.length
+    });
 };
 
-function boxBlur(src, width, height, radius) {
-    const dest = new Uint8Array(width * height);
-    // Simple horizontal then vertical blur
-    // Approximate with single pass average for speed/simplicity code here,
-    // or implementation of separable blur.
-
-    // Simplest: moving average
-    // Horizontal
-    const temp = new Uint8Array(width * height);
-    for (let y = 0; y < height; y++) {
-        let sum = 0;
-        let count = 0;
-        // Init window
-        for(let x=0; x<radius && x<width; x++) {
-             sum += src[y*width+x]; count++;
-        }
-
-        for (let x = 0; x < width; x++) {
-            if (x + radius < width) {
-                sum += src[y*width + x + radius];
-                count++;
-            }
-            if (x - radius - 1 >= 0) {
-                sum -= src[y*width + x - radius - 1];
-                count--;
-            }
-            temp[y*width+x] = sum / count;
-        }
-    }
-
-    // Vertical
-    for (let x = 0; x < width; x++) {
-        let sum = 0;
-        let count = 0;
-        for(let y=0; y<radius && y<height; y++) {
-             sum += temp[y*width+x]; count++;
-        }
-        for (let y = 0; y < height; y++) {
-             if (y + radius < height) {
-                sum += temp[(y+radius)*width + x];
-                count++;
-            }
-            if (y - radius - 1 >= 0) {
-                sum -= temp[(y-radius-1)*width + x];
-                count--;
-            }
-            dest[y*width+x] = sum / count;
-        }
-    }
-    return dest;
+function setPixel(data, width, x, y, r, g, b) {
+    const idx = (y * width + x) * 4;
+    data[idx] = r;
+    data[idx + 1] = g;
+    data[idx + 2] = b;
 }
 
-function morphClose(src, width, height, kw, kh) {
-    // Dilate
-    const dilated = morphOp(src, width, height, kw, kh, 'dilate');
-    // Erode
-    const eroded = morphOp(dilated, width, height, kw, kh, 'erode');
-    return eroded;
+function blur(input, width, height, size) {
+    const output = new Float32Array(width * height);
+    const half = Math.floor(size / 2);
+
+    for (let y = half; y < height - half; y++) {
+        for (let x = half; x < width - half; x++) {
+            let sum = 0;
+            for (let dy = -half; dy <= half; dy++) {
+                for (let dx = -half; dx <= half; dx++) {
+                    sum += input[(y + dy) * width + (x + dx)];
+                }
+            }
+            output[y * width + x] = sum / (size * size);
+        }
+    }
+    return output;
 }
 
-function morphOp(src, width, height, kw, kh, op) {
-    const dest = new Uint8Array(width * height);
-    const hw = Math.floor(kw / 2);
-    const hh = Math.floor(kh / 2);
+function morphClose(mask, width, height, size) {
+    const dilated = dilate(mask, width, height, size);
+    return erode(dilated, width, height, size);
+}
+
+function dilate(mask, width, height, size) {
+    const result = new Uint8Array(width * height);
+    const half = Math.floor(size / 2);
 
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
-            let val = op === 'dilate' ? 0 : 255;
-
-            // Simplified: check boundaries only roughly or sample center and corners if kernel large
-            // Full kernel scan
-            for (let ky = -hh; ky <= hh; ky++) {
-                const py = y + ky;
-                if (py < 0 || py >= height) continue;
-                for (let kx = -hw; kx <= hw; kx++) {
-                    const px = x + kx;
-                    if (px < 0 || px >= width) continue;
-
-                    const p = src[py * width + px];
-                    if (op === 'dilate') {
-                        if (p > val) val = p;
-                    } else {
-                        if (p < val) val = p;
+            let maxVal = 0;
+            for (let dy = -half; dy <= half; dy++) {
+                for (let dx = -half; dx <= half; dx++) {
+                    const ny = y + dy, nx = x + dx;
+                    if (ny >= 0 && ny < height && nx >= 0 && nx < width) {
+                        maxVal = Math.max(maxVal, mask[ny * width + nx]);
                     }
                 }
             }
-            dest[y * width + x] = val;
+            result[y * width + x] = maxVal;
         }
     }
-    return dest;
+    return result;
 }
 
-function findComponents(src, width, height) {
-    // Simple connected components using disjoint set or flood fill
-    // Or just bounding box accumulation for white regions
-    // Since we expect large blobs, simple flood fill is fine
+function erode(mask, width, height, size) {
+    const result = new Uint8Array(width * height);
+    const half = Math.floor(size / 2);
 
-    const visited = new Uint8Array(width * height); // 0 = unvisited
-    const boxes = [];
-    const minArea = width * height * 0.005; // Filter small noise
-
-    for (let y = 0; y < height; y+=4) { // coarse scan
-        for (let x = 0; x < width; x+=4) {
-            const idx = y * width + x;
-            if (src[idx] > 128 && visited[idx] === 0) {
-                // Found new component
-                const box = floodFill(src, visited, width, height, x, y);
-                if (box.width * box.height > minArea) {
-                    // Filter by aspect ratio (barcodes are usually wide)
-                    // if (box.width > box.height) // loose filter
-                    boxes.push(box);
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            let minVal = 255;
+            for (let dy = -half; dy <= half; dy++) {
+                for (let dx = -half; dx <= half; dx++) {
+                    const ny = y + dy, nx = x + dx;
+                    if (ny >= 0 && ny < height && nx >= 0 && nx < width) {
+                        minVal = Math.min(minVal, mask[ny * width + nx]);
+                    }
                 }
             }
+            result[y * width + x] = minVal;
         }
     }
-    return boxes;
+    return result;
 }
 
-function floodFill(src, visited, width, height, startX, startY) {
+function floodFill(mask, labels, width, height, startX, startY, label) {
+    const queue = [[startX, startY]];
+    let count = 0;
     let minX = startX, maxX = startX, minY = startY, maxY = startY;
-    const stack = [startX, startY];
-    visited[startY * width + startX] = 1;
 
-    while (stack.length > 0) {
-        const y = stack.pop();
-        const x = stack.pop();
+    while (queue.length > 0) {
+        const [x, y] = queue.shift();
+        if (x < 0 || x >= width || y < 0 || y >= height) continue;
 
-        if (x < minX) minX = x;
-        if (x > maxX) maxX = x;
-        if (y < minY) minY = y;
-        if (y > maxY) maxY = y;
+        const idx = y * width + x;
+        if (mask[idx] === 0 || labels[idx] !== 0) continue;
 
-        // Neighbors
-        const dirs = [0, 1, 0, -1, 1, 0, -1, 0];
-        for (let i = 0; i < 8; i+=2) {
-            const nx = x + dirs[i];
-            const ny = y + dirs[i+1];
+        labels[idx] = label;
+        count++;
+        minX = Math.min(minX, x);
+        maxX = Math.max(maxX, x);
+        minY = Math.min(minY, y);
+        maxY = Math.max(maxY, y);
 
-            if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
-                const idx = ny * width + nx;
-                if (src[idx] > 128 && visited[idx] === 0) {
-                    visited[idx] = 1;
-                    stack.push(nx, ny);
-                }
-            }
-        }
+        queue.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
     }
 
-    return {
-        x: minX,
-        y: minY,
-        width: maxX - minX + 1,
-        height: maxY - minY + 1
-    };
+    return { count, minX, maxX, minY, maxY, width: maxX - minX + 1, height: maxY - minY + 1 };
 }

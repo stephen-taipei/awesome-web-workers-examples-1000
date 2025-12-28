@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#631 Actor Model - Web Workers Multi-Threading</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Actor Model</h1>
+            <p class="subtitle">Message-Passing Concurrency</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#631</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-danger">Advanced</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Actor Demo</h2>
+            <div class="btn-group">
+                <button id="create-btn" class="btn btn-primary">Create Actors</button>
+                <button id="send-btn" class="btn btn-secondary" disabled>Send Messages</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Actors</h2>
+            <div id="actors"></div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Message Log</h2>
+            <div id="log" style="max-height:200px;overflow-y:auto;"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About Actor Model</h3>
+            <ul>
+                <li><strong>Actors:</strong> Independent units with private state</li>
+                <li><strong>Messages:</strong> Communicate only via message passing</li>
+                <li><strong>No Shared State:</strong> Each actor manages its own state</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples</a> | #631 Actor Model</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

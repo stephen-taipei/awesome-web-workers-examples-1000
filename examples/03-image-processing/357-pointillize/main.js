@@ -1,138 +1,93 @@
+/**
+ * 斑點化效果 - 主程式
+ * 創建點彩派繪畫風格效果
+ */
+
+const uploadArea = document.getElementById('uploadArea');
 const fileInput = document.getElementById('fileInput');
-const dropZone = document.getElementById('dropZone');
+const dotSizeInput = document.getElementById('dotSize');
+const dotSizeValue = document.getElementById('dotSizeValue');
+const densityInput = document.getElementById('density');
+const densityValue = document.getElementById('densityValue');
 const processBtn = document.getElementById('processBtn');
-const resetBtn = document.getElementById('resetBtn');
+const progressSection = document.getElementById('progressSection');
+const progressBar = document.getElementById('progressBar');
 const originalCanvas = document.getElementById('originalCanvas');
 const resultCanvas = document.getElementById('resultCanvas');
 const originalCtx = originalCanvas.getContext('2d');
 const resultCtx = resultCanvas.getContext('2d');
-const pointSizeInput = document.getElementById('pointSize');
-const pointSizeVal = document.getElementById('pointSizeVal');
-const densityInput = document.getElementById('density');
-const processTimeDisplay = document.getElementById('processTime');
-const pointCountDisplay = document.getElementById('pointCountDisplay');
-const progressSection = document.getElementById('progressSection');
-const progressBar = document.getElementById('progressBar');
-const progressText = document.getElementById('progressText');
-const downloadLink = document.getElementById('downloadLink');
 
-let originalImageData = null;
 let worker = null;
 
-function initWorker() {
+uploadArea.addEventListener('click', () => fileInput.click());
+uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    if (e.dataTransfer.files.length) loadImage(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', (e) => loadImage(e.target.files[0]));
+dotSizeInput.addEventListener('input', () => dotSizeValue.textContent = dotSizeInput.value);
+densityInput.addEventListener('input', () => densityValue.textContent = densityInput.value);
+processBtn.addEventListener('click', processImage);
+
+function loadImage(file) {
+    if (!file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+            let w = img.width, h = img.height;
+            const maxSize = 600;
+            if (w > maxSize || h > maxSize) {
+                if (w > h) { h = h * maxSize / w; w = maxSize; }
+                else { w = w * maxSize / h; h = maxSize; }
+            }
+            originalCanvas.width = resultCanvas.width = Math.floor(w);
+            originalCanvas.height = resultCanvas.height = Math.floor(h);
+            originalCtx.drawImage(img, 0, 0, originalCanvas.width, originalCanvas.height);
+            resultCtx.clearRect(0, 0, resultCanvas.width, resultCanvas.height);
+            processBtn.disabled = false;
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function processImage() {
+    processBtn.disabled = true;
+    progressSection.style.display = 'block';
+    progressBar.style.width = '0%';
+    progressBar.textContent = '0%';
+
     if (worker) worker.terminate();
     worker = new Worker('worker.js');
 
-    worker.onmessage = function(e) {
-        const { type, data, duration, progress, count } = e.data;
-
-        if (type === 'progress') {
-            const percent = Math.round(progress * 100);
-            progressBar.style.width = `${percent}%`;
-            progressText.textContent = `處理中... ${percent}%`;
-        } else if (type === 'result') {
-            resultCtx.putImageData(data, 0, 0);
-            processTimeDisplay.textContent = `${duration.toFixed(2)} ms`;
-            pointCountDisplay.textContent = count.toLocaleString();
-
-            progressSection.classList.add('hidden');
-            processBtn.disabled = false;
-            downloadLink.href = resultCanvas.toDataURL();
-            downloadLink.classList.remove('hidden');
-        }
-    };
-
-    worker.onerror = function(error) {
-        console.error('Worker error:', error);
-        alert('處理過程中發生錯誤');
-        processBtn.disabled = false;
-        progressSection.classList.add('hidden');
-    };
-}
-
-function handleImage(file) {
-    const img = new Image();
-    img.onload = function() {
-        const maxWidth = 1920;
-        const maxHeight = 1080;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > maxWidth || height > maxHeight) {
-            const ratio = Math.min(maxWidth / width, maxHeight / height);
-            width = Math.floor(width * ratio);
-            height = Math.floor(height * ratio);
-        }
-
-        originalCanvas.width = width;
-        originalCanvas.height = height;
-        resultCanvas.width = width;
-        resultCanvas.height = height;
-
-        originalCtx.drawImage(img, 0, 0, width, height);
-        originalImageData = originalCtx.getImageData(0, 0, width, height);
-
-        document.getElementById('originalInfo').textContent = `${width} x ${height} - ${(file.size / 1024).toFixed(2)} KB`;
-
-        processBtn.disabled = false;
-        resetBtn.disabled = false;
-        downloadLink.classList.add('hidden');
-
-        resultCtx.clearRect(0, 0, width, height);
-    };
-    img.src = URL.createObjectURL(file);
-}
-
-fileInput.addEventListener('change', e => {
-    if (e.target.files.length > 0) handleImage(e.target.files[0]);
-});
-
-dropZone.addEventListener('dragover', e => {
-    e.preventDefault();
-    dropZone.classList.add('dragover');
-});
-
-dropZone.addEventListener('dragleave', () => {
-    dropZone.classList.remove('dragover');
-});
-
-dropZone.addEventListener('drop', e => {
-    e.preventDefault();
-    dropZone.classList.remove('dragover');
-    if (e.dataTransfer.files.length > 0) handleImage(e.dataTransfer.files[0]);
-});
-
-dropZone.addEventListener('click', () => fileInput.click());
-
-pointSizeInput.addEventListener('input', (e) => {
-    pointSizeVal.textContent = e.target.value;
-});
-
-processBtn.addEventListener('click', () => {
-    if (!originalImageData) return;
-
-    processBtn.disabled = true;
-    progressSection.classList.remove('hidden');
-    progressBar.style.width = '0%';
-    progressText.textContent = '準備中...';
-
-    initWorker();
-
-    const pointSize = parseInt(pointSizeInput.value);
-    const density = parseFloat(densityInput.value);
+    const w = originalCanvas.width, h = originalCanvas.height;
+    const imageData = originalCtx.getImageData(0, 0, w, h);
 
     worker.postMessage({
-        imageData: originalImageData,
-        pointSize: pointSize,
-        density: density
+        imageData: imageData,
+        dotSize: parseInt(dotSizeInput.value),
+        density: parseFloat(densityInput.value)
     });
-});
 
-resetBtn.addEventListener('click', () => {
-    if (originalImageData) {
-        resultCtx.clearRect(0, 0, resultCanvas.width, resultCanvas.height);
-        processTimeDisplay.textContent = '-';
-        pointCountDisplay.textContent = '-';
-        downloadLink.classList.add('hidden');
-    }
-});
+    worker.onmessage = (e) => {
+        if (e.data.type === 'progress') {
+            const percent = Math.round(e.data.progress * 100);
+            progressBar.style.width = percent + '%';
+            progressBar.textContent = percent + '%';
+        } else if (e.data.type === 'result') {
+            resultCtx.putImageData(e.data.imageData, 0, 0);
+            processBtn.disabled = false;
+            progressBar.style.width = '100%';
+            progressBar.textContent = '100%';
+        }
+    };
+
+    worker.onerror = (err) => {
+        console.error('Worker error:', err);
+        processBtn.disabled = false;
+    };
+}

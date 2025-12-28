@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#636 Master-Worker - Web Workers Multi-Threading</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Master-Worker Pattern</h1>
+            <p class="subtitle">Centralized Task Distribution</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#636</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Master-Worker Demo</h2>
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">Start Processing</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Master</h2>
+            <div id="master" class="result-stats"></div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Workers</h2>
+            <div id="workers"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About Master-Worker</h3>
+            <ul>
+                <li><strong>Master:</strong> Distributes tasks and collects results</li>
+                <li><strong>Workers:</strong> Execute assigned tasks</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples</a> | #636 Master-Worker</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

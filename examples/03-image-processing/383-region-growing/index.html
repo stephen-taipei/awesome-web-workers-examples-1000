@@ -3,91 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Workers 區域生長 (Region Growing)</title>
+    <title>#383 區域生長分割 - Web Workers 範例</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>區域生長 (Region Growing)</h1>
-            <div class="subtitle">種子點區域分割</div>
-            <div class="badges">
-                <span class="badge badge-beginner">影像處理</span>
-                <span class="badge badge-worker">Web Worker</span>
-                <span class="badge badge-worker">Region Growing</span>
+        <header class="header">
+            <h1>區域生長分割</h1>
+            <p class="subtitle">Region Growing Segmentation</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#383</span>
+                <span class="badge badge-secondary">影像處理</span>
             </div>
         </header>
-
-        <section class="description">
-            <h2>功能說明</h2>
-            <p>此範例展示區域生長算法。請在圖片上點擊選擇一個「種子點」，算法將會把與種子點顏色相似的鄰近像素合併為一個區域。</p>
-            <ul>
-                <li>上傳圖片</li>
-                <li>設定相似度閾值</li>
-                <li>點擊圖片設定種子點</li>
-            </ul>
-        </section>
-
-        <section class="controls">
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
             <div class="upload-area" id="uploadArea">
-                <div class="upload-icon">📁</div>
-                <p>點擊上傳圖片或將圖片拖曳至此</p>
                 <input type="file" id="fileInput" accept="image/*" hidden>
-            </div>
-
-            <div class="input-group">
-                <label>算法參數</label>
-                <div style="display: grid; grid-template-columns: 1fr; gap: 1rem;">
-                    <div>
-                        <label for="threshold">相似度閾值 (1-100)</label>
-                        <input type="range" id="threshold" min="1" max="100" value="15" oninput="document.getElementById('thresholdVal').textContent = this.value">
-                        <span id="thresholdVal">15</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="button-group">
-                <button id="resetBtn" class="btn btn-secondary" disabled>重置</button>
+                <p>點擊或拖放圖片到此處</p>
             </div>
         </section>
-
-        <section class="results">
-            <div class="stats-row">
-                <div class="result-item">
-                    <span class="result-label">處理時間</span>
-                    <span class="result-value" id="processTime">-</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">區域像素數</span>
-                    <span class="result-value" id="pixelCount">-</span>
-                </div>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>容差值: <span id="toleranceValue">20</span></label>
+                <input type="range" id="tolerance" min="5" max="100" value="20">
             </div>
-
-            <div class="progress-section hidden" id="progressSection">
-                <div class="progress-bar-container">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-                <div class="progress-text" id="progressText">準備中...</div>
-            </div>
-
-            <div class="image-comparison">
-                <div class="image-panel">
-                    <h3>原始圖片 (點擊選擇種子點)</h3>
-                    <div style="position: relative; display: inline-block;">
-                        <canvas id="sourceCanvas" style="cursor: crosshair;"></canvas>
-                        <div id="seedMarker" style="position: absolute; width: 10px; height: 10px; background: red; border-radius: 50%; transform: translate(-50%, -50%); display: none; pointer-events: none;"></div>
-                    </div>
-                </div>
-                <div class="image-panel">
-                    <h3>分割結果</h3>
-                    <canvas id="resultCanvas"></canvas>
-                </div>
-            </div>
+            <p class="info">點擊圖片選擇種子點進行區域生長</p>
         </section>
-
-        <footer>
-            <p>Web Workers 1000 示例 - 383 Region Growing</p>
-        </footer>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>原始圖片 (點擊選種子)</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>分割結果</h3><canvas id="resultCanvas"></canvas></div>
+            </div>
+            <p class="info">選中像素數: <span id="pixelCount">0</span></p>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #383</footer>
     </div>
     <script src="main.js"></script>
 </body>

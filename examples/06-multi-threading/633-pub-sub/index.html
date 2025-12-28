@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#633 Pub-Sub - Web Workers Multi-Threading</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Pub-Sub Pattern</h1>
+            <p class="subtitle">Publish-Subscribe Messaging</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#633</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Pub-Sub Demo</h2>
+            <div class="form-group">
+                <label class="form-label">Topic:</label>
+                <select id="topic" class="form-input">
+                    <option>news</option>
+                    <option>sports</option>
+                    <option>weather</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Message:</label>
+                <input type="text" id="message" class="form-input" value="Hello subscribers!">
+            </div>
+            <div class="btn-group">
+                <button id="publish-btn" class="btn btn-primary">Publish</button>
+                <button id="create-btn" class="btn btn-secondary">Create Subscribers</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Subscribers</h2>
+            <div id="subscribers"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About Pub-Sub</h3>
+            <ul>
+                <li><strong>Publishers:</strong> Send messages to topics</li>
+                <li><strong>Subscribers:</strong> Receive messages from subscribed topics</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples</a> | #633 Pub-Sub</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

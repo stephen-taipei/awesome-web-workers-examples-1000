@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#430 RTF Converter - Web Workers Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>RTF Converter</h1>
+            <p class="subtitle">RTF to Plain Text</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#430</span>
+                <span class="badge badge-secondary">Text Processing</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label">RTF Content</label>
+                <textarea id="input-text" class="form-input" rows="8">{\rtf1\ansi\deff0 {\fonttbl {\f0 Times New Roman;}}
+\f0\fs24 Hello, this is {\b bold} and {\i italic} text.
+\par
+This is a new paragraph with {\ul underlined} text.
+\par
+{\b\i Bold and italic combined.}
+}</textarea>
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Convert to Plain Text</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <textarea id="result-output" class="form-input" rows="6" readonly></textarea>
+        </section>
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #430</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

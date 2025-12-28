@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Vectors - Web Worker Example #495</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .text-area-container {
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 180px;
+            padding: 15px;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-family: var(--font-family);
+            font-size: 1rem;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+        }
+        .options-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        .search-section {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+        .search-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .search-row input {
+            flex: 1;
+        }
+        .similar-words {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .similar-word {
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            background: var(--bg-primary);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+        .similar-word-text {
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        .similar-word-score {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--primary-color);
+        }
+        .vector-display {
+            background: var(--bg-primary);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+        .vocab-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+        }
+        .vocab-word {
+            padding: 4px 10px;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .vocab-word:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Word Vectors</h1>
+            <p class="subtitle">Web Worker Example #495 - Simple Word Embedding</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">Text Processing</span>
+                <span class="badge badge-success">Web Worker</span>
+                <span class="badge badge-secondary">NLP</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="card">
+                <div class="card-title">Word Vector Generator</div>
+
+                <div class="controls">
+                    <div class="options-row">
+                        <div class="form-group">
+                            <label class="form-label">Vector Dimensions</label>
+                            <input type="number" id="dimInput" class="form-input" value="50" min="10" max="200" style="width: 100px;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Window Size</label>
+                            <input type="number" id="windowInput" class="form-input" value="3" min="1" max="10" style="width: 100px;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Min Count</label>
+                            <input type="number" id="minCountInput" class="form-input" value="2" min="1" max="10" style="width: 100px;">
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button id="trainBtn" class="btn btn-primary">Train Vectors</button>
+                        <button id="sampleBtn" class="btn btn-secondary">Load Sample</button>
+                        <button id="clearBtn" class="btn btn-danger">Clear</button>
+                    </div>
+                </div>
+
+                <div class="text-area-container">
+                    <label class="form-label">Training Text (more text = better vectors)</label>
+                    <textarea id="inputArea" placeholder="Enter text to train word vectors..."></textarea>
+                </div>
+
+                <div id="searchSection" class="search-section hidden">
+                    <h3 style="color: var(--primary-color); margin-bottom: 15px;">Find Similar Words</h3>
+                    <div class="search-row">
+                        <input type="text" id="searchInput" class="form-input" placeholder="Enter a word...">
+                        <button id="searchBtn" class="btn btn-primary">Find Similar</button>
+                    </div>
+                    <div id="similarWords" class="similar-words"></div>
+                    <div id="vectorDisplay" class="vector-display hidden"></div>
+                </div>
+
+                <div id="vocabSection" class="hidden">
+                    <h3 style="color: var(--primary-color); margin: 20px 0 15px;">Vocabulary (click to explore)</h3>
+                    <div id="vocabList" class="vocab-list"></div>
+                </div>
+
+                <div id="progressContainer" class="progress-container hidden">
+                    <div class="progress-bar-wrapper">
+                        <div id="progressBar" class="progress-bar" style="width: 0%">0%</div>
+                    </div>
+                    <p id="progressText" class="progress-text">Training...</p>
+                </div>
+
+                <div id="statsContainer" class="result-section hidden">
+                    <div class="result-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Vocabulary Size</span>
+                            <span id="vocabSize" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Dimensions</span>
+                            <span id="dimensions" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Time Taken</span>
+                            <span id="timeTaken" class="stat-value">0 ms</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>How it works</h3>
+                <ul>
+                    <li>Creates word vectors using a simplified Skip-gram like approach.</li>
+                    <li>Words appearing in similar contexts get similar vector representations.</li>
+                    <li>Cosine similarity measures how similar two word vectors are.</li>
+                    <li>More training data produces better quality word embeddings.</li>
+                </ul>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #495</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

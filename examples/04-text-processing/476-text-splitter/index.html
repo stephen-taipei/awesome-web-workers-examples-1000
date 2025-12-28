@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#476 Text Splitter - Web Workers Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Text Splitter</h1>
+            <p class="subtitle">Split text by delimiter, size, or pattern</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#476</span>
+                <span class="badge badge-secondary">Text Processing</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label">Text</label>
+                <textarea id="input-text" class="form-input" rows="4">This is a sample text. It has multiple sentences! Can you split them? Yes, you can.</textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Split By</label>
+                <select id="split-type" class="form-input">
+                    <option value="delimiter">Delimiter</option>
+                    <option value="size">Fixed Size</option>
+                    <option value="words">Word Count</option>
+                    <option value="sentences">Sentences</option>
+                    <option value="paragraphs">Paragraphs</option>
+                    <option value="regex">Regular Expression</option>
+                </select>
+            </div>
+            <div class="form-group" id="delimiter-group">
+                <label class="form-label">Delimiter</label>
+                <input type="text" id="delimiter" class="form-input" value=". ">
+            </div>
+            <div class="form-group hidden" id="size-group">
+                <label class="form-label">Size (characters or words)</label>
+                <input type="number" id="split-size" class="form-input" value="50" min="1">
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Split Text</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div id="result-output" class="result-output"></div>
+        </section>
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #476</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

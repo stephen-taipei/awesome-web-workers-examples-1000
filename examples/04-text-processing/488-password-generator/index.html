@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator - Web Worker Example #488</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .output-area {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            resize: vertical;
+            overflow-y: auto;
+        }
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+        .password-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-family: var(--font-mono);
+        }
+        .password-item:hover {
+            border-color: var(--primary-color);
+        }
+        .copy-btn {
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .strength-bar {
+            height: 4px;
+            background: var(--bg-secondary);
+            border-radius: 2px;
+            margin-top: 4px;
+        }
+        .strength-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+        .strength-weak { background: var(--danger-color); }
+        .strength-medium { background: var(--warning-color); }
+        .strength-strong { background: var(--success-color); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Password Generator</h1>
+            <p class="subtitle">Web Worker Example #488 - Random Password Generation</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">Text Processing</span>
+                <span class="badge badge-success">Web Worker</span>
+                <span class="badge badge-secondary">Security</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="card">
+                <div class="card-title">Password Generator</div>
+
+                <div class="controls">
+                    <div class="options-grid">
+                        <div class="form-group">
+                            <label class="form-label">Password Length</label>
+                            <input type="number" id="lengthInput" class="form-input" value="16" min="4" max="128">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Number of Passwords</label>
+                            <input type="number" id="countInput" class="form-input" value="10" min="1" max="10000">
+                        </div>
+                    </div>
+                    <div class="options-grid">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="uppercaseCheck" checked>
+                            <label for="uppercaseCheck">Uppercase (A-Z)</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="lowercaseCheck" checked>
+                            <label for="lowercaseCheck">Lowercase (a-z)</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="numbersCheck" checked>
+                            <label for="numbersCheck">Numbers (0-9)</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="symbolsCheck" checked>
+                            <label for="symbolsCheck">Symbols (!@#$...)</label>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button id="generateBtn" class="btn btn-primary">Generate Passwords</button>
+                        <button id="clearBtn" class="btn btn-danger">Clear</button>
+                    </div>
+                </div>
+
+                <div id="outputContainer">
+                    <label class="form-label">Generated Passwords</label>
+                    <div id="outputArea" class="output-area"></div>
+                </div>
+
+                <div id="progressContainer" class="progress-container hidden">
+                    <div class="progress-bar-wrapper">
+                        <div id="progressBar" class="progress-bar" style="width: 0%">0%</div>
+                    </div>
+                </div>
+
+                <div id="statsContainer" class="result-section hidden">
+                    <div class="result-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Passwords Generated</span>
+                            <span id="generatedCount" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Time Taken</span>
+                            <span id="timeTaken" class="stat-value">0 ms</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Avg Entropy</span>
+                            <span id="avgEntropy" class="stat-value">0 bits</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>How it works</h3>
+                <ul>
+                    <li>The Web Worker generates cryptographically random passwords using a secure random number generator.</li>
+                    <li>Character sets can be customized (uppercase, lowercase, numbers, symbols).</li>
+                    <li>Password entropy is calculated to measure strength.</li>
+                    <li>Batch generation of thousands of passwords without blocking the UI.</li>
+                </ul>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p><a href="../../index.html">Back to Examples</a> | Web Workers Example #488</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

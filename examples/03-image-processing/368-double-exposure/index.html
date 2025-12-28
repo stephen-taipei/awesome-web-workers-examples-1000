@@ -3,101 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Workers 雙重曝光 (Double Exposure)</title>
+    <title>#368 雙重曝光 - Web Workers 範例</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .upload-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        .mini-upload {
-            border: 2px dashed rgba(16,185,129,0.3);
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .mini-upload:hover {
-            border-color: #10b981;
-            background: rgba(16,185,129,0.1);
-        }
-        .mini-upload.active {
-            border-color: #10b981;
-            background: rgba(16,185,129,0.2);
-        }
-        .preview-thumb {
-            max-width: 100%;
-            max-height: 150px;
-            display: none;
-            margin: 0 auto;
-            border-radius: 4px;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Web Workers 雙重曝光</h1>
-            <div class="subtitle">Double Exposure</div>
-            <div class="badges">
-                <span class="badge badge-beginner">影像處理</span>
-                <span class="badge badge-worker">Web Worker</span>
+        <header class="header">
+            <h1>雙重曝光</h1>
+            <p class="subtitle">Double Exposure</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#368</span>
+                <span class="badge badge-secondary">影像處理</span>
             </div>
         </header>
-
-        <section class="description">
-            <p>將兩張圖片進行混合，創造雙重曝光的藝術效果。</p>
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-area" id="uploadArea1"><input type="file" id="fileInput1" accept="image/*" hidden><p>圖片 1</p></div>
+            <div class="upload-area" id="uploadArea2"><input type="file" id="fileInput2" accept="image/*" hidden><p>圖片 2</p></div>
         </section>
-
-        <div class="upload-row">
-            <div class="mini-upload" id="upload1">
-                <p>上傳底圖 (Base)</p>
-                <img id="preview1" class="preview-thumb">
-                <input type="file" id="file1" accept="image/*" hidden>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>混合模式：
+                    <select id="blendMode">
+                        <option value="screen">濾色 (Screen)</option>
+                        <option value="multiply">正片疊底 (Multiply)</option>
+                        <option value="overlay">疊加 (Overlay)</option>
+                        <option value="lighten">變亮 (Lighten)</option>
+                    </select>
+                </label>
             </div>
-            <div class="mini-upload" id="upload2">
-                <p>上傳疊加圖 (Overlay)</p>
-                <img id="preview2" class="preview-thumb">
-                <input type="file" id="file2" accept="image/*" hidden>
+            <div class="control-group">
+                <label>混合比例：<span id="ratioValue">0.5</span></label>
+                <input type="range" id="ratio" min="0" max="1" step="0.1" value="0.5">
             </div>
-        </div>
-
-        <section class="controls">
-             <div class="input-group">
-                <label>混合模式 (Blend Mode)</label>
-                <select id="blendMode">
-                    <option value="screen">濾色 (Screen)</option>
-                    <option value="multiply">色彩增值 (Multiply)</option>
-                    <option value="overlay">覆蓋 (Overlay)</option>
-                    <option value="lighten">變亮 (Lighten)</option>
-                    <option value="darken">變暗 (Darken)</option>
-                    <option value="soft-light">柔光 (Soft Light)</option>
-                    <option value="hard-light">實光 (Hard Light)</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>疊加強度 (Opacity)</label>
-                <input type="range" id="opacity" min="0" max="100" value="80">
-                <span id="opacityVal">0.8</span>
-            </div>
+            <button id="processBtn" class="btn btn-primary" disabled>套用雙重曝光</button>
         </section>
-
-        <section class="image-comparison">
-            <div class="image-panel" style="display:none;"> <!-- Hiding source panel as we have previews above -->
-                <h3>原始圖片</h3>
-                <canvas id="sourceCanvas"></canvas>
-            </div>
-            <div class="image-panel" style="grid-column: 1 / -1;">
-                <h3>合成結果</h3>
-                <canvas id="targetCanvas"></canvas>
-                <div class="image-info" id="targetInfo">請上傳兩張圖片</div>
-            </div>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <canvas id="resultCanvas"></canvas>
         </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #368</footer>
     </div>
-
     <script src="main.js"></script>
 </body>
 </html>

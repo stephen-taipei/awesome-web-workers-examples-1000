@@ -1,73 +1,44 @@
-const generateBtn = document.getElementById('generateBtn');
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+const strengthInput = document.getElementById('strength');
+const strengthValue = document.getElementById('strengthValue');
+const noiseTypeInput = document.getElementById('noiseType');
+const processBtn = document.getElementById('processBtn');
+const originalCanvas = document.getElementById('originalCanvas');
 const resultCanvas = document.getElementById('resultCanvas');
+const originalCtx = originalCanvas.getContext('2d');
 const resultCtx = resultCanvas.getContext('2d');
-const widthInput = document.getElementById('width');
-const widthVal = document.getElementById('widthVal');
-const heightInput = document.getElementById('height');
-const heightVal = document.getElementById('heightVal');
-const typeInput = document.getElementById('type');
-const processTimeDisplay = document.getElementById('processTime');
-const progressSection = document.getElementById('progressSection');
-const progressBar = document.getElementById('progressBar');
-const progressText = document.getElementById('progressText');
-const downloadLink = document.getElementById('downloadLink');
+const worker = new Worker('worker.js');
 
-let worker = null;
+uploadArea.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', (e) => loadImage(e.target.files[0]));
+strengthInput.addEventListener('input', () => strengthValue.textContent = strengthInput.value);
+processBtn.addEventListener('click', processImage);
+worker.onmessage = (e) => { resultCtx.putImageData(e.data.imageData, 0, 0); processBtn.disabled = false; };
 
-function initWorker() {
-    if (worker) worker.terminate();
-    worker = new Worker('worker.js');
-
-    worker.onmessage = function(e) {
-        const { type, data, duration, progress } = e.data;
-
-        if (type === 'progress') {
-            const percent = Math.round(progress * 100);
-            progressBar.style.width = `${percent}%`;
-            progressText.textContent = `生成中... ${percent}%`;
-        } else if (type === 'result') {
-            const width = parseInt(widthInput.value);
-            const height = parseInt(heightInput.value);
-
-            resultCanvas.width = width;
-            resultCanvas.height = height;
-            resultCtx.putImageData(data, 0, 0);
-
-            processTimeDisplay.textContent = `${duration.toFixed(2)} ms`;
-
-            progressSection.classList.add('hidden');
-            generateBtn.disabled = false;
-            downloadLink.href = resultCanvas.toDataURL();
-            downloadLink.classList.remove('hidden');
-        }
+function loadImage(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+            let w = img.width, h = img.height;
+            if (w > 500) { h = h * 500 / w; w = 500; }
+            originalCanvas.width = resultCanvas.width = w;
+            originalCanvas.height = resultCanvas.height = h;
+            originalCtx.drawImage(img, 0, 0, w, h);
+            processBtn.disabled = false;
+        };
+        img.src = e.target.result;
     };
-
-    worker.onerror = function(error) {
-        console.error('Worker error:', error);
-        alert('生成過程中發生錯誤');
-        generateBtn.disabled = false;
-        progressSection.classList.add('hidden');
-    };
+    reader.readAsDataURL(file);
 }
 
-widthInput.addEventListener('input', (e) => widthVal.textContent = e.target.value);
-heightInput.addEventListener('input', (e) => heightVal.textContent = e.target.value);
-
-generateBtn.addEventListener('click', () => {
-    generateBtn.disabled = true;
-    progressSection.classList.remove('hidden');
-    progressBar.style.width = '0%';
-    progressText.textContent = '準備中...';
-
-    initWorker();
-
-    const width = parseInt(widthInput.value);
-    const height = parseInt(heightInput.value);
-    const type = typeInput.value;
-
+function processImage() {
+    processBtn.disabled = true;
+    const w = originalCanvas.width, h = originalCanvas.height;
     worker.postMessage({
-        width,
-        height,
-        type
+        imageData: originalCtx.getImageData(0, 0, w, h),
+        strength: parseInt(strengthInput.value),
+        type: noiseTypeInput.value
     });
-});
+}

@@ -1,47 +1,40 @@
-self.onmessage = function(e) {
-    const { width, height, type } = e.data;
-    const startTime = performance.now();
-
-    try {
-        const resultImageData = generateRandomNoise(width, height, type);
-        const endTime = performance.now();
-
-        self.postMessage({
-            type: 'result',
-            data: resultImageData,
-            duration: endTime - startTime
-        });
-    } catch (error) {
-        console.error(error);
-        self.postMessage({ type: 'error', error: error.message });
-    }
-};
-
-function generateRandomNoise(width, height, type) {
-    const result = new Uint8ClampedArray(width * height * 4);
-    const len = result.length;
-
-    // Optimization: Generate noise in chunks to report progress
-    const chunkSize = 100000;
-
-    for (let i = 0; i < len; i += 4) {
-        if (i % chunkSize === 0) {
-             self.postMessage({ type: 'progress', progress: i / len });
-        }
-
-        if (type === 'monochrome') {
-            const val = Math.random() * 255;
-            result[i] = val;
-            result[i+1] = val;
-            result[i+2] = val;
-            result[i+3] = 255;
-        } else {
-            result[i] = Math.random() * 255;
-            result[i+1] = Math.random() * 255;
-            result[i+2] = Math.random() * 255;
-            result[i+3] = 255;
-        }
-    }
-
-    return new ImageData(result, width, height);
+function gaussianRandom() {
+    let u = 0, v = 0;
+    while (u === 0) u = Math.random();
+    while (v === 0) v = Math.random();
+    return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
 }
+
+self.onmessage = function(e) {
+    const { imageData, strength, type } = e.data;
+    const { width, height, data } = imageData;
+    const output = new Uint8ClampedArray(data.length);
+
+    for (let i = 0; i < data.length; i += 4) {
+        let r = data[i], g = data[i + 1], b = data[i + 2];
+
+        if (type === 'gaussian') {
+            const noise = gaussianRandom() * strength;
+            r = Math.min(255, Math.max(0, r + noise));
+            g = Math.min(255, Math.max(0, g + noise));
+            b = Math.min(255, Math.max(0, b + noise));
+        } else if (type === 'salt-pepper') {
+            const rand = Math.random();
+            const prob = strength / 500;
+            if (rand < prob) { r = g = b = 255; }
+            else if (rand < prob * 2) { r = g = b = 0; }
+        } else {
+            const noise = (Math.random() - 0.5) * strength * 2;
+            r = Math.min(255, Math.max(0, r + noise));
+            g = Math.min(255, Math.max(0, g + noise));
+            b = Math.min(255, Math.max(0, b + noise));
+        }
+
+        output[i] = r;
+        output[i + 1] = g;
+        output[i + 2] = b;
+        output[i + 3] = data[i + 3];
+    }
+
+    self.postMessage({ imageData: new ImageData(output, width, height) });
+};

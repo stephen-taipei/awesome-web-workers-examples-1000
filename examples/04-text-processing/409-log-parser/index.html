@@ -3,44 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>日誌解析器 - Web Workers 範例</title>
+    <title>#409 Log Parser - Web Workers Example</title>
+    <meta name="description" content="Parse log files using Web Worker">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>日誌解析器</h1>
-            <div class="subtitle">Log Parser (Apache/Nginx)</div>
-            <div class="badges">
-                <span class="badge badge-beginner">進階</span>
-                <span class="badge badge-worker">Web Worker</span>
-                <span class="badge badge-worker">Regex</span>
+        <header class="header">
+            <h1>Log Parser</h1>
+            <p class="subtitle">Log File Parsing</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#409</span>
+                <span class="badge badge-secondary">Text Processing</span>
+                <span class="badge badge-success">Beginner</span>
             </div>
         </header>
 
-        <section class="description">
-            <h2>功能描述</h2>
-            <p>解析常見的伺服器日誌格式 (Common Log Format / Combined Log Format) 為結構化 JSON 數據。</p>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="input-text">Log Data</label>
+                <textarea id="input-text" class="form-input" rows="12" placeholder="Enter log data...">
+2024-01-15 10:23:45 INFO  [main] Application started successfully
+2024-01-15 10:23:46 DEBUG [db] Database connection established
+2024-01-15 10:23:47 INFO  [auth] User john@example.com logged in
+2024-01-15 10:24:01 WARN  [cache] Cache miss for key: user_123
+2024-01-15 10:24:15 ERROR [api] Failed to fetch data: Connection timeout
+2024-01-15 10:24:16 INFO  [api] Retrying request...
+2024-01-15 10:24:18 INFO  [api] Request successful on retry
+2024-01-15 10:25:00 DEBUG [scheduler] Running scheduled task: cleanup
+2024-01-15 10:25:30 WARN  [memory] Memory usage above 80%
+2024-01-15 10:26:00 INFO  [auth] User jane@example.com logged in
+                </textarea>
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Parse Logs</button>
+                <button id="clear-btn" class="btn btn-secondary">Clear</button>
+            </div>
         </section>
 
-        <div class="main-content" style="display: flex; gap: 1rem; margin-top: 1rem;">
-            <div class="editor-pane" style="flex: 1;">
-                <div class="pane-header" style="margin-bottom: 0.5rem; color: #a7f3d0;">日誌輸入</div>
-                <textarea id="logInput" style="width: 100%; height: 300px; background: rgba(0,0,0,0.3); color: #fff; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 1rem; font-family: monospace;" placeholder="在此輸入日誌...">127.0.0.1 - - [10/Oct/2023:13:55:36 -0700] "GET /apache_pb.gif HTTP/1.0" 200 2326
-192.168.1.10 - frank [10/Oct/2023:13:55:36 -0700] "POST /admin/login HTTP/1.1" 401 1200
-10.0.0.5 - - [10/Oct/2023:14:10:22 +0000] "GET /favicon.ico HTTP/1.1" 404 500 "-" "Mozilla/5.0"</textarea>
-            </div>
-            <div class="preview-pane" style="flex: 1;">
-                <div class="pane-header" style="margin-bottom: 0.5rem; color: #a7f3d0;">
-                    <span>解析結果</span>
-                    <span id="processTime" style="float: right; font-size: 0.8rem; color: #6ee7b7;">0ms</span>
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
                 </div>
-                <div id="previewOutput" style="width: 100%; height: 300px; background: rgba(0,0,0,0.3); color: #a7f3d0; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 1rem; font-family: monospace; white-space: pre; overflow: auto;"></div>
+                <p id="progress-text" class="progress-text">Ready</p>
             </div>
-        </div>
+        </section>
 
-        <footer>
-            <p>Web Workers 1000 範例系列 - 409 日誌解析器</p>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div id="table-output" class="table-container"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Regex-based log line parsing</li>
+                <li><strong>Worker Type:</strong> Dedicated Worker</li>
+                <li><strong>Use Case:</strong> Log analysis without blocking UI</li>
+                <li><strong>Features:</strong> Timestamp, level, source, message extraction</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #409</p>
         </footer>
     </div>
     <script src="main.js"></script>

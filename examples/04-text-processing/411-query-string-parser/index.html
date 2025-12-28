@@ -3,45 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>查詢字串解析器 - Web Workers 範例</title>
+    <title>#411 Query String Parser - Web Workers Example</title>
+    <meta name="description" content="Parse query strings using Web Worker">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>查詢字串解析器</h1>
-            <div class="subtitle">Query String Parser</div>
-            <div class="badges">
-                <span class="badge badge-beginner">入門</span>
-                <span class="badge badge-worker">Web Worker</span>
-                <span class="badge badge-worker">URLSearchParams</span>
+        <header class="header">
+            <h1>Query String Parser</h1>
+            <p class="subtitle">Query String Parsing</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#411</span>
+                <span class="badge badge-secondary">Text Processing</span>
+                <span class="badge badge-success">Beginner</span>
             </div>
         </header>
 
-        <section class="description">
-            <h2>功能描述</h2>
-            <p>將 URL 查詢字串 (Query String) 解析為 JSON 對象，支援陣列參數與巢狀結構（透過特定命名約定）。</p>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="input-text">Query Strings (one per line)</label>
+                <textarea id="input-text" class="form-input" rows="8" placeholder="Enter query strings...">
+name=John+Doe&age=30&city=New+York
+search=web%20workers&lang=en&page=1&limit=20
+user[name]=Alice&user[email]=alice%40example.com&tags[]=red&tags[]=blue
+action=submit&data=%7B%22key%22%3A%22value%22%7D
+empty=&flag&multiple=a&multiple=b&multiple=c
+                </textarea>
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Parse Query Strings</button>
+                <button id="clear-btn" class="btn btn-secondary">Clear</button>
+            </div>
         </section>
 
-        <div class="main-content" style="display: flex; gap: 1rem; margin-top: 1rem;">
-            <div class="editor-pane" style="flex: 1;">
-                <div class="pane-header" style="margin-bottom: 0.5rem; color: #a7f3d0;">查詢字串輸入</div>
-                <textarea id="qsInput" style="width: 100%; height: 300px; background: rgba(0,0,0,0.3); color: #fff; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 1rem; font-family: monospace;" placeholder="在此輸入 Query String...">name=John%20Doe&age=25
-tags=js&tags=html&tags=css
-user[name]=Alice&user[role]=admin
-filter=active&sort=-created_at</textarea>
-            </div>
-            <div class="preview-pane" style="flex: 1;">
-                <div class="pane-header" style="margin-bottom: 0.5rem; color: #a7f3d0;">
-                    <span>JSON 結果</span>
-                    <span id="processTime" style="float: right; font-size: 0.8rem; color: #6ee7b7;">0ms</span>
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
                 </div>
-                <div id="previewOutput" style="width: 100%; height: 300px; background: rgba(0,0,0,0.3); color: #a7f3d0; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 1rem; font-family: monospace; white-space: pre; overflow: auto;"></div>
+                <p id="progress-text" class="progress-text">Ready</p>
             </div>
-        </div>
+        </section>
 
-        <footer>
-            <p>Web Workers 1000 範例系列 - 411 查詢字串解析器</p>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <pre id="result-output" class="code-output"></pre>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> URL-encoded string parsing</li>
+                <li><strong>Worker Type:</strong> Dedicated Worker</li>
+                <li><strong>Use Case:</strong> Parsing URL parameters without blocking UI</li>
+                <li><strong>Features:</strong> Decoding, arrays, nested objects</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #411</p>
         </footer>
     </div>
     <script src="main.js"></script>

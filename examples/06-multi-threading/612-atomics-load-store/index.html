@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#612 Atomics Load/Store - Web Workers Multi-Threading</title>
+    <meta name="description" content="Demonstrate Atomics.load and Atomics.store operations">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Atomics Load/Store</h1>
+            <p class="subtitle">Atomic Memory Operations</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#612</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Atomics Demo</h2>
+            <div class="btn-group">
+                <button id="init-btn" class="btn btn-primary">Initialize</button>
+                <button id="store-btn" class="btn btn-secondary" disabled>Atomic Store</button>
+                <button id="load-btn" class="btn btn-secondary" disabled>Atomic Load</button>
+                <button id="race-btn" class="btn btn-warning" disabled>Test Race Condition</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Shared Value</h2>
+            <div id="value-display" class="result-stats"></div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Operations Log</h2>
+            <div id="log" style="max-height:250px;overflow-y:auto;font-family:monospace;font-size:0.85rem;"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About Atomics Load/Store</h3>
+            <ul>
+                <li><strong>Atomics.load:</strong> Reads value atomically from shared memory</li>
+                <li><strong>Atomics.store:</strong> Writes value atomically to shared memory</li>
+                <li><strong>Guarantee:</strong> Operation completes without interruption</li>
+                <li><strong>Use Case:</strong> Thread-safe read/write of shared state</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #612 Atomics Load/Store</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,127 +1,87 @@
-// Text Diff Worker
-// Implements LCS (Longest Common Subsequence) for line-by-line diff
-
+/**
+ * Text Diff Web Worker - Simple line-based diff
+ */
 self.onmessage = function(e) {
-    const { text1, text2 } = e.data;
-
-    try {
-        const startTime = performance.now();
-
-        const lines1 = text1.split(/\r?\n/);
-        const lines2 = text2.split(/\r?\n/);
-
-        const diffs = computeDiff(lines1, lines2);
-
-        const endTime = performance.now();
-
-        self.postMessage({
-            type: 'result',
-            data: {
-                diffs: diffs,
-                diffCount: diffs.filter(d => d.type !== 'same').length
-            },
-            executionTime: (endTime - startTime).toFixed(2)
-        });
-
-    } catch (error) {
-        self.postMessage({ type: 'error', data: error.message });
-    }
+    const { type, payload } = e.data;
+    if (type === 'DIFF') computeDiff(payload.text1, payload.text2);
 };
 
-function computeDiff(lines1, lines2) {
-    // 1. Compute LCS Matrix
-    // Note: For very large files, O(N*M) memory is too much.
-    // Optimization: Myers Diff Algorithm is O(ND), better for typical diffs.
-    // Here we implement basic DP LCS for simplicity as files are expected to be small-medium.
+function computeDiff(text1, text2) {
+    const startTime = performance.now();
+    self.postMessage({ type: 'PROGRESS', payload: { percent: 30, message: 'Computing diff...' } });
 
-    const N = lines1.length;
-    const M = lines2.length;
+    const lines1 = text1.split('\n');
+    const lines2 = text2.split('\n');
 
-    // DP Table: dp[i][j] stores length of LCS of lines1[0..i-1] and lines2[0..j-1]
-    // To save space, we could use only 2 rows, but we need to backtrack for the solution.
-    // If N*M > 10^7, this might crash.
-    const dp = new Int32Array((N + 1) * (M + 1));
+    // Simple LCS-based diff
+    const lcs = computeLCS(lines1, lines2);
 
-    for (let i = 1; i <= N; i++) {
-        for (let j = 1; j <= M; j++) {
-            if (lines1[i-1] === lines2[j-1]) {
-                dp[i*(M+1) + j] = dp[(i-1)*(M+1) + (j-1)] + 1;
-            } else {
-                dp[i*(M+1) + j] = Math.max(dp[(i-1)*(M+1) + j], dp[i*(M+1) + (j-1)]);
-            }
-        }
-    }
+    self.postMessage({ type: 'PROGRESS', payload: { percent: 60, message: 'Generating output...' } });
 
-    // 2. Backtrack to find diff
-    let i = N;
-    let j = M;
     const result = [];
+    let i = 0, j = 0, k = 0;
+    let added = 0, removed = 0, unchanged = 0;
 
-    while (i > 0 || j > 0) {
-        if (i > 0 && j > 0 && lines1[i-1] === lines2[j-1]) {
-            result.push({ type: 'same', oldText: lines1[i-1], newText: lines2[j-1], oldLine: i, newLine: j });
-            i--;
-            j--;
-        } else if (j > 0 && (i === 0 || dp[i*(M+1) + (j-1)] >= dp[(i-1)*(M+1) + j])) {
-            // Addition (in lines2 but not lines1)
-            result.push({ type: 'add', oldText: '', newText: lines2[j-1], oldLine: '', newLine: j });
-            j--;
-        } else if (i > 0 && (j === 0 || dp[i*(M+1) + (j-1)] < dp[(i-1)*(M+1) + j])) {
-            // Deletion (in lines1 but not lines2)
-            result.push({ type: 'del', oldText: lines1[i-1], newText: '', oldLine: i, newLine: '' });
-            i--;
-        }
-    }
-
-    result.reverse();
-
-    // 3. Post-processing: Group changes into Modified blocks?
-    // Side-by-side view is simpler if we align Add/Del into Change if they are adjacent.
-    // Basic approach: Just list them.
-    // Improvement: If we have DEL followed immediately by ADD, we can visually combine them as CHANGE?
-    // Let's iterate and merge adjacent del+add pairs into change rows for better side-by-side
-
-    const alignedResult = [];
-    let k = 0;
-    while(k < result.length) {
-        // Check if we have a block of DELs followed by ADDs
-        if (result[k].type === 'del') {
-            let delBlock = [result[k]];
-            k++;
-            while(k < result.length && result[k].type === 'del') {
-                delBlock.push(result[k]);
-                k++;
-            }
-
-            let addBlock = [];
-            while(k < result.length && result[k].type === 'add') {
-                addBlock.push(result[k]);
-                k++;
-            }
-
-            if (addBlock.length > 0) {
-                // We have a block of DELs and ADDs. Match them up.
-                const count = Math.max(delBlock.length, addBlock.length);
-                for(let m=0; m<count; m++) {
-                    const delItem = delBlock[m] || { oldText: '', oldLine: '' };
-                    const addItem = addBlock[m] || { newText: '', newLine: '' };
-                    alignedResult.push({
-                        type: 'change', // or mixed
-                        oldText: delItem.oldText,
-                        newText: addItem.newText,
-                        oldLine: delItem.oldLine,
-                        newLine: addItem.newLine
-                    });
-                }
+    while (i < lines1.length || j < lines2.length) {
+        if (k < lcs.length && i < lines1.length && lines1[i] === lcs[k]) {
+            if (j < lines2.length && lines2[j] === lcs[k]) {
+                result.push({ type: 'same', line: lines1[i] });
+                unchanged++;
+                i++; j++; k++;
             } else {
-                // Just DELs
-                delBlock.forEach(item => alignedResult.push(item));
+                result.push({ type: 'add', line: lines2[j] });
+                added++;
+                j++;
             }
-        } else {
-            alignedResult.push(result[k]);
-            k++;
+        } else if (i < lines1.length && (k >= lcs.length || lines1[i] !== lcs[k])) {
+            result.push({ type: 'remove', line: lines1[i] });
+            removed++;
+            i++;
+        } else if (j < lines2.length) {
+            result.push({ type: 'add', line: lines2[j] });
+            added++;
+            j++;
         }
     }
 
-    return alignedResult;
+    const html = result.map(r => {
+        const escaped = escapeHTML(r.line);
+        if (r.type === 'add') return `<div style="background:#1b4332;color:#4caf50">+ ${escaped}</div>`;
+        if (r.type === 'remove') return `<div style="background:#442222;color:#f44336">- ${escaped}</div>`;
+        return `<div style="color:#888">  ${escaped}</div>`;
+    }).join('');
+
+    self.postMessage({
+        type: 'RESULT',
+        payload: {
+            result: html,
+            duration: performance.now() - startTime,
+            stats: { added, removed, unchanged }
+        }
+    });
+}
+
+function computeLCS(arr1, arr2) {
+    const m = arr1.length, n = arr2.length;
+    const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            if (arr1[i-1] === arr2[j-1]) dp[i][j] = dp[i-1][j-1] + 1;
+            else dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+        }
+    }
+
+    const lcs = [];
+    let i = m, j = n;
+    while (i > 0 && j > 0) {
+        if (arr1[i-1] === arr2[j-1]) { lcs.unshift(arr1[i-1]); i--; j--; }
+        else if (dp[i-1][j] > dp[i][j-1]) i--;
+        else j--;
+    }
+    return lcs;
+}
+
+function escapeHTML(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#609 Structured Clone - Web Workers Multi-Threading</title>
+    <meta name="description" content="Demonstrate structured clone algorithm for data transfer">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Structured Clone Algorithm</h1>
+            <p class="subtitle">Deep Cloning for Worker Communication</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#609</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-success">Beginner</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Structured Clone Demo</h2>
+            <p style="color:var(--text-secondary);margin-bottom:15px;">Test various data types with structured clone.</p>
+            <div class="btn-group">
+                <button id="test-primitives-btn" class="btn btn-primary">Test Primitives</button>
+                <button id="test-objects-btn" class="btn btn-secondary">Test Objects</button>
+                <button id="test-arrays-btn" class="btn btn-secondary">Test Arrays</button>
+                <button id="test-special-btn" class="btn btn-secondary">Test Special Types</button>
+                <button id="test-unsupported-btn" class="btn btn-danger">Test Unsupported</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Test Results</h2>
+            <div id="results" style="max-height:400px;overflow-y:auto;"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About Structured Clone</h3>
+            <ul>
+                <li><strong>Supported:</strong> Primitives, Date, RegExp, Blob, File, Map, Set, ArrayBuffer</li>
+                <li><strong>Unsupported:</strong> Functions, DOM nodes, Error objects (partially)</li>
+                <li><strong>Behavior:</strong> Deep clone - no shared references</li>
+                <li><strong>Performance:</strong> Copy overhead for large data</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #609 Structured Clone</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,46 +1,121 @@
-const iniInput = document.getElementById('iniInput');
-const previewOutput = document.getElementById('previewOutput');
-const processTime = document.getElementById('processTime');
+/**
+ * INI Parser - Main Thread Script
+ */
 
-let worker;
-let lastInput = '';
+let worker = null;
 
-function initWorker() {
+const elements = {
+    inputText: null,
+    processBtn: null,
+    clearBtn: null,
+    progressBar: null,
+    progressText: null,
+    resultSection: null,
+    resultStats: null,
+    parsedOutput: null
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializeElements();
+    setupEventListeners();
+    initializeWorker();
+});
+
+function initializeElements() {
+    elements.inputText = document.getElementById('input-text');
+    elements.processBtn = document.getElementById('process-btn');
+    elements.clearBtn = document.getElementById('clear-btn');
+    elements.progressBar = document.getElementById('progress-bar');
+    elements.progressText = document.getElementById('progress-text');
+    elements.resultSection = document.getElementById('result-section');
+    elements.resultStats = document.getElementById('result-stats');
+    elements.parsedOutput = document.getElementById('parsed-output');
+}
+
+function setupEventListeners() {
+    elements.processBtn.addEventListener('click', processText);
+    elements.clearBtn.addEventListener('click', clearAll);
+}
+
+function initializeWorker() {
+    if (typeof Worker === 'undefined') {
+        alert('Web Workers not supported');
+        return;
+    }
     worker = new Worker('worker.js');
-
-    worker.onmessage = function(e) {
-        const { json, time, error } = e.data;
-
-        if (error) {
-            previewOutput.textContent = `Error: ${error}`;
-            previewOutput.style.color = '#f87171';
-        } else {
-            previewOutput.textContent = JSON.stringify(json, null, 2);
-            previewOutput.style.color = '#a7f3d0';
-        }
-
-        processTime.textContent = `${time.toFixed(2)}ms`;
-    };
+    worker.onmessage = handleWorkerMessage;
+    worker.onerror = handleWorkerError;
 }
 
-function updatePreview() {
-    const text = iniInput.value;
-    if (text === lastInput) return;
-    lastInput = text;
-
-    if (!worker) initWorker();
-    worker.postMessage({ ini: text });
+function handleWorkerMessage(event) {
+    const { type, payload } = event.data;
+    switch (type) {
+        case 'PROGRESS':
+            updateProgress(payload.percent, payload.message);
+            break;
+        case 'RESULT':
+            displayResult(payload);
+            break;
+        case 'ERROR':
+            alert('Error: ' + payload.message);
+            updateProgress(0, 'Error occurred');
+            break;
+    }
 }
 
-function debounce(func, wait) {
-    let timeout;
-    return function(...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), wait);
-    };
+function handleWorkerError(error) {
+    alert('Worker error: ' + error.message);
+    updateProgress(0, 'Error occurred');
 }
 
-iniInput.addEventListener('input', debounce(updatePreview, 300));
+function processText() {
+    const text = elements.inputText.value;
+    if (!text.trim()) {
+        alert('Please enter some INI data');
+        return;
+    }
 
-initWorker();
-updatePreview();
+    elements.resultSection.classList.add('hidden');
+    updateProgress(0, 'Starting...');
+
+    worker.postMessage({
+        type: 'PARSE',
+        payload: { text }
+    });
+}
+
+function clearAll() {
+    elements.inputText.value = '';
+    elements.resultSection.classList.add('hidden');
+    updateProgress(0, 'Ready');
+}
+
+function updateProgress(percent, message) {
+    elements.progressBar.style.width = percent + '%';
+    elements.progressBar.textContent = percent + '%';
+    elements.progressText.textContent = message;
+}
+
+function displayResult(payload) {
+    const { json, duration, stats } = payload;
+
+    updateProgress(100, 'Completed');
+
+    elements.resultStats.innerHTML = `
+        <div class="stat-item">
+            <span class="stat-label">Processing Time:</span>
+            <span class="stat-value">${duration.toFixed(2)} ms</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Sections:</span>
+            <span class="stat-value">${stats.sectionCount}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Keys:</span>
+            <span class="stat-value">${stats.keyCount}</span>
+        </div>
+    `;
+
+    elements.parsedOutput.textContent = json;
+    elements.resultSection.classList.remove('hidden');
+}

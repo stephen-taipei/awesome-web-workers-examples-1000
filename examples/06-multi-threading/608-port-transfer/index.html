@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#608 Port Transfer - Web Workers Multi-Threading</title>
+    <meta name="description" content="Demonstrate transferring MessagePorts between workers">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Port Transfer Pattern</h1>
+            <p class="subtitle">Dynamic Port Redistribution</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#608</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Port Transfer Demo</h2>
+            <p style="color:var(--text-secondary);margin-bottom:15px;">Create workers and transfer ports dynamically.</p>
+            <div class="btn-group">
+                <button id="create-workers-btn" class="btn btn-primary">Create 3 Workers</button>
+                <button id="connect-1-2-btn" class="btn btn-secondary" disabled>Connect 1-2</button>
+                <button id="connect-2-3-btn" class="btn btn-secondary" disabled>Connect 2-3</button>
+                <button id="connect-1-3-btn" class="btn btn-secondary" disabled>Connect 1-3</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Network Topology</h2>
+            <div id="topology" style="text-align:center;padding:20px;"></div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Communication Log</h2>
+            <div id="comm-log" style="max-height:250px;overflow-y:auto;"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Pattern</h3>
+            <ul>
+                <li><strong>Pattern:</strong> Dynamic port transfer between workers</li>
+                <li><strong>Use Case:</strong> Building flexible worker networks</li>
+                <li><strong>Key:</strong> Ports are transferable objects</li>
+                <li><strong>Benefit:</strong> Workers can establish new connections</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #608 Port Transfer</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

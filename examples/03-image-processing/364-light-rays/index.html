@@ -3,103 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Workers 光線效果 (Light Rays)</title>
+    <title>#364 光線效果 - Web Workers 範例</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .canvas-container {
-            position: relative;
-            display: inline-block;
-        }
-        #lightSourceOverlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            cursor: crosshair;
-            pointer-events: all;
-        }
-        .light-marker {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 2px solid yellow;
-            border-radius: 50%;
-            background: rgba(255, 255, 0, 0.3);
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            box-shadow: 0 0 10px yellow;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Web Workers 光線效果</h1>
-            <div class="subtitle">Light Rays / Volumetric Light</div>
-            <div class="badges">
-                <span class="badge badge-beginner">影像處理</span>
-                <span class="badge badge-worker">Web Worker</span>
-                <span class="badge badge-worker">OffscreenCanvas</span>
+        <header class="header">
+            <h1>光線效果</h1>
+            <p class="subtitle">Light Rays</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#364</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-success">進階</span>
             </div>
         </header>
-
-        <section class="description">
-            <p>此示例展示如何使用 Web Worker 實現體積光（God Rays）效果。點擊圖片設定光源位置。</p>
-        </section>
-
-        <div class="upload-area" id="dropZone">
-            <div class="upload-icon">📁</div>
-            <p>拖放圖片至此，或點擊上傳</p>
-            <input type="file" id="fileInput" accept="image/*" hidden>
-        </div>
-
-        <section class="controls">
-            <div class="input-group">
-                <label>光線強度 (Intensity)</label>
-                <input type="range" id="intensity" min="0" max="200" value="100">
-                <span id="intensityVal">1.0</span>
-            </div>
-            <div class="input-group">
-                <label>光線衰減 (Decay)</label>
-                <input type="range" id="decay" min="80" max="99" value="95">
-                <span id="decayVal">0.95</span>
-            </div>
-            <div class="input-group">
-                <label>密度 (Density)</label>
-                <input type="range" id="density" min="1" max="100" value="50">
-                <span id="densityVal">0.5</span>
-            </div>
-             <div class="input-group">
-                <label>採樣權重 (Weight)</label>
-                <input type="range" id="weight" min="1" max="100" value="20">
-                <span id="weightVal">0.2</span>
-            </div>
-            <div class="input-group">
-                <label>閾值 (Threshold)</label>
-                <input type="range" id="threshold" min="0" max="255" value="200">
-                <span id="thresholdVal">200</span>
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>點擊或拖放圖片到此處</p>
             </div>
         </section>
-
-        <section class="image-comparison">
-            <div class="image-panel">
-                <h3>原始圖片</h3>
-                <div class="canvas-container">
-                    <canvas id="sourceCanvas"></canvas>
-                    <div id="lightSourceOverlay"></div>
-                    <div id="lightMarker" class="light-marker" style="display:none; left: 50%; top: 50%;"></div>
-                </div>
-                <div class="image-info" id="sourceInfo">請上傳圖片</div>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>光源X：<span id="lightXValue">0.5</span></label>
+                <input type="range" id="lightX" min="0" max="1" step="0.1" value="0.5">
             </div>
-            <div class="image-panel">
-                <h3>處理結果</h3>
-                <canvas id="targetCanvas"></canvas>
-                <div class="image-info" id="targetInfo">等待處理...</div>
+            <div class="control-group">
+                <label>光源Y：<span id="lightYValue">0.3</span></label>
+                <input type="range" id="lightY" min="0" max="1" step="0.1" value="0.3">
+            </div>
+            <div class="control-group">
+                <label>光線強度：<span id="intensityValue">0.5</span></label>
+                <input type="range" id="intensity" min="0.1" max="1" step="0.1" value="0.5">
+            </div>
+            <button id="processBtn" class="btn btn-primary" disabled>套用光線</button>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>原始圖片</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>光線效果</h3><canvas id="resultCanvas"></canvas></div>
             </div>
         </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #364</footer>
     </div>
-
     <script src="main.js"></script>
 </body>
 </html>

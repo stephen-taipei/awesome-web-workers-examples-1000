@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#437 Autocomplete - Web Workers Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Autocomplete</h1>
+            <p class="subtitle">Autocomplete Suggestions</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#437</span>
+                <span class="badge badge-secondary">Text Processing</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label">Type to search</label>
+                <input id="search-input" class="form-input" placeholder="Start typing..." autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Word List</label>
+                <textarea id="word-list" class="form-input" rows="6">javascript
+java
+python
+typescript
+react
+angular
+vue
+node
+express
+mongodb
+postgresql
+redis
+docker
+kubernetes
+webpack
+babel</textarea>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Suggestions</h2>
+            <div id="result-output" class="result-output"></div>
+        </section>
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #437</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

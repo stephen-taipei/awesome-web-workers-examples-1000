@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#615 Atomics Compare-Exchange - Web Workers Multi-Threading</title>
+    <meta name="description" content="Demonstrate Atomics.compareExchange for lock-free algorithms">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Atomics Compare-Exchange</h1>
+            <p class="subtitle">CAS Operation for Lock-Free Algorithms</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#615</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-danger">Advanced</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">CAS Demo</h2>
+            <p style="color:var(--text-secondary);margin-bottom:15px;">Compare-And-Swap: Only update if current value matches expected.</p>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="expected">Expected value:</label>
+                    <input type="number" id="expected" class="form-input" value="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="new-value">New value:</label>
+                    <input type="number" id="new-value" class="form-input" value="1">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="init-btn" class="btn btn-primary">Initialize</button>
+                <button id="cas-btn" class="btn btn-secondary" disabled>Compare-Exchange</button>
+                <button id="race-btn" class="btn btn-warning" disabled>CAS Race Test</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Current Value</h2>
+            <div id="value-display" style="text-align:center;padding:30px;">
+                <span id="current-value" style="font-size:4rem;font-weight:bold;color:var(--primary-color);">-</span>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">CAS Results</h2>
+            <div id="cas-results"></div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Operations Log</h2>
+            <div id="log" style="max-height:200px;overflow-y:auto;font-family:monospace;font-size:0.85rem;"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About Compare-Exchange (CAS)</h3>
+            <ul>
+                <li><strong>Operation:</strong> If value equals expected, replace with new value</li>
+                <li><strong>Returns:</strong> The original value (before potential change)</li>
+                <li><strong>Success:</strong> If returned value equals expected value</li>
+                <li><strong>Use Case:</strong> Lock-free data structures, optimistic updates</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #615 Atomics Compare-Exchange</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

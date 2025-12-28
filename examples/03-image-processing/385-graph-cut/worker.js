@@ -1,258 +1,136 @@
-// Graph Cut Worker
-// Implements a simplified Graph Cut using Max-Flow Min-Cut algorithm.
-// Since a full Push-Relabel or Boykov-Kolmogorov max-flow on a pixel-grid graph
-// is very heavy for JS (millions of edges), we will implement a simplified version
-// or use a smaller grid scaling, or a simpler approximation like Iterated Conditional Modes (ICM)
-// or simply Min-Cut on a smaller resolution.
-
-// Let's implement a standard Max-Flow (Edmonds-Karp or Push-Relabel) on the graph.
-// Nodes: Pixels + Source (S) + Sink (T).
-// Edges:
-//   - S -> Pixel: High capacity if marked foreground.
-//   - Pixel -> T: High capacity if marked background.
-//   - Pixel <-> Neighbor: Capacity based on color similarity.
-
-// To make it performant:
-// 1. Downsample if large? (Already limited to 200x200 in main.js, so ~40k nodes, ~160k edges)
-// 2. 40k nodes is still heavy for Edmonds-Karp (BFS). Push-Relabel is better.
-// 3. Simple BFS (Edmonds-Karp) might be too slow if many augmenting paths.
-
 self.onmessage = function(e) {
-    const { imageData, markers } = e.data;
+    const { imageData, fgMarks, bgMarks } = e.data;
     const { width, height, data } = imageData;
-    const numPixels = width * height;
 
-    try {
-        const startTime = performance.now();
+    // Simple graph-cut approximation using region growing from seeds
+    const labels = new Int8Array(width * height); // 0: unknown, 1: fg, -1: bg
 
-        self.postMessage({ type: 'progress', progress: 5, message: '建構圖形...' });
-
-        // Graph Construction
-        // We need an adjacency list with capacities.
-        // Node indices: 0..N-1 are pixels. N is Source, N+1 is Sink.
-        const S = numPixels;
-        const T = numPixels + 1;
-        const totalNodes = numPixels + 2;
-
-        // Using a flat array for edges might be better for memory, but list is easier.
-        // Let's use simple object/array based adjacency for readability first.
-        // Optimization: TypedArrays for edges.
-        // Forward Edge: [to, capacity, flow, reverse_edge_index]
-
-        // Since max degree is small (4 neighbors + S/T), we can use a compact representation.
-        // But for generic MaxFlow, we need to handle residual graph.
-
-        // Let's use a simplified approach:
-        // We will store graph as:
-        // head[u] = first_edge_index
-        // next[edge_index] = next_edge_index
-        // to[edge_index] = v
-        // cap[edge_index] = capacity
-
-        // Estimate max edges:
-        // N nodes. Each has 4 neighbors -> 4 edges * 2 (undirected) = 8 edges per node?
-        // Plus S->u or u->T.
-        // Total edges approx 5 * N * 2 (reverse edges).
-        const MAX_EDGES = numPixels * 12; // safe upper bound
-
-        const head = new Int32Array(totalNodes).fill(-1);
-        const nextEdge = new Int32Array(MAX_EDGES);
-        const toNode = new Int32Array(MAX_EDGES);
-        const capacity = new Float32Array(MAX_EDGES);
-        let edgeCount = 0;
-
-        function addEdge(u, v, cap) {
-            // Forward
-            toNode[edgeCount] = v;
-            capacity[edgeCount] = cap;
-            nextEdge[edgeCount] = head[u];
-            head[u] = edgeCount;
-            edgeCount++;
-
-            // Backward (residual, init 0 capacity)
-            toNode[edgeCount] = u;
-            capacity[edgeCount] = 0; // standard residual graph logic
-            // Wait, for undirected graph cut (pixel neighbors), capacity is same both ways.
-            // But max flow formulation uses directed edges.
-            // For neighbors u-v with similarity w:
-            // u->v cap w, v->u cap w.
-            // Residuals start at 0? No, if we push flow u->v, we increase residual v->u.
-            // Standard construction: Add directed edge u->v with cap C, and v->u with cap C.
-            // Each of these needs a residual reverse edge with 0 cap.
-            // Actually simpler: u->v (cap C), v->u (cap C).
-            // Residuals are implicit: res_cap(u,v) = cap(u,v) - flow(u,v).
-            // flow(v,u) = -flow(u,v).
-            // Here we stick to: stored capacity is residual capacity.
-            // If we push flow u->v, we decrease cap(u,v) and increase cap(v,u).
-
-            nextEdge[edgeCount] = head[v];
-            head[v] = edgeCount;
-            edgeCount++;
+    // Initialize seeds
+    for (const { x, y } of fgMarks) {
+        if (x >= 0 && x < width && y >= 0 && y < height) {
+            labels[y * width + x] = 1;
         }
-
-        // Helper to add bi-directional edge with same capacity
-        function addBiEdge(u, v, cap) {
-            // u -> v
-            toNode[edgeCount] = v;
-            capacity[edgeCount] = cap;
-            nextEdge[edgeCount] = head[u];
-            head[u] = edgeCount;
-            edgeCount++;
-
-            // v -> u
-            toNode[edgeCount] = u;
-            capacity[edgeCount] = cap;
-            nextEdge[edgeCount] = head[v];
-            head[v] = edgeCount;
-            edgeCount++;
-        }
-
-        const MAX_CAP = 1000000;
-
-        // Build Edges
-        for (let y = 0; y < height; y++) {
-             if (y % 20 === 0) self.postMessage({ type: 'progress', progress: 5 + (y/height)*15, message: '建構圖形...' });
-
-            for (let x = 0; x < width; x++) {
-                const u = y * width + x;
-                const marker = markers[u];
-
-                // T-links (Terminal links)
-                if (marker === 1) { // Foreground -> Connect S to u with infinite cap
-                    addEdge(S, u, MAX_CAP);
-                } else if (marker === 2) { // Background -> Connect u to T with infinite cap
-                    addEdge(u, T, MAX_CAP);
-                }
-
-                // N-links (Neighbor links) based on color similarity
-                // Down neighbor
-                if (y < height - 1) {
-                    const v = (y + 1) * width + x;
-                    const w = colorSimilarity(data, u, v);
-                    addBiEdge(u, v, w);
-                }
-                // Right neighbor
-                if (x < width - 1) {
-                    const v = y * width + (x + 1);
-                    const w = colorSimilarity(data, u, v);
-                    addBiEdge(u, v, w);
-                }
-            }
-        }
-
-        self.postMessage({ type: 'progress', progress: 20, message: '計算最小割 (Max Flow)...' });
-
-        // Dinic's Algorithm (Level Graph + DFS)
-        const level = new Int32Array(totalNodes);
-        const q = new Int32Array(totalNodes); // queue
-
-        function bfs() {
-            level.fill(-1);
-            level[S] = 0;
-            let qHead = 0;
-            let qTail = 0;
-            q[qTail++] = S;
-
-            while (qHead < qTail) {
-                const u = q[qHead++];
-                for (let e = head[u]; e !== -1; e = nextEdge[e]) {
-                    const v = toNode[e];
-                    if (capacity[e] > 0.001 && level[v] < 0) { // Check residual capacity
-                        level[v] = level[u] + 1;
-                        q[qTail++] = v;
-                    }
-                }
-            }
-            return level[T] >= 0;
-        }
-
-        function dfs(u, flow, ptr) {
-            if (u === T || flow === 0) return flow;
-
-            for (let e = ptr[u]; e !== -1; e = nextEdge[e]) {
-                ptr[u] = e; // Update current edge pointer
-                const v = toNode[e];
-                if (level[v] === level[u] + 1 && capacity[e] > 0.001) {
-                    const pushed = dfs(v, Math.min(flow, capacity[e]), ptr);
-                    if (pushed > 0) {
-                        capacity[e] -= pushed;
-                        capacity[e ^ 1] += pushed; // Reverse edge is adjacent index (0,1), (2,3)...
-                        return pushed;
-                    }
-                }
-            }
-            return 0;
-        }
-
-        let maxFlow = 0;
-        let iter = 0;
-
-        while (bfs()) {
-            iter++;
-            if (iter % 5 === 0) self.postMessage({ type: 'progress', progress: 20 + Math.min(70, iter), message: `迭代優化中 (${iter})...` });
-
-            // Current arc array to avoid scanning edges multiple times
-            const ptr = new Int32Array(head);
-
-            while (true) {
-                const pushed = dfs(S, Infinity, ptr);
-                if (pushed === 0) break;
-                maxFlow += pushed;
-            }
-        }
-
-        self.postMessage({ type: 'progress', progress: 95, message: '生成遮罩...' });
-
-        // Construct min-cut mask
-        // Run BFS/DFS from S on residual graph. Reachable nodes are Source-set (Foreground).
-        const mask = new Uint8Array(numPixels);
-        const visited = new Uint8Array(totalNodes);
-        const queue = [S];
-        visited[S] = 1;
-
-        while (queue.length > 0) {
-            const u = queue.pop();
-            if (u < numPixels) mask[u] = 1; // It's a pixel node
-
-            for (let e = head[u]; e !== -1; e = nextEdge[e]) {
-                const v = toNode[e];
-                if (!visited[v] && capacity[e] > 0.001) {
-                    visited[v] = 1;
-                    queue.push(v);
-                }
-            }
-        }
-
-        const endTime = performance.now();
-
-        self.postMessage({
-            type: 'result',
-            data: { mask: mask },
-            executionTime: (endTime - startTime).toFixed(2)
-        });
-
-    } catch (error) {
-        self.postMessage({ type: 'error', data: error.message });
     }
+    for (const { x, y } of bgMarks) {
+        if (x >= 0 && x < width && y >= 0 && y < height) {
+            labels[y * width + x] = -1;
+        }
+    }
+
+    // Calculate average colors for fg and bg
+    let fgColor = [0, 0, 0], bgColor = [0, 0, 0];
+    let fgCount = 0, bgCount = 0;
+
+    for (const { x, y } of fgMarks) {
+        if (x >= 0 && x < width && y >= 0 && y < height) {
+            const idx = (y * width + x) * 4;
+            fgColor[0] += data[idx];
+            fgColor[1] += data[idx + 1];
+            fgColor[2] += data[idx + 2];
+            fgCount++;
+        }
+    }
+    for (const { x, y } of bgMarks) {
+        if (x >= 0 && x < width && y >= 0 && y < height) {
+            const idx = (y * width + x) * 4;
+            bgColor[0] += data[idx];
+            bgColor[1] += data[idx + 1];
+            bgColor[2] += data[idx + 2];
+            bgCount++;
+        }
+    }
+
+    if (fgCount > 0) {
+        fgColor = fgColor.map(c => c / fgCount);
+    }
+    if (bgCount > 0) {
+        bgColor = bgColor.map(c => c / bgCount);
+    }
+
+    // Assign unlabeled pixels based on color similarity
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const idx = y * width + x;
+            if (labels[idx] !== 0) continue;
+
+            const pidx = idx * 4;
+            const r = data[pidx], g = data[pidx + 1], b = data[pidx + 2];
+
+            const fgDist = Math.sqrt(
+                Math.pow(r - fgColor[0], 2) +
+                Math.pow(g - fgColor[1], 2) +
+                Math.pow(b - fgColor[2], 2)
+            );
+
+            const bgDist = Math.sqrt(
+                Math.pow(r - bgColor[0], 2) +
+                Math.pow(g - bgColor[1], 2) +
+                Math.pow(b - bgColor[2], 2)
+            );
+
+            labels[idx] = fgDist < bgDist ? 1 : -1;
+        }
+    }
+
+    // Smooth labels using iterative refinement
+    const iterations = 5;
+    for (let iter = 0; iter < iterations; iter++) {
+        const newLabels = new Int8Array(labels);
+
+        for (let y = 1; y < height - 1; y++) {
+            for (let x = 1; x < width - 1; x++) {
+                const idx = y * width + x;
+
+                // Check if this is a seed pixel
+                let isSeed = false;
+                for (const m of fgMarks) {
+                    if (m.x === x && m.y === y) isSeed = true;
+                }
+                for (const m of bgMarks) {
+                    if (m.x === x && m.y === y) isSeed = true;
+                }
+                if (isSeed) continue;
+
+                // Count neighbor labels
+                let fgNeighbors = 0, bgNeighbors = 0;
+                for (let dy = -1; dy <= 1; dy++) {
+                    for (let dx = -1; dx <= 1; dx++) {
+                        if (dx === 0 && dy === 0) continue;
+                        const nidx = (y + dy) * width + (x + dx);
+                        if (labels[nidx] > 0) fgNeighbors++;
+                        else if (labels[nidx] < 0) bgNeighbors++;
+                    }
+                }
+
+                if (fgNeighbors > bgNeighbors + 2) newLabels[idx] = 1;
+                else if (bgNeighbors > fgNeighbors + 2) newLabels[idx] = -1;
+            }
+        }
+
+        for (let i = 0; i < labels.length; i++) {
+            labels[i] = newLabels[i];
+        }
+    }
+
+    // Create output image
+    const output = new Uint8ClampedArray(data.length);
+
+    for (let i = 0; i < labels.length; i++) {
+        const pidx = i * 4;
+        if (labels[i] > 0) {
+            // Foreground - show original
+            output[pidx] = data[pidx];
+            output[pidx + 1] = data[pidx + 1];
+            output[pidx + 2] = data[pidx + 2];
+            output[pidx + 3] = 255;
+        } else {
+            // Background - dim
+            output[pidx] = Math.floor(data[pidx] * 0.3);
+            output[pidx + 1] = Math.floor(data[pidx + 1] * 0.3);
+            output[pidx + 2] = Math.floor(data[pidx + 2] * 0.3);
+            output[pidx + 3] = 255;
+        }
+    }
+
+    self.postMessage({ imageData: new ImageData(output, width, height) });
 };
-
-function colorSimilarity(data, idx1, idx2) {
-    // Basic weight function: exp( - dist^2 / (2*sigma^2) ) / dist_spatial
-    // Since dist_spatial is 1 (neighbors), we ignore it.
-    // Sigma is noise parameter.
-
-    const r1 = data[idx1 * 4], g1 = data[idx1 * 4 + 1], b1 = data[idx1 * 4 + 2];
-    const r2 = data[idx2 * 4], g2 = data[idx2 * 4 + 1], b2 = data[idx2 * 4 + 2];
-
-    const dr = r1 - r2;
-    const dg = g1 - g2;
-    const db = b1 - b2;
-
-    const distSq = dr*dr + dg*dg + db*db;
-    const sigmaSq = 30 * 30; // Roughly sigma=30
-
-    // Weight should be high for similar colors, low for different
-    // Add a base small constant to avoid 0 capacity (ensure graph connectivity)
-    // Scale factor to make numbers reasonable for float32
-    return 100 * Math.exp(-distSq / (2 * sigmaSq)) + 0.1;
-}

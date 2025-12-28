@@ -1,78 +1,65 @@
+/**
+ * 斑點化效果 - Worker
+ * 使用隨機採樣創建點彩效果
+ */
+
 self.onmessage = function(e) {
-    const { imageData, pointSize, density } = e.data;
-    const startTime = performance.now();
+    const { imageData, dotSize, density } = e.data;
+    const { width, height, data } = imageData;
+    const output = new Uint8ClampedArray(data.length);
 
-    try {
-        const { resultImageData, count } = pointillize(imageData, pointSize, density);
-        const endTime = performance.now();
-
-        self.postMessage({
-            type: 'result',
-            data: resultImageData,
-            duration: endTime - startTime,
-            count: count
-        });
-    } catch (error) {
-        console.error(error);
-        self.postMessage({ type: 'error', error: error.message });
-    }
-};
-
-function pointillize(imageData, pointSize, density) {
-    const width = imageData.width;
-    const height = imageData.height;
-    const data = imageData.data;
-    const result = new Uint8ClampedArray(width * height * 4);
-
-    // Fill background with white
-    for (let i = 0; i < result.length; i += 4) {
-        result[i] = 255;
-        result[i+1] = 255;
-        result[i+2] = 255;
-        result[i+3] = 255;
+    // 填充背景為白色
+    for (let i = 0; i < output.length; i += 4) {
+        output[i] = 255;
+        output[i + 1] = 255;
+        output[i + 2] = 255;
+        output[i + 3] = 255;
     }
 
-    // Calculate number of points based on image size, point size and density
-    // A simplified approach: generate points randomly.
-    // Number of points ~ (Width * Height) / (PointArea) * Density
-    const numPoints = Math.floor((width * height) / (pointSize * pointSize) * density);
+    // 計算需要繪製的點數
+    const area = width * height;
+    const dotArea = Math.PI * dotSize * dotSize;
+    const numDots = Math.floor(area * density / dotArea);
 
-    // Since we can't use Canvas API in Worker (unless OffscreenCanvas, but let's stick to pixel manipulation for compatibility/demonstration),
-    // we need to draw circles manually.
-    // Optimization: Pre-calculate circle mask?
-    // Or simply loop over bounding box of circle.
+    let lastProgress = 0;
 
-    const r2 = (pointSize / 2) ** 2;
-    const r = Math.floor(pointSize / 2);
+    // 繪製隨機斑點
+    for (let i = 0; i < numDots; i++) {
+        const x = Math.floor(Math.random() * width);
+        const y = Math.floor(Math.random() * height);
+        const srcIdx = (y * width + x) * 4;
 
-    for (let i = 0; i < numPoints; i++) {
-        // Report progress periodically
-        if (i % 5000 === 0) {
-             self.postMessage({ type: 'progress', progress: i / numPoints });
-        }
+        const r = data[srcIdx];
+        const g = data[srcIdx + 1];
+        const b = data[srcIdx + 2];
 
-        const cx = Math.floor(Math.random() * width);
-        const cy = Math.floor(Math.random() * height);
-
-        // Sample color at center
-        const idx = (cy * width + cx) * 4;
-        const color = [data[idx], data[idx+1], data[idx+2], data[idx+3]];
-
-        // Draw circle at (cx, cy)
-        for (let y = cy - r; y <= cy + r; y++) {
-            for (let x = cx - r; x <= cx + r; x++) {
-                if (x >= 0 && x < width && y >= 0 && y < height) {
-                    if ((x - cx)**2 + (y - cy)**2 <= r2) {
-                        const targetIdx = (y * width + x) * 4;
-                        result[targetIdx] = color[0];
-                        result[targetIdx+1] = color[1];
-                        result[targetIdx+2] = color[2];
-                        result[targetIdx+3] = 255; // Opaque dots
+        // 繪製圓形斑點
+        for (let dy = -dotSize; dy <= dotSize; dy++) {
+            for (let dx = -dotSize; dx <= dotSize; dx++) {
+                if (dx * dx + dy * dy <= dotSize * dotSize) {
+                    const px = x + dx;
+                    const py = y + dy;
+                    if (px >= 0 && px < width && py >= 0 && py < height) {
+                        const idx = (py * width + px) * 4;
+                        output[idx] = r;
+                        output[idx + 1] = g;
+                        output[idx + 2] = b;
+                        output[idx + 3] = 255;
                     }
                 }
             }
         }
+
+        // 報告進度
+        const progress = (i + 1) / numDots;
+        if (progress - lastProgress > 0.05) {
+            self.postMessage({ type: 'progress', progress: progress });
+            lastProgress = progress;
+        }
     }
 
-    return { resultImageData: new ImageData(result, width, height), count: numPoints };
-}
+    self.postMessage({
+        type: 'result',
+        imageData: new ImageData(output, width, height)
+    });
+};

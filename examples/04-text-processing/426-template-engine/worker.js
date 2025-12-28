@@ -1,69 +1,48 @@
-// Template Engine Worker
-// Implements a simple Mustache-like syntax
-// Supported features:
-// {{ key }} - Variable interpolation
-// {{#each key}} ... {{/each}} - Array iteration (simple)
-// {{ key.subkey }} - Nested access
-
 self.onmessage = function(e) {
-    const { template, data } = e.data;
-
-    try {
-        const startTime = performance.now();
-
-        const result = render(template, data);
-
-        const endTime = performance.now();
-
-        self.postMessage({
-            type: 'result',
-            data: { result },
-            executionTime: (endTime - startTime).toFixed(2)
-        });
-
-    } catch (error) {
-        self.postMessage({ type: 'error', data: error.message });
-    }
+    const { type, payload } = e.data;
+    if (type === 'RENDER') render(payload.template, payload.data);
 };
 
-function render(template, data) {
-    let output = template;
+function render(template, dataStr) {
+    const startTime = performance.now();
+    self.postMessage({ type: 'PROGRESS', payload: { percent: 30, message: 'Parsing data...' } });
 
-    // 1. Handle {{#each key}} ... {{/each}} blocks
-    // We match nested regex is hard, assume non-nested for simplicity or use loop.
-    // Regex: /\{\{#each\s+([\w\.]+)\}\}([\s\S]*?)\{\{\/each\}\}/g
+    let data;
+    try {
+        data = JSON.parse(dataStr);
+    } catch (e) {
+        self.postMessage({ type: 'ERROR', payload: { message: 'Invalid JSON' } });
+        return;
+    }
 
-    output = output.replace(/\{\{#each\s+([\w\.]+)\}\}([\s\S]*?)\{\{\/each\}\}/g, (match, key, content) => {
-        const arr = getValue(data, key);
+    self.postMessage({ type: 'PROGRESS', payload: { percent: 60, message: 'Rendering template...' } });
+
+    let result = template;
+
+    // Handle {{#each items}}...{{/each}}
+    result = result.replace(/\{\{#each\s+(\w+)\}\}([\s\S]*?)\{\{\/each\}\}/g, (match, key, content) => {
+        const arr = data[key];
         if (!Array.isArray(arr)) return '';
-
         return arr.map(item => {
-            // Render the inner content with the item as context
-            // Also support {{.}} for primitives
-            return render(content, item);
+            let itemContent = content;
+            itemContent = itemContent.replace(/\{\{this\.(\w+)\}\}/g, (m, prop) => item[prop] !== undefined ? item[prop] : '');
+            itemContent = itemContent.replace(/\{\{this\}\}/g, item);
+            return itemContent;
         }).join('');
     });
 
-    // 2. Handle {{ key }} variables
-    output = output.replace(/\{\{\s*([\w\.]+)\s*\}\}/g, (match, key) => {
-        // Handle escaped curlies like \{{ (not implemented here, assumes valid input)
-        const val = getValue(data, key);
-        return val !== undefined ? val : '';
+    // Handle simple {{variable}}
+    result = result.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+        return data[key] !== undefined ? data[key] : match;
     });
 
-    return output;
-}
+    // Handle nested {{object.property}}
+    result = result.replace(/\{\{(\w+)\.(\w+)\}\}/g, (match, obj, prop) => {
+        return data[obj] && data[obj][prop] !== undefined ? data[obj][prop] : match;
+    });
 
-function getValue(obj, path) {
-    if (path === '.') return obj;
-
-    const parts = path.split('.');
-    let current = obj;
-
-    for (const part of parts) {
-        if (current === null || current === undefined) return undefined;
-        current = current[part];
-    }
-
-    return current;
+    self.postMessage({
+        type: 'RESULT',
+        payload: { result, duration: performance.now() - startTime }
+    });
 }

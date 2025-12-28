@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#419 JSON Minify - Web Workers Example</title>
+    <meta name="description" content="Minify JSON using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>JSON Minify</h1>
+            <p class="subtitle">JSON Minification</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#419</span>
+                <span class="badge badge-secondary">Text Processing</span>
+                <span class="badge badge-success">Beginner</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="input-text">Formatted JSON</label>
+                <textarea id="input-text" class="form-input" rows="10" placeholder="Enter JSON...">{
+    "name": "John Doe",
+    "age": 30,
+    "city": "New York",
+    "hobbies": [
+        "reading",
+        "gaming"
+    ],
+    "address": {
+        "street": "123 Main St",
+        "zip": "10001"
+    }
+}</textarea>
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Minify JSON</button>
+                <button id="clear-btn" class="btn btn-secondary">Clear</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div class="form-group">
+                <label class="form-label">Minified JSON</label>
+                <textarea id="result-output" class="form-input" rows="4" readonly></textarea>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> JSON.parse and JSON.stringify without spacing</li>
+                <li><strong>Worker Type:</strong> Dedicated Worker</li>
+                <li><strong>Use Case:</strong> Reducing JSON size for transmission</li>
+                <li><strong>Features:</strong> Whitespace removal, size reduction</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #419</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
