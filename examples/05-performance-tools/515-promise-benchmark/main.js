@@ -1,0 +1,35 @@
+let worker = null;
+const elements = {};
+
+document.addEventListener('DOMContentLoaded', () => {
+    ['param', 'run-btn', 'stop-btn', 'progress-bar', 'progress-text', 'result-section', 'result-stats', 'error-message'].forEach(id => {
+        elements[id.replace(/-([a-z])/g, (_, c) => c.toUpperCase())] = document.getElementById(id);
+    });
+    worker = new Worker('worker.js');
+    worker.onmessage = e => {
+        const { type, payload } = e.data;
+        if (type === 'PROGRESS') {
+            elements.progressBar.style.width = `${payload.percent}%`;
+            elements.progressBar.textContent = `${payload.percent}%`;
+            elements.progressText.textContent = payload.message;
+        } else if (type === 'RESULT') {
+            elements.resultStats.innerHTML = Object.entries(payload).map(([k, v]) =>
+                `<div class="stat-item"><span class="stat-label">${k}:</span><span class="stat-value">${typeof v === 'number' ? v.toFixed(2) + ' ms' : v}</span></div>`
+            ).join('');
+            elements.resultSection.classList.remove('hidden');
+            updateUI(false);
+        }
+    };
+    elements.runBtn.onclick = () => {
+        updateUI(true);
+        elements.resultSection.classList.add('hidden');
+        worker.postMessage({ type: 'START', payload: { param: parseInt(elements.param.value) } });
+    };
+    elements.stopBtn.onclick = () => { worker.terminate(); worker = new Worker('worker.js'); updateUI(false); };
+    document.querySelectorAll('.preset-btn').forEach(b => b.onclick = () => elements.param.value = b.dataset.value);
+});
+
+function updateUI(running) {
+    elements.runBtn.disabled = running;
+    elements.stopBtn.disabled = !running;
+}

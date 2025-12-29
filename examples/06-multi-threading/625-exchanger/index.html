@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#625 Exchanger - Web Workers Multi-Threading</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Exchanger Pattern</h1>
+            <p class="subtitle">Pair Workers to Exchange Data</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#625</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-danger">Advanced</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Exchanger Demo</h2>
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">Start Exchange</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Workers</h2>
+            <div id="workers" style="display:flex;gap:20px;justify-content:center;"></div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Exchanges</h2>
+            <div id="log" style="max-height:200px;overflow-y:auto;"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About Exchanger</h3>
+            <ul>
+                <li><strong>Purpose:</strong> Two workers meet and swap data</li>
+                <li><strong>Synchronization:</strong> Both must arrive to exchange</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples</a> | #625 Exchanger</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

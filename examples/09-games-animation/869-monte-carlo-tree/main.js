@@ -1,0 +1,3 @@
+let worker=null;
+document.addEventListener('DOMContentLoaded',()=>{document.getElementById('runBtn').addEventListener('click',run);});
+function run(){if(worker)worker.terminate();worker=new Worker('worker.js');document.getElementById('runBtn').disabled=true;worker.onmessage=e=>{document.getElementById('bestMove').textContent=e.data.bestMove;document.getElementById('winRate').textContent=(e.data.winRate*100).toFixed(1)+'%';document.getElementById('time').textContent=e.data.time.toFixed(2)+' ms';document.getElementById('runBtn').disabled=false;};worker.postMessage({simulations:parseInt(document.getElementById('sims').value)});}

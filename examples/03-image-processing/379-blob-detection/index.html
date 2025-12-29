@@ -3,94 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blob Detection - Web Worker Example #379</title>
+    <title>#379 Blob 偵測 - Web Workers 範例</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Blob Detection</h1>
-            <p class="subtitle">Web Worker Example #379 - Laplacian of Gaussian (LoG)</p>
-            <div class="badges">
-                <span class="badge badge-beginner">Advanced</span>
-                <span class="badge badge-worker">Single Worker</span>
+        <header class="header">
+            <h1>Blob 偵測</h1>
+            <p class="subtitle">Blob Detection (LoG)</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#379</span>
+                <span class="badge badge-secondary">影像處理</span>
             </div>
         </header>
-
-        <main>
-            <section class="description">
-                <h2>About Blob Detection</h2>
-                <p>Detects regions in a digital image that differ in properties, such as brightness or color, compared to surrounding regions. This example uses a simplified Scale-Invariant Feature Transform (SIFT) approach using Laplacian of Gaussian (LoG) approximation (Difference of Gaussians).</p>
-            </section>
-
-            <section class="controls">
-                <h2>Settings</h2>
-                <div class="input-group">
-                    <label for="sigma">Sigma (Scale): <span id="sigmaVal">1.6</span></label>
-                    <input type="range" id="sigma" min="0.5" max="5.0" value="1.6" step="0.1">
-                </div>
-                 <div class="input-group">
-                    <label for="threshold">Threshold: <span id="thresholdVal">0.03</span></label>
-                    <input type="range" id="threshold" min="0.01" max="0.2" value="0.03" step="0.01">
-                </div>
-                 <div class="input-group">
-                    <label>
-                        <input type="checkbox" id="overlayInput" checked> Overlay on Original
-                    </label>
-                </div>
-
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-icon">📷</div>
-                    <p>Drop an image here or click to select</p>
-                    <input type="file" id="fileInput" accept="image/*" hidden>
-                </div>
-
-                <div class="button-group">
-                    <button id="processBtn" class="btn btn-primary" disabled>Detect Blobs</button>
-                    <button id="resetBtn" class="btn btn-outline">Reset</button>
-                </div>
-            </section>
-
-            <section id="progressContainer" class="progress-section hidden">
-                <div class="progress-bar-container">
-                    <div id="progressBar" class="progress-bar"></div>
-                </div>
-                <p id="progressText" class="progress-text">Processing...</p>
-            </section>
-
-            <section class="visualization">
-                <h2>Preview</h2>
-                <div class="image-comparison">
-                    <div class="image-panel">
-                        <h3>Original</h3>
-                        <canvas id="originalCanvas"></canvas>
-                        <p id="originalInfo" class="image-info">No image loaded</p>
-                    </div>
-                    <div class="image-panel">
-                        <h3>Blobs</h3>
-                        <canvas id="processedCanvas"></canvas>
-                        <p id="processedInfo" class="image-info">-</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="resultContainer" class="result-section hidden">
-                <h2>Results</h2>
-                <div class="results-grid">
-                    <div class="result-item">
-                        <span class="result-label">Processing Time</span>
-                        <span id="processingTime" class="result-value">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">Blobs Found</span>
-                        <span id="blobCount" class="result-value">-</span>
-                    </div>
-                </div>
-                <div class="download-section">
-                    <button id="downloadBtn" class="btn btn-primary">Download Image</button>
-                </div>
-            </section>
-        </main>
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>點擊或拖放圖片到此處</p>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>閾值: <span id="thresholdValue">30</span></label>
+                <input type="range" id="threshold" min="5" max="100" value="30">
+            </div>
+            <div class="control-group">
+                <label>最小尺寸: <span id="minSizeValue">5</span></label>
+                <input type="range" id="minSize" min="3" max="20" value="5">
+            </div>
+            <button id="processBtn" class="btn btn-primary" disabled>偵測 Blob</button>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>原始圖片</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>Blob 偵測</h3><canvas id="resultCanvas"></canvas></div>
+            </div>
+            <p class="info">偵測到 Blob 數: <span id="blobCount">0</span></p>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #379</footer>
     </div>
     <script src="main.js"></script>
 </body>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#849 Pendulum Simulation - Web Workers Example</title>
+    <meta name="description" content="Double pendulum chaos simulation">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Pendulum Simulation</h1>
+            <p class="subtitle">Double Pendulum Chaos</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#849</span>
+                <span class="badge badge-secondary">Physics</span>
+                <span class="badge badge-success">Chaos</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Controls</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="length1">Length 1</label>
+                    <input type="range" id="length1" class="form-input" value="150" min="50" max="200">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="length2">Length 2</label>
+                    <input type="range" id="length2" class="form-input" value="150" min="50" max="200">
+                </div>
+            </div>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="mass1">Mass 1</label>
+                    <input type="range" id="mass1" class="form-input" value="20" min="5" max="50">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="mass2">Mass 2</label>
+                    <input type="range" id="mass2" class="form-input" value="20" min="5" max="50">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="startBtn" class="btn btn-primary">Start</button>
+                <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+                <button id="resetBtn" class="btn btn-secondary">Reset</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Double Pendulum</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #849</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

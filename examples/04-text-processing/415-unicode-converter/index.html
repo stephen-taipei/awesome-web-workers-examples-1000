@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#415 Unicode Converter - Web Workers Example</title>
+    <meta name="description" content="Unicode processing using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Unicode Converter</h1>
+            <p class="subtitle">Unicode Processing</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#415</span>
+                <span class="badge badge-secondary">Text Processing</span>
+                <span class="badge badge-success">Beginner</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="input-text">Text or Unicode</label>
+                <textarea id="input-text" class="form-input" rows="4" placeholder="Enter text or unicode escape sequences...">Hello 世界 😀</textarea>
+            </div>
+            <div class="btn-group">
+                <button id="to-unicode-btn" class="btn btn-primary">To Unicode Escape</button>
+                <button id="from-unicode-btn" class="btn btn-secondary">From Unicode Escape</button>
+                <button id="info-btn" class="btn btn-secondary">Get Code Points</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div class="form-group">
+                <label class="form-label">Output</label>
+                <textarea id="result-output" class="form-input" rows="6" readonly></textarea>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Unicode code point conversion</li>
+                <li><strong>Worker Type:</strong> Dedicated Worker</li>
+                <li><strong>Use Case:</strong> Character encoding, internationalization</li>
+                <li><strong>Features:</strong> Escape sequences, code points, emoji support</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #415</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

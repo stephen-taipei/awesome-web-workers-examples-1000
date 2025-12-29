@@ -3,66 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Workers 文本壓縮 (Text Compression)</title>
+    <title>#428 Text Compression - Web Workers Example</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>文本壓縮 (Text Compression)</h1>
-            <div class="subtitle">LZW 壓縮算法</div>
-            <div class="badges">
-                <span class="badge badge-beginner">文本處理</span>
-                <span class="badge badge-worker">Web Worker</span>
-                <span class="badge badge-worker">LZW</span>
+        <header class="header">
+            <h1>Text Compression</h1>
+            <p class="subtitle">LZ-based Compression</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#428</span>
+                <span class="badge badge-secondary">Text Processing</span>
             </div>
         </header>
-
-        <section class="description">
-            <h2>功能說明</h2>
-            <p>此範例展示 LZW (Lempel-Ziv-Welch) 壓縮算法。輸入文本後，Worker 會進行壓縮並輸出 Base64 編碼的結果。</p>
-        </section>
-
-        <section class="controls">
-            <div class="input-pane">
-                <label>原始文本</label>
-                <textarea id="sourceText" placeholder="輸入要壓縮的文本..." style="height: 150px; margin-bottom: 1rem;"></textarea>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label">Text to Compress</label>
+                <textarea id="input-text" class="form-input" rows="6">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.</textarea>
             </div>
-
-            <div class="button-group">
-                <button id="loadSampleBtn" class="btn btn-secondary">載入長文本</button>
-                <button id="processBtn" class="btn btn-primary">執行壓縮</button>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Compress</button>
             </div>
         </section>
-
-        <section class="results">
-            <div class="stats-row">
-                <div class="result-item">
-                    <span class="result-label">處理時間</span>
-                    <span class="result-value" id="processTime">-</span>
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
                 </div>
-                <div class="result-item">
-                    <span class="result-label">原始大小</span>
-                    <span class="result-value" id="origSize">-</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">壓縮後大小</span>
-                    <span class="result-value" id="compSize">-</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">壓縮率</span>
-                    <span class="result-value" id="ratio">-</span>
-                </div>
-            </div>
-
-            <div class="output-pane">
-                <h3>壓縮結果 (Base64)</h3>
-                <textarea id="resultText" readonly style="height: 150px; word-break: break-all;"></textarea>
+                <p id="progress-text" class="progress-text">Ready</p>
             </div>
         </section>
-
-        <footer>
-            <p>Web Workers 1000 示例 - 428 Text Compression</p>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div class="form-group">
+                <label class="form-label">Compressed Output (Base64)</label>
+                <textarea id="result-output" class="form-input" rows="4" readonly></textarea>
+            </div>
+        </section>
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #428</p>
         </footer>
     </div>
     <script src="main.js"></script>

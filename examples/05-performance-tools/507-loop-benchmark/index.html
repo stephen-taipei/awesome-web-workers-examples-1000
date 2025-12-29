@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#507 Loop Benchmark - Web Workers Examples</title>
+    <meta name="description" content="Loop constructs benchmark using Web Workers">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Loop Benchmark</h1>
+            <p class="subtitle">Loop Constructs Performance Testing</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#507</span>
+                <span class="badge badge-secondary">Benchmark</span>
+                <span class="badge badge-success">Performance</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Benchmark Configuration</h2>
+            <div class="form-group">
+                <label class="form-label" for="iterations">Iterations</label>
+                <input type="number" id="iterations" class="form-input" value="10000000" min="10000">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Quick Presets</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-value="1000000">1M</button>
+                    <button class="preset-btn" data-value="10000000">10M</button>
+                    <button class="preset-btn" data-value="50000000">50M</button>
+                    <button class="preset-btn" data-value="100000000">100M</button>
+                </div>
+            </div>
+            <div id="error-message" class="error-message hidden"></div>
+            <div class="btn-group">
+                <button id="run-btn" class="btn btn-primary">Run Benchmark</button>
+                <button id="stop-btn" class="btn btn-danger" disabled>Stop</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Benchmark Results</h2>
+            <div id="result-stats" class="result-stats"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Purpose:</strong> Compare different loop constructs</li>
+                <li><strong>Tests:</strong> for, while, forEach, for...of, for...in</li>
+                <li><strong>Worker Type:</strong> Dedicated Worker</li>
+                <li><strong>Benefit:</strong> Identify fastest loop patterns</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #507 Loop Benchmark</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

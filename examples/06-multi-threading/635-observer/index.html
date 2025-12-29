@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#635 Observer - Web Workers Multi-Threading</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Observer Pattern</h1>
+            <p class="subtitle">Subject-Observer Notifications</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#635</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Observer Demo</h2>
+            <div class="btn-group">
+                <button id="init-btn" class="btn btn-primary">Initialize</button>
+                <button id="update-btn" class="btn btn-secondary" disabled>Update Subject</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Subject State</h2>
+            <div id="subject" style="text-align:center;padding:30px;font-size:3rem;color:var(--primary-color);font-weight:bold;">-</div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Observers</h2>
+            <div id="observers"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About Observer Pattern</h3>
+            <ul>
+                <li><strong>Subject:</strong> Maintains state and notifies observers</li>
+                <li><strong>Observers:</strong> React to state changes</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples</a> | #635 Observer</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

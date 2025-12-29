@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>#879 Character Stats - Web Workers</title><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<header class="header"><h1>Character Stats</h1><p class="subtitle">RPG Stat Calculator</p><div class="badge-container"><span class="badge badge-primary">#879</span><span class="badge badge-secondary">Games</span></div></header>
+<section class="card"><h2 class="card-title">Base Stats</h2><div class="input-row"><div class="form-group"><label class="form-label">Level</label><input type="number" id="level" class="form-input" value="1" min="1" max="100"></div><div class="form-group"><label class="form-label">Class</label><select id="charClass" class="form-select"><option value="warrior">Warrior</option><option value="mage">Mage</option><option value="rogue">Rogue</option><option value="cleric">Cleric</option></select></div></div><div class="input-row"><div class="form-group"><label class="form-label">STR</label><input type="number" id="str" class="form-input" value="10"></div><div class="form-group"><label class="form-label">DEX</label><input type="number" id="dex" class="form-input" value="10"></div><div class="form-group"><label class="form-label">INT</label><input type="number" id="int" class="form-input" value="10"></div><div class="form-group"><label class="form-label">VIT</label><input type="number" id="vit" class="form-input" value="10"></div></div><button id="calcBtn" class="btn btn-primary">Calculate Stats</button></section>
+<section class="card"><h2 class="card-title">Derived Stats</h2><div id="derived" class="result-display"></div></section>
+<footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #879</p></footer>
+</div><script src="main.js"></script></body></html>

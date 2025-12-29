@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#834 A* Pathfinding - Web Workers Example</title>
+    <meta name="description" content="A* pathfinding algorithm in Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>A* Pathfinding</h1>
+            <p class="subtitle">A* Algorithm for Optimal Pathfinding</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#834</span>
+                <span class="badge badge-secondary">Games</span>
+                <span class="badge badge-success">AI</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Controls</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="gridSize">Grid Size</label>
+                    <input type="number" id="gridSize" class="form-input" value="40" min="10" max="100">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="obstacleRate">Obstacle Rate (%)</label>
+                    <input type="number" id="obstacleRate" class="form-input" value="30" min="0" max="50">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="generateBtn" class="btn btn-secondary">Generate Grid</button>
+                <button id="findPathBtn" class="btn btn-primary">Find Path</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Pathfinding Grid</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="800"></canvas>
+            </div>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Path Length:</span>
+                    <span class="stat-value" id="pathLength">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Nodes Explored:</span>
+                    <span class="stat-value" id="nodesExplored">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Time:</span>
+                    <span class="stat-value" id="searchTime">-</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> A* with Manhattan distance heuristic</li>
+                <li><strong>Green:</strong> Start position, <strong>Red:</strong> Goal position</li>
+                <li><strong>Blue:</strong> Explored nodes, <strong>Yellow:</strong> Final path</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #834</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#421 SQL Formatter - Web Workers Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>SQL Formatter</h1>
+            <p class="subtitle">SQL Formatting</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#421</span>
+                <span class="badge badge-secondary">Text Processing</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="input-text">SQL Query</label>
+                <textarea id="input-text" class="form-input" rows="6">SELECT users.id, users.name, orders.total FROM users INNER JOIN orders ON users.id = orders.user_id WHERE orders.total > 100 AND users.active = true ORDER BY orders.total DESC LIMIT 10</textarea>
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Format SQL</button>
+                <button id="clear-btn" class="btn btn-secondary">Clear</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <textarea id="result-output" class="form-input" rows="12" readonly></textarea>
+        </section>
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #421</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

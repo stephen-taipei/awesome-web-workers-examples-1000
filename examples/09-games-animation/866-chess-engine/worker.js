@@ -1,0 +1,5 @@
+const pieceValues={p:1,n:3,b:3,r:5,q:9,k:0,P:-1,N:-3,B:-3,R:-5,Q:-9,K:0};
+self.onmessage=e=>{if(e.data.type==='FIND_MOVE'){const board=e.data.payload.board;const moves=generateMoves(board,false);if(moves.length===0)return;let best=moves[0],bestEval=-Infinity;for(const m of moves){const newBoard=applyMove(board,m);const ev=evaluate(newBoard);if(ev>bestEval){bestEval=ev;best=m;}}self.postMessage({type:'MOVE',payload:{from:best.from,to:best.to,eval:bestEval}});}};
+function generateMoves(board,isWhite){const moves=[];for(let r=0;r<8;r++)for(let c=0;c<8;c++){const p=board[r][c];if(!p)continue;const white=p===p.toUpperCase();if(white===isWhite)continue;for(let tr=0;tr<8;tr++)for(let tc=0;tc<8;tc++)if(r!==tr||c!==tc)moves.push({from:{r,c},to:{r:tr,c:tc}});}return moves.slice(0,20);}
+function applyMove(board,move){const nb=board.map(r=>[...r]);nb[move.to.r][move.to.c]=nb[move.from.r][move.from.c];nb[move.from.r][move.from.c]='';return nb;}
+function evaluate(board){let score=0;for(const row of board)for(const p of row)if(p)score+=(pieceValues[p]||0);return score;}

@@ -1,74 +1,127 @@
-self.onmessage = function(e) {
-    const logString = e.data.log;
-    const startTime = performance.now();
+/**
+ * Log Parser Web Worker
+ */
 
-    try {
-        const result = parseLogs(logString);
-        const endTime = performance.now();
+self.onmessage = function(event) {
+    const { type, payload } = event.data;
 
-        self.postMessage({
-            result: result,
-            time: endTime - startTime
-        });
-    } catch (err) {
-        self.postMessage({
-            error: err.toString(),
-            time: performance.now() - startTime
-        });
+    switch (type) {
+        case 'PARSE':
+            parseLogs(payload.text);
+            break;
+        default:
+            sendError('Unknown message type: ' + type);
     }
 };
 
 function parseLogs(text) {
-    const lines = text.split(/\r\n|\n|\r/);
-    const results = [];
+    const startTime = performance.now();
 
-    // Regex for Common Log Format (CLF) and Combined Log Format
-    // Format: %h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"
-    // Groups:
-    // 1: IP
-    // 2: Identity (usually -)
-    // 3: User
-    // 4: Date/Time
-    // 5: Request Method + Path + Protocol
-    // 6: Status Code
-    // 7: Size
-    // 8: Referer (Optional)
-    // 9: User Agent (Optional)
-    const logRegex = /^(\S+) (\S+) (\S+) \[([\w:/]+\s[+\-]\d{4})\] "(.+?)" (\d{3}) (\S+)(?: "(.+?)" "(.+?)")?/;
+    sendProgress(10, 'Splitting lines...');
 
-    for (let line of lines) {
-        line = line.trim();
-        if (!line) continue;
+    const lines = text.split('\n').filter(line => line.trim());
 
-        const match = line.match(logRegex);
-        if (match) {
-            const entry = {
-                ip: match[1],
-                identity: match[2],
-                user: match[3],
-                timestamp: match[4],
-                request: match[5],
-                status: parseInt(match[6]),
-                size: match[7] === '-' ? 0 : parseInt(match[7])
-            };
+    sendProgress(30, 'Parsing log entries...');
 
-            if (match[8]) entry.referer = match[8];
-            if (match[9]) entry.userAgent = match[9];
+    const entries = [];
+    const levelCounts = {};
+    const patterns = [
+        // Standard format: 2024-01-15 10:23:45 INFO [source] message
+        /^(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})\s+(DEBUG|INFO|WARN|WARNING|ERROR|FATAL|TRACE)\s+\[([^\]]+)\]\s+(.+)$/i,
+        // Apache/Nginx style: [timestamp] [level] message
+        /^\[([^\]]+)\]\s+\[(DEBUG|INFO|WARN|WARNING|ERROR|FATAL|TRACE)\]\s+(.+)$/i,
+        // Simple format: LEVEL: message
+        /^(DEBUG|INFO|WARN|WARNING|ERROR|FATAL|TRACE):\s+(.+)$/i
+    ];
 
-            // Parse request part "METHOD /path HTTP/1.x"
-            const reqParts = match[5].split(' ');
-            if (reqParts.length >= 2) {
-                entry.method = reqParts[0];
-                entry.path = reqParts[1];
-                if (reqParts.length > 2) entry.protocol = reqParts[2];
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        let parsed = false;
+
+        for (const pattern of patterns) {
+            const match = line.match(pattern);
+            if (match) {
+                let entry;
+
+                if (match.length === 5) {
+                    // Full format with timestamp, level, source, message
+                    entry = {
+                        timestamp: match[1],
+                        level: match[2].toUpperCase(),
+                        source: match[3],
+                        message: match[4]
+                    };
+                } else if (match.length === 4) {
+                    // Format with timestamp, level, message (no source)
+                    entry = {
+                        timestamp: match[1],
+                        level: match[2].toUpperCase(),
+                        source: '-',
+                        message: match[3]
+                    };
+                } else if (match.length === 3) {
+                    // Simple format with just level and message
+                    entry = {
+                        timestamp: '-',
+                        level: match[1].toUpperCase(),
+                        source: '-',
+                        message: match[2]
+                    };
+                }
+
+                if (entry) {
+                    entries.push(entry);
+                    levelCounts[entry.level] = (levelCounts[entry.level] || 0) + 1;
+                    parsed = true;
+                    break;
+                }
             }
+        }
 
-            results.push(entry);
-        } else {
-            // Unmatched line
-            results.push({ raw: line, error: "Format not recognized" });
+        // If no pattern matched, add as raw entry
+        if (!parsed && line) {
+            entries.push({
+                timestamp: '-',
+                level: 'INFO',
+                source: '-',
+                message: line
+            });
+            levelCounts['INFO'] = (levelCounts['INFO'] || 0) + 1;
+        }
+
+        if (i % 100 === 0) {
+            const progress = 30 + Math.floor((i / lines.length) * 60);
+            sendProgress(progress, `Parsing line ${i + 1} of ${lines.length}...`);
         }
     }
 
-    return results;
+    const endTime = performance.now();
+
+    sendProgress(100, 'Done');
+
+    self.postMessage({
+        type: 'RESULT',
+        payload: {
+            entries: entries,
+            duration: endTime - startTime,
+            stats: {
+                totalEntries: entries.length,
+                levelCounts: levelCounts
+            }
+        }
+    });
+}
+
+function sendProgress(percent, message) {
+    self.postMessage({
+        type: 'PROGRESS',
+        payload: { percent, message }
+    });
+}
+
+function sendError(message) {
+    self.postMessage({
+        type: 'ERROR',
+        payload: { message }
+    });
 }

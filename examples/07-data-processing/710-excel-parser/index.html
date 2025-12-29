@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#710 Excel Parser - Web Workers Example</title>
+    <meta name="description" content="Parse Excel-like spreadsheet data using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Excel Parser</h1>
+            <p class="subtitle">Parse Spreadsheet Data in Background</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#710</span>
+                <span class="badge badge-secondary">Data Processing</span>
+                <span class="badge badge-success">Intermediate</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Spreadsheet Data</h2>
+            <div class="form-group">
+                <label class="form-label" for="sheet-input">Sheet Data (tab or comma separated)</label>
+                <textarea id="sheet-input" class="form-textarea" rows="8">Name	Age	Department	Salary
+Alice	28	Engineering	75000
+Bob	34	Marketing	65000
+Charlie	22	Sales	55000
+Diana	45	HR	80000
+Edward	31	Engineering	72000</textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Quick Presets</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-size="100">100 Rows</button>
+                    <button class="preset-btn" data-size="1000">1K Rows</button>
+                    <button class="preset-btn" data-size="5000">5K Rows</button>
+                </div>
+            </div>
+            <div id="error-message" class="error-message hidden"></div>
+            <div class="btn-group">
+                <button id="parse-btn" class="btn btn-primary">Parse with Worker</button>
+                <button id="main-btn" class="btn btn-secondary">Parse on Main Thread</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div class="output-container">
+                <table id="result-table" class="data-table"></table>
+            </div>
+        </section>
+
+        <section id="comparison-section" class="card hidden">
+            <h2 class="card-title">Performance Comparison</h2>
+            <div class="comparison-grid">
+                <div class="comparison-item worker">
+                    <p class="comparison-label">Web Worker</p>
+                    <p id="worker-time" class="comparison-value">-</p>
+                </div>
+                <div class="comparison-item main-thread">
+                    <p class="comparison-label">Main Thread</p>
+                    <p id="main-thread-time" class="comparison-value">-</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Cell-by-cell parsing with formula detection</li>
+                <li><strong>Features:</strong> Auto type detection, formula parsing, cell references</li>
+                <li><strong>Use Case:</strong> Processing spreadsheet exports and imports</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | Example #710</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

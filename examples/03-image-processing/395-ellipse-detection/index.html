@@ -3,75 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Workers 橢圓檢測 (Ellipse Detection)</title>
+    <title>#395 橢圓偵測 - Web Workers 範例</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>橢圓檢測 (Ellipse Detection)</h1>
-            <p class="subtitle">利用 Web Worker 與最小平方法擬合檢測橢圓</p>
-            <div class="badges">
-                <span class="badge badge-worker">Web Worker</span>
-                <span class="badge badge-worker">Least Squares Fitting</span>
-                <span class="badge badge-beginner">Expert</span>
+        <header class="header">
+            <h1>橢圓偵測</h1>
+            <p class="subtitle">Ellipse Fitting Detection</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#395</span>
+                <span class="badge badge-secondary">影像處理</span>
             </div>
         </header>
-
-        <section class="description">
-            <h2>功能描述</h2>
-            <p>本示例演示如何檢測圖片中的橢圓。橢圓檢測比圓形檢測更複雜，因為它有 5 個自由度（中心 x, y，長軸 a，短軸 b，旋轉角度 θ）。本示例首先提取邊緣並尋找連通區域，然後對每個可能的邊緣段進行最小二乘橢圓擬合。</p>
-            <div class="formula-box">
-                <div class="formula">
-Ax² + Bxy + Cy² + Dx + Ey + F = 0
-Fitting: Minimize Σ(Axᵢ² + Bxᵢyᵢ + Cyᵢ² + Dxᵢ + Eyᵢ + F)²
-Constraint: B² - 4AC < 0
-                </div>
-            </div>
-        </section>
-
-        <section class="upload-section">
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
             <div class="upload-area" id="uploadArea">
-                <div class="upload-icon">🥚</div>
-                <p>點擊或拖圖至此處上傳包含橢圓的圖片</p>
                 <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>點擊或拖放圖片到此處</p>
             </div>
         </section>
-
-        <section class="controls hidden" id="controls">
-            <div class="button-group">
-                <button id="processBtn" class="btn btn-primary">開始檢測</button>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>邊緣閾值: <span id="thresholdValue">50</span></label>
+                <input type="range" id="threshold" min="20" max="150" value="50">
             </div>
+            <button id="processBtn" class="btn btn-primary" disabled>偵測橢圓</button>
         </section>
-
-        <section class="results hidden" id="results">
-            <div class="image-comparison">
-                <div class="image-panel">
-                    <h3>原始圖片</h3>
-                    <canvas id="sourceCanvas"></canvas>
-                    <div class="image-info" id="sourceInfo"></div>
-                </div>
-                <div class="image-panel">
-                    <h3>檢測結果</h3>
-                    <canvas id="targetCanvas"></canvas>
-                    <div class="image-info" id="targetInfo"></div>
-                </div>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>原始圖片</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>橢圓偵測</h3><canvas id="resultCanvas"></canvas></div>
             </div>
-            <div class="stats-row">
-                <div class="result-item">
-                    <span class="result-label">檢測耗時</span>
-                    <span class="result-value" id="processTime">-</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">檢測橢圓數</span>
-                    <span class="result-value" id="ellipseCount">-</span>
-                </div>
-            </div>
+            <p class="info">偵測到橢圓數: <span id="ellipseCount">0</span></p>
         </section>
-
-        <footer>
-            <p>Web Workers 1000 示例 - 0395 Ellipse Detection</p>
-        </footer>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #395</footer>
     </div>
     <script src="main.js"></script>
 </body>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#842 Particle Emitter - Web Workers Example</title>
+    <meta name="description" content="Multiple particle emitters with different behaviors">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Particle Emitter</h1>
+            <p class="subtitle">Multiple Emitter Types</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#842</span>
+                <span class="badge badge-secondary">Animation</span>
+                <span class="badge badge-success">Emitters</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Emitter Types</h2>
+            <div class="btn-group">
+                <button class="preset-btn emitter-btn" data-type="fire">Fire</button>
+                <button class="preset-btn emitter-btn" data-type="fountain">Fountain</button>
+                <button class="preset-btn emitter-btn" data-type="explosion">Explosion</button>
+                <button class="preset-btn emitter-btn" data-type="snow">Snow</button>
+                <button class="preset-btn emitter-btn" data-type="sparkle">Sparkle</button>
+            </div>
+            <div class="btn-group" style="margin-top: 15px;">
+                <button id="startBtn" class="btn btn-primary">Start</button>
+                <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+                <button id="clearBtn" class="btn btn-secondary">Clear All</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Click to Place Emitters</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="500"></canvas>
+            </div>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Emitters:</span>
+                    <span class="stat-value" id="emitterCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Particles:</span>
+                    <span class="stat-value" id="particleCount">0</span>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #842</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

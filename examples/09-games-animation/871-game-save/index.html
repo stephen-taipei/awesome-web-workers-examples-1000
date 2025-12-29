@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>#871 Game Save System - Web Workers</title><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<header class="header"><h1>Game Save System</h1><p class="subtitle">Async Save/Load with Compression</p><div class="badge-container"><span class="badge badge-primary">#871</span><span class="badge badge-secondary">Systems</span></div></header>
+<section class="card"><h2 class="card-title">Game State</h2><div class="input-row"><div class="form-group"><label class="form-label">Player Name</label><input type="text" id="playerName" class="form-input" value="Hero"></div><div class="form-group"><label class="form-label">Level</label><input type="number" id="level" class="form-input" value="1" min="1" max="100"></div></div><div class="input-row"><div class="form-group"><label class="form-label">Gold</label><input type="number" id="gold" class="form-input" value="100"></div><div class="form-group"><label class="form-label">Experience</label><input type="number" id="exp" class="form-input" value="0"></div></div><div class="btn-group"><button id="saveBtn" class="btn btn-primary">Save Game</button><button id="loadBtn" class="btn btn-secondary">Load Game</button></div></section>
+<section class="card"><div class="result-stats"><div class="stat-item"><span class="stat-label">Status:</span><span class="stat-value" id="status">Ready</span></div><div class="stat-item"><span class="stat-label">Save Size:</span><span class="stat-value" id="size">-</span></div></div></section>
+<footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #871</p></footer>
+</div><script src="main.js"></script></body></html>

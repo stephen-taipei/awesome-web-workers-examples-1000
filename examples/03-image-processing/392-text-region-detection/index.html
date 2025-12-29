@@ -3,74 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Workers 文字區域檢測 (Text Region Detection)</title>
+    <title>#392 文字區域偵測 - Web Workers 範例</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>文字區域檢測 (Text Region Detection)</h1>
-            <p class="subtitle">利用 Web Worker 與邊緣密度分析來定位文字區塊</p>
-            <div class="badges">
-                <span class="badge badge-worker">Web Worker</span>
-                <span class="badge badge-worker">Edge Density</span>
-                <span class="badge badge-beginner">Advanced</span>
+        <header class="header">
+            <h1>文字區域偵測</h1>
+            <p class="subtitle">Text Region Detection</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#392</span>
+                <span class="badge badge-secondary">影像處理</span>
             </div>
         </header>
-
-        <section class="description">
-            <h2>功能描述</h2>
-            <p>本示例演示如何檢測圖片中的文字區域。文字通常具有高密度的邊緣信息。通過檢測邊緣（Sobel），然後進行形態學膨脹 (Dilation) 將相鄰字符連接成行，最後通過輪廓分析找到可能的文字區塊。</p>
-            <div class="formula-box">
-                <div class="formula">
-Edges = Sobel(Gray)
-TextRegion = Dilate(Edges) -> FindContours
-                </div>
-            </div>
-        </section>
-
-        <section class="upload-section">
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
             <div class="upload-area" id="uploadArea">
-                <div class="upload-icon">📄</div>
-                <p>點擊或拖圖至此處上傳包含文字的圖片</p>
                 <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>點擊或拖放含文字的圖片</p>
             </div>
         </section>
-
-        <section class="controls hidden" id="controls">
-            <div class="button-group">
-                <button id="processBtn" class="btn btn-primary">開始檢測</button>
-            </div>
+        <section class="card">
+            <button id="processBtn" class="btn btn-primary" disabled>偵測文字區域</button>
         </section>
-
-        <section class="results hidden" id="results">
-            <div class="image-comparison">
-                <div class="image-panel">
-                    <h3>原始圖片</h3>
-                    <canvas id="sourceCanvas"></canvas>
-                    <div class="image-info" id="sourceInfo"></div>
-                </div>
-                <div class="image-panel">
-                    <h3>檢測結果</h3>
-                    <canvas id="targetCanvas"></canvas>
-                    <div class="image-info" id="targetInfo"></div>
-                </div>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>原始圖片</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>偵測結果</h3><canvas id="resultCanvas"></canvas></div>
             </div>
-            <div class="stats-row">
-                <div class="result-item">
-                    <span class="result-label">檢測耗時</span>
-                    <span class="result-value" id="processTime">-</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">文字區塊數</span>
-                    <span class="result-value" id="boxCount">-</span>
-                </div>
-            </div>
+            <p class="info">偵測到文字區域: <span id="textCount">0</span></p>
         </section>
-
-        <footer>
-            <p>Web Workers 1000 示例 - 0392 Text Region Detection</p>
-        </footer>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #392</footer>
     </div>
     <script src="main.js"></script>
 </body>

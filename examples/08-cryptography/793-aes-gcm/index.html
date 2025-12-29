@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#793 AES-GCM - Web Workers Cryptography</title>
+    <meta name="description" content="AES-GCM authenticated encryption using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>AES-GCM Authenticated Encryption</h1>
+            <p class="subtitle">Galois/Counter Mode with Authentication</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#793</span>
+                <span class="badge badge-secondary">Cryptography</span>
+                <span class="badge badge-success">Intermediate</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="plaintext-input">Plaintext</label>
+                <textarea id="plaintext-input" class="form-input" rows="3" placeholder="Enter text...">Secret message with authentication!</textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="aad-input">Additional Authenticated Data (AAD)</label>
+                <input type="text" id="aad-input" class="form-input" placeholder="Enter AAD..." value="metadata-header">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="password-input">Password</label>
+                <input type="password" id="password-input" class="form-input" placeholder="Enter password..." value="mySecretPassword">
+            </div>
+            <div id="error-message" class="error-message hidden"></div>
+            <div class="btn-group">
+                <button id="encrypt-btn" class="btn btn-primary">Encrypt</button>
+                <button id="decrypt-btn" class="btn btn-secondary">Decrypt</button>
+                <button id="clear-btn" class="btn btn-secondary">Clear</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Output:</span>
+                    <span id="output-result" class="stat-value" style="word-break: break-all;"></span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Auth Tag:</span>
+                    <span id="tag-result" class="stat-value"></span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Time:</span>
+                    <span id="time-result" class="stat-value"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About AES-GCM</h3>
+            <ul>
+                <li><strong>Mode:</strong> Galois/Counter Mode</li>
+                <li><strong>Authentication:</strong> Built-in authentication tag</li>
+                <li><strong>AAD:</strong> Additional data authenticated but not encrypted</li>
+                <li><strong>Use Case:</strong> TLS, secure communications</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #793 - AES-GCM</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

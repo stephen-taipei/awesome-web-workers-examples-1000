@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>#874 Inventory System - Web Workers</title><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<header class="header"><h1>Inventory System</h1><p class="subtitle">Item Management with Stacking</p><div class="badge-container"><span class="badge badge-primary">#874</span><span class="badge badge-secondary">Games</span></div></header>
+<section class="card"><h2 class="card-title">Add Item</h2><div class="input-row"><div class="form-group"><label class="form-label">Item Type</label><select id="itemType" class="form-select"><option value="potion">Health Potion</option><option value="sword">Iron Sword</option><option value="shield">Wooden Shield</option><option value="gold">Gold Coin</option></select></div><div class="form-group"><label class="form-label">Quantity</label><input type="number" id="quantity" class="form-input" value="1" min="1"></div></div><button id="addBtn" class="btn btn-primary">Add to Inventory</button></section>
+<section class="card"><h2 class="card-title">Inventory (Max 20 slots)</h2><div id="inventory" class="result-display"></div><div class="result-stats"><div class="stat-item"><span class="stat-label">Slots Used:</span><span class="stat-value" id="slots">0/20</span></div></div></section>
+<footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #874</p></footer>
+</div><script src="main.js"></script></body></html>

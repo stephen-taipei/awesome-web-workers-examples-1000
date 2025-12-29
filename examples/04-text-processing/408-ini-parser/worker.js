@@ -1,63 +1,122 @@
-self.onmessage = function(e) {
-    const iniString = e.data.ini;
-    const startTime = performance.now();
+/**
+ * INI Parser Web Worker
+ */
 
-    try {
-        const result = parseINI(iniString);
-        const endTime = performance.now();
+self.onmessage = function(event) {
+    const { type, payload } = event.data;
 
-        self.postMessage({
-            json: result,
-            time: endTime - startTime
-        });
-    } catch (err) {
-        self.postMessage({
-            error: err.toString(),
-            time: performance.now() - startTime
-        });
+    switch (type) {
+        case 'PARSE':
+            parseINI(payload.text);
+            break;
+        default:
+            sendError('Unknown message type: ' + type);
     }
 };
 
 function parseINI(text) {
+    const startTime = performance.now();
+
+    sendProgress(10, 'Preprocessing...');
+
+    const lines = text.split('\n');
+
+    sendProgress(30, 'Parsing INI...');
+
     const result = {};
-    let currentSection = result;
+    let currentSection = null;
+    let sectionCount = 0;
+    let keyCount = 0;
 
-    const lines = text.split(/\r\n|\n|\r/);
-
-    for (let line of lines) {
-        line = line.trim();
+    for (let i = 0; i < lines.length; i++) {
+        let line = lines[i].trim();
 
         // Skip empty lines and comments
-        if (!line || line.startsWith(';') || line.startsWith('#')) continue;
+        if (!line || line.startsWith(';') || line.startsWith('#')) {
+            continue;
+        }
 
-        // Section header [section]
+        // Section header
         if (line.startsWith('[') && line.endsWith(']')) {
             const sectionName = line.slice(1, -1).trim();
             result[sectionName] = {};
-            currentSection = result[sectionName];
+            currentSection = sectionName;
+            sectionCount++;
+            continue;
         }
-        // Key = Value
-        else if (line.includes('=')) {
-            const parts = line.split('=');
-            const key = parts[0].trim();
-            const value = parts.slice(1).join('=').trim();
 
-            currentSection[key] = parseValue(value);
+        // Key-value pair
+        const eqIndex = line.indexOf('=');
+        if (eqIndex !== -1) {
+            const key = line.slice(0, eqIndex).trim();
+            let value = line.slice(eqIndex + 1).trim();
+
+            // Parse value
+            value = parseValue(value);
+
+            if (currentSection) {
+                result[currentSection][key] = value;
+            } else {
+                result[key] = value;
+            }
+            keyCount++;
         }
     }
 
-    return result;
+    sendProgress(80, 'Converting to JSON...');
+
+    const json = JSON.stringify(result, null, 2);
+
+    const endTime = performance.now();
+
+    sendProgress(100, 'Done');
+
+    self.postMessage({
+        type: 'RESULT',
+        payload: {
+            json: json,
+            duration: endTime - startTime,
+            stats: { sectionCount, keyCount }
+        }
+    });
 }
 
-function parseValue(val) {
+function parseValue(value) {
     // Remove quotes if present
-    if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-        return val.slice(1, -1);
+    if ((value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))) {
+        return value.slice(1, -1);
     }
 
-    if (val.toLowerCase() === 'true') return true;
-    if (val.toLowerCase() === 'false') return false;
-    if (!isNaN(Number(val)) && val !== '') return Number(val);
+    // Boolean
+    if (value.toLowerCase() === 'true' || value.toLowerCase() === 'yes' || value === '1') {
+        return true;
+    }
+    if (value.toLowerCase() === 'false' || value.toLowerCase() === 'no' || value === '0') {
+        return false;
+    }
 
-    return val;
+    // Number
+    if (/^-?\d+$/.test(value)) {
+        return parseInt(value, 10);
+    }
+    if (/^-?\d+\.\d+$/.test(value)) {
+        return parseFloat(value);
+    }
+
+    return value;
+}
+
+function sendProgress(percent, message) {
+    self.postMessage({
+        type: 'PROGRESS',
+        payload: { percent, message }
+    });
+}
+
+function sendError(message) {
+    self.postMessage({
+        type: 'ERROR',
+        payload: { message }
+    });
 }

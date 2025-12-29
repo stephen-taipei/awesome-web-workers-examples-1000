@@ -3,60 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Workers 模板引擎 (Template Engine)</title>
+    <title>#426 Template Engine - Web Workers Example</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>模板引擎 (Template Engine)</h1>
-            <div class="subtitle">變數替換與渲染</div>
-            <div class="badges">
-                <span class="badge badge-beginner">文本處理</span>
-                <span class="badge badge-worker">Web Worker</span>
-                <span class="badge badge-worker">Regex</span>
+        <header class="header">
+            <h1>Template Engine</h1>
+            <p class="subtitle">Template Rendering</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#426</span>
+                <span class="badge badge-secondary">Text Processing</span>
             </div>
         </header>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label">Template</label>
+                <textarea id="template" class="form-input" rows="6">Hello, {{name}}!
 
-        <section class="description">
-            <h2>功能說明</h2>
-            <p>此範例展示一個簡易的模板引擎。在模板中使用 <code>{{ variable }}</code> 語法，系統將根據提供的 JSON 數據進行替換。</p>
-        </section>
+Your order #{{orderId}} contains:
+{{#each items}}
+- {{this.name}}: ${{this.price}}
+{{/each}}
 
-        <section class="controls">
-            <div class="button-group" style="margin-bottom: 1rem;">
-                <button id="loadSampleBtn" class="btn btn-secondary">載入範例</button>
-                <button id="processBtn" class="btn btn-primary">渲染模板</button>
+Total: ${{total}}</textarea>
             </div>
-
-            <div class="grid-layout">
-                <div class="input-pane">
-                    <h3>模板 (Template)</h3>
-                    <textarea id="templateText" placeholder="Hello {{ name }}!"></textarea>
-                </div>
-                <div class="input-pane">
-                    <h3>數據 (JSON Data)</h3>
-                    <textarea id="jsonText" placeholder='{ "name": "World" }'></textarea>
-                </div>
+            <div class="form-group">
+                <label class="form-label">Data (JSON)</label>
+                <textarea id="data" class="form-input" rows="8">{
+    "name": "John",
+    "orderId": "12345",
+    "items": [
+        {"name": "Widget", "price": 9.99},
+        {"name": "Gadget", "price": 19.99}
+    ],
+    "total": 29.98
+}</textarea>
             </div>
-        </section>
-
-        <section class="results">
-            <div class="stats-row">
-                <div class="result-item">
-                    <span class="result-label">處理時間</span>
-                    <span class="result-value" id="processTime">-</span>
-                </div>
-            </div>
-
-            <div class="output-pane">
-                <h3>渲染結果</h3>
-                <pre id="renderResult" class="code-output"></pre>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Render</button>
             </div>
         </section>
-
-        <footer>
-            <p>Web Workers 1000 示例 - 426 Template Engine</p>
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <pre id="result-output" class="code-output"></pre>
+        </section>
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #426</p>
         </footer>
     </div>
     <script src="main.js"></script>

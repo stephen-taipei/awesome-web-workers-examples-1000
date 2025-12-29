@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#606 Broadcast Channel - Web Workers Multi-Threading</title>
+    <meta name="description" content="Demonstrate BroadcastChannel API for cross-context communication">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Broadcast Channel Pattern</h1>
+            <p class="subtitle">Cross-Context Communication via BroadcastChannel</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#606</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-success">Beginner</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Broadcast Demo</h2>
+            <p style="color:var(--text-secondary);margin-bottom:15px;">Main thread and workers share a broadcast channel.</p>
+            <div class="form-group">
+                <label class="form-label" for="channel-name">Channel name:</label>
+                <input type="text" id="channel-name" class="form-input" value="demo-channel">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="message-input">Message:</label>
+                <input type="text" id="message-input" class="form-input" placeholder="Type a message...">
+            </div>
+            <div class="btn-group">
+                <button id="broadcast-btn" class="btn btn-primary">Broadcast from Main</button>
+                <button id="worker-broadcast-btn" class="btn btn-secondary">Broadcast from Worker</button>
+                <button id="spawn-worker-btn" class="btn btn-secondary">Spawn Worker</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Active Workers</h2>
+            <div id="workers-list"></div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Messages Received</h2>
+            <div id="messages" style="max-height:300px;overflow-y:auto;"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Pattern</h3>
+            <ul>
+                <li><strong>Pattern:</strong> BroadcastChannel for pub/sub communication</li>
+                <li><strong>Use Case:</strong> Broadcasting messages to all contexts</li>
+                <li><strong>Advantage:</strong> Simpler than SharedWorker for one-way broadcasts</li>
+                <li><strong>Scope:</strong> Same origin, all tabs/workers on channel</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #606 Broadcast Channel</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

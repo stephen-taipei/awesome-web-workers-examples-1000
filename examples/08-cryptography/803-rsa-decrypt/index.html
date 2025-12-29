@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#803 RSA Decrypt - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>RSA Decryption</h1>
+            <p class="subtitle">Decrypt with Private Key</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#803</span>
+                <span class="badge badge-secondary">Cryptography</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Test RSA Encryption/Decryption</h2>
+            <div class="form-group">
+                <label class="form-label" for="plaintext-input">Message</label>
+                <textarea id="plaintext-input" class="form-input" rows="2">Secret message for RSA!</textarea>
+            </div>
+            <div id="error-message" class="error-message hidden"></div>
+            <div class="btn-group">
+                <button id="test-btn" class="btn btn-primary">Generate Keys, Encrypt & Decrypt</button>
+            </div>
+        </section>
+        <section class="card"><h2 class="card-title">Progress</h2>
+            <div class="progress-container"><div class="progress-bar-wrapper">
+                <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+            </div><p id="progress-text" class="progress-text">Ready</p></div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div class="result-stats">
+                <div class="stat-item"><span class="stat-label">Original:</span>
+                    <span id="original-result" class="stat-value"></span></div>
+                <div class="stat-item"><span class="stat-label">Encrypted:</span>
+                    <span id="encrypted-result" class="stat-value" style="word-break: break-all; font-size: 0.8rem;"></span></div>
+                <div class="stat-item"><span class="stat-label">Decrypted:</span>
+                    <span id="decrypted-result" class="stat-value"></span></div>
+                <div class="stat-item"><span class="stat-label">Time:</span>
+                    <span id="time-result" class="stat-value"></span></div>
+            </div>
+        </section>
+        <section class="card info-section">
+            <h3>About RSA Decryption</h3>
+            <ul>
+                <li><strong>Operation:</strong> Decrypt with private key</li>
+                <li><strong>Security:</strong> Only private key holder can decrypt</li>
+                <li><strong>Use Case:</strong> Secure message exchange</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #803</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

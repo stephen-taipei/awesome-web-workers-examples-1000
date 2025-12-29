@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#634 Event Bus - Web Workers Multi-Threading</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Event Bus Pattern</h1>
+            <p class="subtitle">Centralized Event Distribution</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#634</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Event Bus Demo</h2>
+            <div class="btn-group">
+                <button id="init-btn" class="btn btn-primary">Initialize Bus</button>
+                <button id="emit-btn" class="btn btn-secondary" disabled>Emit Event</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Connected Workers</h2>
+            <div id="workers"></div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Event Log</h2>
+            <div id="events" style="max-height:200px;overflow-y:auto;"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About Event Bus</h3>
+            <ul>
+                <li><strong>Centralized:</strong> Single bus handles all events</li>
+                <li><strong>Decoupled:</strong> Workers dont know about each other</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples</a> | #634 Event Bus</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

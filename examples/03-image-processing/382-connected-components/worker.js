@@ -1,155 +1,121 @@
-// Connected Components Worker
-// Implements Two-Pass Algorithm (Rosenfeld and Pfaltz) with Union-Find
-
 self.onmessage = function(e) {
-    const { imageData, connectivity } = e.data;
+    const { imageData, threshold } = e.data;
     const { width, height, data } = imageData;
 
-    try {
-        const startTime = performance.now();
-
-        // 1. Prepare data (ensure binary 0 or 1)
-        self.postMessage({ type: 'progress', progress: 10, message: '準備資料...' });
-        const binaryMap = new Uint8Array(width * height);
-        for (let i = 0; i < width * height; i++) {
-            // Assume white (255) is foreground, black (0) is background
-            // The input imageData is already thresholded visual binary, but let's be safe
-            // Check Red channel
-            binaryMap[i] = data[i * 4] > 128 ? 1 : 0;
-        }
-
-        // 2. First Pass: Assign temporary labels and record equivalences
-        self.postMessage({ type: 'progress', progress: 20, message: '第一次掃描...' });
-
-        const labels = new Int32Array(width * height); // 0 means background or unlabeled
-        let nextLabel = 1;
-        const parent = [0]; // Union-Find structure, index 0 is background
-
-        function find(i) {
-            while (parent[i] !== i) {
-                // Path compression
-                parent[i] = parent[parent[i]];
-                i = parent[i];
-            }
-            return i;
-        }
-
-        function union(i, j) {
-            const rootI = find(i);
-            const rootJ = find(j);
-            if (rootI !== rootJ) {
-                // Simple union (always attach higher index to lower to keep labels small? or vice versa?)
-                // Actually usually rank-based is better, but here simple link is fine
-                if (rootI < rootJ) parent[rootJ] = rootI;
-                else parent[rootI] = rootJ;
-            }
-        }
-
-        // Neighbors offsets based on connectivity
-        // For 4-way: North, West
-        // For 8-way: North-West, North, North-East, West
-
-        for (let y = 0; y < height; y++) {
-            // Progress update
-            if (y % 50 === 0) {
-                self.postMessage({ type: 'progress', progress: 20 + (y/height)*30, message: '第一次掃描...' });
-            }
-
-            for (let x = 0; x < width; x++) {
-                const idx = y * width + x;
-
-                if (binaryMap[idx] === 0) continue; // Background
-
-                const neighbors = [];
-
-                // Check West
-                if (x > 0 && binaryMap[idx - 1] === 1) {
-                    neighbors.push(labels[idx - 1]);
-                }
-
-                // Check North
-                if (y > 0 && binaryMap[idx - width] === 1) {
-                    neighbors.push(labels[idx - width]);
-                }
-
-                if (connectivity === 8) {
-                    // Check North-West
-                    if (x > 0 && y > 0 && binaryMap[idx - width - 1] === 1) {
-                        neighbors.push(labels[idx - width - 1]);
-                    }
-                    // Check North-East
-                    if (x < width - 1 && y > 0 && binaryMap[idx - width + 1] === 1) {
-                        neighbors.push(labels[idx - width + 1]);
-                    }
-                }
-
-                // Filter 0 labels (shouldn't happen if binaryMap check is correct but labels array is init to 0)
-                const validNeighbors = neighbors.filter(l => l > 0);
-
-                if (validNeighbors.length === 0) {
-                    // New component
-                    labels[idx] = nextLabel;
-                    parent[nextLabel] = nextLabel;
-                    nextLabel++;
-                } else {
-                    // Find smallest label
-                    let minLabel = validNeighbors[0];
-                    for (let i = 1; i < validNeighbors.length; i++) {
-                        if (validNeighbors[i] < minLabel) minLabel = validNeighbors[i];
-                    }
-
-                    labels[idx] = minLabel;
-
-                    // Record equivalences (Union)
-                    for (let i = 0; i < validNeighbors.length; i++) {
-                        union(minLabel, validNeighbors[i]);
-                    }
-                }
-            }
-        }
-
-        // 3. Second Pass: Replace labels with their root
-        self.postMessage({ type: 'progress', progress: 60, message: '第二次掃描 (合併區域)...' });
-
-        // Optimize: Flatten the parent array first so find() is O(1)
-        for (let i = 1; i < nextLabel; i++) {
-            parent[i] = find(i);
-        }
-
-        // Relabel to contiguous range 1..N
-        const labelMap = new Int32Array(nextLabel); // maps old root -> new contiguous label
-        let finalLabelCount = 0;
-
-        for (let i = 1; i < nextLabel; i++) {
-            if (parent[i] === i) {
-                finalLabelCount++;
-                labelMap[i] = finalLabelCount;
-            }
-        }
-
-        // Apply to image
-        for (let i = 0; i < width * height; i++) {
-            if (labels[i] > 0) {
-                const root = parent[labels[i]];
-                labels[i] = labelMap[root];
-            }
-        }
-
-        self.postMessage({ type: 'progress', progress: 90, message: '生成結果...' });
-
-        const endTime = performance.now();
-
-        self.postMessage({
-            type: 'result',
-            data: {
-                labeledData: labels,
-                count: finalLabelCount,
-                colorMap: {} // We generate colors in main thread to keep worker light or pass count
-            },
-            executionTime: (endTime - startTime).toFixed(2)
-        });
-
-    } catch (error) {
-        self.postMessage({ type: 'error', data: error.message });
+    // Convert to binary
+    const binary = new Uint8Array(width * height);
+    for (let i = 0; i < data.length; i += 4) {
+        const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+        binary[i / 4] = gray > threshold ? 1 : 0;
     }
+
+    // Two-pass connected component labeling
+    const labels = new Int32Array(width * height);
+    const parent = new Int32Array(width * height);
+    let nextLabel = 1;
+
+    // Initialize parent array
+    for (let i = 0; i < parent.length; i++) {
+        parent[i] = i;
+    }
+
+    // Find root with path compression
+    function find(x) {
+        if (parent[x] !== x) {
+            parent[x] = find(parent[x]);
+        }
+        return parent[x];
+    }
+
+    // Union two labels
+    function union(x, y) {
+        const rootX = find(x);
+        const rootY = find(y);
+        if (rootX !== rootY) {
+            parent[rootX] = rootY;
+        }
+    }
+
+    // First pass
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const idx = y * width + x;
+
+            if (binary[idx] === 0) continue;
+
+            const neighbors = [];
+
+            // Check left neighbor
+            if (x > 0 && labels[idx - 1] > 0) {
+                neighbors.push(labels[idx - 1]);
+            }
+
+            // Check top neighbor
+            if (y > 0 && labels[idx - width] > 0) {
+                neighbors.push(labels[idx - width]);
+            }
+
+            // Check top-left neighbor (8-connectivity)
+            if (x > 0 && y > 0 && labels[idx - width - 1] > 0) {
+                neighbors.push(labels[idx - width - 1]);
+            }
+
+            // Check top-right neighbor (8-connectivity)
+            if (x < width - 1 && y > 0 && labels[idx - width + 1] > 0) {
+                neighbors.push(labels[idx - width + 1]);
+            }
+
+            if (neighbors.length === 0) {
+                labels[idx] = nextLabel++;
+            } else {
+                const minLabel = Math.min(...neighbors);
+                labels[idx] = minLabel;
+
+                for (const n of neighbors) {
+                    if (n !== minLabel) {
+                        union(n, minLabel);
+                    }
+                }
+            }
+        }
+    }
+
+    // Second pass - flatten labels
+    const labelMap = new Map();
+    let numComponents = 0;
+
+    for (let i = 0; i < labels.length; i++) {
+        if (labels[i] > 0) {
+            const root = find(labels[i]);
+            if (!labelMap.has(root)) {
+                labelMap.set(root, ++numComponents);
+            }
+            labels[i] = labelMap.get(root);
+        }
+    }
+
+    // Generate random colors for each component
+    const colors = [[0, 0, 0]]; // Background
+    for (let i = 1; i <= numComponents; i++) {
+        colors.push([
+            Math.floor(Math.random() * 200) + 55,
+            Math.floor(Math.random() * 200) + 55,
+            Math.floor(Math.random() * 200) + 55
+        ]);
+    }
+
+    // Create output image
+    const output = new Uint8ClampedArray(data.length);
+    for (let i = 0; i < labels.length; i++) {
+        const color = colors[labels[i]];
+        output[i * 4] = color[0];
+        output[i * 4 + 1] = color[1];
+        output[i * 4 + 2] = color[2];
+        output[i * 4 + 3] = 255;
+    }
+
+    self.postMessage({
+        imageData: new ImageData(output, width, height),
+        components: numComponents
+    });
 };

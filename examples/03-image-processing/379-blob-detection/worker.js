@@ -1,141 +1,128 @@
-// worker.js
-
 self.onmessage = function(e) {
-    const { imageData, sigma, threshold } = e.data;
+    const { imageData, threshold, minSize } = e.data;
+    const { width, height, data } = imageData;
 
-    try {
-        const startTime = performance.now();
-        const width = imageData.width;
-        const height = imageData.height;
-        const data = imageData.data;
-
-        // 1. Grayscale
-        const gray = new Float32Array(width * height);
-        for (let i = 0; i < width * height; i++) {
-            gray[i] = (data[i * 4] * 0.299 + data[i * 4 + 1] * 0.587 + data[i * 4 + 2] * 0.114) / 255.0;
-        }
-
-        self.postMessage({ type: 'progress', data: 10 });
-
-        // 2. Laplacian of Gaussian (LoG)
-        // We can approximate LoG by convolving with a LoG kernel.
-        // LoG kernel size usually 3*sigma or 6*sigma.
-        // Kernel generation:
-        // LoG(x,y) = -1/(pi*sigma^4) * (1 - (x^2+y^2)/(2*sigma^2)) * e^(-(x^2+y^2)/(2*sigma^2))
-
-        const kSize = Math.ceil(sigma * 6);
-        const kernelSize = kSize % 2 === 0 ? kSize + 1 : kSize;
-        const halfSize = Math.floor(kernelSize / 2);
-        const kernel = new Float32Array(kernelSize * kernelSize);
-
-        let sum = 0; // LoG sum is 0
-
-        for (let y = -halfSize; y <= halfSize; y++) {
-            for (let x = -halfSize; x <= halfSize; x++) {
-                const r2 = x*x + y*y;
-                const s2 = 2 * sigma * sigma;
-                const val = ((r2 - s2) / (s2 * s2)) * Math.exp(-r2 / s2); // Simplified constant factor
-                // Or standard formula:
-                // (x^2 + y^2 - 2sigma^2) / (sigma^4) * exp(...)
-                // Let's use simplified without constant factors, just shape matters for detection, scale handled later?
-                // Actually scale normalization is important for scale invariance, but here fixed scale.
-
-                // Let's use: (r^2 - 2sigma^2) * exp(-r^2 / 2sigma^2)
-                const v = (r2 - 2*sigma*sigma) * Math.exp(-r2 / (2*sigma*sigma));
-                const idx = (y + halfSize) * kernelSize + (x + halfSize);
-                kernel[idx] = v;
-                sum += v;
-            }
-        }
-
-        // Zero mean correction
-        const mean = sum / (kernelSize * kernelSize);
-        for(let i=0; i<kernel.length; i++) kernel[i] -= mean;
-
-        self.postMessage({ type: 'progress', data: 20 });
-
-        // Convolution
-        const response = new Float32Array(width * height);
-
-        for (let y = 0; y < height; y++) {
-            for (let x = 0; x < width; x++) {
-                let val = 0;
-
-                for (let ky = -halfSize; ky <= halfSize; ky++) {
-                    for (let kx = -halfSize; kx <= halfSize; kx++) {
-                        const iy = y + ky;
-                        const ix = x + kx;
-
-                        if (iy >= 0 && iy < height && ix >= 0 && ix < width) {
-                            const kVal = kernel[(ky + halfSize) * kernelSize + (kx + halfSize)];
-                            val += gray[iy * width + ix] * kVal;
-                        }
-                    }
-                }
-
-                // Scale normalization: multiply response by sigma^2
-                // SIFT does this for scale invariance.
-                response[y * width + x] = val * sigma * sigma;
-            }
-
-            if (y % 20 === 0) self.postMessage({ type: 'progress', data: 20 + (y/height)*70 });
-        }
-
-        // 3. Find Extrema (Blobs)
-        // Since we only do one scale, we just look for local maxima/minima in 3x3 neighborhood.
-        // Bright blobs on dark background -> Local Minima (due to inverted LoG kernel shape usually)
-        // or Local Maxima?
-        // With kernel (r^2 - 2s^2), center (r=0) is negative (-2s^2).
-        // So a bright spot convolution will differ.
-        // Standard LoG has negative center.
-        // So bright blob = response minimum (most negative).
-        // Dark blob = response maximum (most positive).
-
-        // Let's find local extremas with absolute value > threshold
-
-        const blobs = [];
-        const rAbs = new Float32Array(width * height);
-        for(let i=0; i<width*height; i++) rAbs[i] = Math.abs(response[i]);
-
-        for (let y = 1; y < height - 1; y++) {
-            for (let x = 1; x < width - 1; x++) {
-                const idx = y * width + x;
-                const val = rAbs[idx];
-
-                if (val > threshold) {
-                    // Check local max of absolute response
-                    let isMax = true;
-                    for (let ny = -1; ny <= 1; ny++) {
-                        for (let nx = -1; nx <= 1; nx++) {
-                            if (ny === 0 && nx === 0) continue;
-                            if (rAbs[(y+ny)*width + (x+nx)] > val) {
-                                isMax = false;
-                                break;
-                            }
-                        }
-                        if (!isMax) break;
-                    }
-
-                    if (isMax) {
-                        blobs.push({ x, y, sigma: sigma, strength: val });
-                    }
-                }
-            }
-        }
-
-        const endTime = performance.now();
-
-        self.postMessage({
-            type: 'result',
-            data: {
-                blobs: blobs,
-                time: endTime - startTime,
-                width: width,
-                height: height
-            }
-        });
-
-    } catch (error) {
-        self.postMessage({ type: 'error', message: error.message });
+    // Convert to grayscale
+    const gray = new Float32Array(width * height);
+    for (let i = 0; i < data.length; i += 4) {
+        gray[i / 4] = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
     }
+
+    // Apply Laplacian of Gaussian at multiple scales
+    const scales = [1, 2, 4, 8];
+    const responses = [];
+
+    for (const sigma of scales) {
+        const log = applyLoG(gray, width, height, sigma);
+        responses.push({ sigma, log });
+    }
+
+    // Find local maxima across scale space
+    const blobs = [];
+
+    for (let s = 0; s < responses.length; s++) {
+        const { sigma, log } = responses[s];
+
+        for (let y = minSize; y < height - minSize; y++) {
+            for (let x = minSize; x < width - minSize; x++) {
+                const idx = y * width + x;
+                const val = Math.abs(log[idx]);
+
+                if (val < threshold) continue;
+
+                // Check if local maximum in space
+                let isMax = true;
+                for (let dy = -1; dy <= 1 && isMax; dy++) {
+                    for (let dx = -1; dx <= 1 && isMax; dx++) {
+                        if (dx === 0 && dy === 0) continue;
+                        if (Math.abs(log[(y + dy) * width + (x + dx)]) > val) {
+                            isMax = false;
+                        }
+                    }
+                }
+
+                // Check neighboring scales
+                if (isMax && s > 0) {
+                    if (Math.abs(responses[s - 1].log[idx]) > val) isMax = false;
+                }
+                if (isMax && s < responses.length - 1) {
+                    if (Math.abs(responses[s + 1].log[idx]) > val) isMax = false;
+                }
+
+                if (isMax) {
+                    blobs.push({ x, y, r: sigma * Math.sqrt(2) * 2 });
+                }
+            }
+        }
+    }
+
+    // Create output image
+    const output = new Uint8ClampedArray(data);
+
+    // Draw blobs as circles
+    const colors = [[255, 0, 0], [0, 255, 0], [0, 0, 255], [255, 255, 0]];
+
+    for (let i = 0; i < blobs.length; i++) {
+        const blob = blobs[i];
+        const color = colors[i % colors.length];
+        const r = Math.max(3, Math.round(blob.r));
+
+        // Draw circle outline
+        for (let angle = 0; angle < 360; angle += 5) {
+            const rad = angle * Math.PI / 180;
+            const px = Math.round(blob.x + r * Math.cos(rad));
+            const py = Math.round(blob.y + r * Math.sin(rad));
+
+            if (px >= 0 && px < width && py >= 0 && py < height) {
+                const idx = (py * width + px) * 4;
+                output[idx] = color[0];
+                output[idx + 1] = color[1];
+                output[idx + 2] = color[2];
+            }
+        }
+    }
+
+    self.postMessage({
+        imageData: new ImageData(output, width, height),
+        blobs: blobs.length
+    });
 };
+
+function applyLoG(gray, width, height, sigma) {
+    const result = new Float32Array(width * height);
+    const kernelSize = Math.ceil(sigma * 6) | 1;
+    const half = Math.floor(kernelSize / 2);
+
+    // Create LoG kernel
+    const kernel = [];
+    for (let y = -half; y <= half; y++) {
+        for (let x = -half; x <= half; x++) {
+            const r2 = x * x + y * y;
+            const s2 = sigma * sigma;
+            const t = (r2 - 2 * s2) / (s2 * s2);
+            kernel.push(t * Math.exp(-r2 / (2 * s2)));
+        }
+    }
+
+    // Normalize kernel
+    const sum = kernel.reduce((a, b) => a + b, 0);
+    for (let i = 0; i < kernel.length; i++) {
+        kernel[i] -= sum / kernel.length;
+    }
+
+    // Apply convolution
+    for (let y = half; y < height - half; y++) {
+        for (let x = half; x < width - half; x++) {
+            let val = 0;
+            let ki = 0;
+            for (let ky = -half; ky <= half; ky++) {
+                for (let kx = -half; kx <= half; kx++) {
+                    val += gray[(y + ky) * width + (x + kx)] * kernel[ki++];
+                }
+            }
+            result[y * width + x] = val * sigma * sigma; // Scale normalization
+        }
+    }
+
+    return result;
+}

@@ -3,77 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Workers 隨機噪點 (Random Noise) - 360</title>
+    <title>#360 隨機噪點 - Web Workers 範例</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Web Workers 隨機噪點</h1>
-            <div class="subtitle">Random Noise Generation</div>
-            <div class="badges">
-                <span class="badge badge-worker">Web Worker</span>
-                <span class="badge badge-beginner">Random</span>
+        <header class="header">
+            <h1>隨機噪點</h1>
+            <p class="subtitle">Random Noise</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#360</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-success">入門</span>
             </div>
         </header>
-
-        <main>
-            <section class="description">
-                <h2>隨機噪點 (Random Noise)</h2>
-                <p>此範例展示如何快速生成隨機噪點（白噪聲）。與 Perlin Noise 不同，這是完全隨機的，沒有連續性。Web Worker 負責生成並填充像素數據。</p>
-            </section>
-
-            <section class="controls">
-                <div class="input-group">
-                    <label for="width">寬度 (Width): <span id="widthVal">800</span></label>
-                    <input type="range" id="width" min="100" max="4000" step="100" value="800">
-                </div>
-                <div class="input-group">
-                    <label for="height">高度 (Height): <span id="heightVal">600</span></label>
-                    <input type="range" id="height" min="100" max="4000" step="100" value="600">
-                </div>
-
-                <div class="input-group">
-                    <label for="type">類型 (Type):</label>
-                    <select id="type">
-                        <option value="monochrome">單色 (Monochrome)</option>
-                        <option value="color">彩色 (RGB)</option>
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>點擊或拖放圖片到此處</p>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>噪點強度：<span id="strengthValue">50</span></label>
+                <input type="range" id="strength" min="10" max="150" value="50">
+            </div>
+            <div class="control-group">
+                <label>噪點類型：
+                    <select id="noiseType">
+                        <option value="gaussian">高斯噪點</option>
+                        <option value="salt-pepper">椒鹽噪點</option>
+                        <option value="uniform">均勻噪點</option>
                     </select>
-                </div>
-
-                <div class="button-group">
-                    <button id="generateBtn" class="btn btn-primary">生成噪點</button>
-                </div>
-            </section>
-
-            <section class="progress-section hidden" id="progressSection">
-                <div class="progress-bar-container">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-                <div class="progress-text" id="progressText">生成中... 0%</div>
-            </section>
-
-            <section class="results">
-                <div class="stats-row">
-                    <div class="result-item">
-                        <span class="result-label">生成時間</span>
-                        <span class="result-value" id="processTime">-</span>
-                    </div>
-                </div>
-
-                <div class="image-panel">
-                    <h3>生成結果</h3>
-                    <canvas id="resultCanvas"></canvas>
-                    <div class="download-section">
-                        <a id="downloadLink" class="btn btn-outline hidden" download="random-noise.png">下載結果</a>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <footer>
-            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
-        </footer>
+                </label>
+            </div>
+            <button id="processBtn" class="btn btn-primary" disabled>套用噪點</button>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>原始圖片</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>加入噪點</h3><canvas id="resultCanvas"></canvas></div>
+            </div>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #360</footer>
     </div>
     <script src="main.js"></script>
 </body>

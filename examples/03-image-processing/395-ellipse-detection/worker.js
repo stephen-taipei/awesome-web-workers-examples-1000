@@ -1,180 +1,180 @@
 self.onmessage = function(e) {
-    const { imageData } = e.data;
-    const startTime = performance.now();
+    const { imageData, threshold } = e.data;
+    const { width, height, data } = imageData;
 
-    try {
-        const { width, height, data } = imageData;
-
-        // 1. Grayscale
-        const gray = new Uint8Array(width * height);
-        for (let i = 0; i < width * height; i++) {
-            const r = data[i * 4];
-            const g = data[i * 4 + 1];
-            const b = data[i * 4 + 2];
-            gray[i] = 0.299 * r + 0.587 * g + 0.114 * b;
-        }
-
-        // 2. Edge Detection (Canny-like: Sobel + NMS)
-        // For simplicity, just strong edge thresholding + thinning
-        // Or just contours from thresholded edges
-        const edgeThresh = 80;
-        const edges = new Uint8Array(width * height);
-
-        for (let i = 0; i < width * height; i++) {
-            // Very simple gradient approximation
-            const x = i % width;
-            const y = Math.floor(i / width);
-            if (x === 0 || x === width - 1 || y === 0 || y === height - 1) continue;
-
-            const gx = gray[i+1] - gray[i-1];
-            const gy = gray[i+width] - gray[i-width];
-            const mag = Math.abs(gx) + Math.abs(gy);
-            edges[i] = mag > edgeThresh ? 255 : 0;
-        }
-
-        // 3. Find Connected Components (Contours)
-        // We treat each connected edge segment as a potential ellipse arc
-        const contours = findContours(edges, width, height);
-
-        // 4. Fit Ellipse to each contour
-        const ellipses = [];
-        const minPoints = 10; // Minimum points to fit
-
-        for (let i = 0; i < contours.length; i++) {
-            const points = contours[i];
-            if (points.length < minPoints) continue;
-
-            // Try to fit ellipse using Least Squares
-            const ellipse = fitEllipse(points);
-            if (ellipse) {
-                // Check fitting error or aspect ratio constraints if needed
-                ellipses.push(ellipse);
-            }
-        }
-
-        const endTime = performance.now();
-
-        self.postMessage({
-            type: 'result',
-            data: {
-                ellipses: ellipses,
-                time: Math.round(endTime - startTime)
-            }
-        });
-
-    } catch (error) {
-        self.postMessage({ type: 'error', data: error.message });
+    // Convert to grayscale
+    const gray = new Uint8Array(width * height);
+    for (let i = 0; i < data.length; i += 4) {
+        gray[i / 4] = Math.round(0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]);
     }
-};
 
-function findContours(src, width, height) {
-    const visited = new Uint8Array(width * height);
+    // Edge detection
+    const edges = new Uint8Array(width * height);
+    for (let y = 1; y < height - 1; y++) {
+        for (let x = 1; x < width - 1; x++) {
+            const idx = y * width + x;
+            const gx = gray[idx + 1] - gray[idx - 1];
+            const gy = gray[idx + width] - gray[idx - width];
+            edges[idx] = Math.sqrt(gx * gx + gy * gy) > threshold ? 255 : 0;
+        }
+    }
+
+    // Find connected contours
+    const labels = new Int32Array(width * height);
     const contours = [];
+    let nextLabel = 1;
 
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
             const idx = y * width + x;
-            if (src[idx] === 255 && visited[idx] === 0) {
-                const contour = traceContour(src, visited, width, height, x, y);
-                contours.push(contour);
-            }
-        }
-    }
-    return contours;
-}
-
-function traceContour(src, visited, width, height, startX, startY) {
-    const contour = [];
-    const stack = [{x: startX, y: startY}];
-    visited[startY * width + startX] = 1;
-
-    while (stack.length > 0) {
-        const p = stack.pop();
-        contour.push(p);
-
-        // 8-neighbors
-        for (let dy = -1; dy <= 1; dy++) {
-            for (let dx = -1; dx <= 1; dx++) {
-                if (dx === 0 && dy === 0) continue;
-                const nx = p.x + dx;
-                const ny = p.y + dy;
-
-                if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
-                    const idx = ny * width + nx;
-                    if (src[idx] === 255 && visited[idx] === 0) {
-                        visited[idx] = 1;
-                        stack.push({x: nx, y: ny});
-                    }
+            if (edges[idx] > 0 && labels[idx] === 0) {
+                const points = [];
+                floodFillContour(edges, labels, width, height, x, y, nextLabel, points);
+                if (points.length >= 20) {
+                    contours.push(points);
                 }
+                nextLabel++;
             }
         }
     }
-    return contour;
+
+    // Fit ellipses to contours
+    const ellipses = [];
+
+    for (const points of contours) {
+        const ellipse = fitEllipse(points);
+        if (ellipse && ellipse.a > 5 && ellipse.b > 5 && ellipse.a < 100 && ellipse.b < 100) {
+            // Verify ellipse fit by checking how many points are close
+            let inliers = 0;
+            for (const p of points) {
+                const dist = ellipseDistance(p.x, p.y, ellipse);
+                if (dist < 5) inliers++;
+            }
+
+            if (inliers > points.length * 0.5) {
+                ellipses.push(ellipse);
+            }
+        }
+    }
+
+    // Create output image
+    const output = new Uint8ClampedArray(data);
+
+    // Draw ellipses
+    const colors = [[255, 0, 0], [0, 255, 0], [0, 0, 255], [255, 255, 0], [255, 0, 255]];
+
+    for (let i = 0; i < ellipses.length; i++) {
+        const e = ellipses[i];
+        const color = colors[i % colors.length];
+
+        // Draw ellipse
+        for (let angle = 0; angle < 360; angle++) {
+            const rad = angle * Math.PI / 180;
+            const px = e.cx + e.a * Math.cos(rad) * Math.cos(e.angle) - e.b * Math.sin(rad) * Math.sin(e.angle);
+            const py = e.cy + e.a * Math.cos(rad) * Math.sin(e.angle) + e.b * Math.sin(rad) * Math.cos(e.angle);
+
+            const x = Math.round(px), y = Math.round(py);
+            if (x >= 0 && x < width && y >= 0 && y < height) {
+                const idx = (y * width + x) * 4;
+                output[idx] = color[0];
+                output[idx + 1] = color[1];
+                output[idx + 2] = color[2];
+            }
+        }
+
+        // Draw center
+        for (let d = -2; d <= 2; d++) {
+            const cx = Math.round(e.cx), cy = Math.round(e.cy);
+            if (cx + d >= 0 && cx + d < width && cy >= 0 && cy < height) {
+                const idx = (cy * width + cx + d) * 4;
+                output[idx] = color[0];
+                output[idx + 1] = color[1];
+                output[idx + 2] = color[2];
+            }
+        }
+    }
+
+    self.postMessage({
+        imageData: new ImageData(output, width, height),
+        ellipses: ellipses.length
+    });
+};
+
+function floodFillContour(edges, labels, width, height, startX, startY, label, points) {
+    const queue = [[startX, startY]];
+
+    while (queue.length > 0) {
+        const [x, y] = queue.shift();
+        if (x < 0 || x >= width || y < 0 || y >= height) continue;
+
+        const idx = y * width + x;
+        if (edges[idx] === 0 || labels[idx] !== 0) continue;
+
+        labels[idx] = label;
+        points.push({ x, y });
+
+        queue.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+    }
 }
 
-// Direct Least Squares Fitting of Ellipses (Fitzgibbon 1999)
-// Adapted for JS from Python/Matlab implementations
-// Ax^2 + Bxy + Cy^2 + Dx + Ey + F = 0
-// Constraint: 4AC - B^2 = 1
 function fitEllipse(points) {
-    // Need at least 5/6 points, but practically more
-    const N = points.length;
-    if (N < 6) return null;
+    if (points.length < 5) return null;
 
-    // Normalize data for stability
-    let mx = 0, my = 0;
-    for (let i = 0; i < N; i++) { mx += points[i].x; my += points[i].y; }
-    mx /= N; my /= N;
-
-    let sx = 0, sy = 0;
-    // Actually normalization helps but let's try raw first for simplicity in limited Worker environment without matrix lib.
-    // Implementing matrix operations (SVD or Eigen) from scratch is heavy.
-    // Let's use a simpler heuristic or a lightweight implementation.
-
-    // Fallback: Use Bounding Box approximation for demo if math library not available?
-    // Or implement simplified moment-based fitting (less accurate for partial arcs but okay for closed blobs).
-
-    // Moment-based approach (Second order moments)
-    // Similar to Image Moments in OpenCV
-    // Only works well for closed, filled shapes or dense edge clusters forming the shape.
-
-    let m20 = 0, m02 = 0, m11 = 0;
-
-    for (let i = 0; i < N; i++) {
-        const dx = points[i].x - mx;
-        const dy = points[i].y - my;
-        m20 += dx * dx;
-        m02 += dy * dy;
-        m11 += dx * dy;
+    // Calculate centroid
+    let cx = 0, cy = 0;
+    for (const p of points) {
+        cx += p.x;
+        cy += p.y;
     }
-    m20 /= N; m02 /= N; m11 /= N;
+    cx /= points.length;
+    cy /= points.length;
 
-    // Eigenvalues of covariance matrix
-    // [ m20  m11 ]
-    // [ m11  m02 ]
+    // Calculate covariance matrix
+    let cxx = 0, cyy = 0, cxy = 0;
+    for (const p of points) {
+        const dx = p.x - cx;
+        const dy = p.y - cy;
+        cxx += dx * dx;
+        cyy += dy * dy;
+        cxy += dx * dy;
+    }
+    cxx /= points.length;
+    cyy /= points.length;
+    cxy /= points.length;
 
-    const common = Math.sqrt(4 * m11 * m11 + (m20 - m02) * (m20 - m02));
-    const lambda1 = (m20 + m02 + common) / 2;
-    const lambda2 = (m20 + m02 - common) / 2;
+    // Eigenvalue decomposition
+    const trace = cxx + cyy;
+    const det = cxx * cyy - cxy * cxy;
+    const discriminant = trace * trace / 4 - det;
 
-    // Radii (approximate, usually for filled shape radii = 2 * sqrt(lambda))
-    // For edge points, it's slightly different scaling, usually sqrt(2)*sigma?
-    // Let's assume factor 2 for now (2 sigma)
-    const rx = 2 * Math.sqrt(lambda1);
-    const ry = 2 * Math.sqrt(lambda2);
+    if (discriminant < 0) return null;
 
-    // Angle
-    const angle = 0.5 * Math.atan2(2 * m11, m20 - m02);
+    const sqrtD = Math.sqrt(discriminant);
+    const lambda1 = trace / 2 + sqrtD;
+    const lambda2 = trace / 2 - sqrtD;
 
-    // Filter noise
-    if (rx < 2 || ry < 2) return null;
-    if (rx > Math.max(mx * 2 + 1000, 1000) || ry > 1000) return null; // Simple bounds check
+    const a = Math.sqrt(lambda1) * 2;
+    const b = Math.sqrt(lambda2) * 2;
 
-    return {
-        cx: mx,
-        cy: my,
-        rx: rx,
-        ry: ry,
-        angle: angle
-    };
+    // Calculate angle
+    let angle = 0;
+    if (cxy !== 0) {
+        angle = Math.atan2(lambda1 - cxx, cxy);
+    } else if (cxx > cyy) {
+        angle = 0;
+    } else {
+        angle = Math.PI / 2;
+    }
+
+    return { cx, cy, a, b, angle };
+}
+
+function ellipseDistance(x, y, e) {
+    const dx = x - e.cx;
+    const dy = y - e.cy;
+    const rx = dx * Math.cos(-e.angle) - dy * Math.sin(-e.angle);
+    const ry = dx * Math.sin(-e.angle) + dy * Math.cos(-e.angle);
+
+    const normalized = Math.sqrt(rx * rx / (e.a * e.a) + ry * ry / (e.b * e.b));
+    return Math.abs(normalized - 1) * Math.sqrt(e.a * e.b);
 }

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#623 Cyclic Barrier - Web Workers Multi-Threading</title>
+    <meta name="description" content="Implement reusable cyclic barrier">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Cyclic Barrier</h1>
+            <p class="subtitle">Reusable Barrier for Multiple Rounds</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#623</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-danger">Advanced</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Cyclic Barrier Demo</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label">Workers:</label>
+                    <input type="number" id="workers" class="form-input" value="4" min="2" max="8">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Rounds:</label>
+                    <input type="number" id="rounds" class="form-input" value="3" min="1" max="10">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">Start</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Barrier Status</h2>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Round:</span>
+                    <span class="stat-value" id="round">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Waiting:</span>
+                    <span class="stat-value" id="waiting">0</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div id="progress"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About Cyclic Barrier</h3>
+            <ul>
+                <li><strong>Reusable:</strong> Automatically resets after each round</li>
+                <li><strong>Synchronization:</strong> All threads wait, then proceed together</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #623 Cyclic Barrier</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#811 DH Key Generation - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Diffie-Hellman Key Generation</h1>
+            <p class="subtitle">Classic DH Key Exchange (Simulation)</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#811</span>
+                <span class="badge badge-secondary">Cryptography</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Generate DH Parameters</h2>
+            <div class="form-group">
+                <label class="form-label" for="bits-select">Key Size</label>
+                <select id="bits-select" class="form-input">
+                    <option value="512">512 bits (demo)</option>
+                    <option value="1024" selected>1024 bits</option>
+                    <option value="2048">2048 bits</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button id="generate-btn" class="btn btn-primary">Generate Keys</button>
+            </div>
+        </section>
+        <section class="card"><h2 class="card-title">Progress</h2>
+            <div class="progress-container"><div class="progress-bar-wrapper">
+                <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+            </div><p id="progress-text" class="progress-text">Ready</p></div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">DH Parameters</h2>
+            <div class="result-stats">
+                <div class="stat-item"><span class="stat-label">Public Value (g^a mod p):</span>
+                    <span id="public-value" class="stat-value" style="word-break: break-all; font-size: 0.7rem;"></span></div>
+                <div class="stat-item"><span class="stat-label">Time:</span>
+                    <span id="time-result" class="stat-value"></span></div>
+            </div>
+        </section>
+        <section class="card info-section">
+            <h3>About Diffie-Hellman</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Classic Diffie-Hellman</li>
+                <li><strong>Purpose:</strong> Key agreement</li>
+                <li><strong>Note:</strong> ECDH is preferred for modern applications</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #811</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

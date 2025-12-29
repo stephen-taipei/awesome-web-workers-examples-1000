@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#611 SharedArrayBuffer - Web Workers Multi-Threading</title>
+    <meta name="description" content="Demonstrate SharedArrayBuffer for shared memory between workers">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>SharedArrayBuffer</h1>
+            <p class="subtitle">Shared Memory Between Workers</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#611</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">SharedArrayBuffer Demo</h2>
+            <p style="color:var(--text-secondary);margin-bottom:15px;">Multiple workers share the same memory buffer.</p>
+            <div class="btn-group">
+                <button id="create-btn" class="btn btn-primary">Create Shared Buffer</button>
+                <button id="write-main-btn" class="btn btn-secondary" disabled>Write from Main</button>
+                <button id="write-worker-btn" class="btn btn-secondary" disabled>Write from Worker</button>
+                <button id="read-all-btn" class="btn btn-secondary" disabled>Read All</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Buffer Contents</h2>
+            <div id="buffer-view" style="font-family:monospace;background:var(--bg-secondary);padding:15px;border-radius:8px;overflow-x:auto;"></div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Activity Log</h2>
+            <div id="log" style="max-height:200px;overflow-y:auto;"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About SharedArrayBuffer</h3>
+            <ul>
+                <li><strong>Feature:</strong> True shared memory between contexts</li>
+                <li><strong>Requirement:</strong> Cross-Origin Isolation headers required</li>
+                <li><strong>Use Case:</strong> High-performance data sharing</li>
+                <li><strong>Warning:</strong> Requires careful synchronization</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #611 SharedArrayBuffer</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

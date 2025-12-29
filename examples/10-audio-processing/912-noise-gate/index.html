@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>#912 Noise Gate - Web Workers</title><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<header class="header"><h1>Noise Gate</h1><p class="subtitle">Signal Gating Control</p><div class="badge-container"><span class="badge badge-primary">#912</span><span class="badge badge-secondary">Audio</span></div></header>
+<section class="card"><h2 class="card-title">Gate Settings</h2><div>Threshold: <input type="range" id="thresh" min="-60" max="0" value="-40" oninput="update()"> <span id="threshVal">-40</span>dB</div><div id="status" class="result-display" style="font-size:2rem;margin-top:1rem">CLOSED</div></section>
+<footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #912</p></footer>
+</div><script src="main.js"></script></body></html>

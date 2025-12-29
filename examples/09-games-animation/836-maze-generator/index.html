@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#836 Maze Generator - Web Workers Example</title>
+    <meta name="description" content="Procedural maze generation using recursive backtracking">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Maze Generator</h1>
+            <p class="subtitle">Recursive Backtracking Algorithm</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#836</span>
+                <span class="badge badge-secondary">Procedural</span>
+                <span class="badge badge-success">Generation</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Controls</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="mazeWidth">Width</label>
+                    <input type="number" id="mazeWidth" class="form-input" value="41" min="11" max="101" step="2">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="mazeHeight">Height</label>
+                    <input type="number" id="mazeHeight" class="form-input" value="41" min="11" max="101" step="2">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="generateBtn" class="btn btn-primary">Generate Maze</button>
+                <button id="solveBtn" class="btn btn-secondary" disabled>Solve Maze</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Generated Maze</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="800"></canvas>
+            </div>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Cells:</span>
+                    <span class="stat-value" id="cellCount">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Generation Time:</span>
+                    <span class="stat-value" id="genTime">-</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Recursive backtracking (depth-first search)</li>
+                <li><strong>Features:</strong> Perfect maze with single solution</li>
+                <li><strong>Visualization:</strong> Watch maze being carved in real-time</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #836</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

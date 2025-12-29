@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#830 CRC32 - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>CRC32 Checksum</h1>
+            <p class="subtitle">Cyclic Redundancy Check</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#830</span>
+                <span class="badge badge-secondary">Checksum</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="text-input">Text</label>
+                <textarea id="text-input" class="form-input" rows="4">Hello, World!</textarea>
+            </div>
+            <div class="btn-group">
+                <button id="calc-btn" class="btn btn-primary">Calculate CRC32</button>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div class="result-stats">
+                <div class="stat-item"><span class="stat-label">CRC32 (hex):</span>
+                    <span id="hex-result" class="stat-value" style="font-family: monospace; font-size: 1.5rem;"></span></div>
+                <div class="stat-item"><span class="stat-label">CRC32 (decimal):</span>
+                    <span id="dec-result" class="stat-value"></span></div>
+                <div class="stat-item"><span class="stat-label">Input Size:</span>
+                    <span id="size-result" class="stat-value"></span></div>
+            </div>
+        </section>
+        <section class="card info-section">
+            <h3>About CRC32</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> CRC-32 (IEEE 802.3)</li>
+                <li><strong>Output:</strong> 32-bit checksum</li>
+                <li><strong>Use Case:</strong> Error detection, ZIP files</li>
+                <li><strong>Note:</strong> Not cryptographically secure</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #830</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

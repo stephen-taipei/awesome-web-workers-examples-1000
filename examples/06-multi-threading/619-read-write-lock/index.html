@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#619 Read-Write Lock - Web Workers Multi-Threading</title>
+    <meta name="description" content="Implement read-write lock allowing multiple readers or single writer">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Read-Write Lock</h1>
+            <p class="subtitle">Multiple Readers, Single Writer</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#619</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-danger">Advanced</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">RW Lock Demo</h2>
+            <p style="color:var(--text-secondary);margin-bottom:15px;">Readers can access concurrently, writers need exclusive access.</p>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="readers">Readers:</label>
+                    <input type="number" id="readers" class="form-input" value="5" min="1" max="10">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="writers">Writers:</label>
+                    <input type="number" id="writers" class="form-input" value="2" min="1" max="5">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">Start Simulation</button>
+                <button id="stop-btn" class="btn btn-danger" disabled>Stop</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Lock Status</h2>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Lock State:</span>
+                    <span class="stat-value" id="lock-state">Idle</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Active Readers:</span>
+                    <span class="stat-value" id="active-readers">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Active Writer:</span>
+                    <span class="stat-value" id="active-writer">None</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Shared Data</h2>
+            <div style="text-align:center;padding:20px;">
+                <div id="shared-value" style="font-size:3rem;font-weight:bold;color:var(--primary-color);">0</div>
+                <p style="color:var(--text-muted);">Writers increment, readers observe</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Worker Activity</h2>
+            <div id="worker-activity" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About Read-Write Lock</h3>
+            <ul>
+                <li><strong>Read Lock:</strong> Multiple readers can hold simultaneously</li>
+                <li><strong>Write Lock:</strong> Exclusive access, no readers or other writers</li>
+                <li><strong>Use Case:</strong> Data structures read more often than written</li>
+                <li><strong>Benefit:</strong> Better concurrency than simple mutex</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #619 Read-Write Lock</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

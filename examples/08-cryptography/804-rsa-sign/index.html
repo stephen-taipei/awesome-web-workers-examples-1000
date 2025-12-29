@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#804 RSA Sign - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>RSA Digital Signature</h1>
+            <p class="subtitle">Sign Messages with RSA-PSS</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#804</span>
+                <span class="badge badge-secondary">Cryptography</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="message-input">Message to Sign</label>
+                <textarea id="message-input" class="form-input" rows="3">This is an important message that needs to be signed.</textarea>
+            </div>
+            <div id="error-message" class="error-message hidden"></div>
+            <div class="btn-group">
+                <button id="sign-btn" class="btn btn-primary">Generate Keys & Sign</button>
+            </div>
+        </section>
+        <section class="card"><h2 class="card-title">Progress</h2>
+            <div class="progress-container"><div class="progress-bar-wrapper">
+                <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+            </div><p id="progress-text" class="progress-text">Ready</p></div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Signature</h2>
+            <div class="result-stats">
+                <div class="stat-item"><span class="stat-label">Signature (Base64):</span>
+                    <span id="signature-result" class="stat-value" style="word-break: break-all; font-size: 0.8rem;"></span></div>
+                <div class="stat-item"><span class="stat-label">Algorithm:</span>
+                    <span id="algo-result" class="stat-value"></span></div>
+                <div class="stat-item"><span class="stat-label">Time:</span>
+                    <span id="time-result" class="stat-value"></span></div>
+            </div>
+        </section>
+        <section class="card info-section">
+            <h3>About RSA Signing</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> RSA-PSS (Probabilistic Signature Scheme)</li>
+                <li><strong>Purpose:</strong> Prove message authenticity</li>
+                <li><strong>Operation:</strong> Sign with private key</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #804</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

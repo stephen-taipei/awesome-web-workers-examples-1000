@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#640 SIMD Parallel - Web Workers Multi-Threading</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>SIMD-like Parallelism</h1>
+            <p class="subtitle">Single Instruction Multiple Data</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#640</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-danger">Advanced</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">SIMD Demo</h2>
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">Vector Add (Parallel)</button>
+                <button id="seq-btn" class="btn btn-secondary">Vector Add (Sequential)</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Results</h2>
+            <div id="results" class="result-stats"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About SIMD-like Parallelism</h3>
+            <ul>
+                <li><strong>Concept:</strong> Apply same operation to vector elements in parallel</li>
+                <li><strong>Implementation:</strong> Split vector across workers</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples</a> | #640 SIMD Parallel</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

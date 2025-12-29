@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#702 CSV Parser - Web Workers Example</title>
+    <meta name="description" content="Parse CSV data using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>CSV Parser</h1>
+            <p class="subtitle">Parse CSV Data in Background</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#702</span>
+                <span class="badge badge-secondary">Data Processing</span>
+                <span class="badge badge-success">Beginner</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Input CSV</h2>
+            <div class="form-group">
+                <label class="form-label" for="csv-input">CSV Data</label>
+                <textarea id="csv-input" class="form-textarea" rows="8" placeholder="Enter CSV data...">id,name,email,age,department
+1,Alice Johnson,alice@example.com,28,Engineering
+2,Bob Smith,bob@example.com,34,Marketing
+3,Charlie Brown,charlie@example.com,22,Sales
+4,Diana Ross,diana@example.com,45,HR
+5,Edward Chen,edward@example.com,31,Engineering</textarea>
+            </div>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="delimiter">Delimiter</label>
+                    <select id="delimiter" class="form-input">
+                        <option value=",">Comma (,)</option>
+                        <option value=";">Semicolon (;)</option>
+                        <option value="\t">Tab</option>
+                        <option value="|">Pipe (|)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="has-header">Has Header Row</label>
+                    <select id="has-header" class="form-input">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Quick Presets</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-size="100">100 Rows</button>
+                    <button class="preset-btn" data-size="1000">1K Rows</button>
+                    <button class="preset-btn" data-size="10000">10K Rows</button>
+                    <button class="preset-btn" data-size="50000">50K Rows</button>
+                </div>
+            </div>
+            <div id="error-message" class="error-message hidden"></div>
+            <div class="btn-group">
+                <button id="parse-btn" class="btn btn-primary">Parse with Worker</button>
+                <button id="main-btn" class="btn btn-secondary">Parse on Main Thread</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Parse Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div class="output-container">
+                <table id="result-table" class="data-table"></table>
+            </div>
+        </section>
+
+        <section id="comparison-section" class="card hidden">
+            <h2 class="card-title">Performance Comparison</h2>
+            <div class="comparison-grid">
+                <div class="comparison-item worker">
+                    <p class="comparison-label">Web Worker</p>
+                    <p id="worker-time" class="comparison-value">-</p>
+                </div>
+                <div class="comparison-item main-thread">
+                    <p class="comparison-label">Main Thread</p>
+                    <p id="main-thread-time" class="comparison-value">-</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Line-by-line parsing with quote handling</li>
+                <li><strong>Features:</strong> Custom delimiters, header detection, type inference</li>
+                <li><strong>Use Case:</strong> Processing large CSV files without UI freeze</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | Example #702</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

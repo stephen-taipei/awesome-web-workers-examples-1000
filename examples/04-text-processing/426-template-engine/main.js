@@ -1,74 +1,42 @@
-const templateText = document.getElementById('templateText');
-const jsonText = document.getElementById('jsonText');
-const processBtn = document.getElementById('processBtn');
-const loadSampleBtn = document.getElementById('loadSampleBtn');
-const processTimeDisplay = document.getElementById('processTime');
-const renderResult = document.getElementById('renderResult');
+let worker = null;
+const elements = {};
 
-let worker;
+document.addEventListener('DOMContentLoaded', function() {
+    elements.template = document.getElementById('template');
+    elements.data = document.getElementById('data');
+    elements.processBtn = document.getElementById('process-btn');
+    elements.progressBar = document.getElementById('progress-bar');
+    elements.progressText = document.getElementById('progress-text');
+    elements.resultSection = document.getElementById('result-section');
+    elements.resultStats = document.getElementById('result-stats');
+    elements.resultOutput = document.getElementById('result-output');
 
-function initWorker() {
-    if (worker) worker.terminate();
+    elements.processBtn.addEventListener('click', processText);
+
     worker = new Worker('worker.js');
-
     worker.onmessage = function(e) {
-        const { type, data, executionTime } = e.data;
-
-        if (type === 'result') {
-            processTimeDisplay.textContent = `${executionTime}ms`;
-            renderResult.textContent = data.result;
-            processBtn.disabled = false;
-        } else if (type === 'error') {
-            alert(`Error: ${data}`);
-            processBtn.disabled = false;
+        const { type, payload } = e.data;
+        if (type === 'PROGRESS') {
+            elements.progressBar.style.width = payload.percent + '%';
+            elements.progressBar.textContent = payload.percent + '%';
+            elements.progressText.textContent = payload.message;
+        } else if (type === 'RESULT') {
+            elements.resultStats.innerHTML = `<div class="stat-item"><span class="stat-label">Time:</span><span class="stat-value">${payload.duration.toFixed(2)} ms</span></div>`;
+            elements.resultOutput.textContent = payload.result;
+            elements.resultSection.classList.remove('hidden');
+        } else if (type === 'ERROR') {
+            alert('Error: ' + payload.message);
         }
     };
-}
+});
 
-processBtn.addEventListener('click', () => {
-    initWorker();
-
-    // Validate JSON
-    let dataObj;
+function processText() {
     try {
-        dataObj = JSON.parse(jsonText.value);
+        JSON.parse(elements.data.value);
     } catch (e) {
-        alert('無效的 JSON 數據');
+        alert('Invalid JSON data');
         return;
     }
-
-    processBtn.disabled = true;
-    processTimeDisplay.textContent = '...';
-    renderResult.textContent = 'Rendering...';
-
-    worker.postMessage({
-        template: templateText.value,
-        data: dataObj
-    });
-});
-
-loadSampleBtn.addEventListener('click', () => {
-    templateText.value = `Hello {{ user.name }}!
-
-Here is your order summary:
-{{#each items}}
-- {{ name }}: $\{{ price }}
-{{/each}}
-
-Total: $\{{ total }}`;
-
-    jsonText.value = `{
-    "user": {
-        "name": "Alice"
-    },
-    "items": [
-        { "name": "Apple", "price": 1.2 },
-        { "name": "Banana", "price": 0.8 },
-        { "name": "Cherry", "price": 2.5 }
-    ],
-    "total": 4.5
-}`;
-});
-
-// Init
-initWorker();
+    elements.resultSection.classList.add('hidden');
+    worker.postMessage({ type: 'RENDER', payload: { template: elements.template.value, data: elements.data.value } });
+}

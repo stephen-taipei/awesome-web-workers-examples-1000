@@ -3,96 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Workers 晶格化效果 (Crystallize) - 356</title>
+    <title>#356 晶格化 - Web Workers 範例</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Web Workers 晶格化效果</h1>
-            <div class="subtitle">Crystallize Effect using Voronoi Diagram</div>
-            <div class="badges">
-                <span class="badge badge-worker">Web Worker</span>
-                <span class="badge badge-beginner">Voronoi</span>
+        <header class="header">
+            <h1>晶格化</h1>
+            <p class="subtitle">Crystallize (Voronoi)</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#356</span>
+                <span class="badge badge-secondary">影像處理</span>
+                <span class="badge badge-success">進階</span>
             </div>
         </header>
-
-        <main>
-            <section class="description">
-                <h2>晶格化 (Crystallize)</h2>
-                <p>此範例展示如何使用 Voronoi 圖算法創建晶格化藝術效果。Web Worker 負責計算每個像素最近的特徵點，並將該像素顏色設定為特徵點所在區域的顏色。</p>
-                <div class="formula-box">
-                    <div class="formula">
-Feature Points: P = {p_1, p_2, ..., p_n}
-For each pixel (x, y):
-  Find k such that distance((x,y), p_k) is minimized.
-  Color(x, y) = Color(p_k)
-                    </div>
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>點擊或拖放圖片到此處</p>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>晶格大小：<span id="cellSizeValue">20</span>px</label>
+                <input type="range" id="cellSize" min="10" max="50" value="20">
+            </div>
+            <div class="control-group">
+                <label>種子點數量：<span id="seedCountValue">500</span></label>
+                <input type="range" id="seedCount" min="100" max="2000" value="500">
+            </div>
+            <button id="processBtn" class="btn btn-primary" disabled>套用晶格化效果</button>
+        </section>
+        <section class="card" id="progressSection" style="display: none;">
+            <h2 class="card-title">處理進度</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div class="progress-bar" id="progressBar" style="width: 0%;">0%</div>
                 </div>
-            </section>
-
-            <section class="controls">
-                <div class="upload-area" id="dropZone">
-                    <div class="upload-icon">📁</div>
-                    <p>拖放圖片至此處或點擊上傳</p>
-                    <input type="file" id="fileInput" accept="image/*" hidden>
-                </div>
-
-                <div class="input-group">
-                    <label for="cellSize">晶格大小 (Cell Size): <span id="cellSizeVal">20</span></label>
-                    <input type="range" id="cellSize" min="5" max="100" value="20">
-                </div>
-
-                <div class="input-group">
-                    <label for="pointCount">特徵點數量估計: <span id="pointCountVal">-</span></label>
-                </div>
-
-                <div class="button-group">
-                    <button id="processBtn" class="btn btn-primary" disabled>應用效果</button>
-                    <button id="resetBtn" class="btn btn-secondary" disabled>重置</button>
-                </div>
-            </section>
-
-            <section class="progress-section hidden" id="progressSection">
-                <div class="progress-bar-container">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-                <div class="progress-text" id="progressText">處理中... 0%</div>
-            </section>
-
-            <section class="results">
-                <div class="stats-row">
-                    <div class="result-item">
-                        <span class="result-label">處理時間</span>
-                        <span class="result-value" id="processTime">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">圖片尺寸</span>
-                        <span class="result-value" id="imageSize">-</span>
-                    </div>
-                </div>
-
-                <div class="image-comparison">
-                    <div class="image-panel">
-                        <h3>原始圖片</h3>
-                        <canvas id="originalCanvas"></canvas>
-                        <div class="image-info" id="originalInfo"></div>
-                    </div>
-                    <div class="image-panel">
-                        <h3>處理結果</h3>
-                        <canvas id="resultCanvas"></canvas>
-                        <div class="image-info" id="resultInfo"></div>
-                        <div class="download-section">
-                            <a id="downloadLink" class="btn btn-outline hidden" download="crystallize.png">下載結果</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <footer>
-            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
-        </footer>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>原始圖片</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>晶格化效果</h3><canvas id="resultCanvas"></canvas></div>
+            </div>
+        </section>
+        <section class="card info-section">
+            <h3>技術說明</h3>
+            <ul>
+                <li>使用 <code>Voronoi</code> 圖來分割圖片區域</li>
+                <li>每個晶格填充該區域的平均顏色</li>
+                <li>Web Worker 背景處理避免 UI 阻塞</li>
+                <li>支援調整晶格大小和種子點數量</li>
+            </ul>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #356</footer>
     </div>
     <script src="main.js"></script>
 </body>

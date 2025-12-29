@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#860 Tweening Engine - Web Workers Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Tweening Engine</h1>
+            <p class="subtitle">Easing Functions Animation</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#860</span>
+                <span class="badge badge-secondary">Animation</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Easing Type</h2>
+            <div class="preset-buttons">
+                <button class="preset-btn ease-btn" data-ease="linear">Linear</button>
+                <button class="preset-btn ease-btn" data-ease="easeInQuad">Ease In</button>
+                <button class="preset-btn ease-btn" data-ease="easeOutQuad">Ease Out</button>
+                <button class="preset-btn ease-btn" data-ease="easeInOutQuad">Ease InOut</button>
+                <button class="preset-btn ease-btn" data-ease="easeOutBounce">Bounce</button>
+                <button class="preset-btn ease-btn" data-ease="easeOutElastic">Elastic</button>
+            </div>
+            <div class="btn-group" style="margin-top:15px;">
+                <button id="playBtn" class="btn btn-primary">Play</button>
+            </div>
+        </section>
+        <section class="card">
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="400"></canvas>
+            </div>
+        </section>
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #860</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

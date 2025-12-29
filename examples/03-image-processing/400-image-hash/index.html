@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#400 感知雜湊 - Web Workers 範例</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>感知雜湊</h1>
+            <p class="subtitle">Perceptual Hashing (pHash)</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#400</span>
+                <span class="badge badge-secondary">影像處理</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-row">
+                <div class="upload-area" id="uploadArea1">
+                    <input type="file" id="fileInput1" accept="image/*" hidden>
+                    <p>圖片 1</p>
+                </div>
+                <div class="upload-area" id="uploadArea2">
+                    <input type="file" id="fileInput2" accept="image/*" hidden>
+                    <p>圖片 2</p>
+                </div>
+            </div>
+        </section>
+        <section class="card">
+            <button id="processBtn" class="btn btn-primary" disabled>計算雜湊</button>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item">
+                    <h3>圖片 1</h3>
+                    <canvas id="canvas1"></canvas>
+                    <div class="hash-display" id="hash1">-</div>
+                </div>
+                <div class="preview-item">
+                    <h3>圖片 2</h3>
+                    <canvas id="canvas2"></canvas>
+                    <div class="hash-display" id="hash2">-</div>
+                </div>
+            </div>
+            <div id="similarity" class="similarity" style="display:none;">
+                相似度: <span id="similarityValue">-</span>%<br>
+                <small>漢明距離: <span id="hammingDistance">-</span></small>
+            </div>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #400</footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#477 Text Joiner - Web Workers Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Text Joiner</h1>
+            <p class="subtitle">Join lines or items with a delimiter</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#477</span>
+                <span class="badge badge-secondary">Text Processing</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label">Text (one item per line)</label>
+                <textarea id="input-text" class="form-input" rows="6">apple
+banana
+cherry
+date
+elderberry</textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Join With</label>
+                <select id="join-type" class="form-input">
+                    <option value="comma">Comma (,)</option>
+                    <option value="semicolon">Semicolon (;)</option>
+                    <option value="pipe">Pipe (|)</option>
+                    <option value="space">Space</option>
+                    <option value="newline">New Line</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </div>
+            <div class="form-group hidden" id="custom-group">
+                <label class="form-label">Custom Delimiter</label>
+                <input type="text" id="custom-delimiter" class="form-input" value=" - ">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Format</label>
+                <select id="format-type" class="form-input">
+                    <option value="plain">Plain</option>
+                    <option value="quoted">Quoted ("item")</option>
+                    <option value="single-quoted">Single Quoted ('item')</option>
+                    <option value="brackets">Brackets [item]</option>
+                    <option value="braces">Braces {item}</option>
+                    <option value="parens">Parentheses (item)</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Join Text</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div id="result-output" class="result-output"></div>
+        </section>
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #477</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

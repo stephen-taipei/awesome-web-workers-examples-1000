@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#629 Pipeline - Web Workers Multi-Threading</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Pipeline Pattern</h1>
+            <p class="subtitle">Sequential Processing Stages</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#629</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Pipeline Demo</h2>
+            <div class="form-group">
+                <label class="form-label">Input Value:</label>
+                <input type="number" id="input" class="form-input" value="10">
+            </div>
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">Process Pipeline</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Pipeline Stages</h2>
+            <div id="stages" style="display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About Pipeline</h3>
+            <ul>
+                <li><strong>Stages:</strong> Each worker performs one transformation</li>
+                <li><strong>Flow:</strong> Output of one stage is input to next</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples</a> | #629 Pipeline</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

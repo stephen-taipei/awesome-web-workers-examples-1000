@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#628 Scatter-Gather - Web Workers Multi-Threading</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Scatter-Gather Pattern</h1>
+            <p class="subtitle">Distribute Work, Collect Results</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#628</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-warning">Intermediate</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">Scatter-Gather Demo</h2>
+            <div class="btn-group">
+                <button id="start-btn" class="btn btn-primary">Scatter Tasks</button>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Workers</h2>
+            <div id="workers"></div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">Gathered Results</h2>
+            <div id="results" class="result-stats"></div>
+        </section>
+        <section class="card info-section">
+            <h3>About Scatter-Gather</h3>
+            <ul>
+                <li><strong>Scatter:</strong> Distribute data to workers</li>
+                <li><strong>Gather:</strong> Collect and combine results</li>
+            </ul>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples</a> | #628 Scatter-Gather</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

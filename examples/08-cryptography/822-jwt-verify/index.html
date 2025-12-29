@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#822 JWT Verify - Web Workers Cryptography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>JWT Verifier</h1>
+            <p class="subtitle">Verify JSON Web Tokens</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#822</span>
+                <span class="badge badge-secondary">Cryptography</span>
+            </div>
+        </header>
+        <section class="card">
+            <h2 class="card-title">JWT Token</h2>
+            <div class="form-group">
+                <label class="form-label" for="jwt-input">JWT</label>
+                <textarea id="jwt-input" class="form-input" rows="4" placeholder="Paste JWT token here..."></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="secret-input">Secret Key</label>
+                <input type="text" id="secret-input" class="form-input" value="your-256-bit-secret">
+            </div>
+            <div class="btn-group">
+                <button id="verify-btn" class="btn btn-primary">Verify JWT</button>
+            </div>
+        </section>
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Verification Result</h2>
+            <div class="result-stats">
+                <div class="stat-item"><span class="stat-label">Valid:</span>
+                    <span id="valid-result" class="stat-value"></span></div>
+                <div class="stat-item"><span class="stat-label">Payload:</span>
+                    <span id="payload-result" class="stat-value" style="word-break: break-all;"></span></div>
+            </div>
+        </section>
+        <footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #822</p></footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

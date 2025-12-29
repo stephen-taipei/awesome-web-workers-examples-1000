@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>#887 Event System - Web Workers</title><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<header class="header"><h1>Event System</h1><p class="subtitle">Game Event Bus</p><div class="badge-container"><span class="badge badge-primary">#887</span><span class="badge badge-secondary">Games</span></div></header>
+<section class="card"><h2 class="card-title">Trigger Events</h2><div class="btn-group"><button class="btn" onclick="emit('player:spawn')">Player Spawn</button><button class="btn" onclick="emit('enemy:killed')">Enemy Killed</button><button class="btn" onclick="emit('item:collected')">Item Collected</button><button class="btn" onclick="emit('level:complete')">Level Complete</button></div></section>
+<section class="card"><h2 class="card-title">Event Log</h2><div id="log" class="result-display"></div></section>
+<footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #887</p></footer>
+</div><script src="main.js"></script></body></html>

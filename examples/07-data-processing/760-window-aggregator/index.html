@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#760 Window Aggregator - Web Workers Example</title>
+    <meta name="description" content="Windowed Aggregations using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Window Aggregator</h1>
+            <p class="subtitle">Windowed Aggregations in Background</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#760</span>
+                <span class="badge badge-secondary">Data Processing</span>
+                <span class="badge badge-success">Intermediate</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Input Data</h2>
+            <div class="form-group">
+                <label class="form-label" for="data-input">Data (JSON)</label>
+                <textarea id="data-input" class="form-textarea" rows="8">[
+  {"id": 1, "value": 42, "name": "Item 1"},
+  {"id": 2, "value": 87, "name": "Item 2"},
+  {"id": 3, "value": 15, "name": "Item 3"}
+]</textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Quick Presets</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-size="100">100 Items</button>
+                    <button class="preset-btn" data-size="1000">1K Items</button>
+                    <button class="preset-btn" data-size="10000">10K Items</button>
+                </div>
+            </div>
+            <div id="error-message" class="error-message hidden"></div>
+            <div class="btn-group">
+                <button id="process-btn" class="btn btn-primary">Process with Worker</button>
+                <button id="main-btn" class="btn btn-secondary">Process on Main Thread</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div id="result-stats" class="result-stats"></div>
+            <div class="output-container">
+                <pre id="result-output" class="output-pre"></pre>
+            </div>
+        </section>
+
+        <section id="comparison-section" class="card hidden">
+            <h2 class="card-title">Performance Comparison</h2>
+            <div class="comparison-grid">
+                <div class="comparison-item worker">
+                    <p class="comparison-label">Web Worker</p>
+                    <p id="worker-time" class="comparison-value">-</p>
+                </div>
+                <div class="comparison-item main-thread">
+                    <p class="comparison-label">Main Thread</p>
+                    <p id="main-thread-time" class="comparison-value">-</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Sliding window</li>
+                <li><strong>Features:</strong> Time/count windows</li>
+                <li><strong>Use Case:</strong> Windowed Aggregations</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | Example #760</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

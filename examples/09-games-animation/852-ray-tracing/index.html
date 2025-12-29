@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#852 Ray Tracing - Web Workers Example</title>
+    <meta name="description" content="Simple ray tracer with reflections">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Ray Tracing</h1>
+            <p class="subtitle">Simple 3D Ray Tracer</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#852</span>
+                <span class="badge badge-secondary">Rendering</span>
+                <span class="badge badge-success">3D</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Controls</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="resolution">Resolution</label>
+                    <select id="resolution" class="form-input">
+                        <option value="100">100x100 (Fast)</option>
+                        <option value="200" selected>200x200 (Medium)</option>
+                        <option value="400">400x400 (Slow)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="maxBounces">Max Bounces</label>
+                    <input type="number" id="maxBounces" class="form-input" value="3" min="1" max="10">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="renderBtn" class="btn btn-primary">Render</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Rendered Scene</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="400" height="400"></canvas>
+            </div>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Progress:</span>
+                    <span class="stat-value" id="progress">0%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Render Time:</span>
+                    <span class="stat-value" id="renderTime">-</span>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #852</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

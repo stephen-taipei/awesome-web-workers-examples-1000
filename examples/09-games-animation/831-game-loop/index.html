@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#831 Game Loop - Web Workers Example</title>
+    <meta name="description" content="Web Worker game loop with fixed timestep simulation">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Game Loop</h1>
+            <p class="subtitle">Fixed Timestep Game Loop in Web Worker</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#831</span>
+                <span class="badge badge-secondary">Games</span>
+                <span class="badge badge-success">Animation</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Controls</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="tickRate">Tick Rate (Hz)</label>
+                    <input type="number" id="tickRate" class="form-input" value="60" min="1" max="240">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="entityCount">Entity Count</label>
+                    <input type="number" id="entityCount" class="form-input" value="100" min="1" max="1000">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="startBtn" class="btn btn-primary">Start Game Loop</button>
+                <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Game World</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="400"></canvas>
+            </div>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">FPS:</span>
+                    <span class="stat-value" id="fps">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Tick Time:</span>
+                    <span class="stat-value" id="tickTime">0 ms</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Entities:</span>
+                    <span class="stat-value" id="entities">0</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Pattern:</strong> Fixed timestep game loop running in Web Worker</li>
+                <li><strong>Feature:</strong> Decouples game logic from rendering</li>
+                <li><strong>Benefit:</strong> Consistent physics simulation regardless of frame rate</li>
+                <li><strong>Communication:</strong> Worker sends state updates at fixed intervals</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #831</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

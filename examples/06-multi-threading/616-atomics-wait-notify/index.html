@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#616 Atomics Wait/Notify - Web Workers Multi-Threading</title>
+    <meta name="description" content="Demonstrate Atomics.wait and Atomics.notify for thread synchronization">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Atomics Wait/Notify</h1>
+            <p class="subtitle">Thread Synchronization Primitives</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#616</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-danger">Advanced</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Wait/Notify Demo</h2>
+            <p style="color:var(--text-secondary);margin-bottom:15px;">Workers wait on shared memory until notified.</p>
+            <div class="btn-group">
+                <button id="init-btn" class="btn btn-primary">Initialize Workers</button>
+                <button id="notify-one-btn" class="btn btn-secondary" disabled>Notify One</button>
+                <button id="notify-all-btn" class="btn btn-secondary" disabled>Notify All</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Worker States</h2>
+            <div id="worker-states"></div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Notification Counter</h2>
+            <div style="text-align:center;padding:20px;">
+                <span id="counter" style="font-size:3rem;font-weight:bold;color:var(--primary-color);">0</span>
+                <p style="color:var(--text-muted);">Workers wake when this changes</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Activity Log</h2>
+            <div id="log" style="max-height:200px;overflow-y:auto;font-family:monospace;font-size:0.85rem;"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About Wait/Notify</h3>
+            <ul>
+                <li><strong>Atomics.wait:</strong> Block until value changes or timeout</li>
+                <li><strong>Atomics.notify:</strong> Wake up waiting threads</li>
+                <li><strong>Note:</strong> wait() cannot be used on main thread</li>
+                <li><strong>Use Case:</strong> Producer-consumer, thread coordination</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #616 Atomics Wait/Notify</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

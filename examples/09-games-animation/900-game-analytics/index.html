@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>#900 Game Analytics - Web Workers</title><link rel="stylesheet" href="style.css"></head>
+<body><div class="container">
+<header class="header"><h1>Game Analytics</h1><p class="subtitle">Player Statistics Tracking</p><div class="badge-container"><span class="badge badge-primary">#900</span><span class="badge badge-secondary">Games</span></div></header>
+<section class="card"><h2 class="card-title">Track Events</h2><div class="btn-group"><button class="btn" onclick="track('session_start')">Session Start</button><button class="btn" onclick="track('level_complete')">Level Complete</button><button class="btn" onclick="track('purchase')">Purchase</button><button class="btn" onclick="track('achievement')">Achievement</button></div></section>
+<section class="card"><h2 class="card-title">Analytics</h2><div id="stats" class="result-display"></div></section>
+<footer class="footer"><p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #900</p></footer>
+</div><script src="main.js"></script></body></html>

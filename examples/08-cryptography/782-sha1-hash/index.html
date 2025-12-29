@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#782 SHA-1 Hash - Web Workers Cryptography</title>
+    <meta name="description" content="Generate SHA-1 hash using Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>SHA-1 Hash Generator</h1>
+            <p class="subtitle">Secure Hash Algorithm 1</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#782</span>
+                <span class="badge badge-secondary">Cryptography</span>
+                <span class="badge badge-success">Beginner</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Input</h2>
+            <div class="form-group">
+                <label class="form-label" for="text-input">Text to Hash</label>
+                <textarea id="text-input" class="form-input" rows="4" placeholder="Enter text to generate SHA-1 hash...">Hello, World!</textarea>
+            </div>
+            <div id="error-message" class="error-message hidden"></div>
+            <div class="btn-group">
+                <button id="hash-btn" class="btn btn-primary">Generate SHA-1 Hash</button>
+                <button id="clear-btn" class="btn btn-secondary">Clear</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Progress</h2>
+            <div class="progress-container">
+                <div class="progress-bar-wrapper">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <p id="progress-text" class="progress-text">Ready</p>
+            </div>
+        </section>
+
+        <section id="result-section" class="card hidden">
+            <h2 class="card-title">Result</h2>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">SHA-1 Hash:</span>
+                    <span id="hash-result" class="stat-value" style="word-break: break-all;"></span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Time:</span>
+                    <span id="time-result" class="stat-value"></span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Input Size:</span>
+                    <span id="size-result" class="stat-value"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About SHA-1</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> SHA-1 (Secure Hash Algorithm 1)</li>
+                <li><strong>Output:</strong> 160-bit (40 hex characters)</li>
+                <li><strong>Note:</strong> SHA-1 is deprecated for security use</li>
+                <li><strong>Use Case:</strong> Legacy systems, non-security checksums</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #782 - SHA-1 Hash</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,98 +1,46 @@
+const uploadArea = document.getElementById('uploadArea');
 const fileInput = document.getElementById('fileInput');
-const dropZone = document.getElementById('dropZone');
-const sourceCanvas = document.getElementById('sourceCanvas');
-const targetCanvas = document.getElementById('targetCanvas');
-const sourceCtx = sourceCanvas.getContext('2d', { willReadFrequently: true });
-const targetCtx = targetCanvas.getContext('2d');
+const lengthInput = document.getElementById('length');
+const lengthValue = document.getElementById('lengthValue');
+const angleInput = document.getElementById('angle');
+const angleValue = document.getElementById('angleValue');
+const processBtn = document.getElementById('processBtn');
+const originalCanvas = document.getElementById('originalCanvas');
+const resultCanvas = document.getElementById('resultCanvas');
+const originalCtx = originalCanvas.getContext('2d');
+const resultCtx = resultCanvas.getContext('2d');
+const worker = new Worker('worker.js');
 
-const angleSlider = document.getElementById('angle');
-const distanceSlider = document.getElementById('distance');
+uploadArea.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', (e) => loadImage(e.target.files[0]));
+lengthInput.addEventListener('input', () => lengthValue.textContent = lengthInput.value);
+angleInput.addEventListener('input', () => angleValue.textContent = angleInput.value);
+processBtn.addEventListener('click', processImage);
+worker.onmessage = (e) => { resultCtx.putImageData(e.data.imageData, 0, 0); processBtn.disabled = false; };
 
-const angleVal = document.getElementById('angleVal');
-const distanceVal = document.getElementById('distanceVal');
-
-let worker;
-let originalImageData = null;
-
-function initWorker() {
-    if (worker) worker.terminate();
-    worker = new Worker('worker.js');
-    worker.onmessage = function(e) {
-        if (e.data.type === 'result') {
-            targetCtx.putImageData(e.data.imageData, 0, 0);
-            document.getElementById('targetInfo').textContent = `處理完成 (${e.data.time}ms)`;
-        }
-    };
-}
-
-function processImage() {
-    if (!originalImageData) return;
-
-    const params = {
-        angle: parseInt(angleSlider.value),
-        distance: parseInt(distanceSlider.value)
-    };
-
-    document.getElementById('targetInfo').textContent = '處理中...';
-
-    worker.postMessage({
-        imageData: originalImageData,
-        params: params
-    });
-}
-
-function updateVal(slider, display, suffix = '') {
-    display.textContent = slider.value + suffix;
-}
-
-angleSlider.oninput = () => { updateVal(angleSlider, angleVal, '°'); processImage(); };
-distanceSlider.oninput = () => { updateVal(distanceSlider, distanceVal, 'px'); processImage(); };
-
-function handleFile(file) {
-    if (!file || !file.type.startsWith('image/')) return;
-
+function loadImage(file) {
     const reader = new FileReader();
     reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
-             let w = img.width;
-             let h = img.height;
-             const MAX_SIZE = 1200;
-             if (w > MAX_SIZE || h > MAX_SIZE) {
-                 const ratio = Math.min(MAX_SIZE / w, MAX_SIZE / h);
-                 w = Math.floor(w * ratio);
-                 h = Math.floor(h * ratio);
-             }
-
-             sourceCanvas.width = w;
-             sourceCanvas.height = h;
-             targetCanvas.width = w;
-             targetCanvas.height = h;
-
-             sourceCtx.drawImage(img, 0, 0, w, h);
-             originalImageData = sourceCtx.getImageData(0, 0, w, h);
-
-             document.getElementById('sourceInfo').textContent = `尺寸: ${w}x${h}`;
-
-             initWorker();
-             processImage();
+            let w = img.width, h = img.height;
+            if (w > 500) { h = h * 500 / w; w = 500; }
+            originalCanvas.width = resultCanvas.width = w;
+            originalCanvas.height = resultCanvas.height = h;
+            originalCtx.drawImage(img, 0, 0, w, h);
+            processBtn.disabled = false;
         };
         img.src = e.target.result;
     };
     reader.readAsDataURL(file);
 }
 
-dropZone.addEventListener('click', () => fileInput.click());
-fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
-dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropZone.classList.add('dragover');
-});
-dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropZone.classList.remove('dragover');
-    handleFile(e.dataTransfer.files[0]);
-});
-
-initWorker();
+function processImage() {
+    processBtn.disabled = true;
+    const w = originalCanvas.width, h = originalCanvas.height;
+    worker.postMessage({
+        imageData: originalCtx.getImageData(0, 0, w, h),
+        length: parseInt(lengthInput.value),
+        angle: parseInt(angleInput.value)
+    });
+}

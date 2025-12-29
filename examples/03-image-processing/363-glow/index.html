@@ -3,90 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Workers 光暈效果 (Glow) - 363</title>
+    <title>#363 光暈效果 - Web Workers 範例</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Web Workers 光暈效果</h1>
-            <div class="subtitle">Glow Effect (Bloom)</div>
-            <div class="badges">
-                <span class="badge badge-worker">Web Worker</span>
-                <span class="badge badge-advanced">Blur Overlay</span>
+        <header class="header">
+            <h1>光暈效果</h1>
+            <p class="subtitle">Glow</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#363</span>
+                <span class="badge badge-secondary">影像處理</span>
             </div>
         </header>
-
-        <main>
-            <section class="description">
-                <h2>光暈效果 (Glow)</h2>
-                <p>此範例展示如何創建光暈（或稱 Bloom）效果。原理是提取圖像中的高亮部分，對其進行模糊處理，然後疊加回原圖。Web Worker 負責閾值提取、高斯模糊與圖像混合。</p>
-            </section>
-
-            <section class="controls">
-                <div class="upload-area" id="dropZone">
-                    <div class="upload-icon">📁</div>
-                    <p>拖放圖片至此處或點擊上傳</p>
-                    <input type="file" id="fileInput" accept="image/*" hidden>
-                </div>
-
-                <div class="input-group">
-                    <label for="threshold">亮度閾值 (Threshold): <span id="thresholdVal">180</span></label>
-                    <input type="range" id="threshold" min="0" max="255" value="180">
-                </div>
-
-                <div class="input-group">
-                    <label for="radius">模糊半徑 (Blur Radius): <span id="radiusVal">10</span></label>
-                    <input type="range" id="radius" min="1" max="50" value="10">
-                </div>
-
-                <div class="input-group">
-                    <label for="intensity">強度 (Intensity): <span id="intensityVal">1.5</span></label>
-                    <input type="range" id="intensity" min="0.5" max="3.0" step="0.1" value="1.5">
-                </div>
-
-                <div class="button-group">
-                    <button id="processBtn" class="btn btn-primary" disabled>應用效果</button>
-                    <button id="resetBtn" class="btn btn-secondary" disabled>重置</button>
-                </div>
-            </section>
-
-            <section class="progress-section hidden" id="progressSection">
-                <div class="progress-bar-container">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-                <div class="progress-text" id="progressText">處理中... 0%</div>
-            </section>
-
-            <section class="results">
-                <div class="stats-row">
-                    <div class="result-item">
-                        <span class="result-label">處理時間</span>
-                        <span class="result-value" id="processTime">-</span>
-                    </div>
-                </div>
-
-                <div class="image-comparison">
-                    <div class="image-panel">
-                        <h3>原始圖片</h3>
-                        <canvas id="originalCanvas"></canvas>
-                        <div class="image-info" id="originalInfo"></div>
-                    </div>
-                    <div class="image-panel">
-                        <h3>處理結果</h3>
-                        <canvas id="resultCanvas"></canvas>
-                        <div class="image-info" id="resultInfo"></div>
-                        <div class="download-section">
-                            <a id="downloadLink" class="btn btn-outline hidden" download="glow.png">下載結果</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <footer>
-            <p>Web Workers 1000 示例 - <a href="https://github.com/h797979/web-workers-1000-examples" target="_blank">GitHub Repository</a></p>
-        </footer>
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>點擊或拖放圖片到此處</p>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>光暈強度：<span id="intensityValue">0.5</span></label>
+                <input type="range" id="intensity" min="0.1" max="1" step="0.1" value="0.5">
+            </div>
+            <div class="control-group">
+                <label>模糊半徑：<span id="radiusValue">5</span></label>
+                <input type="range" id="radius" min="1" max="15" value="5">
+            </div>
+            <button id="processBtn" class="btn btn-primary" disabled>套用光暈</button>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>原始圖片</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>光暈效果</h3><canvas id="resultCanvas"></canvas></div>
+            </div>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #363</footer>
     </div>
     <script src="main.js"></script>
 </body>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#838 Terrain Generator - Web Workers Example</title>
+    <meta name="description" content="Heightmap terrain generation using diamond-square">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Terrain Generator</h1>
+            <p class="subtitle">Diamond-Square Algorithm</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#838</span>
+                <span class="badge badge-secondary">Procedural</span>
+                <span class="badge badge-success">Terrain</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Controls</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="size">Size (power of 2 + 1)</label>
+                    <select id="size" class="form-input">
+                        <option value="65">65x65</option>
+                        <option value="129" selected>129x129</option>
+                        <option value="257">257x257</option>
+                        <option value="513">513x513</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="roughness">Roughness</label>
+                    <input type="range" id="roughness" class="form-input" value="0.5" min="0.1" max="1" step="0.1">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="generateBtn" class="btn btn-primary">Generate Terrain</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Generated Terrain</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="800"></canvas>
+            </div>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Points:</span>
+                    <span class="stat-value" id="pointCount">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Time:</span>
+                    <span class="stat-value" id="genTime">-</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Algorithm:</strong> Diamond-Square for heightmap generation</li>
+                <li><strong>Colors:</strong> Based on height (blue=water, green=land, white=snow)</li>
+                <li><strong>Roughness:</strong> Controls terrain variability</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #838</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,104 +1,48 @@
-const baseText = document.getElementById('baseText');
-const localText = document.getElementById('localText');
-const remoteText = document.getElementById('remoteText');
-const processBtn = document.getElementById('processBtn');
-const loadSampleBtn = document.getElementById('loadSampleBtn');
-const processTimeDisplay = document.getElementById('processTime');
-const conflictCountDisplay = document.getElementById('conflictCount');
-const mergeResult = document.getElementById('mergeResult');
+/**
+ * Merge Conflict - Main Thread Script
+ */
+let worker = null;
+const elements = {};
 
-let worker;
+document.addEventListener('DOMContentLoaded', function() {
+    elements.base = document.getElementById('base');
+    elements.versionA = document.getElementById('versionA');
+    elements.versionB = document.getElementById('versionB');
+    elements.processBtn = document.getElementById('process-btn');
+    elements.progressBar = document.getElementById('progress-bar');
+    elements.progressText = document.getElementById('progress-text');
+    elements.resultSection = document.getElementById('result-section');
+    elements.resultStats = document.getElementById('result-stats');
+    elements.resultOutput = document.getElementById('result-output');
 
-function initWorker() {
-    if (worker) worker.terminate();
+    elements.processBtn.addEventListener('click', processText);
+
     worker = new Worker('worker.js');
-
     worker.onmessage = function(e) {
-        const { type, data, executionTime } = e.data;
-
-        if (type === 'result') {
-            processTimeDisplay.textContent = `${executionTime}ms`;
-            conflictCountDisplay.textContent = data.conflictCount;
-            renderMerge(data.result);
-            processBtn.disabled = false;
-        } else if (type === 'error') {
-            alert(`Error: ${data}`);
-            processBtn.disabled = false;
+        const { type, payload } = e.data;
+        if (type === 'PROGRESS') {
+            elements.progressBar.style.width = payload.percent + '%';
+            elements.progressBar.textContent = payload.percent + '%';
+            elements.progressText.textContent = payload.message;
+        } else if (type === 'RESULT') {
+            elements.resultStats.innerHTML = `
+                <div class="stat-item"><span class="stat-label">Time:</span><span class="stat-value">${payload.duration.toFixed(2)} ms</span></div>
+                <div class="stat-item"><span class="stat-label">Conflicts:</span><span class="stat-value" style="color:${payload.stats.conflicts > 0 ? '#f44336' : '#4caf50'}">${payload.stats.conflicts}</span></div>
+            `;
+            elements.resultOutput.innerHTML = payload.result;
+            elements.resultSection.classList.remove('hidden');
         }
     };
-}
+});
 
-function renderMerge(text) {
-    // Simple rendering, maybe highlight conflict blocks?
-    // We can regex replace the conflict markers to wrap them in spans.
-
-    // Markers:
-    // <<<<<<< LOCAL
-    // ...
-    // =======
-    // ...
-    // >>>>>>> REMOTE
-
-    let html = text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-
-    // Highlight conflict blocks
-    html = html.replace(
-        /(&lt;&lt;&lt;&lt;&lt;&lt;&lt; LOCAL[\s\S]*?&gt;&gt;&gt;&gt;&gt;&gt;&gt; REMOTE)/g,
-        '<div class="conflict-block">$1</div>'
-    );
-
-    html = html.replace(
-        /(&lt;&lt;&lt;&lt;&lt;&lt;&lt; LOCAL)/g,
-        '<span class="conflict-marker">$1</span>'
-    );
-    html = html.replace(
-        /(=======)/g,
-        '<span class="conflict-marker">$1</span>'
-    );
-    html = html.replace(
-        /(&gt;&gt;&gt;&gt;&gt;&gt;&gt; REMOTE)/g,
-        '<span class="conflict-marker">$1</span>'
-    );
-
-    mergeResult.innerHTML = html;
-}
-
-processBtn.addEventListener('click', () => {
-    initWorker();
-    processBtn.disabled = true;
-    processTimeDisplay.textContent = '...';
-    conflictCountDisplay.textContent = '...';
-
+function processText() {
+    elements.resultSection.classList.add('hidden');
     worker.postMessage({
-        base: baseText.value,
-        local: localText.value,
-        remote: remoteText.value
+        type: 'MERGE',
+        payload: {
+            base: elements.base.value,
+            versionA: elements.versionA.value,
+            versionB: elements.versionB.value
+        }
     });
-});
-
-loadSampleBtn.addEventListener('click', () => {
-    baseText.value = `Title: Hello World
-
-Line 1: This is unchanged.
-Line 2: This will be changed by both.
-Line 3: This is unchanged.`;
-
-    localText.value = `Title: Hello World
-
-Line 1: This is unchanged.
-Line 2: Changed by Local.
-Line 3: This is unchanged.
-Line 4: Local added this.`;
-
-    remoteText.value = `Title: Hello Universe
-
-Line 1: This is unchanged.
-Line 2: Changed by Remote.
-Line 3: This is unchanged.`;
-});
-
-// Init
-initWorker();
+}

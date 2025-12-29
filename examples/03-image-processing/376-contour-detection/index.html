@@ -3,95 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contour Detection - Web Worker Example #376</title>
+    <title>#376 輪廓偵測 - Web Workers 範例</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Contour Detection</h1>
-            <p class="subtitle">Web Worker Example #376 - Find contours via Edge Tracking</p>
-            <div class="badges">
-                <span class="badge badge-beginner">Intermediate</span>
-                <span class="badge badge-worker">Single Worker</span>
+        <header class="header">
+            <h1>輪廓偵測</h1>
+            <p class="subtitle">Edge Contour Detection</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#376</span>
+                <span class="badge badge-secondary">影像處理</span>
             </div>
         </header>
-
-        <main>
-            <section class="description">
-                <h2>About Contour Detection</h2>
-                <p>Detects contours in an image. It typically works better on binary images (like after Canny edge detection or thresholding). This example implements a basic contour finding algorithm (like finding connected components of edges).</p>
-            </section>
-
-            <section class="controls">
-                <h2>Settings</h2>
-                <div class="input-group">
-                    <label for="threshold">Binarization Threshold: <span id="thresholdVal">128</span></label>
-                    <input type="range" id="threshold" min="0" max="255" value="128">
-                </div>
-                <div class="input-group">
-                    <label>
-                        <input type="checkbox" id="invertInput" checked> Invert Input (Find dark contours on light)
-                    </label>
-                </div>
-                 <div class="input-group">
-                    <label>
-                        <input type="checkbox" id="overlayInput" checked> Overlay on Original
-                    </label>
-                </div>
-
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-icon">📷</div>
-                    <p>Drop an image here or click to select</p>
-                    <input type="file" id="fileInput" accept="image/*" hidden>
-                </div>
-
-                <div class="button-group">
-                    <button id="processBtn" class="btn btn-primary" disabled>Detect Contours</button>
-                    <button id="resetBtn" class="btn btn-outline">Reset</button>
-                </div>
-            </section>
-
-            <section id="progressContainer" class="progress-section hidden">
-                <div class="progress-bar-container">
-                    <div id="progressBar" class="progress-bar"></div>
-                </div>
-                <p id="progressText" class="progress-text">Processing...</p>
-            </section>
-
-            <section class="visualization">
-                <h2>Preview</h2>
-                <div class="image-comparison">
-                    <div class="image-panel">
-                        <h3>Original</h3>
-                        <canvas id="originalCanvas"></canvas>
-                        <p id="originalInfo" class="image-info">No image loaded</p>
-                    </div>
-                    <div class="image-panel">
-                        <h3>Contours</h3>
-                        <canvas id="processedCanvas"></canvas>
-                        <p id="processedInfo" class="image-info">-</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="resultContainer" class="result-section hidden">
-                <h2>Results</h2>
-                <div class="results-grid">
-                    <div class="result-item">
-                        <span class="result-label">Processing Time</span>
-                        <span id="processingTime" class="result-value">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">Contours Found</span>
-                        <span id="contourCount" class="result-value">-</span>
-                    </div>
-                </div>
-                <div class="download-section">
-                    <button id="downloadBtn" class="btn btn-primary">Download Image</button>
-                </div>
-            </section>
-        </main>
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <p>點擊或拖放圖片到此處</p>
+            </div>
+        </section>
+        <section class="card">
+            <h2 class="card-title">參數設定</h2>
+            <div class="control-group">
+                <label>閾值: <span id="thresholdValue">50</span></label>
+                <input type="range" id="threshold" min="10" max="200" value="50">
+            </div>
+            <button id="processBtn" class="btn btn-primary" disabled>偵測輪廓</button>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>原始圖片</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>輪廓結果</h3><canvas id="resultCanvas"></canvas></div>
+            </div>
+        </section>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #376</footer>
     </div>
     <script src="main.js"></script>
 </body>

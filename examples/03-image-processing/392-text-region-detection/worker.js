@@ -1,159 +1,173 @@
 self.onmessage = function(e) {
     const { imageData } = e.data;
-    const startTime = performance.now();
+    const { width, height, data } = imageData;
 
-    try {
-        const { width, height, data } = imageData;
-
-        // 1. Grayscale
-        const gray = new Uint8Array(width * height);
-        for (let i = 0; i < width * height; i++) {
-            const r = data[i * 4];
-            const g = data[i * 4 + 1];
-            const b = data[i * 4 + 2];
-            gray[i] = 0.299 * r + 0.587 * g + 0.114 * b;
-        }
-
-        // 2. Edge Detection (Sobel Magnitude)
-        const edges = new Uint8Array(width * height);
-
-        for (let y = 1; y < height - 1; y++) {
-            for (let x = 1; x < width - 1; x++) {
-                const p00 = gray[(y-1)*width + (x-1)];
-                const p01 = gray[(y-1)*width + x];
-                const p02 = gray[(y-1)*width + (x+1)];
-                const p10 = gray[y*width + (x-1)];
-                const p12 = gray[y*width + (x+1)];
-                const p20 = gray[(y+1)*width + (x-1)];
-                const p21 = gray[(y+1)*width + x];
-                const p22 = gray[(y+1)*width + (x+1)];
-
-                const gx = (p02 + 2*p12 + p22) - (p00 + 2*p10 + p20);
-                const gy = (p20 + 2*p21 + p22) - (p00 + 2*p01 + p02);
-
-                const mag = Math.sqrt(gx*gx + gy*gy);
-                edges[y*width + x] = mag > 50 ? 255 : 0; // Threshold edges
-            }
-        }
-
-        // 3. Morphological Dilation (to connect letters into words/lines)
-        // Text is usually horizontally close. Use a wider kernel.
-        // Kernel: 11x3
-        const dilated = morphDilate(edges, width, height, 11, 3);
-
-        // 4. Find Connected Components
-        const boxes = findComponents(dilated, width, height);
-
-        const endTime = performance.now();
-
-        self.postMessage({
-            type: 'result',
-            data: {
-                boxes: boxes,
-                time: Math.round(endTime - startTime)
-            }
-        });
-
-    } catch (error) {
-        self.postMessage({ type: 'error', data: error.message });
+    // Convert to grayscale
+    const gray = new Uint8Array(width * height);
+    for (let i = 0; i < data.length; i += 4) {
+        gray[i / 4] = Math.round(0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]);
     }
+
+    // Apply Sobel edge detection
+    const edges = new Float32Array(width * height);
+    for (let y = 1; y < height - 1; y++) {
+        for (let x = 1; x < width - 1; x++) {
+            const idx = y * width + x;
+            const gx = -gray[idx - width - 1] - 2 * gray[idx - 1] - gray[idx + width - 1] +
+                        gray[idx - width + 1] + 2 * gray[idx + 1] + gray[idx + width + 1];
+            const gy = -gray[idx - width - 1] - 2 * gray[idx - width] - gray[idx - width + 1] +
+                        gray[idx + width - 1] + 2 * gray[idx + width] + gray[idx + width + 1];
+            edges[idx] = Math.sqrt(gx * gx + gy * gy);
+        }
+    }
+
+    // Calculate edge density in sliding windows (text has high edge density)
+    const windowSize = 8;
+    const density = new Float32Array(width * height);
+
+    for (let y = windowSize; y < height - windowSize; y++) {
+        for (let x = windowSize; x < width - windowSize; x++) {
+            let sum = 0;
+            for (let dy = -windowSize; dy < windowSize; dy++) {
+                for (let dx = -windowSize; dx < windowSize; dx++) {
+                    sum += edges[(y + dy) * width + (x + dx)];
+                }
+            }
+            density[y * width + x] = sum / (windowSize * windowSize * 4);
+        }
+    }
+
+    // Threshold density to find text regions
+    const threshold = 30;
+    const binary = new Uint8Array(width * height);
+    for (let i = 0; i < density.length; i++) {
+        binary[i] = density[i] > threshold ? 255 : 0;
+    }
+
+    // Morphological closing to merge nearby text
+    const closed = morphClose(binary, width, height, 10);
+
+    // Find connected regions
+    const labels = new Int32Array(width * height);
+    const regions = [];
+    let nextLabel = 1;
+
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const idx = y * width + x;
+            if (closed[idx] > 0 && labels[idx] === 0) {
+                const stats = floodFill(closed, labels, width, height, x, y, nextLabel);
+                // Filter by size (text regions have certain characteristics)
+                if (stats.count > 50 && stats.width > 10 && stats.height > 5) {
+                    regions.push(stats);
+                }
+                nextLabel++;
+            }
+        }
+    }
+
+    // Create output image
+    const output = new Uint8ClampedArray(data);
+
+    // Draw text regions
+    for (const region of regions) {
+        const x0 = Math.max(0, region.minX - 3);
+        const y0 = Math.max(0, region.minY - 3);
+        const x1 = Math.min(width - 1, region.maxX + 3);
+        const y1 = Math.min(height - 1, region.maxY + 3);
+
+        // Draw rectangle
+        for (let x = x0; x <= x1; x++) {
+            setPixel(output, width, x, y0, 0, 200, 0);
+            setPixel(output, width, x, y1, 0, 200, 0);
+        }
+        for (let y = y0; y <= y1; y++) {
+            setPixel(output, width, x0, y, 0, 200, 0);
+            setPixel(output, width, x1, y, 0, 200, 0);
+        }
+    }
+
+    self.postMessage({
+        imageData: new ImageData(output, width, height),
+        regions: regions.length
+    });
 };
 
-function morphDilate(src, width, height, kw, kh) {
-    const dest = new Uint8Array(width * height);
-    const hw = Math.floor(kw / 2);
-    const hh = Math.floor(kh / 2);
+function setPixel(data, width, x, y, r, g, b) {
+    const idx = (y * width + x) * 4;
+    data[idx] = r;
+    data[idx + 1] = g;
+    data[idx + 2] = b;
+}
 
-    // Optimization: separable dilation or just brute force for now since image usually small enough in examples
-    // Or we can assume 0/255 and just check if any neighbor is 255
+function morphClose(mask, width, height, size) {
+    const dilated = dilate(mask, width, height, size);
+    return erode(dilated, width, height, size);
+}
+
+function dilate(mask, width, height, size) {
+    const result = new Uint8Array(width * height);
+    const half = Math.floor(size / 2);
 
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
             let maxVal = 0;
-
-            // Check neighbors
-            // Bounding box for kernel
-            const yStart = Math.max(0, y - hh);
-            const yEnd = Math.min(height - 1, y + hh);
-            const xStart = Math.max(0, x - hw);
-            const xEnd = Math.min(width - 1, x + hw);
-
-            for (let ky = yStart; ky <= yEnd; ky++) {
-                for (let kx = xStart; kx <= xEnd; kx++) {
-                    if (src[ky * width + kx] === 255) {
-                        maxVal = 255;
-                        break;
+            for (let dy = -half; dy <= half; dy++) {
+                for (let dx = -half; dx <= half; dx++) {
+                    const ny = y + dy, nx = x + dx;
+                    if (ny >= 0 && ny < height && nx >= 0 && nx < width) {
+                        maxVal = Math.max(maxVal, mask[ny * width + nx]);
                     }
                 }
-                if (maxVal === 255) break;
             }
-
-            dest[y * width + x] = maxVal;
+            result[y * width + x] = maxVal;
         }
     }
-    return dest;
+    return result;
 }
 
-function findComponents(src, width, height) {
-    const visited = new Uint8Array(width * height);
-    const boxes = [];
-    const minArea = 100; // Minimum box area
+function erode(mask, width, height, size) {
+    const result = new Uint8Array(width * height);
+    const half = Math.floor(size / 2);
 
-    for (let y = 0; y < height; y+=2) {
-        for (let x = 0; x < width; x+=2) {
-            const idx = y * width + x;
-            if (src[idx] === 255 && visited[idx] === 0) {
-                const box = floodFill(src, visited, width, height, x, y);
-
-                // Filter boxes
-                const area = box.width * box.height;
-                // Aspect ratio check? Text lines are usually wider than tall
-                if (area > minArea && box.width > 10 && box.height > 8) {
-                     boxes.push(box);
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            let minVal = 255;
+            for (let dy = -half; dy <= half; dy++) {
+                for (let dx = -half; dx <= half; dx++) {
+                    const ny = y + dy, nx = x + dx;
+                    if (ny >= 0 && ny < height && nx >= 0 && nx < width) {
+                        minVal = Math.min(minVal, mask[ny * width + nx]);
+                    }
                 }
             }
+            result[y * width + x] = minVal;
         }
     }
-    return boxes;
+    return result;
 }
 
-function floodFill(src, visited, width, height, startX, startY) {
+function floodFill(mask, labels, width, height, startX, startY, label) {
+    const queue = [[startX, startY]];
+    let count = 0;
     let minX = startX, maxX = startX, minY = startY, maxY = startY;
-    const stack = [startX, startY];
-    visited[startY * width + startX] = 1;
 
-    // Iterative flood fill
-    while (stack.length > 0) {
-        const y = stack.pop();
-        const x = stack.pop();
-
-        if (x < minX) minX = x;
-        if (x > maxX) maxX = x;
-        if (y < minY) minY = y;
-        if (y > maxY) maxY = y;
+    while (queue.length > 0) {
+        const [x, y] = queue.shift();
+        if (x < 0 || x >= width || y < 0 || y >= height) continue;
 
         const idx = y * width + x;
+        if (mask[idx] === 0 || labels[idx] !== 0) continue;
 
-        // 4-connectivity
-        const dirs = [0, 1, 0, -1, 1, 0, -1, 0];
-        for (let i = 0; i < 8; i+=2) {
-            const nx = x + dirs[i];
-            const ny = y + dirs[i+1];
+        labels[idx] = label;
+        count++;
+        minX = Math.min(minX, x);
+        maxX = Math.max(maxX, x);
+        minY = Math.min(minY, y);
+        maxY = Math.max(maxY, y);
 
-            if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
-                const nIdx = ny * width + nx;
-                if (src[nIdx] === 255 && visited[nIdx] === 0) {
-                    visited[nIdx] = 1;
-                    stack.push(nx, ny);
-                }
-            }
-        }
+        queue.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
     }
 
-    return {
-        x: minX,
-        y: minY,
-        width: maxX - minX + 1,
-        height: maxY - minY + 1
-    };
+    return { count, minX, maxX, minY, maxY, width: maxX - minX + 1, height: maxY - minY + 1 };
 }

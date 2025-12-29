@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#617 Mutex - Web Workers Multi-Threading</title>
+    <meta name="description" content="Implement mutex (mutual exclusion) using Atomics">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Mutex Pattern</h1>
+            <p class="subtitle">Mutual Exclusion Lock</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#617</span>
+                <span class="badge badge-secondary">Multi-Threading</span>
+                <span class="badge badge-danger">Advanced</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Mutex Demo</h2>
+            <p style="color:var(--text-secondary);margin-bottom:15px;">Workers compete for exclusive access to shared resource.</p>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="worker-count">Workers:</label>
+                    <input type="number" id="worker-count" class="form-input" value="4" min="2" max="8">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="ops-count">Operations each:</label>
+                    <input type="number" id="ops-count" class="form-input" value="100" min="10">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="test-with-mutex-btn" class="btn btn-primary">Test WITH Mutex</button>
+                <button id="test-without-mutex-btn" class="btn btn-danger">Test WITHOUT Mutex</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Mutex State</h2>
+            <div id="mutex-state" style="text-align:center;padding:20px;">
+                <div id="lock-indicator" style="width:100px;height:100px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-weight:bold;background:var(--secondary-color);color:white;">
+                    UNLOCKED
+                </div>
+                <p id="lock-holder" style="margin-top:10px;color:var(--text-muted);">No holder</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Shared Counter</h2>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Current Value:</span>
+                    <span class="stat-value" id="counter-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Expected Value:</span>
+                    <span class="stat-value" id="expected-value">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Result:</span>
+                    <span class="stat-value" id="result-status">-</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Activity Log</h2>
+            <div id="log" style="max-height:200px;overflow-y:auto;font-family:monospace;font-size:0.85rem;"></div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About Mutex</h3>
+            <ul>
+                <li><strong>Purpose:</strong> Ensures only one thread accesses resource at a time</li>
+                <li><strong>Implementation:</strong> Uses Atomics.compareExchange for lock</li>
+                <li><strong>Lock:</strong> CAS from 0 to 1 (spin if fails)</li>
+                <li><strong>Unlock:</strong> Store 0</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples</a> | #617 Mutex</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#841 Particle System - Web Workers Example</title>
+    <meta name="description" content="Particle system simulation in Web Worker">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Particle System</h1>
+            <p class="subtitle">High-Performance Particle Simulation</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#841</span>
+                <span class="badge badge-secondary">Animation</span>
+                <span class="badge badge-success">Particles</span>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2 class="card-title">Controls</h2>
+            <div class="input-row">
+                <div class="form-group">
+                    <label class="form-label" for="particleCount">Max Particles</label>
+                    <input type="number" id="particleCount" class="form-input" value="5000" min="100" max="50000">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="spawnRate">Spawn Rate</label>
+                    <input type="range" id="spawnRate" class="form-input" value="50" min="1" max="200">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="startBtn" class="btn btn-primary">Start</button>
+                <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-title">Particle Display</h2>
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="500"></canvas>
+            </div>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Particles:</span>
+                    <span class="stat-value" id="activeCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">FPS:</span>
+                    <span class="stat-value" id="fps">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Update Time:</span>
+                    <span class="stat-value" id="updateTime">0 ms</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card info-section">
+            <h3>About This Example</h3>
+            <ul>
+                <li><strong>Simulation:</strong> All particle physics in Web Worker</li>
+                <li><strong>Rendering:</strong> Main thread only handles drawing</li>
+                <li><strong>Features:</strong> Gravity, lifetime, color fading</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <p><a href="../../../">Awesome Web Workers Examples 1000</a> | Example #841</p>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

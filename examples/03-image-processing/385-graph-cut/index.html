@@ -3,91 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Workers 圖割分割 (Graph Cut)</title>
+    <title>#385 圖割分割 - Web Workers 範例</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>圖割分割 (Graph Cut)</h1>
-            <div class="subtitle">前景/背景分割</div>
-            <div class="badges">
-                <span class="badge badge-beginner">影像處理</span>
-                <span class="badge badge-worker">Web Worker</span>
-                <span class="badge badge-worker">Max-Flow Min-Cut</span>
+        <header class="header">
+            <h1>圖割分割</h1>
+            <p class="subtitle">Graph Cut Segmentation</p>
+            <div class="badge-container">
+                <span class="badge badge-primary">#385</span>
+                <span class="badge badge-secondary">影像處理</span>
             </div>
         </header>
-
-        <section class="description">
-            <h2>功能說明</h2>
-            <p>此範例展示基於 Graph Cut 的影像分割。請標記「前景」（物體）與「背景」，算法將利用最小割 (Min-Cut) 找出最佳分割邊界。</p>
-            <ul>
-                <li>上傳圖片 (建議小尺寸以獲得較佳效能)</li>
-                <li>使用筆刷繪製 <span style="color:#f00;font-weight:bold">前景(紅)</span> 與 <span style="color:#00f;font-weight:bold">背景(藍)</span></li>
-                <li>執行分割</li>
-            </ul>
-        </section>
-
-        <section class="controls">
+        <section class="card">
+            <h2 class="card-title">圖片上傳</h2>
             <div class="upload-area" id="uploadArea">
-                <div class="upload-icon">📁</div>
-                <p>點擊上傳圖片 (建議 &lt; 400x400)</p>
                 <input type="file" id="fileInput" accept="image/*" hidden>
-            </div>
-
-            <div class="input-group">
-                <label>標記工具</label>
-                <div style="display: flex; gap: 1rem; align-items: center;">
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button class="color-btn selected" data-type="foreground" style="background-color: red;" title="前景"></button>
-                        <button class="color-btn" data-type="background" style="background-color: blue;" title="背景"></button>
-                    </div>
-                    <div>
-                        <label for="brushSize" style="display:inline;">筆刷大小: </label>
-                        <input type="range" id="brushSize" min="1" max="20" value="5">
-                    </div>
-                </div>
-            </div>
-
-            <div class="button-group">
-                <button id="processBtn" class="btn btn-primary" disabled>執行 Graph Cut</button>
-                <button id="clearBtn" class="btn btn-secondary" disabled>清除標記</button>
+                <p>點擊或拖放圖片到此處</p>
             </div>
         </section>
-
-        <section class="results">
-            <div class="stats-row">
-                <div class="result-item">
-                    <span class="result-label">處理時間</span>
-                    <span class="result-value" id="processTime">-</span>
-                </div>
-            </div>
-
-            <div class="progress-section hidden" id="progressSection">
-                <div class="progress-bar-container">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-                <div class="progress-text" id="progressText">準備中...</div>
-            </div>
-
-            <div class="image-comparison">
-                <div class="image-panel">
-                    <h3>標記 (紅=前, 藍=後)</h3>
-                    <div style="position: relative; display: inline-block;">
-                        <canvas id="sourceCanvas" style="cursor: crosshair;"></canvas>
-                        <canvas id="markerCanvas" style="position: absolute; top: 0; left: 0; pointer-events: none; opacity: 0.6;"></canvas>
-                    </div>
-                </div>
-                <div class="image-panel">
-                    <h3>分割結果 (黑白)</h3>
-                    <canvas id="resultCanvas"></canvas>
-                </div>
+        <section class="card">
+            <h2 class="card-title">標記模式</h2>
+            <button id="fgBtn" class="btn btn-success">前景標記</button>
+            <button id="bgBtn" class="btn btn-danger">背景標記</button>
+            <button id="processBtn" class="btn btn-primary" disabled>執行分割</button>
+            <p class="info">在圖片上繪製前景(綠色)和背景(紅色)標記</p>
+        </section>
+        <section class="card">
+            <h2 class="card-title">結果預覽</h2>
+            <div class="preview-container">
+                <div class="preview-item"><h3>標記圖片</h3><canvas id="originalCanvas"></canvas></div>
+                <div class="preview-item"><h3>分割結果</h3><canvas id="resultCanvas"></canvas></div>
             </div>
         </section>
-
-        <footer>
-            <p>Web Workers 1000 示例 - 385 Graph Cut</p>
-        </footer>
+        <footer class="footer"><a href="../../../">Awesome Web Workers Examples 1000</a> | #385</footer>
     </div>
     <script src="main.js"></script>
 </body>
