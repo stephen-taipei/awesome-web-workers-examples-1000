@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Awesome Web Workers Examples 1000</title>
+    <meta name="description" content="1000 examples showing how Web Workers handle computation, data processing, media, cryptography, and performance tasks." />
+    <meta property="og:title" content="Awesome Web Workers Examples 1000" />
+    <meta property="og:description" content="1000 examples showing how Web Workers handle computation, data processing, media, cryptography, and performance tasks." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://stephen-taipei.github.io/awesome-web-workers-examples-1000/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Awesome Web Workers Examples 1000" />
+    <meta name="twitter:description" content="1000 examples showing how Web Workers handle computation, data processing, media, cryptography, and performance tasks." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f172a'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='16' fill='white' font-family='Arial,sans-serif'%3ES%3C/text%3E%3C/svg%3E" />
+    <link rel="canonical" href="https://stephen-taipei.github.io/awesome-web-workers-examples-1000/" />
+    <link rel="alternate" type="text/plain" title="LLMs.txt" href="/llms.txt" />
+    <style>
+      :root { color-scheme: dark; --bg:#07101b; --card:#101b2d; --line:#283b54; --text:#f8fafc; --muted:#94a3b8; --brand:#38bdf8; --brand2:#8b5cf6; }
+      *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at top,#10203d 0%,var(--bg) 58%);color:var(--text);line-height:1.6}
+      a{color:inherit}.wrap{max-width:1100px;margin:0 auto;padding:32px 20px 72px}.hero,.card{border:1px solid var(--line);border-radius:24px;background:rgba(16,27,45,.92);box-shadow:0 24px 48px rgba(0,0,0,.24)}
+      .hero{padding:36px}.eyebrow{display:inline-flex;padding:6px 12px;border-radius:999px;background:rgba(56,189,248,.16);color:#7dd3fc;font-size:14px;font-weight:700}h1,h2,h3{margin:0;line-height:1.2}
+      h1{margin-top:18px;font-size:clamp(2.2rem,5vw,4rem)}.sub{margin-top:14px;max-width:780px;color:var(--muted);font-size:1.05rem}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+      .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:999px;text-decoration:none;font-weight:700}.btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#040b16}.btn-secondary{border:1px solid var(--line)}
+      .stats,.grid,.faq-list{display:grid;gap:16px}.stats,.grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}.stats{margin-top:24px}.stat,.sample,.faq-item{border-radius:18px;border:1px solid var(--line);background:#16243a;padding:18px}
+      .section{margin-top:28px}.section-head{display:flex;justify-content:space-between;gap:16px;align-items:end;margin-bottom:16px}.section-head p{margin:8px 0 0;color:var(--muted)}.sample p,.faq-item p{margin:10px 0 0;color:var(--muted)}.sample a{display:inline-flex;margin-top:10px;color:#7dd3fc;text-decoration:none}.sample a:hover{text-decoration:underline}
+      .footer{margin-top:28px;color:var(--muted);font-size:.95rem;text-align:center}
+    </style>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "name": "Awesome Web Workers Examples 1000",
+            "url": "https://stephen-taipei.github.io/awesome-web-workers-examples-1000/",
+            "description": "1000 examples showing how Web Workers handle computation, data processing, media, cryptography, and performance tasks."
+          },
+          {
+            "@type": "CollectionPage",
+            "name": "Awesome Web Workers Examples 1000",
+            "url": "https://stephen-taipei.github.io/awesome-web-workers-examples-1000/",
+            "description": "1000 examples showing how Web Workers handle computation, data processing, media, cryptography, and performance tasks."
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Awesome Web Workers Examples 1000 是什麼？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "它是一個整理 Web Workers 實作範例的專案，示範如何把計算、資料處理與高負載工作搬到背景執行緒。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "這些範例可以學到什麼？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "你可以看到 Dedicated Worker、Shared Worker、OffscreenCanvas 與多執行緒模式在瀏覽器裡的具體用法。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "誰適合使用這個專案？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "適合需要優化前端效能、學習 background processing、或想快速找 Web Workers 參考實作的開發者。"
+              }
+            }
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <main class="wrap">
+      <section class="hero">
+        <span class="eyebrow">Web Workers Examples</span>
+        <h1>Awesome Web Workers Examples 1000</h1>
+        <p class="sub">這個專案專注在 Web Workers 的實作範例，從數值計算到圖片處理、加密、音訊與多執行緒模式，適合作為教學與查詢入口。</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="https://github.com/stephen-taipei/awesome-web-workers-examples-1000" target="_blank" rel="noreferrer">View GitHub</a>
+          <a class="btn btn-secondary" href="README.md">Read README</a>
+        </div>
+        <div class="stats">
+<div class="stat"><strong>1000</strong>1000 example topics</div>
+<div class="stat"><strong>Learning-oriented</strong>Learning-oriented structure</div>
+<div class="stat"><strong>Runnable</strong>Runnable HTML demos</div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2>Sample pages</h2>
+            <p>從目前 repo 內已存在的 HTML 頁面挑選入口，方便搜尋引擎與 AI crawler 建立上下文。</p>
+          </div>
+        </div>
+        <div class="grid">
+<article class="sample">
+            <h3>001 Prime Generator</h3>
+            <p>examples/01-computation/001-prime-generator/index.html</p>
+            <a href="examples/01-computation/001-prime-generator/index.html">Open sample</a>
+          </article>
+<article class="sample">
+            <h3>002 Fibonacci Sequence</h3>
+            <p>examples/01-computation/002-fibonacci-sequence/index.html</p>
+            <a href="examples/01-computation/002-fibonacci-sequence/index.html">Open sample</a>
+          </article>
+<article class="sample">
+            <h3>003 Factorial Calculator</h3>
+            <p>examples/01-computation/003-factorial-calculator/index.html</p>
+            <a href="examples/01-computation/003-factorial-calculator/index.html">Open sample</a>
+          </article>
+<article class="sample">
+            <h3>004 Gcd Calculator</h3>
+            <p>examples/01-computation/004-gcd-calculator/index.html</p>
+            <a href="examples/01-computation/004-gcd-calculator/index.html">Open sample</a>
+          </article>
+<article class="sample">
+            <h3>005 Lcm Calculator</h3>
+            <p>examples/01-computation/005-lcm-calculator/index.html</p>
+            <a href="examples/01-computation/005-lcm-calculator/index.html">Open sample</a>
+          </article>
+<article class="sample">
+            <h3>006 Prime Factorization</h3>
+            <p>examples/01-computation/006-prime-factorization/index.html</p>
+            <a href="examples/01-computation/006-prime-factorization/index.html">Open sample</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="section card">
+        <div class="section-head">
+          <div>
+            <h2>常見問題</h2>
+            <p>這些問答與 FAQ schema 一致，方便搜尋結果與 AI 摘要引用。</p>
+          </div>
+        </div>
+        <div class="faq-list">
+<article class="faq-item">
+            <h3>Awesome Web Workers Examples 1000 是什麼？</h3>
+            <p>它是一個整理 Web Workers 實作範例的專案，示範如何把計算、資料處理與高負載工作搬到背景執行緒。</p>
+          </article>
+<article class="faq-item">
+            <h3>這些範例可以學到什麼？</h3>
+            <p>你可以看到 Dedicated Worker、Shared Worker、OffscreenCanvas 與多執行緒模式在瀏覽器裡的具體用法。</p>
+          </article>
+<article class="faq-item">
+            <h3>誰適合使用這個專案？</h3>
+            <p>適合需要優化前端效能、學習 background processing、或想快速找 Web Workers 參考實作的開發者。</p>
+          </article>
+        </div>
+      </section>
+
+      <p class="footer">Awesome Web Workers Examples 1000 · SEO/AEO/GEO landing page for GitHub Pages deployment</p>
+    </main>
+  </body>
+</html>
